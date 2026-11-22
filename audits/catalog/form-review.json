@@ -1,52 +1,5 @@
 {
   "declarations" : [ {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberDecimal\": \"0.8813735870195430252326093249797923\"}}",
-      "documented" : "{\"v\": {\"$numberDecimal\": \"1.818446459232066823483698963560709\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/y-coordinate"
-    } ],
-    "fixture" : "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "expected has the wrong result",
-    "marker" : "lock",
-    "origin" : "f92fcf1807539b4f4fdbe7b227b0932e6f44b873",
-    "pageBlob" : "617094063df567086337b511fd70b27644e00184",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
-      "path" : "source/reference/operator/aggregation/asinh.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"tea_set.jpg\"}",
-      "documented" : "{\"v\": \"teaset.jpg\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/2/name"
-    } ],
-    "fixture" : "aggregation/expressions/binarySize/binarySizeExpressionOperator",
-    "includes" : [ {
-      "blob" : "224fc291cd4d65e57987b6cd5471c003abcbdd75",
-      "path" : "source/includes/fact-utf8-char-byte-sizes.rst"
-    } ],
-    "justification" : null,
-    "lock" : "data has tea_set expected has teaset",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "fd67064d5ae5c109841aa73b0775196aed53fa81",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "00a744dc63b488437043031dab7af6df0399b86f",
-      "path" : "source/reference/operator/aggregation/binarySize.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
     "includes" : [ ],
@@ -80,68 +33,6 @@
     }
   }, {
     "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"733\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"789\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/combined_object_size"
-    } ],
-    "fixture" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "bson sizes are off",
-    "marker" : "lock",
-    "origin" : "303e95e09abd312e0e0f1cb1aa34b2da593ce688",
-    "pageBlob" : "201c9ba757131d9e14fdd7db1139747b977eca1b",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4be47aeab5c6f3ca0bf07ddd3e432f26b8c90658",
-      "path" : "source/reference/operator/aggregation/bsonSize.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"203\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"222\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/object_size"
-    }, {
-      "curated" : "{\"v\": {\"$numberInt\": \"229\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"248\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/1/object_size"
-    }, {
-      "curated" : "{\"v\": {\"$numberInt\": \"105\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"112\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/2/object_size"
-    }, {
-      "curated" : "{\"v\": {\"$numberInt\": \"196\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"207\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/3/object_size"
-    } ],
-    "fixture" : "aggregation/expressions/bsonSize/returnSizesOfDocuments",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "documented bson sizes are off",
-    "marker" : "lock",
-    "origin" : "303e95e09abd312e0e0f1cb1aa34b2da593ce688",
-    "pageBlob" : "201c9ba757131d9e14fdd7db1139747b977eca1b",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4be47aeab5c6f3ca0bf07ddd3e432f26b8c90658",
-      "path" : "source/reference/operator/aggregation/bsonSize.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
       "curated" : "{\"v\": \"example_test\"}",
       "documented" : "{\"v\": \"shipping\"}",
       "file" : "action.json",
@@ -163,71 +54,6 @@
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
       "path" : "source/reference/operator/aggregation/dateAdd.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"oops\"}",
-      "documented" : "{\"v\": {\"$date\": {\"$numberLong\": \"0\"}}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/1/date"
-    }, {
-      "curated" : "{\"v\": \"oops\"}",
-      "documented" : "{\"v\": {\"$date\": {\"$numberLong\": \"0\"}}}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/0/$project/date/$dateFromString/onNull"
-    } ],
-    "fixture" : "aggregation/expressions/dateFromString/onNull",
-    "includes" : [ {
-      "blob" : "4a4e0cf5eb9ef9a0a23e2f3aeb86b9a34fc15697",
-      "path" : "source/includes/extracts-date-format-specifiers.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "provided a simpler onNull()",
-    "marker" : "lock",
-    "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
-    "pageBlob" : "d24517a6c3e5f96685d5fc3a474667d2569d57c7",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
-      "path" : "source/reference/operator/aggregation/dateFromString.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090660\"}}",
-      "documented" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090659\"}}",
-      "file" : "data.json",
-      "index" : null,
-      "pointer" : "/0/angle_a"
-    }, {
-      "curated" : null,
-      "documented" : "{\"v\": {\"$oid\": \"5c50aec71c75c59232b3ede4\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/_id"
-    }, {
-      "curated" : "{\"v\": {\"$numberDecimal\": \"0.9272952180016122324285124629224291\"}}",
-      "documented" : "{\"v\": {\"$numberDecimal\": \"0.9272952180016122324285124629224290\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/angle_a_rad"
-    } ],
-    "fixture" : "aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "the angle_a's were different...",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "d1de01affacb3e111ecb99914d79e8c3682ae592",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
-      "path" : "source/reference/operator/aggregation/degreesToRadians.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -265,31 +91,6 @@
     "source" : {
       "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
       "path" : "source/reference/operator/aggregation/denseRank.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : null,
-      "documented" : "{\"v\": {\"$numberInt\": \"0\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/week"
-    } ],
-    "fixture" : "aggregation/expressions/hour/hourExpressionOperator",
-    "includes" : [ {
-      "blob" : "3a74fe28048991c6f514db876929e8939534d8ee",
-      "path" : "source/includes/fact-iso-date-objects.rst"
-    } ],
-    "justification" : null,
-    "lock" : "the docs list a week field but the server does not return it",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "45e55e193cbd4d736cd9860dcd9810a966138aff",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "222a3f6ee3a1f1420596da7b0eb66582ac06ee29",
-      "path" : "source/reference/operator/aggregation/hour.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -414,123 +215,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
-    "includes" : [ {
-      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
-      "path" : "source/includes/aggregation/fact-return-percentile.rst"
-    }, {
-      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
-      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
-    }, {
-      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
-      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
-    }, {
-      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
-      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
-    }, {
-      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
-      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
-    }, {
-      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
-      "path" : "source/includes/aggregation/example-setup-01.rst"
-    } ],
-    "justification" : null,
-    "lock" : "numbers need to be doubles",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/0/test01_percentiles/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
-      "path" : "source/reference/operator/aggregation/percentile.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
-    "includes" : [ {
-      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
-      "path" : "source/includes/aggregation/fact-return-percentile.rst"
-    }, {
-      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
-      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
-    }, {
-      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
-      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
-    }, {
-      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
-      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
-    }, {
-      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
-      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
-    }, {
-      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
-      "path" : "source/includes/aggregation/example-setup-01.rst"
-    } ],
-    "justification" : null,
-    "lock" : "numbers need to be doubles",
-    "marker" : "lock",
-    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
-    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
-      "path" : "source/reference/operator/aggregation/percentile.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
-    "includes" : [ {
-      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
-      "path" : "source/includes/aggregation/fact-return-percentile.rst"
-    }, {
-      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
-      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
-    }, {
-      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
-      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
-    }, {
-      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
-      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
-    }, {
-      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
-      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
-    }, {
-      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
-      "path" : "source/includes/aggregation/example-setup-01.rst"
-    } ],
-    "justification" : null,
-    "lock" : "numbers need to be doubles",
-    "marker" : "lock",
-    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
-    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
-      "path" : "source/reference/operator/aggregation/percentile.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
     "includes" : [ {
       "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
@@ -566,34 +250,6 @@
     "source" : {
       "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
       "path" : "source/reference/operator/aggregation/percentile.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090660\"}}",
-      "documented" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090659\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/angle_a_deg"
-    }, {
-      "curated" : "{\"v\": {\"$numberDecimal\": \"90.00000000000000000000000000000003\"}}",
-      "documented" : "{\"v\": {\"$numberDecimal\": \"90.00000000000000000000000000000000\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/angle_c_deg"
-    } ],
-    "fixture" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "angle_a was different again",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "eefa0c4a36ad50621ec3034aab0e63511b748996",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
-      "path" : "source/reference/operator/aggregation/radiansToDegrees.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -634,34 +290,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"orchid\"}",
-      "documented" : "{\"v\": \"blue\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/2/flowerFieldB/1"
-    } ],
-    "fixture" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
-    "includes" : [ {
-      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
-      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
-      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange suppress id\nthere was a \"blue\" flower in the expected?!?",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "ff6e81650027f3dc438b507783282c4a66986d20",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
-      "path" : "source/reference/operator/aggregation/setIsSubset.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
     "includes" : [ {
@@ -685,28 +313,6 @@
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
       "path" : "source/reference/operator/aggregation/setUnion.txt",
       "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : null,
-      "documented" : "{\"v\": {\"$oid\": \"669945ab610b080391a8e2f5\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/_id"
-    } ],
-    "fixture" : "aggregation/expressions/toUUID/toUuidExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "drop the ids",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "4f68f01dfb545ae6a819238129199229b13a5ce1",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "b398344371658f682e0c3826a7a749b9fbf6c5e5",
-      "path" : "source/reference/operator/aggregation/toUUID.txt",
-      "relation" : "AFTER_ORIGIN"
     }
   }, {
     "corrections" : [ ],
@@ -754,31 +360,6 @@
     "source" : {
       "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
       "path" : "source/reference/operator/aggregation/topN.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"int\"}",
-      "documented" : "{\"v\": \"double\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/a"
-    } ],
-    "fixture" : "aggregation/expressions/type/typeExpressionOperator",
-    "includes" : [ {
-      "blob" : "479f8312592b5ae672827b018ca301795ca86372",
-      "path" : "source/includes/fact-bson-types.rst"
-    } ],
-    "justification" : null,
-    "lock" : "expected type for _id 0 is wrong",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "0a1a9498e887655d225e5ee6d4bae87bcd879f70",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "7c832aeac151541199c8080413a9c01fb8f77ce6",
-      "path" : "source/reference/operator/aggregation/type.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -951,273 +532,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "query/filters/box/boxQueryPredicateOperator",
-    "includes" : [ {
-      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
-      "path" : "source/includes/note-geospatial-index-must-exist.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "77c68dace2c26c8e6dd8909f658b8afdb242ba0e",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoWithin/$box",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
-      "path" : "source/reference/operator/query/box.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/center/centerQueryPredicateOperator",
-    "includes" : [ {
-      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
-      "path" : "source/includes/note-geospatial-index-must-exist.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "fe3865f2c9c9fc0c385856bb9099be6adf5d7da0",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoWithin/$center",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
-      "path" : "source/reference/operator/query/center.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
-    "includes" : [ {
-      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
-      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
-    }, {
-      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
-      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
-    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
-      "path" : "source/reference/operator/query/geoIntersects.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
-    "includes" : [ {
-      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
-      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
-    }, {
-      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
-      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
-    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
-      "path" : "source/reference/operator/query/geoIntersects.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/geoWithin/withinABigPolygon",
-    "includes" : [ {
-      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
-      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
-    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
-      "path" : "source/reference/operator/query/geoWithin.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/geoWithin/withinAPolygon",
-    "includes" : [ {
-      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
-      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
-    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
-      "path" : "source/reference/operator/query/geoWithin.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/mod/floatingPointArguments",
-    "includes" : [ {
-      "blob" : "29386fb4543b83467ddb0e4aefe4ff861bb48d07",
-      "path" : "source/includes/negative-dividend.rst"
-    } ],
-    "justification" : null,
-    "lock" : "made the 0 a floating point to work the Java's type system",
-    "marker" : "lock",
-    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
-    "pageBlob" : "dd939f3713d0da43fa8a7d0d875ed05bfc2464f8",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/qty/$mod",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/mod.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/near/queryOnGeoJsonData",
-    "includes" : [ {
-      "blob" : "69d2a8115dafb1eb5cc88b3958386b6f62079b7b",
-      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
-    }, {
-      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
-      "path" : "source/includes/fact-geo-near-special-indexes.rst"
-    }, {
-      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
-      "path" : "source/includes/fact-near-sharded-cluster.rst"
-    }, {
-      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
-      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
-    }, {
-      "blob" : "863fbf338696cb4b854049f161659d7eda9e08fd",
-      "path" : "source/includes/example-near-minDistance.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use floating point values",
-    "marker" : "lock",
-    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
-    "pageBlob" : "38c44685031798ec800840f6b9b92c4509cd03e5",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/location/$near",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/near.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
-    "includes" : [ {
-      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
-      "path" : "source/includes/fact-geo-near-special-indexes.rst"
-    }, {
-      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
-      "path" : "source/includes/fact-near-sharded-cluster.rst"
-    }, {
-      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
-      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
-    }, {
-      "blob" : "86d75947d981bc77dca7e5aaf276f130d413ab64",
-      "path" : "source/includes/example-nearSphere-minDistance.rst"
-    } ],
-    "justification" : null,
-    "lock" : "change distances to floating point",
-    "marker" : "lock",
-    "origin" : "7edf3311c9ca2d184a5a86c5190b28edfd193590",
-    "pageBlob" : "6e89aeeb937256a3a47249e9042b6a90a170d7c9",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/location/$nearSphere",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/nearSphere.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
-    "includes" : [ {
-      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
-      "path" : "source/includes/note-geospatial-index-must-exist.rst"
-    } ],
-    "justification" : null,
-    "lock" : "converted the point values to doubles",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "ef5243dfde003285d1a6aeb0a5db805010a072e1",
-    "retypes" : [ {
-      "file" : "action.json",
-      "from" : "INT32",
-      "pointer" : "/0/loc/$geoWithin/$polygon",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
-      "path" : "source/reference/operator/query/polygon.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -1248,217 +562,6 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/type.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"crafts\"}",
-      "documented" : "{\"v\": \"decorative arts\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/desc"
-    } ],
-    "fixture" : "query/updates/max/useMaxToCompareDates",
-    "includes" : [ {
-      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
-      "path" : "source/includes/use-dot-notation.rst"
-    }, {
-      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
-      "path" : "source/includes/fact-update-operator-processing-order.rst"
-    }, {
-      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
-      "path" : "source/includes/extracts-update-operations.yaml"
-    }, {
-      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
-      "path" : "source/includes/extracts-update-operations-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "examples had a complete different doc in expected",
-    "marker" : "lock",
-    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
-    "pageBlob" : "cc05e8e4f8e88c6d2dc5f99ab472351c53797487",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
-      "path" : "source/reference/operator/update/max.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : null,
-      "documented" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
-      "file" : "data.json",
-      "index" : null,
-      "pointer" : "/0/nmae"
-    }, {
-      "curated" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
-      "documented" : null,
-      "file" : "data.json",
-      "index" : 3,
-      "pointer" : "/0/name"
-    }, {
-      "curated" : null,
-      "documented" : "{\"v\": {\"first\": \"abigail\", \"last\": \"adams\"}}",
-      "file" : "data.json",
-      "index" : null,
-      "pointer" : "/1/nmae"
-    }, {
-      "curated" : "{\"v\": {\"first\": \"abigail\", \"last\": \"adams\"}}",
-      "documented" : null,
-      "file" : "data.json",
-      "index" : 3,
-      "pointer" : "/1/name"
-    }, {
-      "curated" : null,
-      "documented" : "{\"v\": {\"first\": \"grace\", \"last\": \"hopper\"}}",
-      "file" : "data.json",
-      "index" : null,
-      "pointer" : "/2/nmae"
-    }, {
-      "curated" : "{\"v\": {\"first\": \"grace\", \"last\": \"hopper\"}}",
-      "documented" : null,
-      "file" : "data.json",
-      "index" : 3,
-      "pointer" : "/2/name"
-    } ],
-    "fixture" : "query/updates/rename/renameAFieldInAnEmbeddedDocument",
-    "includes" : [ {
-      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
-      "path" : "source/includes/fact-update-operator-processing-order.rst"
-    } ],
-    "justification" : null,
-    "lock" : "the input data had the same misspelling of name from the first example",
-    "marker" : "lock",
-    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
-    "pageBlob" : "7a5cbf009fe1c090f1188b6457e64d63cb5a26f6",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/update/rename.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"250\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"500\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/quantity"
-    }, {
-      "curated" : "{\"v\": \"14QQ\"}",
-      "documented" : "{\"v\": \"2600\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/details/model"
-    }, {
-      "curated" : "{\"v\": \"Clothes Corp\"}",
-      "documented" : "{\"v\": \"Kustom Kidz\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/details/make"
-    }, {
-      "curated" : "{\"v\": [\"apparel\", \"rain gear\"]}",
-      "documented" : "{\"v\": [\"coats\", \"rain gear\", \"clothing\"]}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/tags"
-    } ],
-    "fixture" : "query/updates/set/setElementsInArrays",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
-      "path" : "source/includes/use-dot-notation.rst"
-    }, {
-      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
-      "path" : "source/includes/fact-update-operator-processing-order.rst"
-    }, {
-      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
-      "path" : "source/includes/extracts-update-operations.yaml"
-    }, {
-      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
-      "path" : "source/includes/extracts-update-operations-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
-    "marker" : "lock",
-    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
-    "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
-      "path" : "source/reference/operator/update/set.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"250\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"500\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/quantity"
-    }, {
-      "curated" : "{\"v\": \"14QQ\"}",
-      "documented" : "{\"v\": \"2600\"}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/details/model"
-    }, {
-      "curated" : "{\"v\": [\"apparel\", \"clothing\"]}",
-      "documented" : "{\"v\": [\"coats\", \"outerwear\", \"clothing\"]}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/0/tags"
-    } ],
-    "fixture" : "query/updates/set/setFieldsInEmbeddedDocuments",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
-      "path" : "source/includes/use-dot-notation.rst"
-    }, {
-      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
-      "path" : "source/includes/fact-update-operator-processing-order.rst"
-    }, {
-      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
-      "path" : "source/includes/extracts-update-operations.yaml"
-    }, {
-      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
-      "path" : "source/includes/extracts-update-operations-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
-    "marker" : "lock",
-    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
-    "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
-      "path" : "source/reference/operator/update/set.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],
@@ -1495,6 +598,28 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberDecimal\": \"0.8813735870195430252326093249797923\"}}",
+      "documented" : "{\"v\": {\"$numberDecimal\": \"1.818446459232066823483698963560709\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/y-coordinate"
+    } ],
+    "fixture" : "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "expected has the wrong result",
+    "marker" : "lock",
+    "origin" : "f92fcf1807539b4f4fdbe7b227b0932e6f44b873",
+    "pageBlob" : "617094063df567086337b511fd70b27644e00184",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+      "path" : "source/reference/operator/aggregation/asinh.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
     "includes" : [ ],
@@ -1508,6 +633,93 @@
     "source" : {
       "commit" : "3c5205896b0ea712d635793889590be37fc2513c",
       "path" : "source/reference/operator/aggregation/atan2.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"tea_set.jpg\"}",
+      "documented" : "{\"v\": \"teaset.jpg\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/2/name"
+    } ],
+    "fixture" : "aggregation/expressions/binarySize/binarySizeExpressionOperator",
+    "includes" : [ {
+      "blob" : "224fc291cd4d65e57987b6cd5471c003abcbdd75",
+      "path" : "source/includes/fact-utf8-char-byte-sizes.rst"
+    } ],
+    "justification" : null,
+    "lock" : "data has tea_set expected has teaset",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "fd67064d5ae5c109841aa73b0775196aed53fa81",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "00a744dc63b488437043031dab7af6df0399b86f",
+      "path" : "source/reference/operator/aggregation/binarySize.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"733\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"789\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/combined_object_size"
+    } ],
+    "fixture" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "bson sizes are off",
+    "marker" : "lock",
+    "origin" : "303e95e09abd312e0e0f1cb1aa34b2da593ce688",
+    "pageBlob" : "201c9ba757131d9e14fdd7db1139747b977eca1b",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4be47aeab5c6f3ca0bf07ddd3e432f26b8c90658",
+      "path" : "source/reference/operator/aggregation/bsonSize.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"203\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"222\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/object_size"
+    }, {
+      "curated" : "{\"v\": {\"$numberInt\": \"229\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"248\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/1/object_size"
+    }, {
+      "curated" : "{\"v\": {\"$numberInt\": \"105\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"112\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/2/object_size"
+    }, {
+      "curated" : "{\"v\": {\"$numberInt\": \"196\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"207\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/3/object_size"
+    } ],
+    "fixture" : "aggregation/expressions/bsonSize/returnSizesOfDocuments",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "documented bson sizes are off",
+    "marker" : "lock",
+    "origin" : "303e95e09abd312e0e0f1cb1aa34b2da593ce688",
+    "pageBlob" : "201c9ba757131d9e14fdd7db1139747b977eca1b",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4be47aeab5c6f3ca0bf07ddd3e432f26b8c90658",
+      "path" : "source/reference/operator/aggregation/bsonSize.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1577,6 +789,37 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"oops\"}",
+      "documented" : "{\"v\": {\"$date\": {\"$numberLong\": \"0\"}}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/1/date"
+    }, {
+      "curated" : "{\"v\": \"oops\"}",
+      "documented" : "{\"v\": {\"$date\": {\"$numberLong\": \"0\"}}}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/0/$project/date/$dateFromString/onNull"
+    } ],
+    "fixture" : "aggregation/expressions/dateFromString/onNull",
+    "includes" : [ {
+      "blob" : "4a4e0cf5eb9ef9a0a23e2f3aeb86b9a34fc15697",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "provided a simpler onNull()",
+    "marker" : "lock",
+    "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
+    "pageBlob" : "d24517a6c3e5f96685d5fc3a474667d2569d57c7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
+      "path" : "source/reference/operator/aggregation/dateFromString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
     "includes" : [ {
@@ -1624,6 +867,40 @@
     "source" : {
       "commit" : "b2d4041710ee0667261f8f5e2e40390265df85fd",
       "path" : "source/reference/operator/aggregation/dateToString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090660\"}}",
+      "documented" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090659\"}}",
+      "file" : "data.json",
+      "index" : null,
+      "pointer" : "/0/angle_a"
+    }, {
+      "curated" : null,
+      "documented" : "{\"v\": {\"$oid\": \"5c50aec71c75c59232b3ede4\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/_id"
+    }, {
+      "curated" : "{\"v\": {\"$numberDecimal\": \"0.9272952180016122324285124629224291\"}}",
+      "documented" : "{\"v\": {\"$numberDecimal\": \"0.9272952180016122324285124629224290\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/angle_a_rad"
+    } ],
+    "fixture" : "aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the angle_a's were different...",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "d1de01affacb3e111ecb99914d79e8c3682ae592",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+      "path" : "source/reference/operator/aggregation/degreesToRadians.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1843,6 +1120,31 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : null,
+      "documented" : "{\"v\": {\"$numberInt\": \"0\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/week"
+    } ],
+    "fixture" : "aggregation/expressions/hour/hourExpressionOperator",
+    "includes" : [ {
+      "blob" : "3a74fe28048991c6f514db876929e8939534d8ee",
+      "path" : "source/includes/fact-iso-date-objects.rst"
+    } ],
+    "justification" : null,
+    "lock" : "the docs list a week field but the server does not return it",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "45e55e193cbd4d736cd9860dcd9810a966138aff",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "222a3f6ee3a1f1420596da7b0eb66582ac06ee29",
+      "path" : "source/reference/operator/aggregation/hour.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
     "includes" : [ {
@@ -2045,6 +1347,151 @@
     "source" : {
       "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
       "path" : "source/reference/operator/aggregation/ne.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0/test01_percentiles/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "marker" : "lock",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "marker" : "lock",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090660\"}}",
+      "documented" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090659\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/angle_a_deg"
+    }, {
+      "curated" : "{\"v\": {\"$numberDecimal\": \"90.00000000000000000000000000000003\"}}",
+      "documented" : "{\"v\": {\"$numberDecimal\": \"90.00000000000000000000000000000000\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/angle_c_deg"
+    } ],
+    "fixture" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "angle_a was different again",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "eefa0c4a36ad50621ec3034aab0e63511b748996",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+      "path" : "source/reference/operator/aggregation/radiansToDegrees.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2286,6 +1733,34 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"orchid\"}",
+      "documented" : "{\"v\": \"blue\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/2/flowerFieldB/1"
+    } ],
+    "fixture" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
+    "includes" : [ {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange suppress id\nthere was a \"blue\" flower in the expected?!?",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ff6e81650027f3dc438b507783282c4a66986d20",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setIsSubset.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
     "includes" : [ {
@@ -2514,6 +1989,28 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : null,
+      "documented" : "{\"v\": {\"$oid\": \"669945ab610b080391a8e2f5\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/_id"
+    } ],
+    "fixture" : "aggregation/expressions/toUUID/toUuidExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "drop the ids",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "4f68f01dfb545ae6a819238129199229b13a5ce1",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "b398344371658f682e0c3826a7a749b9fbf6c5e5",
+      "path" : "source/reference/operator/aggregation/toUUID.txt",
+      "relation" : "AFTER_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
     "includes" : [ ],
@@ -2555,6 +2052,31 @@
     "source" : {
       "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
       "path" : "source/reference/operator/aggregation/tsSecond.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"int\"}",
+      "documented" : "{\"v\": \"double\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/a"
+    } ],
+    "fixture" : "aggregation/expressions/type/typeExpressionOperator",
+    "includes" : [ {
+      "blob" : "479f8312592b5ae672827b018ca301795ca86372",
+      "path" : "source/includes/fact-bson-types.rst"
+    } ],
+    "justification" : null,
+    "lock" : "expected type for _id 0 is wrong",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0a1a9498e887655d225e5ee6d4bae87bcd879f70",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "7c832aeac151541199c8080413a9c01fb8f77ce6",
+      "path" : "source/reference/operator/aggregation/type.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -3433,6 +2955,54 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "query/filters/box/boxQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "77c68dace2c26c8e6dd8909f658b8afdb242ba0e",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$box",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/box.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/center/centerQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "fe3865f2c9c9fc0c385856bb9099be6adf5d7da0",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$center",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/center.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "query/filters/elemMatch/elementMatch",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -3588,6 +3158,108 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
+    "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
+    "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/geoWithin/withinABigPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/geoWithin/withinAPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "query/filters/gte/matchDocumentFields",
     "includes" : [ {
       "blob" : "df49213225c1c71c76a2dcb69864fabb4861f8b8",
@@ -3693,6 +3365,123 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "query/filters/mod/floatingPointArguments",
+    "includes" : [ {
+      "blob" : "29386fb4543b83467ddb0e4aefe4ff861bb48d07",
+      "path" : "source/includes/negative-dividend.rst"
+    } ],
+    "justification" : null,
+    "lock" : "made the 0 a floating point to work the Java's type system",
+    "marker" : "lock",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "dd939f3713d0da43fa8a7d0d875ed05bfc2464f8",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/qty/$mod",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/mod.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/near/queryOnGeoJsonData",
+    "includes" : [ {
+      "blob" : "69d2a8115dafb1eb5cc88b3958386b6f62079b7b",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "863fbf338696cb4b854049f161659d7eda9e08fd",
+      "path" : "source/includes/example-near-minDistance.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use floating point values",
+    "marker" : "lock",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "38c44685031798ec800840f6b9b92c4509cd03e5",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$near",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/near.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
+    "includes" : [ {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "86d75947d981bc77dca7e5aaf276f130d413ab64",
+      "path" : "source/includes/example-nearSphere-minDistance.rst"
+    } ],
+    "justification" : null,
+    "lock" : "change distances to floating point",
+    "marker" : "lock",
+    "origin" : "7edf3311c9ca2d184a5a86c5190b28edfd193590",
+    "pageBlob" : "6e89aeeb937256a3a47249e9042b6a90a170d7c9",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$nearSphere",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/nearSphere.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ef5243dfde003285d1a6aeb0a5db805010a072e1",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$polygon",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/polygon.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -3726,6 +3515,40 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"crafts\"}",
+      "documented" : "{\"v\": \"decorative arts\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/desc"
+    } ],
+    "fixture" : "query/updates/max/useMaxToCompareDates",
+    "includes" : [ {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "examples had a complete different doc in expected",
+    "marker" : "lock",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "pageBlob" : "cc05e8e4f8e88c6d2dc5f99ab472351c53797487",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+      "path" : "source/reference/operator/update/max.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
     "includes" : [ {
@@ -3751,6 +3574,183 @@
     "source" : {
       "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
       "path" : "source/reference/operator/update/mul.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : null,
+      "documented" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
+      "file" : "data.json",
+      "index" : null,
+      "pointer" : "/0/nmae"
+    }, {
+      "curated" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
+      "documented" : null,
+      "file" : "data.json",
+      "index" : 3,
+      "pointer" : "/0/name"
+    }, {
+      "curated" : null,
+      "documented" : "{\"v\": {\"first\": \"abigail\", \"last\": \"adams\"}}",
+      "file" : "data.json",
+      "index" : null,
+      "pointer" : "/1/nmae"
+    }, {
+      "curated" : "{\"v\": {\"first\": \"abigail\", \"last\": \"adams\"}}",
+      "documented" : null,
+      "file" : "data.json",
+      "index" : 3,
+      "pointer" : "/1/name"
+    }, {
+      "curated" : null,
+      "documented" : "{\"v\": {\"first\": \"grace\", \"last\": \"hopper\"}}",
+      "file" : "data.json",
+      "index" : null,
+      "pointer" : "/2/nmae"
+    }, {
+      "curated" : "{\"v\": {\"first\": \"grace\", \"last\": \"hopper\"}}",
+      "documented" : null,
+      "file" : "data.json",
+      "index" : 3,
+      "pointer" : "/2/name"
+    } ],
+    "fixture" : "query/updates/rename/renameAFieldInAnEmbeddedDocument",
+    "includes" : [ {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    } ],
+    "justification" : null,
+    "lock" : "the input data had the same misspelling of name from the first example",
+    "marker" : "lock",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "pageBlob" : "7a5cbf009fe1c090f1188b6457e64d63cb5a26f6",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/update/rename.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"250\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"500\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/quantity"
+    }, {
+      "curated" : "{\"v\": \"14QQ\"}",
+      "documented" : "{\"v\": \"2600\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/details/model"
+    }, {
+      "curated" : "{\"v\": \"Clothes Corp\"}",
+      "documented" : "{\"v\": \"Kustom Kidz\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/details/make"
+    }, {
+      "curated" : "{\"v\": [\"apparel\", \"rain gear\"]}",
+      "documented" : "{\"v\": [\"coats\", \"rain gear\", \"clothing\"]}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/tags"
+    } ],
+    "fixture" : "query/updates/set/setElementsInArrays",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
+    "marker" : "lock",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
+      "path" : "source/reference/operator/update/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"250\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"500\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/quantity"
+    }, {
+      "curated" : "{\"v\": \"14QQ\"}",
+      "documented" : "{\"v\": \"2600\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/details/model"
+    }, {
+      "curated" : "{\"v\": [\"apparel\", \"clothing\"]}",
+      "documented" : "{\"v\": [\"coats\", \"outerwear\", \"clothing\"]}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/tags"
+    } ],
+    "fixture" : "query/updates/set/setFieldsInEmbeddedDocuments",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
+    "marker" : "lock",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
+      "path" : "source/reference/operator/update/set.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],

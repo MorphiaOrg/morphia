@@ -41,9 +41,17 @@
     "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
     "fixture" : "aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator"
   }, {
+    "check" : "SOURCE",
+    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
+    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate"
+  }, {
     "check" : "SERIALIZATION",
     "detail" : "/0/$group/_id/truncatedOrderDate/$dateTrunc/binSize: the page has Int32 6, Morphia emits Int64 6",
     "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage"
+  }, {
+    "check" : "SERIALIZATION",
+    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
+    "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues"
   }, {
     "check" : "SERIALIZATION",
     "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
@@ -91,6 +99,14 @@
   }, {
     "check" : "SERIALIZATION",
     "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
+    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation"
+  }, {
+    "check" : "SERIALIZATION",
+    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
+    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage"
+  }, {
+    "check" : "SERIALIZATION",
+    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
     "fixture" : "aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue"
   }, {
     "check" : "SERIALIZATION",
@@ -110,6 +126,10 @@
     "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage"
   }, {
     "check" : "SERIALIZATION",
+    "detail" : "/0/$setWindowFields/sortBy/test01: the page has Int32 1, Morphia emits Int64 1",
+    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage"
+  }, {
+    "check" : "SERIALIZATION",
     "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
     "fixture" : "aggregation/expressions/push/useInSetWindowFieldsStage"
   }, {
@@ -120,6 +140,10 @@
     "check" : "SERIALIZATION",
     "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
     "fixture" : "aggregation/expressions/rank/rankPartitionsByAnIntegerField"
+  }, {
+    "check" : "SERIALIZATION",
+    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
+    "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData"
   }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /2: no result matches this constraint",
@@ -212,6 +236,14 @@
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections"
+  }, {
+    "check" : "SOURCE",
+    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
+    "fixture" : "aggregation/stages/graphLookup/withAQueryFilter"
+  }, {
+    "check" : "SOURCE",
+    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
+    "fixture" : "aggregation/stages/graphLookup/withinASingleCollection"
   }, {
     "check" : "SERIALIZATION",
     "detail" : "/0/$sample/size: the page has Int32 3, Morphia emits Int64 3",

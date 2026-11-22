@@ -1,0 +1,69 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/polygon/polygonQueryPredicateOperator",
+  "title": "main",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+    "path": "source/reference/operator/query/polygon.txt",
+    "blob": "ef5243dfde003285d1a6aeb0a5db805010a072e1"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$geoWithin": {
+          "$polygon": [
+            [
+              {
+                "$numberDouble": "0.0"
+              },
+              {
+                "$numberDouble": "0.0"
+              }
+            ],
+            [
+              {
+                "$numberDouble": "3.0"
+              },
+              {
+                "$numberDouble": "6.0"
+              }
+            ],
+            [
+              {
+                "$numberDouble": "6.0"
+              },
+              {
+                "$numberDouble": "0.0"
+              }
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

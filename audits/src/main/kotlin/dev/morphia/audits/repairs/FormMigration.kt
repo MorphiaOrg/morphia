@@ -177,6 +177,11 @@ data class DocumentedScenario(
     val printed: List<PublishedDocument>?,
     /** For an update, whether the page uses `updateMany` rather than `updateOne`. */
     val many: Boolean = false,
+    /**
+     * The results read as documents, when every block reads that way: what a correction's pointer
+     * addresses. The scenario never carries them; see [printed].
+     */
+    val documents: List<BsonValue>? = null,
 )
 
 data class FormOverride(
@@ -913,19 +918,14 @@ object FormMigration {
 
     /**
      * The documented operation an override was proven against, read from its recorded source text.
-     * Its declared rules travel with it to the runner; retypes, corrections and alternative
-     * commands are not supported yet.
+     * Its declared rules travel with it to the runner, and its retypes and corrections are applied
+     * by `FixtureMigration`; alternative commands are not supported.
      */
     fun documented(override: FormOverride): DocumentedScenario {
         // The documented data names every collection, so a test's extra collections need nothing
         // more; their legacy data files were loaded under those same names.
-        require(
-            FormRule.ALTERNATIVE_COMMANDS !in override.rules &&
-                override.retypes.isEmpty() &&
-                override.corrections.isEmpty()
-        ) {
-            "${override.fixture}: only overrides without retypes, corrections or alternative " +
-                "commands are supported"
+        require(FormRule.ALTERNATIVE_COMMANDS !in override.rules) {
+            "${override.fixture}: alternative commands are not supported"
         }
         override.blocks.forEach {
             require(sha256(it.text.toByteArray()) == it.sha256) {
@@ -952,6 +952,7 @@ object FormMigration {
                         throw IllegalArgumentException("${override.fixture}: ${read.detail}")
                     else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
                 }
+        val listed = expected.map { documents(it.text) }
         return DocumentedScenario(
             documented.collection,
             documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
@@ -959,6 +960,7 @@ object FormMigration {
             action.values,
             printed,
             action.many,
+            listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
         )
     }
 

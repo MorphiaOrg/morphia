@@ -2,6 +2,7 @@ package dev.morphia.audits.repairs
 
 import dev.morphia.audits.bindings.LegacyBindingCatalog
 import dev.morphia.audits.bindings.LegacyBindings
+import dev.morphia.audits.published.PublishedDocument
 import dev.morphia.audits.published.PublishedEncoding
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,6 +17,7 @@ import org.bson.BsonDocument
 import org.bson.BsonInt32
 import org.bson.BsonNull
 import org.bson.BsonString
+import org.bson.BsonValue
 import org.bson.json.JsonMode
 import org.bson.json.JsonWriterSettings
 
@@ -115,6 +117,90 @@ object FixtureMigration {
      */
     val mappedOptions = setOf("removeIds", "serverVersion", "skipActionCheck", "skipDataCheck")
 
+    /**
+     * [documented] with [override]'s retypes and corrections applied as it pins them: to the rows
+     * of each data file's collection; to the action in its canonical form under the declared rules
+     * (the runner canonicalizes both sides again, which changes nothing); and to the results read
+     * as documents, which are then printed as mongosh prints them. A retype of the results to
+     * Double needs nothing, since a printed whole number is an Int32 or a Double; any other retype
+     * of the results is refused, and so is a stale pin.
+     */
+    private fun pinned(override: FormOverride, documented: DocumentedScenario): DocumentedScenario {
+        if (override.retypes.isEmpty() && override.corrections.isEmpty()) return documented
+        fun edit(file: String, values: List<BsonValue>): List<BsonValue> {
+            val retypes = override.retypes.filter { it.file == file }
+            val corrections = override.corrections.filter { it.file == file }
+            val retyped =
+                if (retypes.isEmpty()) values
+                else
+                    requireNotNull(NumericRetypes.apply(values, retypes)) {
+                            "${override.fixture}: a retype of $file no longer applies"
+                        }
+                        .first
+            return when (val result = FormCorrections.apply(retyped, corrections)) {
+                is FormCorrections.Result.Applied -> result.values
+                is FormCorrections.Result.Stale ->
+                    throw IllegalArgumentException(
+                        "${override.fixture}: the correction at $file${result.pointer} is stale"
+                    )
+            }
+        }
+        val files =
+            (override.retypes.map { it.file } + override.corrections.map { it.file }).toSet()
+        val byFile = mapOf("data.json" to documented.collection) + override.collections
+        require(files.all { it in byFile.keys || it == "action.json" || it == "expected.json" }) {
+            "${override.fixture}: edits to ${files - byFile.keys} are not supported"
+        }
+        // Each edited data file must name exactly one collection, or its edits would be skipped.
+        files
+            .filter { it in byFile }
+            .forEach { file ->
+                require(byFile.values.count { it == byFile[file] } == 1) {
+                    "${override.fixture}: $file shares its collection with another data file"
+                }
+            }
+        val data =
+            documented.data.mapValues { (collection, rows) ->
+                val file = byFile.entries.singleOrNull { it.value == collection }?.key
+                if (file == null || file !in files) rows
+                else edit(file, rows).map { it.asDocument() }
+            }
+        val action =
+            if ("action.json" !in files) documented.action
+            else
+                edit(
+                    "action.json",
+                    FormEquivalence.canonical(
+                        documented.action,
+                        documented.shape,
+                        override.rules.toSet(),
+                    ),
+                )
+        val printed =
+            if ("expected.json" !in files) documented.printed
+            else {
+                val retypes = override.retypes.filter { it.file == "expected.json" }
+                require(
+                    retypes.all { it.from == NumericType.INT32 && it.to == NumericType.DOUBLE }
+                ) {
+                    "${override.fixture}: only a retype of the results to Double is supported"
+                }
+                val rows =
+                    requireNotNull(documented.documents) {
+                        "${override.fixture}: corrected results must read as documents"
+                    }
+                // Printing the documents must prove exactly what the page's text proves, so the
+                // corrected rows are read the same way the uncorrected ones are.
+                require(rows.map { PublishedEncoding.printed(it) } == documented.printed) {
+                    "${override.fixture}: the results read as documents print differently"
+                }
+                edit("expected.json", rows).map {
+                    PublishedEncoding.printed(it) as PublishedDocument
+                }
+            }
+        return documented.copy(data = data, action = action, printed = printed)
+    }
+
     private fun kind(shape: ActionShape): String =
         when (shape) {
             ActionShape.PIPELINE -> "aggregate"
@@ -124,6 +210,9 @@ object FixtureMigration {
 
     /** The legacy helpers whose cases the adapter runs. */
     private val helpers = setOf("testPipeline", "testQuery", "testUpdate")
+
+    /** The single collection the legacy harness loads every fixture into. */
+    private const val HARNESS_COLLECTION = "example_test"
 
     /** Whether a legacy body compares results in order: `orderMatters` defaults to true. */
     fun ordered(body: String): Boolean = !unordered.containsMatchIn(body)
@@ -153,7 +242,7 @@ object FixtureMigration {
             skipped["results"] =
                 BsonString("the legacy test skipped its data check (skipDataCheck)")
         }
-        val documented = FormMigration.documented(override)
+        val documented = pinned(override, FormMigration.documented(override))
         val action =
             BsonDocument("kind", BsonString(kind(documented.shape)))
                 .append("collection", BsonString(documented.collection))
@@ -374,8 +463,8 @@ object FixtureMigration {
 
     /**
      * Why the case of [override] cannot be converted yet, or null when the adapter supports it: a
-     * case run by one of [helpers] with mapped options and a documented source without retypes,
-     * corrections or alternative commands.
+     * case run by one of [helpers] with mapped options and a documented source without alternative
+     * commands.
      */
     fun convertible(override: FormOverride, example: CuratedExample): String? =
         when {
@@ -383,9 +472,13 @@ object FixtureMigration {
                 "only cases that run one of $helpers can be converted"
             !example.options.all { it.name == "orderMatters" || it.name in mappedOptions } ->
                 "options ${example.options.map { it.name }} are not mapped yet"
-            override.retypes.isNotEmpty() || override.corrections.isNotEmpty() ->
-                "retypes and corrections are not supported yet"
             FormRule.ALTERNATIVE_COMMANDS in override.rules -> "alternative commands"
+            // The runner seeds the documented collection names, so a correction that renamed one to
+            // the legacy harness's collection would point both runs at the same wrong collection.
+            override.corrections.any {
+                it.curated != null &&
+                    FormCorrection.value(it.curated) == BsonString(HARNESS_COLLECTION)
+            } -> "a correction renames a collection to $HARNESS_COLLECTION; it needs review"
             else -> null
         }
 

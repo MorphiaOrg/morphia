@@ -77,4 +77,28 @@ class PrintedVectorsTest {
             else -> Unit
         }
     }
+
+    /** What mongosh would print for a value: number types it does not show become whole numbers. */
+    @Test
+    fun printedValuesProveWhatMongoshShows() {
+        val printed =
+            PublishedEncoding.printed(
+                BsonDocument.parse(
+                    """{"b": 4.0, "1": {"${'$'}numberLong": "5"}, "a": 4.5, "s": "x", "n": NaN, "d": {"${'$'}numberDecimal": "1.50"}, "z": -0.0}"""
+                )
+            ) as PublishedDocument
+        assertEquals(listOf("1", "b", "a", "s", "n", "d", "z"), printed.fields.map { it.name })
+        assertEquals(
+            listOf(
+                PublishedKind.EXACT_SCALAR,
+                PublishedKind.WHOLE_NUMBER,
+                PublishedKind.EXACT_SCALAR,
+                PublishedKind.TEXT,
+                PublishedKind.DOUBLE_NAN,
+                PublishedKind.DECIMAL128_TEXT,
+                PublishedKind.EXACT_SCALAR,
+            ),
+            printed.fields.map { it.value.kind },
+        )
+    }
 }

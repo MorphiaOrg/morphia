@@ -177,17 +177,36 @@ class FixtureMigrationTest {
     }
 
     @Test
-    fun overridesWithRetypesOrCorrectionsCannotBeMigratedYet() {
-        val form = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
-        listOf(
-                form.overrides.first { it.retypes.isNotEmpty() },
-                form.overrides.first { it.corrections.isNotEmpty() },
-            )
-            .forEach {
-                assertThrows(IllegalArgumentException::class.java) {
-                    FixtureMigration.scenario(it, true)
+    fun retypesAndCorrectionsApplyAsPinned() {
+        // A corrected case's scenario carries the curated value, not the documented one.
+        val corrected =
+            ledger.migrations.first { migrated ->
+                migrated.override.corrections.any {
+                    it.file == "expected.json" && it.curated != null
                 }
             }
+        val correction =
+            corrected.override.corrections.first {
+                it.file == "expected.json" && it.curated != null
+            }
+        assertEquals(
+            FixtureMigration.scenario(corrected.override, corrected.ordered, corrected.options),
+            read(corrected.scenario),
+        )
+        // A correction whose documented value the page no longer has is stale, not applied.
+        val stale =
+            corrected.override.copy(
+                corrections =
+                    corrected.override.corrections.map {
+                        if (it == correction) it.copy(documented = "{\"v\": \"not on the page\"}")
+                        else it
+                    }
+            )
+        val failure =
+            assertThrows(IllegalArgumentException::class.java) {
+                FixtureMigration.scenario(stale, corrected.ordered, corrected.options)
+            }
+        assertTrue("is stale" in failure.message!!, failure.message)
         // Declared rules travel with the scenario.
         val withRules = ledger.migrations.first { FormRule.COND_ARRAY in it.override.rules }
         assertTrue(

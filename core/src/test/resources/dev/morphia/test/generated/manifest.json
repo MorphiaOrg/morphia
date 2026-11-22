@@ -66,6 +66,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestAsinh#testInverseHyperbolicSineInDegrees"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/asinh/inverseHyperbolicSineInRadians/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAsinh#testInverseHyperbolicSineInRadians"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/atan/inverseTangentOfValueInDegrees",
     "scenario" : "/dev/morphia/test/aggregation/expressions/atan/inverseTangentOfValueInDegrees/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtan#testInverseTangentOfValueInDegrees"
@@ -106,6 +111,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestAvg#testUseInProjectStage"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/binarySize/binarySizeExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/binarySize/binarySizeExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBinarySize#testBinarySizeExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bitNot/bitNotExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bitNot/bitNotExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBitNot#testBitNotExpressionOperator"
@@ -114,6 +124,16 @@
     "name" : "aggregation/expressions/bitXor/bitXorExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bitXor/bitXorExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBitXor#testBitXorExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnCombinedSizeOfAllDocumentsInACollection"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bsonSize/returnSizesOfDocuments",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bsonSize/returnSizesOfDocuments/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnSizesOfDocuments"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/ceil/ceilExpressionOperator",
@@ -166,6 +186,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testOnError"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/dateFromString/onNull",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/dateFromString/onNull/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testOnNull"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateToParts/dateToPartsExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateToParts#testDateToPartsExpressionOperator"
@@ -189,6 +214,11 @@
     "name" : "aggregation/expressions/dayOfYear/dayOfYearExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dayOfYear/dayOfYearExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDayOfYear#testDayOfYearExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDegreesToRadians#testDegreesToRadiansExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/eq/eqExpressionOperator",
@@ -269,6 +299,11 @@
     "name" : "aggregation/expressions/gte/gteExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/gte/gteExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestGte#testGteExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/hour/hourExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/hour/hourExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestHour#testHourExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/ifNull/multipleInputExpressions",
@@ -501,6 +536,21 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestOr#testOrExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testCalculateASingleValueAsAnAccumulator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testCalculateMultipleValuesAsAnAccumulator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/percentile/usePercentileInAProjectStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testUsePercentileInAProjectStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/pow/powExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/pow/powExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestPow#testPowExpressionOperator"
@@ -509,6 +559,11 @@
     "name" : "aggregation/expressions/push/useInGroupStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/push/useInGroupStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestPush#testUseInGroupStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRadiansToDegrees#testRadiansToDegreesExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/rand/generateRandomDataPoints",
@@ -619,6 +674,11 @@
     "name" : "aggregation/expressions/setIntersection/elementsArrayExample",
     "scenario" : "/dev/morphia/test/aggregation/expressions/setIntersection/elementsArrayExample/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetIntersection#testElementsArrayExample"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSetIsSubset#testSetIsSubsetExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees",
@@ -781,6 +841,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestToString#testToStringExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/toUUID/toUuidExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/toUUID/toUuidExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestToUUID#testToUuidExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/toUpper/toUpperExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/toUpper/toUpperExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestToUpper#testToUpperExpressionOperator"
@@ -794,6 +859,11 @@
     "name" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
     "scenario" : "/dev/morphia/test/aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestTsSecond#testObtainTheNumberOfSecondsFromATimestampField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/type/typeExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/type/typeExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestType#testTypeExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/unsetField/removeASubfield",
@@ -1091,6 +1161,16 @@
     "test" : "dev.morphia.test.query.filters.TestAnd#testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/box/boxQueryPredicateOperator",
+    "scenario" : "/dev/morphia/test/query/filters/box/boxQueryPredicateOperator/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBox#testBoxQueryPredicateOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/center/centerQueryPredicateOperator",
+    "scenario" : "/dev/morphia/test/query/filters/center/centerQueryPredicateOperator/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestCenter#testCenterQueryPredicateOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/elemMatch/arrayOfEmbeddedDocuments",
     "scenario" : "/dev/morphia/test/query/filters/elemMatch/arrayOfEmbeddedDocuments/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestElemMatch#testArrayOfEmbeddedDocuments"
@@ -1119,6 +1199,26 @@
     "name" : "query/filters/eq/fieldInEmbeddedDocumentEqualsAValue",
     "scenario" : "/dev/morphia/test/query/filters/eq/fieldInEmbeddedDocumentEqualsAValue/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestEq#testFieldInEmbeddedDocumentEqualsAValue"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/geoIntersects/intersectsABigPolygon",
+    "scenario" : "/dev/morphia/test/query/filters/geoIntersects/intersectsABigPolygon/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestGeoIntersects#testIntersectsABigPolygon"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/geoIntersects/intersectsAPolygon",
+    "scenario" : "/dev/morphia/test/query/filters/geoIntersects/intersectsAPolygon/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestGeoIntersects#testIntersectsAPolygon"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/geoWithin/withinABigPolygon",
+    "scenario" : "/dev/morphia/test/query/filters/geoWithin/withinABigPolygon/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestGeoWithin#testWithinABigPolygon"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/geoWithin/withinAPolygon",
+    "scenario" : "/dev/morphia/test/query/filters/geoWithin/withinAPolygon/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestGeoWithin#testWithinAPolygon"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/gt/matchDocumentFields",
@@ -1166,9 +1266,24 @@
     "test" : "dev.morphia.test.query.filters.TestLte#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/mod/floatingPointArguments",
+    "scenario" : "/dev/morphia/test/query/filters/mod/floatingPointArguments/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestMod#testFloatingPointArguments"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/ne/matchDocumentFieldsThatAreNotEqual",
     "scenario" : "/dev/morphia/test/query/filters/ne/matchDocumentFieldsThatAreNotEqual/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestNe#testMatchDocumentFieldsThatAreNotEqual"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/near/queryOnGeoJsonData",
+    "scenario" : "/dev/morphia/test/query/filters/near/queryOnGeoJsonData/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestNear#testQueryOnGeoJsonData"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
+    "scenario" : "/dev/morphia/test/query/filters/nearSphere/specifyCenterPointUsingGeoJson/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestNearSphere#testSpecifyCenterPointUsingGeoJson"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/nor/norAndAdditionalComparisons",
@@ -1184,6 +1299,11 @@
     "name" : "query/filters/nor/norQueryWithTwoExpressions",
     "scenario" : "/dev/morphia/test/query/filters/nor/norQueryWithTwoExpressions/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestNor#testNorQueryWithTwoExpressions"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/polygon/polygonQueryPredicateOperator",
+    "scenario" : "/dev/morphia/test/query/filters/polygon/polygonQueryPredicateOperator/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestPolygon#testPolygonQueryPredicateOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
@@ -1204,6 +1324,11 @@
     "name" : "query/updates/inc/incUpdateOperator",
     "scenario" : "/dev/morphia/test/query/updates/inc/incUpdateOperator/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestInc#testIncUpdateOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/updates/max/useMaxToCompareDates",
+    "scenario" : "/dev/morphia/test/query/updates/max/useMaxToCompareDates/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestMax#testUseMaxToCompareDates"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/updates/max/useMaxToCompareNumbers",
@@ -1301,6 +1426,21 @@
     "test" : "dev.morphia.test.query.updates.TestRename#testRenameAField"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/updates/rename/renameAFieldInAnEmbeddedDocument",
+    "scenario" : "/dev/morphia/test/query/updates/rename/renameAFieldInAnEmbeddedDocument/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestRename#testRenameAFieldInAnEmbeddedDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/updates/set/setElementsInArrays",
+    "scenario" : "/dev/morphia/test/query/updates/set/setElementsInArrays/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSet#testSetElementsInArrays"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/updates/set/setFieldsInEmbeddedDocuments",
+    "scenario" : "/dev/morphia/test/query/updates/set/setFieldsInEmbeddedDocuments/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSet#testSetFieldsInEmbeddedDocuments"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/updates/slice/sliceFromTheEndOfTheArray",
     "scenario" : "/dev/morphia/test/query/updates/slice/sliceFromTheEndOfTheArray/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestSlice#testSliceFromTheEndOfTheArray"
@@ -1383,6 +1523,10 @@
     "sha256" : "3f0f1b22d1a2e9025a1c2988ffb1d9f2bf06d76d9d00f27b37e7f6551c71bec0"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/asinh/inverseHyperbolicSineInRadians/scenario.json",
+    "sha256" : "b1f84e9faa00394ace3b4c77433f6cf7051fd739cd99fdcacaa21f00a6cbfddb"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/atan/inverseTangentOfValueInDegrees/scenario.json",
     "sha256" : "30ba52bd37faaa986495b0f7a0c9262b013197d9aa5ad997dc338e4bbb2d931c"
   }, {
@@ -1415,12 +1559,24 @@
     "sha256" : "4ab3d7ace78b8573655b61a7f71bf9441d907ae4f87ac6bbe2599984da8eedda"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/binarySize/binarySizeExpressionOperator/scenario.json",
+    "sha256" : "0ede9658b6d15f5d68b7b46c04b07527050c4326b2234729ed9bf70c696d7cc6"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bitNot/bitNotExpressionOperator/scenario.json",
     "sha256" : "0171e8635f006816fc962642c566301e8f47c0115ae322a2517e037d9494d7a7"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bitXor/bitXorExpressionOperator/scenario.json",
     "sha256" : "44684960d2325ade19872d1dafefc2f6330232da67504bc091abbef17e7aa3e8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection/scenario.json",
+    "sha256" : "a0638327eabf335b40e757394265ebe6bc128deced98c71b9a8b891b799dc620"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bsonSize/returnSizesOfDocuments/scenario.json",
+    "sha256" : "7b8a68f8aa78ac2b4e45e8dccdbe9a915e47ec48778cff0e89147c7c141a688b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/ceil/ceilExpressionOperator/scenario.json",
@@ -1463,6 +1619,10 @@
     "sha256" : "f93cb508159b18998059f94f56b86f47f391a65f74426056d978726e1328564d"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateFromString/onNull/scenario.json",
+    "sha256" : "ccb6fe90ee3e8a52708e69f09f8ddb2594a2c2b7320bb86fed1d03894f6d37a8"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateToParts/dateToPartsExpressionOperator/scenario.json",
     "sha256" : "182828ee2f1c4c8f223e29af035eda11e2689f37cf26c47135da9d249d225e76"
   }, {
@@ -1481,6 +1641,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dayOfYear/dayOfYearExpressionOperator/scenario.json",
     "sha256" : "e82fe1832b19084a1015e374fdceb4abb1cefb803797c7083257040b2c499335"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator/scenario.json",
+    "sha256" : "ffe0d650e63c20189a171bee3d2e2a94a79d6b22331148149c44133fe3ccd51b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/eq/eqExpressionOperator/scenario.json",
@@ -1545,6 +1709,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/gte/gteExpressionOperator/scenario.json",
     "sha256" : "1d274d01c0967aa09f86fdf7722da7181174eeb26ff3ca628f971b3de00d6a4c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/hour/hourExpressionOperator/scenario.json",
+    "sha256" : "f2939889a4c22b04ca11b2152f6bbf61b47935367fe9b4774516a0897de689a9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/ifNull/multipleInputExpressions/scenario.json",
@@ -1731,12 +1899,28 @@
     "sha256" : "c30b1b8e2884edc93d899b1a0d39d54717a0a60689fcd9df1611f554a0a1ffe9"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator/scenario.json",
+    "sha256" : "1d4ac3d6fa29521aa86eb2a82a0cb255aca5fcd7fb2bad35370e13b72e72d60d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator/scenario.json",
+    "sha256" : "a06f2e89feee703946b8aacfaab5f81d6a672ff162f9cb1fd30ecebe0c724811"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/percentile/usePercentileInAProjectStage/scenario.json",
+    "sha256" : "2640c8f3f54915f4e54f1b7c3f58dd8f31c6b8a7de75b17f870fdd008286e00c"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/pow/powExpressionOperator/scenario.json",
     "sha256" : "594f0920b5d8c3201ec807e386e551a4204e5d7d9cc3834037d603355fc6c0c0"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/push/useInGroupStage/scenario.json",
     "sha256" : "c74ad11c5fd8bcc4830130a98f85e87aa28e4092ed850588dcf7ee579352a44c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator/scenario.json",
+    "sha256" : "efb228f2397cc6287d33c504954bb18b3dd23c332db1ab7a1d2779200054b74d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/rand/generateRandomDataPoints/scenario.json",
@@ -1821,6 +2005,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/setIntersection/elementsArrayExample/scenario.json",
     "sha256" : "d4a0026425d28c0d497452412adf7cb041397d6b429ffee7049204a54c496ce5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator/scenario.json",
+    "sha256" : "28249d4a3cb6fa2a39597236da8cc74a984c8e875db5f04c45a69fc3764d8480"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees/scenario.json",
@@ -1951,6 +2139,10 @@
     "sha256" : "167a85b4993d5fa813ec23c54771d56df090932f2938bfabf9f1d31402790999"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/toUUID/toUuidExpressionOperator/scenario.json",
+    "sha256" : "b85be9f65ed330610657abc11682b82af0da594159cb8fdf6b5257d4c5e009f7"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/toUpper/toUpperExpressionOperator/scenario.json",
     "sha256" : "5c10aadb1f6574908965f8f37f838c9b3d3cf9721a6effcf129029e7b1923462"
   }, {
@@ -1961,6 +2153,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField/scenario.json",
     "sha256" : "7603a7e28a326b937d5f4029bf74b15494f705209b35b7d934160aeafa3f22c6"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/type/typeExpressionOperator/scenario.json",
+    "sha256" : "cb79c4138d520c835d0740646d6ca3904b8a3a43394b9fdc03a432952ba32f92"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/unsetField/removeASubfield/scenario.json",
@@ -2223,6 +2419,14 @@
     "sha256" : "81cfdb08330b35253eaed197446465985aab7b32b73851cea29a2d2e68644aba"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/box/boxQueryPredicateOperator/scenario.json",
+    "sha256" : "a1c4525fe9ce43cf397c6d7cda6627173114fa37e1abb50ded55c550dd65a6ee"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/center/centerQueryPredicateOperator/scenario.json",
+    "sha256" : "87ca00f6f72275bafb3527cce577dbd24b33d64cfaacd009990ff895817a351c"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/elemMatch/arrayOfEmbeddedDocuments/scenario.json",
     "sha256" : "a72d768c91ae682232c9626129468860193a0fdfb9fc546994ade4fc0cab76f6"
   }, {
@@ -2245,6 +2449,22 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/eq/fieldInEmbeddedDocumentEqualsAValue/scenario.json",
     "sha256" : "096d24cde7f95ed12234c0f3f056e89ab64e28e0b11b0c2ffde0b051cf4aae1c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/geoIntersects/intersectsABigPolygon/scenario.json",
+    "sha256" : "10339f8ed4cd019f417a0f9a0270784b8925b355a7a422e0fee9ae4d890337b1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/geoIntersects/intersectsAPolygon/scenario.json",
+    "sha256" : "0d1d14b54755c5ad4bada282e28d7a8cb58aff3d9139abc8164e7f65429e338b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/geoWithin/withinABigPolygon/scenario.json",
+    "sha256" : "a80908208d2d3339484ff71fecc9d4395617685cbfd73f2f8eb4abe1b14aab82"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/geoWithin/withinAPolygon/scenario.json",
+    "sha256" : "4b7e1d364cd2a9cb2fc68b0c752805256dbb4a15e745d55b530043948cd46f12"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/gt/matchDocumentFields/scenario.json",
@@ -2283,8 +2503,20 @@
     "sha256" : "12ffc3c86e336ec5e9fd249eedc5dd3dffa2595806c967fafd23bd3e8b9a5706"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/mod/floatingPointArguments/scenario.json",
+    "sha256" : "86c18526e3a76447e4209465e68fdaaf71d871ed7818b1d80cd0bef53c36a2bc"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/ne/matchDocumentFieldsThatAreNotEqual/scenario.json",
     "sha256" : "2d10a740dd2544173bd3657d00d08bfaa2b570c7a27a617c8283fb3a89ddd8de"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/near/queryOnGeoJsonData/scenario.json",
+    "sha256" : "ce1aaf608b9b3486ff0ded6f7d18ea1655862ab594544bbacce81ec69aedcfd9"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/nearSphere/specifyCenterPointUsingGeoJson/scenario.json",
+    "sha256" : "e542a4a0092203869ffeaf3f39db98c1408fd3e1f9eeb735c45de12dd513531e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/nor/norAndAdditionalComparisons/scenario.json",
@@ -2297,6 +2529,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/nor/norQueryWithTwoExpressions/scenario.json",
     "sha256" : "616b204d9bba7bb5f1d5e2043741936b1222150222bab204d6ba307f4553333f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/polygon/polygonQueryPredicateOperator/scenario.json",
+    "sha256" : "bfd3628c1fe644cb1a33c89f2fa73bceca2fcb64d4792c3c04fe8a4fb94aef75"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii/scenario.json",
@@ -2313,6 +2549,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/inc/incUpdateOperator/scenario.json",
     "sha256" : "39ae0486648e9b7135fcc9f3c05a7b22f29ef1f4404a4baf6fa368c3b5d2170c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/max/useMaxToCompareDates/scenario.json",
+    "sha256" : "1b750ec23ad0b93d8b3ca58fd75f638b98e8f07ad9ad9abe71f156bf1dd8cd61"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/max/useMaxToCompareNumbers/scenario.json",
@@ -2389,6 +2629,18 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/rename/renameAField/scenario.json",
     "sha256" : "a61314b1d61a79537c8bf229cbd424b92fcb7c0427bfe611bc1486104c9fdc93"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/rename/renameAFieldInAnEmbeddedDocument/scenario.json",
+    "sha256" : "90b396b17d62400772b2aa23502b46c659d7ac091e8a6a291c95a1962f4f248d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/set/setElementsInArrays/scenario.json",
+    "sha256" : "eb223366c7386706f8f844c34061caa9ae5764381d60ffbcdb4ecd21dcfa9941"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/set/setFieldsInEmbeddedDocuments/scenario.json",
+    "sha256" : "077aaace8ca3d9c6495f70d57d72d5ca7164f3d6d968e48b2f231fb8a58a4621"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/slice/sliceFromTheEndOfTheArray/scenario.json",

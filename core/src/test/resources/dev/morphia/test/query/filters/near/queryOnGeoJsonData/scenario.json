@@ -1,0 +1,60 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/near/queryOnGeoJsonData",
+  "title": "Query on GeoJSON Data",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/near.txt",
+    "blob": "38c44685031798ec800840f6b9b92c4509cd03e5"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "location": {
+        "$near": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [
+              {
+                "$numberDouble": "-73.9667"
+              },
+              {
+                "$numberDouble": "40.78"
+              }
+            ]
+          },
+          "$minDistance": {
+            "$numberDouble": "1000.0"
+          },
+          "$maxDistance": {
+            "$numberDouble": "5000.0"
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

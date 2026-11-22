@@ -336,7 +336,14 @@ A candidate records:
      legacy-only.
    - **5d, queries and updates:** the runner runs `find` and `update` actions, and `testQuery` and
      `testUpdate` hand converted cases to it. 51 of 65 convert; 14 stay legacy-only.
-   - **5e and later:** retypes and corrections, documented projections (`findOptions`) and indexes.
+   - **5e, retypes and corrections:** applied as each override pins them: to the data file's
+     collection, to the action's canonical form, and to the results read as documents, which are
+     then printed as mongosh prints them (only after checking that printing the uncorrected rows
+     proves exactly what the page's text proves). When the action is edited, the scenario's
+     `action` holds that canonical form rather than the page's spelling. A correction that renames
+     a collection to the harness's `example_test` is refused for review. 28 of 36 convert; 8 stay
+     legacy-only.
+   - **Later:** documented projections (`findOptions`), indexes and alternative commands.
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.
    - **Failures:** a case whose checks fail is not converted. It stays on the legacy path with the

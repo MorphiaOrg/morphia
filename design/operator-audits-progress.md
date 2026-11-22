@@ -2291,3 +2291,31 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   variables. `timeoutMode` is now checked on its own; `let` has no getter, so a body passing it
   through a variable (the inventory refuses any chained `findOptions`) is a known gap, and
   `FindOptions.equals` itself is core code outside this slice.
+
+- PR #4550 (branch audits-cutover-queries, base #4549) published.
+
+## Step 5 slice 5e: retypes and corrections (2026-11-22)
+
+- Branch audits-cutover-corrections from #4550. `FixtureMigration.pinned` applies an override's
+  retypes and corrections as it pins them, in order (retypes first): to the rows of the data
+  file's collection; to the action in its canonical form under the declared rules (the runner
+  canonicalizes both sides again, which changes nothing); and to the results read as documents,
+  which `PublishedEncoding.printed` then prints as mongosh would. Before correcting, printing the
+  uncorrected rows must equal what the shell normalizer reads from the page, so both readings
+  agree on everything left alone. A retype of the results to Double needs nothing (a printed
+  whole number is an Int32 or a Double); any other retype of the results, and any stale pin, is
+  refused.
+- 36 cases were tried under both mappers: 28 convert, 8 stay legacy-only: 5 SERIALIZATION (Int64
+  `$setWindowFields` sort directions) and 3 SOURCE: corrections that rename a collection to the
+  harness's `example_test` (`$graphLookup`'s `from` twice, `$dateAdd`'s `$merge` target), which
+  `convertible` now refuses for review.
+- Totals: form report 21 overrides; ledger 293 cases; 81 legacy-only.
+- Review round 1:
+  - medium: nothing refused a correction renaming a collection to `example_test`; the three such
+    cases failed by coincidence (an empty `from`, an Int64 `amount`). `convertible` now refuses
+    them, and their records give that reason;
+  - low: an edited data file must name exactly one collection, or `pinned` fails instead of
+    skipping its edits; the design notes that an edited action is stored in canonical form.
+  - Canonicalization is idempotent for every rule, the printed precondition is checked before
+    the retype as it should be, and `printed()` matches what mongosh prints.
+- Review round 2: nothing new.
