@@ -1,31 +1,67 @@
 # Operator audit implementation progress
 
-Current branch: `audits-curated-repairs`; PR base: `audits-descriptive-names` (#4530).
-Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
-#4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
-#4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
-#4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → #4521 `audits-scenario-programs` →
-#4522 `audits-scenario-extraction` → #4523 `audits-published-expectations` →
-#4524 `audits-legacy-scenarios` → #4525 `audits-section-assembly` → #4529 `audits-binding-manifest` →
-#4530 `audits-descriptive-names` → curated repair inventory (in progress).
-Each PR targets its predecessor; #4512 targets `master`.
-Use `git worktree list` to locate the checkout on this machine.
+Stack (PR head branches, each targeting its predecessor; the oldest targets `master`): #4512–#4530
+built the pipeline (see the checkpoints below); #4531–#4544 the curated repairs and form
+migration (step 4); #4545 `audits-case-rules` → #4546 `audits-printed-constraints` →
+#4547 `audits-legacy-references` → #4548 `audits-cutover-expressions` → #4549 `audits-cutover-stages` →
+#4550 `audits-cutover-queries` → #4551 `audits-cutover-corrections` → #4552 `audits-int32-parameters` →
+#4553 `audits-ordered-maps` → #4554 `audits-documented-collections` → #4555 `audits-gh-gateway` →
+#4556 `audits-publisher` → #4557 `audits-candidates` → #4558 `audits-generator` →
+#4559 `audits-monitoring` → #4560 `audits-retire` → #4561 `audits-since-audit` →
+#4564 `audits-discovery-issues`. Nothing is merged; merging is the user's.
+Use `git worktree list` to locate the checkouts on this machine.
 
-## Current status at a glance
+## Current status at a glance (2026-11-22)
 
-- Published infrastructure: #4512 foundation, #4513 API inventory, #4514 coverage contracts,
-  #4515 persisted names, #4516 pinned acquisition, #4517 structured docs and #4518 capability
-  discovery. Discovery is deliberately PARTIAL where upstream evidence is unresolved.
-- #4519 strict BSON comparison is published and all five exact-head checks pass at
-  `27a3fa7c1db2d22a6b0fc6e1c3d0f53f0e45f257`; local review is complete.
-- This branch adds shell BSON literals: 215 audit tests pass in both requested configurations,
-  including 27 literal tests. Two existing Python integrations skip without explicit properties.
-  Three local review rounds are complete; the final round found no remaining correctness issues.
-  Check publication/CI with `gh pr view audits-shell-semantics`; its base is #4519.
-- Still required: complete ordered scenarios and result streams, independently reviewed current
-  coverage expectations, actual descriptive-name backport, curated repair/lock migration, typed
-  executable generation, monitoring, enabled gh issue publication and obsolete-path cleanup.
-  No core fixture/test naming migration or lock retirement has occurred. No merges are authorized.
+Every step of the plan (0–7) has been started. What stands:
+
+- **On the runner:** 346 legacy cases (345 converted, 1 migrated), plus 1 generated case.
+  Core gate: 662 tests under each mapper; audits: 448.
+- **Generation:** inventory of mongodb/docs `e4b0c153` (197 pages read; 300 examples owned,
+  32 unowned, 11 unnamed), reviewed DSL bindings checked against core's API, and the
+  candidate → integrate → promote path. One expressions case is generated, and three are
+  excluded with evidence.
+- **Monitoring:** a weekly discovery workflow that re-inventories the docs, regenerates,
+  integrates, and files its findings as issues in this repository.
+- **README:** an operating guide; the component detail moved to
+  [operator-audits-reference.md](operator-audits-reference.md).
+
+### Remaining work
+
+Waiting on reviews or decisions:
+- **Independent review of #4553–#4564.** All were self-reviewed only: the reviewer was at its
+  weekly limit until 2026-11-26, and Codex and Copilot were out of quota. Run review rounds after
+  the reset.
+- **`SinceAudit` (#4561):** the user keeps or deletes it. If it is declined, re-target #4564
+  onto #4560.
+- **#4563:** the user's reminder to report the `$bitOr` and `$dateDiff` page errors upstream.
+  Do not report them ourselves.
+
+Step 5, generation and cutover:
+- **A resolver for tested code snippets** (`.. input:: /code-examples/...`). 103 pages, most
+  stage pages among them, are skipped without it. It is the largest unlock.
+- **Bindings for the gaps** the weekly job files as issues (today `$match`, `$serializeEJSON`,
+  `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
+- **Find and update generation.** Only aggregation pipelines are generated.
+- **Reviewed names** for the 11 examples with generic titles.
+- **The remaining legacy fixtures:** 210 directories.
+  - 98 are locked; 96 are unresolved in `form-review.json`.
+  - 28 are legacy-only in `cutover.json`, the `$graphLookup` pair among them (#4562, an
+    unordered-array comparison).
+  - 81 never-locked fixtures have no pinned reference.
+- **Deferred cutover features:** documented projections (`findOptions`), indexes, alternative
+  commands, and `$topN`/`$bottomN`/`$fill` key order.
+
+Step 6, monitoring:
+- **An accepted production baseline for capability discovery.** It is needed before
+  `MISSING_API`/`VERSION_ANNOTATION` findings can be published.
+- **A capability-driven server matrix.** Integration runs only MongoDB 8.2.
+
+Step 7, retiring old paths:
+- **Core's legacy fixture loader:** retire it after the remaining fixtures convert.
+- **The legacy RST extractor:** retire it after the structured parser owns example extraction,
+  snippets included.
+- **The frozen legacy documentation tables:** a separate documentation migration.
 
 Design: [mongodb-operator-audits.md](mongodb-operator-audits.md).
 The reviewed plan is committed as `3c78eb7b4cccf5c661bc2183d25cf3984ddda3ad`.
@@ -2447,3 +2483,54 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - `CandidatesTest` (5 cases): determinism and agreement with the tree, promotion, every refusal,
   rollback, and integration with a fake runner.
 - Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
+
+## Step 5 slice 7: inventory, bindings and generator (2026-11-22)
+
+- #4558, branch audits-generator.
+- **Inventory.** `fetch.py current` lists every operator page at one mongodb/docs commit, and
+  `GenerateMainKt inventory` writes `audits/catalog/documented-examples.json`.
+  - Owners are matched by title, then by action text.
+  - Statuses are OWNED, UNOWNED, UNNAMED and AMBIGUOUS. Unowned examples keep their source text.
+  - `FormMigration.pageExamples` and `documented(label, shape, blocks)` were factored out for it.
+- **Bindings.** `audits/catalog/dsl-bindings.json` has four forms: positional, named, projection
+  and fields. `DslBindings.verify` checks them against `MorphiaApiInventory` of core, captured
+  with core's Maven classpath plus `core/target/classes`.
+- **Generator.** `CaseGenerator` emits one class per operator, between `spotless:off` and
+  `spotless:on`, plus one scenario per case, and `gaps.json`. `generation-review.json` names the
+  families and the exclusions.
+- **First run.** `$add` passes. Three cases are excluded:
+  - `$bitOr`: the page prints `$bitAnd`'s results;
+  - `$dateDiff`: the page prints `1` for a long;
+  - `$filter` `$$IDX`: needs a server newer than 8.2.
+- `FormMain manifest` now goes through `Candidates.manifest`, so generated cases survive a
+  manifest rewrite.
+
+## Step 6c: scheduled discovery (2026-11-22)
+
+- #4559, branch audits-monitoring. `.github/workflows/operator-discovery.yml` runs weekly and on
+  demand. It makes a sparse git clone of the docs, which avoids `GITHUB_TOKEN`'s API rate limit.
+- It then runs `audits/discover.sh`: in a throwaway worktree, `fetch.py local`, `inventory`,
+  `candidate`, then `integrate`. It writes `summary.md` and uploads the reports for 90 days.
+- A local run reproduced the committed inventory byte for byte and passed integration.
+
+## Step 7: README and SinceAudit (2026-11-22)
+
+- #4560, branch audits-retire. The README became an operating and troubleshooting guide, and the
+  component sections moved verbatim to `design/operator-audits-reference.md`.
+- The README now accounts for the legacy paths still in use. Step 0 had already removed the
+  live-HTML discovery, the old publisher and writers, and the dead property files.
+- #4561, branch audits-since-audit, is optional. It removes `SinceAudit`, its model,
+  `audit-classes.txt` and `asm-tree`.
+
+## Step 6d: discovery findings as issues (2026-11-22)
+
+- #4564, branch audits-discovery-issues. The workflow's Publish job (`issues: write`, with the
+  job token passed as `AUDITS_GITHUB_TOKEN`) runs `PublishMainKt discovery`. It files three
+  finding types:
+  - MISSING_BINDING, one per unbound node;
+  - NEW_EXAMPLE, an example new since the committed inventory;
+  - INTEGRATION_FAILURE.
+- A sandbox test found that GitHub's listing lags new issues: a run with a fresh journal filed
+  duplicates. The job now restores the previous run's journal and runs in a concurrency group.
+  The duplicate-marker guard refused once the listing caught up.
+- Filed alongside: #4562 (unordered-array comparison) and #4563 (the docs-error reminder).
