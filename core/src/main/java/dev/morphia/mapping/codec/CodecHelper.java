@@ -112,6 +112,37 @@ public class CodecHelper {
         }
     }
 
+    /**
+     * Writes a whole number as an Int32 when it fits, as the documentation and the shell write small whole numbers, and as an
+     * Int64 otherwise. The server reads either the same way.
+     *
+     * @param writer the writer
+     * @param value  the value
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static void whole(BsonWriter writer, long value) {
+        if (value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE) {
+            writer.writeInt32((int) value);
+        } else {
+            writer.writeInt64(value);
+        }
+    }
+
+    /**
+     * Writes a named whole number as {@link #whole(BsonWriter, long)} does.
+     *
+     * @param writer the writer
+     * @param name   the field name
+     * @param value  the value
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static void whole(BsonWriter writer, String name, long value) {
+        writer.writeName(name);
+        whole(writer, value);
+    }
+
     public static void value(BsonWriter writer, String name, @Nullable Long value) {
         if (value != null) {
             writer.writeInt64(name, value);

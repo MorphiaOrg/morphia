@@ -27,13 +27,13 @@ public class NRankedResultsExpressionCodec extends BaseExpressionCodec<NRankedRe
                 writer.writeName("sortBy");
 
                 document(writer, () -> {
-                    writer.writeInt64(sortBy[0].getField(), sortBy[0].getOrder());
+                    writer.writeInt32(sortBy[0].getField(), sortBy[0].getOrder());
                 });
             } else {
                 array(writer, "sortBy", () -> {
                     for (Sort sort : sortBy) {
                         document(writer, () -> {
-                            writer.writeInt64(sort.getField(), sort.getOrder());
+                            writer.writeInt32(sort.getField(), sort.getOrder());
                         });
                     }
                 });

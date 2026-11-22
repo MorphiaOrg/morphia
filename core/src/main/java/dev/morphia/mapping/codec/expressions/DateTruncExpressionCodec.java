@@ -12,6 +12,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 import static dev.morphia.mapping.codec.CodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.whole;
 
 public class DateTruncExpressionCodec extends BaseExpressionCodec<DateTruncExpression> {
     public DateTruncExpressionCodec(MorphiaDatastore datastore) {
@@ -24,7 +25,9 @@ public class DateTruncExpressionCodec extends BaseExpressionCodec<DateTruncExpre
             CodecRegistry registry = datastore.getCodecRegistry();
             encodeIfNotNull(registry, writer, "date", trunc.date(), encoderContext);
             writer.writeString("unit", trunc.unit().name().toLowerCase(Locale.ROOT));
-            value(writer, "binSize", trunc.binSize());
+            if (trunc.binSize() != null) {
+                whole(writer, "binSize", trunc.binSize());
+            }
             encodeIfNotNull(registry, writer, "timezone", trunc.timezone(), encoderContext);
             if (trunc.startOfWeek() != null) {
                 value(writer, "startOfWeek", trunc.startOfWeek().name().toLowerCase(Locale.ROOT));

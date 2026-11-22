@@ -126,6 +126,26 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestBitXor#testBitXorExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bottom/findTheBottomScore",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bottom/findTheBottomScore/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottom#testFindTheBottomScore"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottom#testFindingTheBottomScoreAcrossMultipleGames"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bottomN/findTheThreeLowestScores",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/findTheThreeLowestScores/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindTheThreeLowestScores"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindingTheThreeLowestScoreDocumentsAcrossMultipleGames"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnCombinedSizeOfAllDocumentsInACollection"
@@ -171,6 +191,16 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestCosh#testHyperbolicCosineInRadians"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/covariancePop/covariancePopExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/covariancePop/covariancePopExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCovariancePop#testCovariancePopExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCovarianceSamp#testCovarianceSampExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateDiff/elapsedTime",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testElapsedTime"
@@ -201,6 +231,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestDateToString#testDateToStringExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateTrunc#testTruncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dayOfMonth/dayOfMonthExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dayOfMonth/dayOfMonthExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDayOfMonth#testDayOfMonthExpressionOperator"
@@ -221,6 +256,36 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestDegreesToRadians#testDegreesToRadiansExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankForDuplicateNullAndMissingValues"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/denseRank/denseRankPartitionsByADateField",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByADateField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankPartitionsByADateField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankPartitionsByAnIntegerField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDerivative#testDerivativeWindowFunctionExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDocumentNumber#testDocumentNumberForDuplicateNullAndMissingValues"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/documentNumber/documentNumberForEachState",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForEachState/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDocumentNumber#testDocumentNumberForEachState"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/eq/eqExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/eq/eqExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestEq#testEqExpressionOperator"
@@ -229,6 +294,16 @@
     "name" : "aggregation/expressions/exp/expExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/exp/expExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestExp#testExpExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestExpMovingAvg#testExponentialMovingAverageUsingAlpha"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestExpMovingAvg#testExponentialMovingAverageUsingN"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
@@ -326,6 +401,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestIndexOfArray#testIndexOfArrayExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/integral/integralExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/integral/integralExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIntegral#testIntegralExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/isArray/isArrayExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/isArray/isArrayExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsArray#testIsArrayExpressionOperator"
@@ -371,6 +451,16 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestLet#testLetExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLinearFill#testFillMissingValuesWithLinearInterpolation"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLinearFill#testUseMultipleFillMethodsInASingleStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/literal/projectANewFieldWithValue1",
     "scenario" : "/dev/morphia/test/aggregation/expressions/literal/projectANewFieldWithValue1/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestLiteral#testProjectANewFieldWithValue1"
@@ -384,6 +474,16 @@
     "name" : "aggregation/expressions/ln/lnExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/ln/lnExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestLn#testLnExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLocf#testFillMissingValuesWithTheLastObservedValue"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/locf/useMultipleFillMethodsInASingleStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/locf/useMultipleFillMethodsInASingleStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLocf#testUseMultipleFillMethodsInASingleStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/log/logExpressionOperator",
@@ -426,6 +526,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInProjectStage"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/max/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/max/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInSetWindowFieldsStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "scenario" : "/dev/morphia/test/aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testComputingNBasedOnTheGroupKeyForGroup"
@@ -451,6 +556,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestMedian#testUseMedianInAProjectStage"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/median/useMedianInASetWindowFieldStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/median/useMedianInASetWindowFieldStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMedian#testUseMedianInASetWindowFieldStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMergeObjects#testMergeObjectsAsAnAccumulator"
@@ -469,6 +579,11 @@
     "name" : "aggregation/expressions/min/useInProjectStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/min/useInProjectStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMin#testUseInProjectStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/min/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/min/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMin#testUseInSetWindowFieldsStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
@@ -551,6 +666,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testUsePercentileInAProjectStage"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/percentile/usePercentileInASetWindowFieldStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testUsePercentileInASetWindowFieldStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/pow/powExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/pow/powExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestPow#testPowExpressionOperator"
@@ -559,6 +679,11 @@
     "name" : "aggregation/expressions/push/useInGroupStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/push/useInGroupStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestPush#testUseInGroupStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/push/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/push/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestPush#testUseInSetWindowFieldsStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
@@ -579,6 +704,21 @@
     "name" : "aggregation/expressions/range/rangeExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/range/rangeExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestRange#testRangeExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/rank/rankPartitionsByADateField",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/rank/rankPartitionsByADateField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsByADateField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/rank/rankPartitionsByAnIntegerField",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/rank/rankPartitionsByAnIntegerField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsByAnIntegerField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsContainingDuplicateValuesNullsOrMissingData"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/reduce/arrayConcatenation",
@@ -681,6 +821,16 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestSetIsSubset#testSetIsSubsetExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/shift/shiftUsingANegativeInteger",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/shift/shiftUsingANegativeInteger/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingANegativeInteger"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/shift/shiftUsingAPositiveInteger",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingAPositiveInteger"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees",
     "scenario" : "/dev/morphia/test/aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSinh#testHyperbolicSineOfValueInDegrees"
@@ -706,6 +856,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortAnArrayOfIntegers"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/sortArray/sortOnASubfield",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/sortArray/sortOnASubfield/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnASubfield"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/split/splitExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/split/splitExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSplit#testSplitExpressionOperator"
@@ -724,6 +879,16 @@
     "name" : "aggregation/expressions/stdDevPop/useInProjectStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/stdDevPop/useInProjectStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestStdDevPop#testUseInProjectStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/stdDevPop/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/stdDevPop/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestStdDevPop#testUseInSetWindowFieldsStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestStdDevSamp#testUseInSetWindowFieldsStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/strLenBytes/singleByteAndMultibyteCharacterSet",
@@ -779,6 +944,11 @@
     "name" : "aggregation/expressions/sum/useInProjectStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/sum/useInProjectStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSum#testUseInProjectStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/sum/useInSetWindowFieldsStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/sum/useInSetWindowFieldsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSum#testUseInSetWindowFieldsStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/switch/switchAggregationExpressionOperator",
@@ -849,6 +1019,26 @@
     "name" : "aggregation/expressions/toUpper/toUpperExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/toUpper/toUpperExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestToUpper#testToUpperExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/top/findTheTopScore",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/top/findTheTopScore/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTop#testFindTheTopScore"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/top/findTheTopScoreAcrossMultipleGames/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTop#testFindTheTopScoreAcrossMultipleGames"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/topN/findTheThreeHighestScores",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/topN/findTheThreeHighestScores/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindTheThreeHighestScores"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindingTheThreeHighestScoreDocumentsAcrossMultipleGames"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/trunc/truncExpressionOperator",
@@ -936,9 +1126,24 @@
     "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testUseADocumentsStageInALookupStage"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue",
+    "scenario" : "/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesBasedOnTheLastObservedValue"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue",
     "scenario" : "/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesWithAConstantValue"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation",
+    "scenario" : "/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesWithLinearInterpolation"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill",
+    "scenario" : "/dev/morphia/test/aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testIndicateIfAFieldWasPopulatedUsingFill"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/group/pivotData",
@@ -1061,6 +1266,11 @@
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithAnEmbeddedDocumentField"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/stages/sample/sampleAggregationStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/sample/sampleAggregationStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSample#testSampleAggregationStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/stages/set/addElementToAnArray",
     "scenario" : "/dev/morphia/test/aggregation/stages/set/addElementToAnArray/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testAddElementToAnArray"
@@ -1079,6 +1289,31 @@
     "name" : "aggregation/stages/set/usingTwoSetStages",
     "scenario" : "/dev/morphia/test/aggregation/stages/set/usingTwoSetStages/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testUsingTwoSetStages"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample",
+    "scenario" : "/dev/morphia/test/aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testComparisonWithPreviousValuesExample"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/setWindowFields/documentsWindowExamples",
+    "scenario" : "/dev/morphia/test/aggregation/stages/setWindowFields/documentsWindowExamples/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testDocumentsWindowExamples"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/setWindowFields/rangeWindowExample",
+    "scenario" : "/dev/morphia/test/aggregation/stages/setWindowFields/rangeWindowExample/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testRangeWindowExample"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/setWindowFields/timeRangeWindowExamples",
+    "scenario" : "/dev/morphia/test/aggregation/stages/setWindowFields/timeRangeWindowExamples/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testTimeRangeWindowExamples"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/skip/skipAggregationStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/skip/skipAggregationStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSkip#testSkipAggregationStage"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/sort/ascendingDescendingSort",
@@ -1269,6 +1504,11 @@
     "name" : "query/filters/mod/floatingPointArguments",
     "scenario" : "/dev/morphia/test/query/filters/mod/floatingPointArguments/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestMod#testFloatingPointArguments"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/mod/useModToSelectDocuments",
+    "scenario" : "/dev/morphia/test/query/filters/mod/useModToSelectDocuments/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestMod#testUseModToSelectDocuments"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/ne/matchDocumentFieldsThatAreNotEqual",
@@ -1571,6 +1811,22 @@
     "sha256" : "44684960d2325ade19872d1dafefc2f6330232da67504bc091abbef17e7aa3e8"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottom/findTheBottomScore/scenario.json",
+    "sha256" : "368586020dd35b8a7b9c1e562aa6409cfeb8984af99100ac142dce67882fba2a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames/scenario.json",
+    "sha256" : "cca76fae04096bf4a4fcaa7a6802b8545b0abe970c3676fbf0f6aeb7db65c4cb"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottomN/findTheThreeLowestScores/scenario.json",
+    "sha256" : "9e212b0b53daa3e64a426666180855c51ae4a3f1377d041ca82d45bc75335577"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames/scenario.json",
+    "sha256" : "4016f7704e6f321d9b1aa8a558ee944e70144ff3c2bd4b4a2dec3410b44d95b3"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection/scenario.json",
     "sha256" : "a0638327eabf335b40e757394265ebe6bc128deced98c71b9a8b891b799dc620"
   }, {
@@ -1607,6 +1863,14 @@
     "sha256" : "f2988892ba3f1cf632cccb3aff8bd776c77a193813bf3a314534602366242ab8"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/covariancePop/covariancePopExpressionOperator/scenario.json",
+    "sha256" : "7a69c4ee5d5761feb28420d6282a567c41b3000e8d0d0d4da8f310a465e9b80e"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator/scenario.json",
+    "sha256" : "7c1e15414050822cdecca8929dcae98ed4bd547a36540df91c149c447a8cbe26"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime/scenario.json",
     "sha256" : "09858a6e5d0ee27c7d3c92e12b78f14197b667bf25c4afb4c2a4e4f74090c2d7"
   }, {
@@ -1631,6 +1895,10 @@
     "sha256" : "5dcb9ee1d24b63d361ee464174c9e060bcc16d65e211f9455c80baa84bed3b57"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage/scenario.json",
+    "sha256" : "9a825392e6bb6994ab19ac368a4da7d0d1f2582ceacafd2e6c11150d6018b5a3"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dayOfMonth/dayOfMonthExpressionOperator/scenario.json",
     "sha256" : "24a19b52c794623fc4f7368b106ebe953808d02c7beb2c252f3a2c0a3448a8fe"
   }, {
@@ -1647,12 +1915,44 @@
     "sha256" : "ffe0d650e63c20189a171bee3d2e2a94a79d6b22331148149c44133fe3ccd51b"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues/scenario.json",
+    "sha256" : "745addb1274cbc5b73931cde897a2f63d29e11cf3ffdc352cdff87bca864b216"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByADateField/scenario.json",
+    "sha256" : "b181d4abc40c406b48ea3c30dfa5c86a4b228c2968fe2a865abb1ee835bb87ea"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField/scenario.json",
+    "sha256" : "d401a6dc418c9431d096f1fd274dad1b7719314960b212f4376a78d70fd75d59"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator/scenario.json",
+    "sha256" : "77d39b98c596cad22c512307faeb686ecec5ad114c7e2c33c452e2301ff675b9"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues/scenario.json",
+    "sha256" : "e1704c6dad0ef01a633588fd723e1a308260020feec1b637237ce673fa51e3da"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForEachState/scenario.json",
+    "sha256" : "657eb7a3699a1c699e24fd644c50e2be7e42ec10c7935a0c0fa7de1656b325a2"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/eq/eqExpressionOperator/scenario.json",
     "sha256" : "e2137f98d049d316cfc33306cda456990a3d61e335b83ca46520d5015c6d67e8"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/exp/expExpressionOperator/scenario.json",
     "sha256" : "646ffd17a01887cda9bc370ec75c5c9290dab2e61a724f2fad8340834f76b61c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha/scenario.json",
+    "sha256" : "9b3143e022ead352ae0a5cd581a2fc095eb2101c52699f811b10a1cd7da8049b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN/scenario.json",
+    "sha256" : "d4cfad0d0945edb2a6b8887a02561b56890b9680939781c198f4f9210b1ec9e3"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/filter/filterBasedOnRegularExpressionMatch/scenario.json",
@@ -1731,6 +2031,10 @@
     "sha256" : "8ec6cd1702c31b3c586da9ebd7073d31fc183265a069f64b52e35e7b1e53c498"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/integral/integralExpressionOperator/scenario.json",
+    "sha256" : "ed42a7814cb2e3f1a8c4c4ee30cfd04eb1df47496aa95cb6907091aafddd7aa8"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/isArray/isArrayExpressionOperator/scenario.json",
     "sha256" : "4c00501486dcf34aaa9aa2dcd324f72b9b33e06ef4e2b20704fb728b43c5b92b"
   }, {
@@ -1767,6 +2071,14 @@
     "sha256" : "ddebdb7c88b692f855bd15b3420211d990ec2fa2415b12b3d89dad6f06aadf8d"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation/scenario.json",
+    "sha256" : "d5640e85d0c4098c1170d965bc8000ee0f271d1e372bf5f7c44350f011e4762f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage/scenario.json",
+    "sha256" : "5d3538392393a0beb507134ad79ef7b0d696585c493aa50f40695732ef2e3a46"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/literal/projectANewFieldWithValue1/scenario.json",
     "sha256" : "e90c14ad2d94a324df890875a228d377226cafed5e56e2bcf3b58dadfbb1c14c"
   }, {
@@ -1777,6 +2089,14 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/ln/lnExpressionOperator/scenario.json",
     "sha256" : "cdf6e899087aa4b34352c2b4d2d6533163068a34b3c71dfbc725c21380268150"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue/scenario.json",
+    "sha256" : "dc956420ceecad3d67ae664b915a7afd83a90ea9461d717333574bd43abc97af"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/locf/useMultipleFillMethodsInASingleStage/scenario.json",
+    "sha256" : "31492113b2d36d9dd841ba6287eefc3c56d7573a2f28a0dd7e18707483213aac"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/log/logExpressionOperator/scenario.json",
@@ -1811,6 +2131,10 @@
     "sha256" : "4adbccb09b18236a05746028fe009edfe75167cfb16c407a6df3567cda94a66b"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/max/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "75668cd38bd3f6db0e12a67f043e5c55ae2062c088fe46246fe71b4e218062c2"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "sha256" : "e92caa78ad2a2c4200d77c293892cde3f7c35045ee36b449de4042eab88380b6"
   }, {
@@ -1831,6 +2155,10 @@
     "sha256" : "ca0b839a02597283b2a996710d434dae729f5c9b5da28c51610cc1bc68153b86"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/median/useMedianInASetWindowFieldStage/scenario.json",
+    "sha256" : "9b723a1d063563f88339d0f0bc1b05587a574e8493b9cb5868715813274ad952"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator/scenario.json",
     "sha256" : "5ef48d4ffa0a7c283d569de431345146850a2cf54dbd64394b31661545ff7983"
   }, {
@@ -1845,6 +2173,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/min/useInProjectStage/scenario.json",
     "sha256" : "2fd58e675fd6970edd98449b2bbfa09356d1e3f631fe2f2a13cae9644b924ba8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/min/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "76bf965cc57c8eeb4e578ac4a9dd8fb1fddc0c78d192d3c0e7e1669f3775f9b4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
@@ -1911,12 +2243,20 @@
     "sha256" : "2640c8f3f54915f4e54f1b7c3f58dd8f31c6b8a7de75b17f870fdd008286e00c"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/percentile/usePercentileInASetWindowFieldStage/scenario.json",
+    "sha256" : "cfae87b8765e0063450ca9b223cafff52a14d59dbbc0f5116b6d5f95a77452c4"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/pow/powExpressionOperator/scenario.json",
     "sha256" : "594f0920b5d8c3201ec807e386e551a4204e5d7d9cc3834037d603355fc6c0c0"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/push/useInGroupStage/scenario.json",
     "sha256" : "c74ad11c5fd8bcc4830130a98f85e87aa28e4092ed850588dcf7ee579352a44c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/push/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "fda89ffff83690a47a3a42b80fdb3b401e7d4ab47c42f6c7efb72526bba83267"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator/scenario.json",
@@ -1933,6 +2273,18 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/range/rangeExpressionOperator/scenario.json",
     "sha256" : "e528f56092c2315c4b73a0fea9661691fabccb9dcd00ebc7757e7460385ed8c5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/rank/rankPartitionsByADateField/scenario.json",
+    "sha256" : "fc1969f77538cb92adb84f9a726da85bcb6ec0418116022659422e85ded30302"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/rank/rankPartitionsByAnIntegerField/scenario.json",
+    "sha256" : "a987629b6cc69398836c785e61cd84acaf7ec96bd91e129ef16070b4b7c35beb"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData/scenario.json",
+    "sha256" : "3f2a1a371b185e0422d58b25decaca82b898d650f52b51a2eb2c2befc67665ad"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/reduce/arrayConcatenation/scenario.json",
@@ -2011,6 +2363,14 @@
     "sha256" : "28249d4a3cb6fa2a39597236da8cc74a984c8e875db5f04c45a69fc3764d8480"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/shift/shiftUsingANegativeInteger/scenario.json",
+    "sha256" : "75c44f30abcc7bb654a42d42817254e98b87e49d5f6d38dffcabc7ff1df30ebd"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger/scenario.json",
+    "sha256" : "9119adbfb5daaf4a12e0202158d6f961b333cc21349eda1b3f8a89f469a1c47c"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees/scenario.json",
     "sha256" : "b222267753c7c5d8a6cfcc5cbd7b220477fa2f11dca4d397b480fec1d730617e"
   }, {
@@ -2031,6 +2391,10 @@
     "sha256" : "d637ee0ec93c764de3569fafbe2c5dcbf8bd056b232031a8f805f5879b6859de"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sortArray/sortOnASubfield/scenario.json",
+    "sha256" : "3adb3b9c0c6cbce6eb116c3c052235db6d06ac7a76a3242fba2d0cb9ab79902d"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/split/splitExpressionOperator/scenario.json",
     "sha256" : "53dacee4388282565106d1eea5956bcb8e9e0b69f724b4ed96d28567d66ca5c4"
   }, {
@@ -2045,6 +2409,14 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/stdDevPop/useInProjectStage/scenario.json",
     "sha256" : "d75470bd732b64a01098b33466e42e9cf6f1caea95d769126f4f8c07d5469af8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/stdDevPop/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "2d3520907ea31f878ed5a4594e519a22d2732666bb58b63d6c23e575e49fce2a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "c6325d2dd0c4b53a24051798bbbaa930ec189be151a4244330b7be1f85cd5cfd"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/strLenBytes/singleByteAndMultibyteCharacterSet/scenario.json",
@@ -2089,6 +2461,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sum/useInProjectStage/scenario.json",
     "sha256" : "e287c3747710cfe9717d2bb21be26d1007b6ba9044274ad09917f22a6fd7ec7c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sum/useInSetWindowFieldsStage/scenario.json",
+    "sha256" : "1ebdda0af5fe53505d0db4d6a1201dd358ea988c61c53463fd22ed77a426e79f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/switch/switchAggregationExpressionOperator/scenario.json",
@@ -2145,6 +2521,22 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/toUpper/toUpperExpressionOperator/scenario.json",
     "sha256" : "5c10aadb1f6574908965f8f37f838c9b3d3cf9721a6effcf129029e7b1923462"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/top/findTheTopScore/scenario.json",
+    "sha256" : "ab7abbe46e4fcecae67ee4cc9a850fcd1ad9c6e3dd8eed96dfb1072751c5a074"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/top/findTheTopScoreAcrossMultipleGames/scenario.json",
+    "sha256" : "46621c13739291528010a1b86c592690e6f8349e3818452beb5909421b430cab"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/topN/findTheThreeHighestScores/scenario.json",
+    "sha256" : "a5031524c2277b1f99f943b1cdc764f18cb83d6c52c0a2b69b5ff2309e97572f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames/scenario.json",
+    "sha256" : "9b946666706d1e4ffe7bc49ee891a85eaa3b73336572a27a5003e93ba8b80ddb"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
@@ -2215,8 +2607,20 @@
     "sha256" : "41f547604b64f2d32549bb7fc1b1734b28f0dcc5484ef33b6be66b4cc9b7b094"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue/scenario.json",
+    "sha256" : "768aed80a7d5a97616d22affe8626590b2392a8d59c34c348b8e838ef1a15270"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue/scenario.json",
     "sha256" : "164afed9a5fa76361d31c70699bc5565a8f0a6660575a8647d2ac8665a7968d3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation/scenario.json",
+    "sha256" : "8cf1f2543f4c1d8e017efbda2a8c0fc8d05535416ef17f26bc8e6a5e2c2d2158"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill/scenario.json",
+    "sha256" : "9fc2340e7a6542e49d906f0db3657c46fb4b65cf627837632b5c69e957eb6f53"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/group/pivotData/scenario.json",
@@ -2315,6 +2719,10 @@
     "sha256" : "1540546634c6565a16280f113ace46a019fb499139224e571e45c6ef380e63be"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/sample/sampleAggregationStage/scenario.json",
+    "sha256" : "bd96874b61be365510374fd3f4189cb05d60599a0de52c6c7910b25a4ca6b1ed"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/addElementToAnArray/scenario.json",
     "sha256" : "6a35e3ef51646f6967a47fdc9017692c61b39427c34fc733d50313d6b2a5959a"
   }, {
@@ -2329,6 +2737,26 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/usingTwoSetStages/scenario.json",
     "sha256" : "387ea14536c00b27b5fe06765f66d364a2abdf8ed823e79085a13734d670b2fe"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample/scenario.json",
+    "sha256" : "472c45c3f048d6b745ac819add6a45c30f20f95d2d346b81f9fd01e9255e35bd"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/setWindowFields/documentsWindowExamples/scenario.json",
+    "sha256" : "0afe4eb726768219320325f5247826cfb8f57471617bc2b1eeac9d7afb3fa255"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/setWindowFields/rangeWindowExample/scenario.json",
+    "sha256" : "11e13d2b9d5f754202bd676b3c26081912f2b68791b2af23928a091909f500bf"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/setWindowFields/timeRangeWindowExamples/scenario.json",
+    "sha256" : "b85804ae785d6fad5ea08d232debed7278f79d4b27be50f2227b9cb94018b3c4"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/skip/skipAggregationStage/scenario.json",
+    "sha256" : "08fdbb6515720d75422d49992597212678041dee376059f795525eda5b796531"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/sort/ascendingDescendingSort/scenario.json",
@@ -2505,6 +2933,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/mod/floatingPointArguments/scenario.json",
     "sha256" : "86c18526e3a76447e4209465e68fdaaf71d871ed7818b1d80cd0bef53c36a2bc"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/mod/useModToSelectDocuments/scenario.json",
+    "sha256" : "a10c5d7401f951dbde4c01898060cd4685fa8c70daa55aa4b2276cbb9655e74c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/ne/matchDocumentFieldsThatAreNotEqual/scenario.json",

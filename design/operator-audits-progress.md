@@ -2319,3 +2319,22 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   - Canonicalization is idempotent for every rule, the printed precondition is checked before
     the retype as it should be, and `printed()` matches what mongosh prints.
 - Review round 2: nothing new.
+
+- PR #4551 (branch audits-cutover-corrections, base #4550) published.
+
+## Int32 parameters (2026-11-22)
+
+- Branch audits-int32-parameters from #4551, on the user's decision to change the encoding.
+  Morphia wrote sort directions with `writeInt64` although `Sort.getOrder()` is an `int`
+  (`$setWindowFields`, `$fill`, `$top`/`$bottom`/`$topN`/`$bottomN`, `$sortArray`); they are now
+  Int32. `$skip`, `$limit`, `$sample`'s `size`, `$dateAdd`/`$dateSubtract`'s `amount`, `$shift`'s
+  `by`, `$dateTrunc`'s `binSize` and the integral `$mod` operands hold a `long` in the API, which
+  is unchanged; `CodecHelper.whole` writes such a value as Int32 when it fits and Int64 otherwise,
+  as the documentation and the shell write small whole numbers. The server reads either alike.
+- The full core suite passes under both mappers (2632 tests).
+- Of the 49 legacy-only cases whose first difference named an Int64, 48 convert. The 49th,
+  `$isoWeekYear`, is the server returning a Long, not an encoding; it stays legacy-only.
+- Totals: form report 10 overrides; ledger 341 cases; 33 legacy-only.
+- Review round 1: server-correct, with no missed or wrongly changed sites. Medium, applied: the
+  generated commands change type for anyone reading them (Int32 where it was Int64), so the 3.0
+  migration guide gains a note (morphia-docs, `docs-redesign`).

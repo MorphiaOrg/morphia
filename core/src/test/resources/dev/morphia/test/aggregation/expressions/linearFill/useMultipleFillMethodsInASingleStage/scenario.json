@@ -1,0 +1,362 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
+  "title": "Use Multiple Fill Methods in a Single Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "095396b6319b25c0e8334317f148b79b31b2ae7a",
+    "path": "source/reference/operator/aggregation/linearFill.txt",
+    "blob": "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa"
+  },
+  "dataset": null,
+  "collections": {
+    "stock": [
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615194000000"
+          }
+        },
+        "price": {
+          "$numberInt": "500"
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615197600000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615201200000"
+          }
+        },
+        "price": {
+          "$numberInt": "515"
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615204800000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615208400000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615212000000"
+          }
+        },
+        "price": {
+          "$numberInt": "485"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "stock",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "sortBy": {
+            "time": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "linearFillPrice": {
+              "$linearFill": "$price"
+            },
+            "locfPrice": {
+              "$locf": "$price"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5ef"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615194000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5f0"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615197600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "exact": {
+                "$numberDouble": "507.5"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5f1"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615201200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5f2"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615204800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "505"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5f3"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615208400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "495"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620ad555394d47411658b5f4"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615212000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "485"
+              }
+            }
+          },
+          {
+            "name": "linearFillPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "485"
+              }
+            }
+          },
+          {
+            "name": "locfPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "485"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

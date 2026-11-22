@@ -1,22 +1,6 @@
 {
   "declarations" : [ {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "unwrap expected data from the array",
-    "marker" : "lock",
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "4e023b7f63c3cb354881f1d8b33bda0704a54b27",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
-      "path" : "source/reference/operator/aggregation/bottom.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
     "includes" : [ ],
     "justification" : null,
@@ -57,239 +41,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"4\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"5\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/5/denseRankQuantityForState"
-    } ],
-    "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues",
-    "includes" : [ {
-      "blob" : "89a7d39c220ecc6a7ac138b3904fc271cdf6b92d",
-      "path" : "source/includes/rank-and-denseRank-behavior.rst"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "1d8936541da3975a89e1e7e5e7c984ed7d5467f9",
-      "path" : "source/includes/setWindowFields-partition-sort-quantity.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    }, {
-      "blob" : "177e415a22d946c759fe429251695e8961f515e5",
-      "path" : "source/includes/setWindowFields-duplicates-example-collection.rst"
-    } ],
-    "justification" : null,
-    "lock" : "actual data differs from the docs",
-    "marker" : "lock",
-    "origin" : "a666622f709185be73ddffa22df10e7aa90151f5",
-    "pageBlob" : "b44836822b16c9a9a1a8206940fd11c87fc9cf6e",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
-      "path" : "source/reference/operator/aggregation/denseRank.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
-    "includes" : [ {
-      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
-      "path" : "source/includes/fact-linear-fill-description.rst"
-    }, {
-      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
-      "path" : "source/includes/example-multiple-fill-methods.rst"
-    } ],
-    "justification" : null,
-    "lock" : "some numbers need to be doubles (because of the fill?)",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/3/price",
-      "to" : "DOUBLE"
-    }, {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/4/price",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
-      "path" : "source/reference/operator/aggregation/linearFill.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
-    "includes" : [ {
-      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
-      "path" : "source/includes/fact-linear-fill-description.rst"
-    }, {
-      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
-      "path" : "source/includes/example-multiple-fill-methods.rst"
-    } ],
-    "justification" : null,
-    "lock" : "some numbers need to be doubles (because of the fill?)",
-    "marker" : "lock",
-    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
-    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/3/linearFillPrice",
-      "to" : "DOUBLE"
-    }, {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "/4/linearFillPrice",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
-      "path" : "source/reference/operator/aggregation/linearFill.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
-    "includes" : [ {
-      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
-    }, {
-      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    } ],
-    "justification" : null,
-    "lock" : "data is from include file",
-    "marker" : "lock",
-    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
-    "pageBlob" : "5d1a75ffee6c641b70fe3ec8a562b543ab2c2b20",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
-      "path" : "source/reference/operator/aggregation/max.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
-    "includes" : [ {
-      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
-    }, {
-      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    } ],
-    "justification" : null,
-    "lock" : "data is from include file",
-    "marker" : "lock",
-    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
-    "pageBlob" : "55ed24d632e4f22e2fc78d291fe1b5ec63e44f63",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
-      "path" : "source/reference/operator/aggregation/min.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
-    "includes" : [ {
-      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
-      "path" : "source/includes/aggregation/fact-return-percentile.rst"
-    }, {
-      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
-      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
-    }, {
-      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
-      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
-    }, {
-      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
-      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
-    }, {
-      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
-      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
-    }, {
-      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
-      "path" : "source/includes/aggregation/example-setup-01.rst"
-    } ],
-    "justification" : null,
-    "lock" : "numbers need to be doubles",
-    "marker" : "lock",
-    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
-    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
-    "retypes" : [ {
-      "file" : "expected.json",
-      "from" : "INT32",
-      "pointer" : "",
-      "to" : "DOUBLE"
-    } ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
-      "path" : "source/reference/operator/aggregation/percentile.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": {\"$numberInt\": \"5\"}}",
-      "documented" : "{\"v\": {\"$numberInt\": \"6\"}}",
-      "file" : "expected.json",
-      "index" : null,
-      "pointer" : "/5/rankQuantityForState"
-    } ],
-    "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData",
-    "includes" : [ {
-      "blob" : "89a7d39c220ecc6a7ac138b3904fc271cdf6b92d",
-      "path" : "source/includes/rank-and-denseRank-behavior.rst"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "1d8936541da3975a89e1e7e5e7c984ed7d5467f9",
-      "path" : "source/includes/setWindowFields-partition-sort-quantity.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    }, {
-      "blob" : "177e415a22d946c759fe429251695e8961f515e5",
-      "path" : "source/includes/setWindowFields-duplicates-example-collection.rst"
-    } ],
-    "justification" : null,
-    "lock" : "results in the docs don't match the results",
-    "marker" : "lock",
-    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
-    "pageBlob" : "dba54103c83dc87beab05f9c78ebb06d41dcd53c",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
-      "path" : "source/reference/operator/aggregation/rank.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
     "includes" : [ {
@@ -312,38 +63,6 @@
     "source" : {
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
       "path" : "source/reference/operator/aggregation/setUnion.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/top/findTheTopScore",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "unwrap expected from array",
-    "marker" : "lock",
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
-      "path" : "source/reference/operator/aggregation/top.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "had to unwrap the results from the array",
-    "marker" : "lock",
-    "origin" : "b4a0827dd0435771f3c42861402d6155f109bfe8",
-    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
-      "path" : "source/reference/operator/aggregation/top.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -495,43 +214,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
-    "includes" : [ {
-      "blob" : "746f3697da4fb3e58cf7ab15c07fc7998c9a19d8",
-      "path" : "source/includes/setWindowFields-introduction-examples.rst"
-    }, {
-      "blob" : "463129d2d4410fb58d9cfba068d0bd6761402a4f",
-      "path" : "source/includes/setWindowFields-and-transactions-snapshots.rst"
-    }, {
-      "blob" : "e9755be7ee652e5d8a6b0ec6b0668f0d1aa98d90",
-      "path" : "source/includes/setWindowFields-operators.rst"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    }, {
-      "blob" : "8d83b97b2d30451c2d82469151ebf6ef233bda5b",
-      "path" : "source/includes/time-range-window-example.rst"
-    }, {
-      "blob" : "1f627588938ff10e40926a1d115ca2b466887318",
-      "path" : "source/includes/fact-timeseries-example-aggregation-book.rst"
-    } ],
-    "justification" : null,
-    "lock" : "parser grabs extraneous text\nwrong name from parser",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "4360d98bebb89e841d0b99c932b3f8cffceb5721",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "8ab245d2e59dce762882f5c683ad91c683969e7b",
-      "path" : "source/reference/operator/aggregation/setWindowFields.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -658,6 +340,22 @@
     "source" : {
       "commit" : "00a744dc63b488437043031dab7af6df0399b86f",
       "path" : "source/reference/operator/aggregation/binarySize.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "unwrap expected data from the array",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "4e023b7f63c3cb354881f1d8b33bda0704a54b27",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/bottom.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -901,6 +599,43 @@
     "source" : {
       "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
       "path" : "source/reference/operator/aggregation/degreesToRadians.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"4\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"5\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/5/denseRankQuantityForState"
+    } ],
+    "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues",
+    "includes" : [ {
+      "blob" : "89a7d39c220ecc6a7ac138b3904fc271cdf6b92d",
+      "path" : "source/includes/rank-and-denseRank-behavior.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "1d8936541da3975a89e1e7e5e7c984ed7d5467f9",
+      "path" : "source/includes/setWindowFields-partition-sort-quantity.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    }, {
+      "blob" : "177e415a22d946c759fe429251695e8961f515e5",
+      "path" : "source/includes/setWindowFields-duplicates-example-collection.rst"
+    } ],
+    "justification" : null,
+    "lock" : "actual data differs from the docs",
+    "marker" : "lock",
+    "origin" : "a666622f709185be73ddffa22df10e7aa90151f5",
+    "pageBlob" : "b44836822b16c9a9a1a8206940fd11c87fc9cf6e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
+      "path" : "source/reference/operator/aggregation/denseRank.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1197,6 +932,70 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "justification" : null,
+    "lock" : "some numbers need to be doubles (because of the fill?)",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/price",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/price",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "justification" : null,
+    "lock" : "some numbers need to be doubles (because of the fill?)",
+    "marker" : "lock",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/linearFillPrice",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/linearFillPrice",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
     "includes" : [ {
       "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
@@ -1297,6 +1096,34 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
+    "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    } ],
+    "justification" : null,
+    "lock" : "data is from include file",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "5d1a75ffee6c641b70fe3ec8a562b543ab2c2b20",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/max.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "includes" : [ ],
     "justification" : null,
@@ -1309,6 +1136,34 @@
     "source" : {
       "commit" : "e473868337d01610afb03e550b561ca771245aff",
       "path" : "source/reference/operator/aggregation/maxN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
+    "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    } ],
+    "justification" : null,
+    "lock" : "data is from include file",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "55ed24d632e4f22e2fc78d291fe1b5ec63e44f63",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/min.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1467,6 +1322,45 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "marker" : "lock",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ {
       "curated" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090660\"}}",
       "documented" : "{\"v\": {\"$numberDecimal\": \"53.13010235415597870314438744090659\"}}",
@@ -1508,6 +1402,43 @@
     "source" : {
       "commit" : "616d57a126410ad4be0b4c8abeb00660f987f605",
       "path" : "source/reference/operator/aggregation/range.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": {\"$numberInt\": \"5\"}}",
+      "documented" : "{\"v\": {\"$numberInt\": \"6\"}}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/5/rankQuantityForState"
+    } ],
+    "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData",
+    "includes" : [ {
+      "blob" : "89a7d39c220ecc6a7ac138b3904fc271cdf6b92d",
+      "path" : "source/includes/rank-and-denseRank-behavior.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "1d8936541da3975a89e1e7e5e7c984ed7d5467f9",
+      "path" : "source/includes/setWindowFields-partition-sort-quantity.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    }, {
+      "blob" : "177e415a22d946c759fe429251695e8961f515e5",
+      "path" : "source/includes/setWindowFields-duplicates-example-collection.rst"
+    } ],
+    "justification" : null,
+    "lock" : "results in the docs don't match the results",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "dba54103c83dc87beab05f9c78ebb06d41dcd53c",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
+      "path" : "source/reference/operator/aggregation/rank.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2009,6 +1940,38 @@
       "commit" : "b398344371658f682e0c3826a7a749b9fbf6c5e5",
       "path" : "source/reference/operator/aggregation/toUUID.txt",
       "relation" : "AFTER_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/top/findTheTopScore",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "unwrap expected from array",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/top.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "had to unwrap the results from the array",
+    "marker" : "lock",
+    "origin" : "b4a0827dd0435771f3c42861402d6155f109bfe8",
+    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/top.txt",
+      "relation" : "AT_ORIGIN"
     }
   }, {
     "corrections" : [ ],
@@ -2755,6 +2718,43 @@
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
+    "includes" : [ {
+      "blob" : "746f3697da4fb3e58cf7ab15c07fc7998c9a19d8",
+      "path" : "source/includes/setWindowFields-introduction-examples.rst"
+    }, {
+      "blob" : "463129d2d4410fb58d9cfba068d0bd6761402a4f",
+      "path" : "source/includes/setWindowFields-and-transactions-snapshots.rst"
+    }, {
+      "blob" : "e9755be7ee652e5d8a6b0ec6b0668f0d1aa98d90",
+      "path" : "source/includes/setWindowFields-operators.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    }, {
+      "blob" : "8d83b97b2d30451c2d82469151ebf6ef233bda5b",
+      "path" : "source/includes/time-range-window-example.rst"
+    }, {
+      "blob" : "1f627588938ff10e40926a1d115ca2b466887318",
+      "path" : "source/includes/fact-timeseries-example-aggregation-book.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser grabs extraneous text\nwrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "4360d98bebb89e841d0b99c932b3f8cffceb5721",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "8ab245d2e59dce762882f5c683ad91c683969e7b",
+      "path" : "source/reference/operator/aggregation/setWindowFields.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

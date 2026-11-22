@@ -1,0 +1,253 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage",
+  "title": "Truncate Order Dates and Obtain Quantity Sum in a ``$group`` Pipeline Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "1006d39b673115f3dad63823db2bd1b0d42ed591",
+    "path": "source/reference/operator/aggregation/dateTrunc.txt",
+    "blob": "fd19907aa841f305791a6455b4b5ed83554d63cd"
+  },
+  "dataset": null,
+  "collections": {
+    "cakeSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1616239805000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "14"
+        },
+        "quantity": {
+          "$numberInt": "140"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1610346675000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "145"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1581167603000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "104"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1558195741000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "41"
+        },
+        "quantity": {
+          "$numberInt": "162"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1546927923000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "43"
+        },
+        "quantity": {
+          "$numberInt": "134"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "cakeSales",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": {
+            "truncatedOrderDate": {
+              "$dateTrunc": {
+                "date": "$orderDate",
+                "unit": "month",
+                "binSize": {
+                  "$numberInt": "6"
+                }
+              }
+            }
+          },
+          "sumQuantity": {
+            "$sum": "$quantity"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "truncatedOrderDate",
+                  "value": {
+                    "exact": {
+                      "$date": {
+                        "$numberLong": "1577836800000"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "sumQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "224"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "truncatedOrderDate",
+                  "value": {
+                    "exact": {
+                      "$date": {
+                        "$numberLong": "1609459200000"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "sumQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "285"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "truncatedOrderDate",
+                  "value": {
+                    "exact": {
+                      "$date": {
+                        "$numberLong": "1546300800000"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "sumQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "296"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

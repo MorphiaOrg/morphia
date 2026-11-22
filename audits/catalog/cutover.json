@@ -6,24 +6,8 @@
     "fixture" : "aggregation/expressions/addToSet/useInGroupStage"
   }, {
     "check" : "SERIALIZATION",
-    "detail" : "/1/$group/playerId/$bottom/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/bottom/findTheBottomScore"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/playerId/$bottom/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames"
-  }, {
-    "check" : "SERIALIZATION",
     "detail" : "/0/$group/gamescores/$bottomN: key order ['output', 'n', 'sortBy'], Morphia emits ['output', 'sortBy', 'n']",
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/1/$group/playerId/$bottomN/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/bottomN/findTheThreeLowestScores"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/playerId/$bottomN/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames"
   }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: key order differs",
@@ -33,53 +17,9 @@
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/covariancePop/covariancePopExpressionOperator"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator"
-  }, {
     "check" : "SOURCE",
     "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
     "fixture" : "aggregation/expressions/dateAdd/addAFutureDate"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/_id/truncatedOrderDate/$dateTrunc/binSize: the page has Int32 6, Morphia emits Int64 6",
-    "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/denseRank/denseRankPartitionsByADateField"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/timeStamp: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/documentNumber/documentNumberForEachState"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/date: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/date: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN"
   }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: key order differs",
@@ -89,73 +29,13 @@
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/timeStamp: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/integral/integralExpressionOperator"
-  }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0/yearNumber: printed whole 2015 is an Int64 2015",
     "fixture" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/locf/useMultipleFillMethodsInASingleStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/test01: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/median/useMedianInASetWindowFieldStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/test01: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/push/useInSetWindowFieldsStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/rank/rankPartitionsByADateField"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/rank/rankPartitionsByAnIntegerField"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData"
-  }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /2: no result matches this constraint",
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/shift/shiftUsingANegativeInteger"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/quantity: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/shift/shiftUsingAPositiveInteger"
   }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: key order differs",
@@ -165,45 +45,13 @@
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/sin/sineOfValueInRadians"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$project/result/$sortArray/sortBy/address.city: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/sortArray/sortOnASubfield"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/stdDevPop/useInSetWindowFieldsStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/expressions/sum/useInSetWindowFieldsStage"
-  }, {
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians"
   }, {
     "check" : "SERIALIZATION",
-    "detail" : "/1/$group/playerId/$top/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/top/findTheTopScore"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/playerId/$top/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames"
-  }, {
-    "check" : "SERIALIZATION",
     "detail" : "/0/$group/gamescores/$topN: key order ['output', 'n', 'sortBy'], Morphia emits ['output', 'sortBy', 'n']",
     "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/1/$group/playerId/$topN/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/topN/findTheThreeHighestScores"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/playerId/$topN/sortBy/score: the page has Int32 -1, Morphia emits Int64 -1",
-    "fixture" : "aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames"
   }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: no result matches this constraint",
@@ -221,18 +69,6 @@
     "detail" : "/0/$fill: key order ['sortBy', 'partitionBy', 'output'], Morphia emits ['partitionBy', 'sortBy', 'output']",
     "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$fill/sortBy/date: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$fill/sortBy/time: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/1/$fill/sortBy/date: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill"
-  }, {
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections"
@@ -245,37 +81,9 @@
     "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
     "fixture" : "aggregation/stages/graphLookup/withinASingleCollection"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$sample/size: the page has Int32 3, Morphia emits Int64 3",
-    "fixture" : "aggregation/stages/sample/sampleAggregationStage"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/price: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/setWindowFields/rangeWindowExample"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$setWindowFields/sortBy/orderDate: the page has Int32 1, Morphia emits Int64 1",
-    "fixture" : "aggregation/stages/setWindowFields/timeRangeWindowExamples"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$skip: the page has Int32 5, Morphia emits Int64 5",
-    "fixture" : "aggregation/stages/skip/skipAggregationStage"
-  }, {
     "check" : "SOURCE",
     "detail" : "the page documents a projection, which needs the unmapped findOptions",
     "fixture" : "query/filters/in/useTheInOperatorToMatchValues"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/qty/$mod/0: the page has Int32 4, Morphia emits Int64 4",
-    "fixture" : "query/filters/mod/useModToSelectDocuments"
   }, {
     "check" : "SOURCE",
     "detail" : "the page documents a projection, which needs the unmapped findOptions",
