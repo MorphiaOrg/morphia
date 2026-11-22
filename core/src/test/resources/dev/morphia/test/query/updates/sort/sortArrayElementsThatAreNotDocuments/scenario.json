@@ -1,0 +1,129 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/sort/sortArrayElementsThatAreNotDocuments",
+  "title": "Sort Array Elements That Are Not Documents",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "1382fdc5825108f2596a92106fc9d0281e22fd9b",
+    "path": "source/reference/operator/update/sort.txt",
+    "blob": "fa57bcf52a8fc29d1461f5f1ae67fb9ee3b851cf"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "tests": [
+          {
+            "$numberInt": "89"
+          },
+          {
+            "$numberInt": "70"
+          },
+          {
+            "$numberInt": "89"
+          },
+          {
+            "$numberInt": "50"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "2"
+      }
+    },
+    "update": {
+      "$push": {
+        "tests": {
+          "$each": [
+            {
+              "$numberInt": "40"
+            },
+            {
+              "$numberInt": "60"
+            }
+          ],
+          "$sort": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "tests",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "40"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "60"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "70"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "89"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "89"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

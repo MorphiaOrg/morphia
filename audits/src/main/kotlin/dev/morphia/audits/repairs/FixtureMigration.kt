@@ -11,6 +11,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
 import org.bson.BsonArray
+import org.bson.BsonBoolean
 import org.bson.BsonDocument
 import org.bson.BsonInt32
 import org.bson.BsonNull
@@ -62,6 +63,11 @@ enum class CutoverCheck {
     BEHAVIOR,
     /** The results differ from what the page prints. */
     PUBLISHED,
+    /**
+     * The legacy test body itself is unsound for a strict comparison, for example a value built
+     * with `Map.of`, whose key order is unspecified.
+     */
+    TEST,
 }
 
 /**
@@ -109,6 +115,16 @@ object FixtureMigration {
      */
     val mappedOptions = setOf("removeIds", "serverVersion", "skipActionCheck", "skipDataCheck")
 
+    private fun kind(shape: ActionShape): String =
+        when (shape) {
+            ActionShape.PIPELINE -> "aggregate"
+            ActionShape.FIND -> "find"
+            ActionShape.UPDATE -> "update"
+        }
+
+    /** The legacy helpers whose cases the adapter runs. */
+    private val helpers = setOf("testPipeline", "testQuery", "testUpdate")
+
     /** Whether a legacy body compares results in order: `orderMatters` defaults to true. */
     fun ordered(body: String): Boolean = !unordered.containsMatchIn(body)
 
@@ -138,8 +154,26 @@ object FixtureMigration {
                 BsonString("the legacy test skipped its data check (skipDataCheck)")
         }
         val documented = FormMigration.documented(override)
-        require(documented.shape == ActionShape.PIPELINE) {
-            "${override.fixture}: only aggregations are supported"
+        val action =
+            BsonDocument("kind", BsonString(kind(documented.shape)))
+                .append("collection", BsonString(documented.collection))
+        when (documented.shape) {
+            ActionShape.PIPELINE -> action["pipeline"] = BsonArray(documented.action)
+            ActionShape.FIND -> {
+                // A projection needs the legacy findOptions, which the adapter does not map yet.
+                require(documented.action.size == 1) {
+                    "${override.fixture}: a documented projection is not supported yet"
+                }
+                action["filter"] = documented.action[0]
+            }
+            ActionShape.UPDATE -> {
+                require(documented.action.size == 2 && documented.action[1].isDocument) {
+                    "${override.fixture}: only an update document is supported"
+                }
+                action["filter"] = documented.action[0]
+                action["update"] = documented.action[1]
+                action["multi"] = BsonBoolean(documented.many)
+            }
         }
         val collections = BsonDocument()
         documented.data.toSortedMap().forEach { (name, rows) ->
@@ -163,13 +197,7 @@ object FixtureMigration {
                 .append("dataset", BsonNull.VALUE)
                 .append("collections", collections)
                 .append("indexes", BsonArray())
-                .append(
-                    "action",
-                    BsonDocument()
-                        .append("kind", BsonString("aggregate"))
-                        .append("collection", BsonString(documented.collection))
-                        .append("pipeline", BsonArray(documented.action)),
-                )
+                .append("action", action)
                 .append(
                     "expected",
                     documented.printed?.let { printed ->
@@ -346,12 +374,13 @@ object FixtureMigration {
 
     /**
      * Why the case of [override] cannot be converted yet, or null when the adapter supports it: a
-     * `testPipeline` case with mapped options and a documented source without retypes, corrections
-     * or alternative commands.
+     * case run by one of [helpers] with mapped options and a documented source without retypes,
+     * corrections or alternative commands.
      */
     fun convertible(override: FormOverride, example: CuratedExample): String? =
         when {
-            example.helpers != listOf("testPipeline") -> "only testPipeline cases can be converted"
+            example.helpers.size != 1 || example.helpers.single() !in helpers ->
+                "only cases that run one of $helpers can be converted"
             !example.options.all { it.name == "orderMatters" || it.name in mappedOptions } ->
                 "options ${example.options.map { it.name }} are not mapped yet"
             override.retypes.isNotEmpty() || override.corrections.isNotEmpty() ->

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/in/useTheInOperatorWithARegularExpression",
+  "title": "Use the ``$in`` Operator with a Regular Expression",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/in.txt",
+    "blob": "a1ad4613f10bb5eb67174b4a35c0505b04cf34ae"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "item": "Pens",
+        "quantity": {
+          "$numberInt": "350"
+        },
+        "tags": [
+          "school",
+          "office"
+        ]
+      },
+      {
+        "item": "Erasers",
+        "quantity": {
+          "$numberInt": "15"
+        },
+        "tags": [
+          "school",
+          "home"
+        ]
+      },
+      {
+        "item": "Maps",
+        "tags": [
+          "office",
+          "storage"
+        ]
+      },
+      {
+        "item": "Books",
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "tags": [
+          "school",
+          "storage",
+          "home"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "tags": {
+        "$in": [
+          {
+            "$regularExpression": {
+              "pattern": "^be",
+              "options": ""
+            }
+          },
+          {
+            "$regularExpression": {
+              "pattern": "^st",
+              "options": ""
+            }
+          }
+        ]
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

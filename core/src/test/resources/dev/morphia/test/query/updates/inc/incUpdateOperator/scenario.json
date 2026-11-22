@@ -1,0 +1,118 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/inc/incUpdateOperator",
+  "title": "main",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/update/inc.txt",
+    "blob": "7b4f974b6c3baa03b2ecee5acd44801b2870689f"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "sku": "abc123",
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "metrics": {
+          "orders": {
+            "$numberInt": "2"
+          },
+          "ratings": {
+            "$numberDouble": "3.5"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "products",
+    "filter": {
+      "sku": "abc123"
+    },
+    "update": {
+      "$inc": {
+        "quantity": {
+          "$numberInt": "-2"
+        },
+        "metrics.orders": {
+          "$numberInt": "1"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "abc123"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "metrics",
+            "value": {
+              "document": [
+                {
+                  "name": "orders",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "3"
+                    }
+                  }
+                },
+                {
+                  "name": "ratings",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "3.5"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -175,6 +175,8 @@ data class DocumentedScenario(
      * Double, so they are constraints, never guessed BSON values.
      */
     val printed: List<PublishedDocument>?,
+    /** For an update, whether the page uses `updateMany` rather than `updateOne`. */
+    val many: Boolean = false,
 )
 
 data class FormOverride(
@@ -956,6 +958,7 @@ object FormMigration {
             action.shape,
             action.values,
             printed,
+            action.many,
         )
     }
 

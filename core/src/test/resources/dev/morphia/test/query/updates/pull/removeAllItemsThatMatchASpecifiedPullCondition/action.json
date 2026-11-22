@@ -1,1 +1,0 @@
-db.profiles.updateOne( { _id: 1 }, { $pull: { votes: { $gte: 6 } } } )

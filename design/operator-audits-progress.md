@@ -2257,3 +2257,37 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `EXAMPLE_TEST_COLLECTION` directly acts on a collection the runner no longer uses. The one case,
   `sort/textScoreMetadataSort` (a text index), skips its results; a case like it that ran its
   results would fail loudly on `$text`, not pass.
+
+- PR #4549 (branch audits-cutover-stages, base #4548) published.
+
+## Step 5 slice 5d: query and update cutover (2026-11-21)
+
+- Branch audits-cutover-queries from #4549. `OperatorCaseRunner.run` is now shared by three
+  action kinds: `aggregate`, `find` (the documented filter through the driver, Morphia's query as
+  the test builds it) and `update` (`updateOne`/`updateMany` as the page uses, then the documents
+  the filter matches, as the legacy harness read them). `testQuery` and `testUpdate` hand converted
+  cases to it. `FixtureMigration.scenario` writes find and update actions; a documented projection
+  (it needs the unmapped `findOptions`) or a pipeline update is refused.
+- 65 eligible query and update cases were tried under both mappers: 51 convert, 14 stay
+  legacy-only (the same set under both):
+  - 4 TEST (a new `CutoverCheck` for an unsound legacy test body), all updates whose stored subdocuments have their fields in another order than
+    the reference's (`{make, model}` for `{model, make}`, `{score, wk}` for `{wk, score}`). The cause
+    is the test bodies, not Morphia: they build those values with `Map.of`, whose iteration order is
+    unspecified, and already skip their action check for that reason. Building them with ordered
+    maps would let them convert;
+  - 1 SERIALIZATION: `$mod`'s divisor and remainder as Int64;
+  - 9 SOURCE: 7 `$text` pages that create an index (not seeded yet) and 2 with a projection.
+- Totals: form report 49 overrides; ledger 265 cases; `cutover.json` covers expressions, stages and
+  query with 73 legacy-only cases.
+- Review round 1:
+  - medium: `options()` did not check `findOptions` or `updateOptions`, which the runner replaces
+    with its own; a body setting them other than by a chained setter would have converted with them
+    silently dropped. It now fails unless both are at their defaults (`ActionTestOptions` gained
+    `hasUpdateOptions()`, since the driver's update options have no `equals`);
+  - low: the four `Map.of` updates are test defects, not Morphia behavior (serialization and
+    `update()` send the same document), so they are recorded under the new `TEST` check.
+  - The update and find semantics match the legacy harness, and the aggregate refactor is clean.
+- Review round 2: the fixes hold. Low: `FindOptions.equals` leaves out `timeoutMode` and `let`
+  variables. `timeoutMode` is now checked on its own; `let` has no getter, so a body passing it
+  through a variable (the inventory refuses any chained `findOptions`) is a known gap, and
+  `FindOptions.equals` itself is core code outside this slice.

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/position/addElementsAtTheStartOfTheArray",
+  "title": "Add Elements at the Start of the Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/position.txt",
+    "blob": "87938971d5e3436475565a9a7fe444dfdc66b939"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "$numberInt": "100"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [
+            {
+              "$numberInt": "50"
+            },
+            {
+              "$numberInt": "60"
+            },
+            {
+              "$numberInt": "70"
+            }
+          ],
+          "$position": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "60"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "70"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

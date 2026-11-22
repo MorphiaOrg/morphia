@@ -6,12 +6,20 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.mongodb.client.MongoDatabase;
 
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.MorphiaQuery;
+import dev.morphia.query.Operations;
+import dev.morphia.query.Query;
+import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.FormRules.Rule;
 import dev.morphia.test.FormRules.Shape;
 import dev.morphia.test.util.ActionTestOptions;
@@ -62,6 +70,89 @@ public class OperatorCaseRunner {
      */
     public void aggregate(OperatorCase operatorCase, ActionTestOptions options,
             Function<Aggregation<Document>, Aggregation<Document>> dsl) {
+        options(operatorCase, options);
+        aggregate(operatorCase, dsl);
+    }
+
+    public void aggregate(OperatorCase operatorCase, Function<Aggregation<Document>, Aggregation<Document>> dsl) {
+        run(operatorCase, "aggregate", Shape.PIPELINE, (action, collection) -> {
+            Aggregation<Document> aggregation = dsl.apply(test.getDs().aggregate(aggregationOptions().collection(collection)));
+            List<BsonDocument> pipeline = action.getArray("pipeline").getValues().stream().map(BsonValue::asDocument).toList();
+            return new Execution(bson(((AggregationImpl<Document>) aggregation).pipeline()),
+                    reference -> new ArrayList<>(reference.getCollection(collection, BsonDocument.class).aggregate(pipeline)
+                            .into(new ArrayList<>())),
+                    () -> bson(aggregation.toList()).getValues());
+        });
+    }
+
+    /**
+     * Runs a converted legacy query case. The documented filter runs through the driver; Morphia's query runs as the
+     * test builds it.
+     */
+    public void find(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl) {
+        options(operatorCase, options);
+        run(operatorCase, "find", Shape.FIND, (action, collection) -> {
+            Query<Document> query = dsl.apply(test.getDs().find(Document.class, new FindOptions().collection(collection))
+                    .disableValidation());
+            BsonDocument filter = action.getDocument("filter");
+            return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument())),
+                    reference -> new ArrayList<>(reference.getCollection(collection, BsonDocument.class).find(filter)
+                            .into(new ArrayList<>())),
+                    () -> {
+                        try (var cursor = query.iterator()) {
+                            return bson(cursor.toList()).getValues();
+                        }
+                    });
+        });
+    }
+
+    /**
+     * Runs a converted legacy update case. As the legacy test did, the results are the documents its filter matches
+     * after the update; every collection is compared as well.
+     */
+    public void update(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl,
+            UpdateOperator... operators) {
+        options(operatorCase, options);
+        run(operatorCase, "update", Shape.UPDATE, (action, collection) -> {
+            Query<Document> query = dsl.apply(test.getDs().find(collection, Document.class).disableValidation());
+            Document updates = new Operations(test.getDs(), null, List.of(operators), false).toDocument(test.getDs());
+            BsonDocument filter = action.getDocument("filter");
+            BsonDocument update = action.getDocument("update");
+            boolean multi = action.getBoolean("multi").getValue();
+            return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument(), updates)),
+                    reference -> {
+                        var target = reference.getCollection(collection, BsonDocument.class);
+                        if (multi) {
+                            target.updateMany(filter, update);
+                        } else {
+                            target.updateOne(filter, update);
+                        }
+                        return new ArrayList<>(target.find(filter).into(new ArrayList<>()));
+                    },
+                    () -> {
+                        query.update(new UpdateOptions().multi(multi), operators);
+                        try (var cursor = query.iterator()) {
+                            return bson(cursor.toList()).getValues();
+                        }
+                    });
+        });
+    }
+
+    /** What one kind of action contributes to a run: Morphia's command, and each side's results. */
+    private record Execution(BsonArray emitted, Function<MongoDatabase, List<BsonValue>> reference,
+            Supplier<List<BsonValue>> morphia) {
+    }
+
+    /** The documented command of each action kind, in the order its shape reads it. */
+    private static BsonArray documented(BsonDocument action) {
+        return switch (action.getString("kind").getValue()) {
+            case "aggregate" -> action.getArray("pipeline");
+            case "find" -> new BsonArray(List.of(action.getDocument("filter")));
+            default -> new BsonArray(List.of(action.getDocument("filter"), action.getDocument("update")));
+        };
+    }
+
+    private void options(OperatorCase operatorCase, ActionTestOptions options) {
         BsonDocument scenario = operatorCase.scenario();
         BsonDocument comparison = scenario.getDocument("comparison");
         BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
@@ -86,18 +177,24 @@ public class OperatorCaseRunner {
         if (options.skipIndex() && !options.skipDataCheck() || !options.minDriver().equals("0.0.0")) {
             differences.add("skipIndex/minDriver");
         }
+        // The runner builds its own find and update options, so a test's own would be silently dropped.
+        // FindOptions.equals leaves out timeoutMode, so it is checked on its own.
+        if (!options.findOptions().equals(new FindOptions()) || options.findOptions().timeoutMode() != null
+                || options.hasUpdateOptions()) {
+            differences.add("findOptions/updateOptions");
+        }
         if (!differences.isEmpty()) {
             fail(operatorCase.resource() + ": the test's options differ from its scenario: " + differences);
         }
-        aggregate(operatorCase, dsl);
     }
 
-    public void aggregate(OperatorCase operatorCase, Function<Aggregation<Document>, Aggregation<Document>> dsl) {
+    private void run(OperatorCase operatorCase, String kind, Shape shape,
+            BiFunction<BsonDocument, String, Execution> plan) {
         BsonDocument scenario = operatorCase.scenario();
         supported(operatorCase, scenario);
         BsonDocument action = scenario.getDocument("action");
-        if (!action.getString("kind").getValue().equals("aggregate")) {
-            fail(operatorCase.resource() + ": not an aggregation");
+        if (!action.getString("kind").getValue().equals(kind)) {
+            fail(operatorCase.resource() + ": its action is not " + kind);
         }
         String collection = action.getString("collection").getValue();
         boolean ordered = scenario.getDocument("comparison").getString("order").getValue().equals("ORDERED");
@@ -119,28 +216,25 @@ public class OperatorCaseRunner {
             seed(morphia, seeded);
             seed(reference, seeded);
 
-            Aggregation<Document> aggregation = dsl.apply(test.getDs().aggregate(aggregationOptions().collection(collection)));
-            BsonArray emitted = bson(((AggregationImpl<Document>) aggregation).pipeline());
-            BsonArray documented = action.getArray("pipeline");
-            // Both sides take the declared rules; the documented pipeline itself is what runs.
+            Execution execution = plan.apply(action, collection);
+            BsonArray documented = documented(action);
+            // Both sides take the declared rules; the documented command itself is what runs.
             Set<Rule> rules = EnumSet.noneOf(Rule.class);
             scenario.getDocument("comparison").getArray("rules")
                     .forEach(rule -> rules.add(Rule.valueOf(rule.asString().getValue())));
             if (!skipped.containsKey("serialization")
-                    && !StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), Shape.PIPELINE, rules)),
-                            new BsonArray(FormRules.canonical(emitted.getValues(), Shape.PIPELINE, rules)))) {
+                    && !StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), shape, rules)),
+                            new BsonArray(FormRules.canonical(execution.emitted().getValues(), shape, rules)))) {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
-                        + json(emitted));
+                        + json(execution.emitted()));
             }
             // The legacy test did not run the action, so neither does its case; the scenario names why.
             if (skipped.containsKey("results")) {
                 return;
             }
 
-            List<BsonValue> referenceResults = new ArrayList<>(reference.getCollection(collection, BsonDocument.class)
-                    .aggregate(documented.getValues().stream().map(BsonValue::asDocument).toList())
-                    .into(new ArrayList<>()));
-            List<BsonValue> morphiaResults = bson(aggregation.toList()).getValues();
+            List<BsonValue> referenceResults = execution.reference().apply(reference);
+            List<BsonValue> morphiaResults = execution.morphia().get();
             if (!StrictBson.equal(referenceResults, morphiaResults, ordered)) {
                 fail(operatorCase.resource() + ": behavior differs\nreference: " + json(referenceResults) + "\nmorphia:   "
                         + json(morphiaResults));
@@ -240,9 +334,15 @@ public class OperatorCaseRunner {
             unsupported.add("order " + order);
         }
         BsonDocument action = scenario.getDocument("action");
-        if (!action.keySet().equals(Set.of("kind", "collection", "pipeline"))) {
+        Set<String> fields = switch (action.getString("kind", new BsonString("")).getValue()) {
+            case "aggregate" -> Set.of("kind", "collection", "pipeline");
+            case "find" -> Set.of("kind", "collection", "filter");
+            case "update" -> Set.of("kind", "collection", "filter", "update", "multi");
+            default -> Set.of();
+        };
+        if (!action.keySet().equals(fields)) {
             unsupported.add("action fields " + action.keySet());
-        } else {
+        } else if (action.getString("kind").getValue().equals("aggregate")) {
             for (BsonValue stage : action.getArray("pipeline")) {
                 if (namesADatabase(stage)) {
                     unsupported.add("a stage naming another database: " + stage.asDocument().getFirstKey());

@@ -1,0 +1,356 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/all/useAllWithElemMatch",
+  "title": "Use ``$all`` with ``$elemMatch``",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/all.txt",
+    "blob": "87ec3ce26346162f90eb903f77e29c2e7d8925b5"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$oid": "5234cc89687ea597eabee675"
+        },
+        "code": "xyz",
+        "tags": [
+          "school",
+          "book",
+          "bag",
+          "headphone",
+          "appliance"
+        ],
+        "qty": [
+          {
+            "size": "S",
+            "num": {
+              "$numberInt": "10"
+            },
+            "color": "blue"
+          },
+          {
+            "size": "M",
+            "num": {
+              "$numberInt": "45"
+            },
+            "color": "blue"
+          },
+          {
+            "size": "L",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "green"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "5234cc8a687ea597eabee676"
+        },
+        "code": "abc",
+        "tags": [
+          "appliance",
+          "school",
+          "book"
+        ],
+        "qty": [
+          {
+            "size": "6",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "green"
+          },
+          {
+            "size": "6",
+            "num": {
+              "$numberInt": "50"
+            },
+            "color": "blue"
+          },
+          {
+            "size": "8",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "brown"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "5234ccb7687ea597eabee677"
+        },
+        "code": "efg",
+        "tags": [
+          "school",
+          "book"
+        ],
+        "qty": [
+          {
+            "size": "S",
+            "num": {
+              "$numberInt": "10"
+            },
+            "color": "blue"
+          },
+          {
+            "size": "M",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "blue"
+          },
+          {
+            "size": "L",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "green"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$oid": "52350353b2eff1353b349de9"
+        },
+        "code": "ijk",
+        "tags": [
+          "electronics",
+          "school"
+        ],
+        "qty": [
+          {
+            "size": "M",
+            "num": {
+              "$numberInt": "100"
+            },
+            "color": "green"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "qty": {
+        "$all": [
+          {
+            "$elemMatch": {
+              "size": "M",
+              "num": {
+                "$gt": {
+                  "$numberInt": "50"
+                }
+              }
+            }
+          },
+          {
+            "$elemMatch": {
+              "num": {
+                "$numberInt": "100"
+              },
+              "color": "green"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5234ccb7687ea597eabee677"
+              }
+            }
+          },
+          {
+            "name": "code",
+            "value": {
+              "text": "efg"
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "school"
+                },
+                {
+                  "text": "book"
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "size",
+                      "value": {
+                        "text": "S"
+                      }
+                    },
+                    {
+                      "name": "num",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "10"
+                        }
+                      }
+                    },
+                    {
+                      "name": "color",
+                      "value": {
+                        "text": "blue"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "size",
+                      "value": {
+                        "text": "M"
+                      }
+                    },
+                    {
+                      "name": "num",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "100"
+                        }
+                      }
+                    },
+                    {
+                      "name": "color",
+                      "value": {
+                        "text": "blue"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "size",
+                      "value": {
+                        "text": "L"
+                      }
+                    },
+                    {
+                      "name": "num",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "100"
+                        }
+                      }
+                    },
+                    {
+                      "name": "color",
+                      "value": {
+                        "text": "green"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "52350353b2eff1353b349de9"
+              }
+            }
+          },
+          {
+            "name": "code",
+            "value": {
+              "text": "ijk"
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "electronics"
+                },
+                {
+                  "text": "school"
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "size",
+                      "value": {
+                        "text": "M"
+                      }
+                    },
+                    {
+                      "name": "num",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "100"
+                        }
+                      }
+                    },
+                    {
+                      "name": "color",
+                      "value": {
+                        "text": "green"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

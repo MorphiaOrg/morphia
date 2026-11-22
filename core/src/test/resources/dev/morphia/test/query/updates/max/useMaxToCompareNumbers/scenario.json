@@ -1,0 +1,90 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/max/useMaxToCompareNumbers",
+  "title": "Use ``$max`` to Compare Numbers",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+    "path": "source/reference/operator/update/max.txt",
+    "blob": "cc05e8e4f8e88c6d2dc5f99ab472351c53797487"
+  },
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "highScore": {
+          "$numberInt": "800"
+        },
+        "lowScore": {
+          "$numberInt": "200"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "scores",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$max": {
+        "highScore": {
+          "$numberInt": "950"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "highScore",
+            "value": {
+              "whole": {
+                "$numberInt": "950"
+              }
+            }
+          },
+          {
+            "name": "lowScore",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/nor/norAndExists",
+  "title": "``$nor`` and ``$exists``",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "defca05f4349cadea2c7ea2c00ef84b106625ab6",
+    "path": "source/reference/operator/query/nor.txt",
+    "blob": "b6245853a8cf26f3fbe514adffe782deca160b9c"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "$nor": [
+        {
+          "price": {
+            "$numberDouble": "1.99"
+          }
+        },
+        {
+          "price": {
+            "$exists": false
+          }
+        },
+        {
+          "sale": true
+        },
+        {
+          "sale": {
+            "$exists": false
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

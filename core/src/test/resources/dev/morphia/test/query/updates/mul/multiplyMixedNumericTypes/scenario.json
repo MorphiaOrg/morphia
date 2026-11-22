@@ -1,0 +1,84 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/mul/multiplyMixedNumericTypes",
+  "title": "Multiply Mixed Numeric Types",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "948002e14f1d94c10fb84b8fb833149a16531169",
+    "path": "source/reference/operator/update/mul.txt",
+    "blob": "366930f8850ed59f0f6996861cb296131c6655fb"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "Scarf",
+        "price": {
+          "$numberDecimal": "10"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "products",
+    "filter": {
+      "_id": {
+        "$numberInt": "3"
+      }
+    },
+    "update": {
+      "$mul": {
+        "price": {
+          "$numberInt": "5"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Scarf"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "50"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -116,6 +116,10 @@ canonical extended JSON (`$numberInt`, `$date`, …), so BSON types survive.
 }
 ```
 
+- **`action`:** `{kind: "aggregate", collection, pipeline}`, `{kind: "find", collection, filter}` or
+  `{kind: "update", collection, filter, update, multi}`. A find's results are the matching documents;
+  an update's, as in the legacy harness, are the documents its filter matches afterwards, and every
+  collection is compared too.
 - **`expected`:** either `documents` (exact), `printed` (the published constraints of
   [published expectations](operator-audits-published-expectations.md)), or `none` with a reason.
   Each printed constraint is a one-key document naming its kind, so no published field name or
@@ -330,7 +334,9 @@ A candidate records:
    - **5c, stages:** extra collections are supported (the documented data names them, and a
      converted body's `loadData(collection, n)` defers to the scenario). 49 of 63 convert; 14 stay
      legacy-only.
-   - **5d and later:** query and update cases, then retypes and corrections.
+   - **5d, queries and updates:** the runner runs `find` and `update` actions, and `testQuery` and
+     `testUpdate` hand converted cases to it. 51 of 65 convert; 14 stay legacy-only.
+   - **5e and later:** retypes and corrections, documented projections (`findOptions`) and indexes.
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.
    - **Failures:** a case whose checks fail is not converted. It stays on the legacy path with the

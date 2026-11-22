@@ -185,12 +185,13 @@ public abstract class TemplatedTestBase extends TestBase {
         return "/%s/%s/%s/scenario.json".formatted(getClass().getPackageName().replace('.', '/'), prefix(), resourceName);
     }
 
-    /** The runner supports converted aggregations only, so a converted query or update case must not run here. */
-    private void notConverted() {
+    /**
+     * @return the scenario of a converted case, whose fixture directory holds only its scenario, or null
+     */
+    @Nullable
+    private OperatorCase converted() {
         String scenario = scenarioResource(discoverResourceName());
-        if (getClass().getResource(scenario) != null) {
-            throw new IllegalStateException(scenario + ": converted query and update cases are not supported yet");
-        }
+        return getClass().getResource(scenario) != null ? OperatorCase.of(scenario) : null;
     }
 
     public final String prefix() {
@@ -216,7 +217,12 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testQuery(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function) {
-        notConverted();
+        // A converted case's fixture directory holds only its scenario: the runner checks it instead.
+        OperatorCase converted = converted();
+        if (converted != null) {
+            new OperatorCaseRunner(this).find(converted, options, function);
+            return;
+        }
 
         var resourceName = prepareDatabase(options);
 
@@ -233,7 +239,11 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testUpdate(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
-        notConverted();
+        OperatorCase converted = converted();
+        if (converted != null) {
+            new OperatorCaseRunner(this).update(converted, options, function, operators);
+            return;
+        }
 
         var resourceName = prepareDatabase(options);
 

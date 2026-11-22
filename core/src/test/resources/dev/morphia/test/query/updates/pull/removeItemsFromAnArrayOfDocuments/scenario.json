@@ -1,0 +1,180 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/pull/removeItemsFromAnArrayOfDocuments",
+  "title": "Remove Items from an Array of Documents",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/pull.txt",
+    "blob": "5420b98884f610b5bcaf8e41dcb7012244c2890e"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "results": [
+          {
+            "item": "A",
+            "score": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "item": "B",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "results": [
+          {
+            "item": "C",
+            "score": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "item": "B",
+            "score": {
+              "$numberInt": "4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "survey",
+    "filter": {},
+    "update": {
+      "$pull": {
+        "results": {
+          "score": {
+            "$numberInt": "8"
+          },
+          "item": "B"
+        }
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item",
+                      "value": {
+                        "text": "A"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "5"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item",
+                      "value": {
+                        "text": "C"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "item",
+                      "value": {
+                        "text": "B"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}
