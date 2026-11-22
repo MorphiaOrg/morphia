@@ -1,0 +1,53 @@
+name: Operator Example Discovery
+
+# Report-only: inventories the documented operator examples at the head of mongodb/docs, generates
+# a candidate with its gaps, and integrates it under both mappers. It uploads the reports and never
+# commits, promotes or files issues; a changed inventory is a proposal to review, not a failure.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  Discover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      # A sparse, blobless clone: git checks every blob, and it makes no rate-limited API calls.
+      - name: Checkout mongodb/docs operator pages
+        run: |
+          git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git "$RUNNER_TEMP/docs"
+          git -C "$RUNNER_TEMP/docs" sparse-checkout set --no-cone \
+            /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/
+          git -C "$RUNNER_TEMP/docs" checkout -q
+
+      - name: Discover, generate and integrate
+        run: audits/discover.sh "$RUNNER_TEMP/docs" "$RUNNER_TEMP/discovery" --integrate
+
+      - name: Summarize
+        if: always()
+        run: '[ ! -f "$RUNNER_TEMP/discovery/summary.md" ] || cat "$RUNNER_TEMP/discovery/summary.md" >> "$GITHUB_STEP_SUMMARY"'
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: operator-discovery
+          path: |
+            ${{ runner.temp }}/discovery/*.json
+            ${{ runner.temp }}/discovery/*.md
+            ${{ runner.temp }}/discovery/*.diff
+            ${{ runner.temp }}/discovery/candidate/
+          retention-days: 90

@@ -706,3 +706,22 @@ build core first), then generates the families that `audits/catalog/generation-r
 `<out>`, with `<out>/gaps.json` listing every example it could not generate and why. `integrate` and
 `promote` then take the candidate into the checkout. A case that fails integration is excluded in the
 review with its evidence, never generated looser.
+
+## Scheduled discovery
+
+`.github/workflows/operator-discovery.yml` runs weekly and on demand with read-only permissions.
+It clones the operator pages of mongodb/docs sparsely (git checks every blob, and no API rate
+limit applies) and runs `audits/discover.sh <docs-checkout> <out> --integrate`, which works in a
+throwaway worktree of HEAD:
+
+- `fetch.py local` lists the checkout's operator pages;
+- `GenerateMainKt inventory` reinventories them, and `inventory.diff` is the change against the
+  committed `documented-examples.json`: new, renamed or removed examples to review;
+- `candidate` regenerates with the committed bindings and review, writing `gaps.json`;
+- `integrate` runs the candidate's tests under Critter, then reflection.
+
+`summary.md` (also the job summary) lists the counts, skipped pages, gaps, and each example
+without a handwritten owner with its state. The job uploads every report for 90 days and fails
+only when integration does. It never commits, promotes or files issues: accepting a changed
+inventory is a reviewed change made locally with the same commands. Run it locally the same way;
+the checkout is left untouched.

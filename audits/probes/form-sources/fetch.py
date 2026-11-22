@@ -23,6 +23,11 @@ This is the only networked step of the form migration. It never edits the reposi
       default branch), for the generator's inventory of documented examples. Writes a sources
       file that `pages` fetches.
 
+  fetch.py local <docs-checkout> <out.json> <pages-dir>
+      The same sources file for a local mongodb/docs checkout (sparse is enough: the operator
+      directories and source/includes), at its checked-out commit. Links <pages-dir>/<commit> to
+      the checkout instead of fetching, so it makes no API calls; git already checked every blob.
+
   fetch.py pages <sources.json> <pages-dir>
       Fetch every page named by a candidates or review file, plus its absolute
       `.. include::` targets (recursively), at the exact recorded commit, into
@@ -141,6 +146,25 @@ def current(out, commit=None):
                     "--jq", '.[] | select(.type == "file") | .name').split()
         result += [{"source": {"commit": commit, "path": f"{folder}/{name}"}}
                    for name in sorted(names) if name.endswith(".txt")]
+    with open(out, "w") as handle:
+        json.dump({"schemaVersion": 1, "commit": commit, "pages": result}, handle, indent=2)
+        handle.write("\n")
+
+
+def local(checkout, out, pages):
+    commit = run("git", "rev-parse", "HEAD", cwd=checkout).strip()
+    result = []
+    for directory in CURRENT_DIRECTORIES:
+        folder = f"content/manual/manual/source/reference/operator/{directory}"
+        names = sorted(name for name in os.listdir(os.path.join(checkout, folder))
+                       if name.endswith(".txt") and os.path.isfile(os.path.join(checkout, folder, name)))
+        result += [{"source": {"commit": commit, "path": f"{folder}/{name}"}} for name in names]
+    os.makedirs(pages, exist_ok=True)
+    link = os.path.join(pages, commit)
+    if not os.path.lexists(link):
+        os.symlink(os.path.abspath(checkout), link)
+    elif os.path.realpath(link) != os.path.realpath(checkout):
+        sys.exit(f"{link} already points elsewhere")
     with open(out, "w") as handle:
         json.dump({"schemaVersion": 1, "commit": commit, "pages": result}, handle, indent=2)
         handle.write("\n")
@@ -332,6 +356,8 @@ if __name__ == "__main__":
         references(sys.argv[2], sys.argv[3], sys.argv[4])
     elif len(sys.argv) in (3, 4) and sys.argv[1] == "current":
         current(*sys.argv[2:])
+    elif len(sys.argv) == 5 and sys.argv[1] == "local":
+        local(*sys.argv[2:])
     elif len(sys.argv) == 4 and sys.argv[1] == "pages":
         pages(sys.argv[2], sys.argv[3])
     else:
