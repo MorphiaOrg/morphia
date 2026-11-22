@@ -911,18 +911,19 @@ object FormMigration {
 
     /**
      * The documented operation an override was proven against, read from its recorded source text.
-     * Its declared rules travel with it to the runner; retypes, corrections, extra collections and
-     * alternative commands are not supported yet.
+     * Its declared rules travel with it to the runner; retypes, corrections and alternative
+     * commands are not supported yet.
      */
     fun documented(override: FormOverride): DocumentedScenario {
+        // The documented data names every collection, so a test's extra collections need nothing
+        // more; their legacy data files were loaded under those same names.
         require(
             FormRule.ALTERNATIVE_COMMANDS !in override.rules &&
                 override.retypes.isEmpty() &&
-                override.corrections.isEmpty() &&
-                override.collections.isEmpty()
+                override.corrections.isEmpty()
         ) {
-            "${override.fixture}: only single-collection overrides without retypes, corrections " +
-                "or alternative commands are supported"
+            "${override.fixture}: only overrides without retypes, corrections or alternative " +
+                "commands are supported"
         }
         override.blocks.forEach {
             require(sha256(it.text.toByteArray()) == it.sha256) {

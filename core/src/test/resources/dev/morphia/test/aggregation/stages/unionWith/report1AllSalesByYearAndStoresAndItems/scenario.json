@@ -1,0 +1,1395 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
+  "title": "Report 1: All Sales by Year and Stores and Items",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "326f02223a9d4f695be65a4172d46968a828b14e",
+    "path": "source/reference/operator/aggregation/unionWith.txt",
+    "blob": "270d1daee078aaaa2b826f6d5b4423d3ec3d3075"
+  },
+  "dataset": null,
+  "collections": {
+    "sales_2017": [
+      {
+        "store": "General Store",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "150"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "5"
+        }
+      }
+    ],
+    "sales_2018": [
+      {
+        "store": "General Store",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "30"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "125"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "150"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Nuts",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "30"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "25"
+        }
+      }
+    ],
+    "sales_2019": [
+      {
+        "store": "General Store",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "20"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "125"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "150"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Nuts",
+        "quantity": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Nuts",
+        "quantity": {
+          "$numberInt": "30"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "75"
+        }
+      }
+    ],
+    "sales_2020": [
+      {
+        "store": "General Store",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cheese",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Chocolates",
+        "quantity": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "500"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Cookies",
+        "quantity": {
+          "$numberInt": "400"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Nuts",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Nuts",
+        "quantity": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "store": "General Store",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "store": "ShopMart",
+        "item": "Pie",
+        "quantity": {
+          "$numberInt": "100"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales_2017",
+    "pipeline": [
+      {
+        "$set": {
+          "_id": "2017"
+        }
+      },
+      {
+        "$unionWith": {
+          "coll": "sales_2018",
+          "pipeline": [
+            {
+              "$set": {
+                "_id": "2018"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$unionWith": {
+          "coll": "sales_2019",
+          "pipeline": [
+            {
+              "$set": {
+                "_id": "2019"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$unionWith": {
+          "coll": "sales_2020",
+          "pipeline": [
+            {
+              "$set": {
+                "_id": "2020"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          },
+          "store": {
+            "$numberInt": "1"
+          },
+          "item": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "150"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "120"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2017"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "125"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "150"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2018"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "25"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "125"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "80"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "150"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2019"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "75"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "General Store"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cheese"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Chocolates"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Cookies"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "400"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "2020"
+            }
+          },
+          {
+            "name": "store",
+            "value": {
+              "text": "ShopMart"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Pie"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

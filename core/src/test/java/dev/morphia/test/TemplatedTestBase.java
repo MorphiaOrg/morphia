@@ -126,6 +126,14 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected void loadData(String collection, int index) {
+        // A converted case's scenario seeds every documented collection, so its body loads nothing.
+        String scenario = scenarioResource(discoverResourceName());
+        if (getClass().getResource(scenario) != null) {
+            if (!OperatorCase.of(scenario).scenario().getDocument("collections").containsKey(collection)) {
+                Assertions.fail(scenario + " does not seed the collection " + collection);
+            }
+            return;
+        }
         insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), discoverResourceName(), index), "data", true));
     }
 
@@ -242,7 +250,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected void loadData(ActionTestOptions options, String collection, int index) {
         if (!options.skipDataCheck()) {
-            insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), discoverResourceName(), index), "data", true));
+            loadData(collection, index);
         }
     }
 

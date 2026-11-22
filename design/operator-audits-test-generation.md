@@ -327,7 +327,10 @@ A candidate records:
      every eligible expressions case is tried. 160 convert; the 45 whose strict checks fail stay
      legacy-only in `audits/catalog/cutover.json` with the failing check and its first
      difference.
-   - **5c and later:** stages, then query and update cases.
+   - **5c, stages:** extra collections are supported (the documented data names them, and a
+     converted body's `loadData(collection, n)` defers to the scenario). 49 of 63 convert; 14 stay
+     legacy-only.
+   - **5d and later:** query and update cases, then retypes and corrections.
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.
    - **Failures:** a case whose checks fail is not converted. It stays on the legacy path with the

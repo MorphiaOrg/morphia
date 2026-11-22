@@ -1,0 +1,240 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue",
+  "title": "Fill Missing Field Values with a Constant Value",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+    "path": "source/reference/operator/aggregation/fill.txt",
+    "blob": "b0ee7dd39cf46de21e670976d3f6842a77c293ef"
+  },
+  "dataset": null,
+  "collections": {
+    "dailySales": [
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1643760000000"
+          }
+        },
+        "bootsSold": {
+          "$numberInt": "10"
+        },
+        "sandalsSold": {
+          "$numberInt": "20"
+        },
+        "sneakersSold": {
+          "$numberInt": "12"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1643846400000"
+          }
+        },
+        "bootsSold": {
+          "$numberInt": "7"
+        },
+        "sneakersSold": {
+          "$numberInt": "18"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1643932800000"
+          }
+        },
+        "sneakersSold": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "dailySales",
+    "pipeline": [
+      {
+        "$fill": {
+          "output": {
+            "bootsSold": {
+              "value": {
+                "$numberInt": "0"
+              }
+            },
+            "sandalsSold": {
+              "value": {
+                "$numberInt": "0"
+              }
+            },
+            "sneakersSold": {
+              "value": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6202df9f394d47411658b51e"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1643760000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "bootsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "sandalsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "sneakersSold",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6202df9f394d47411658b51f"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1643846400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "bootsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "7"
+              }
+            }
+          },
+          {
+            "name": "sneakersSold",
+            "value": {
+              "whole": {
+                "$numberInt": "18"
+              }
+            }
+          },
+          {
+            "name": "sandalsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6202df9f394d47411658b520"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1643932800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "sneakersSold",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "bootsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "sandalsSold",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

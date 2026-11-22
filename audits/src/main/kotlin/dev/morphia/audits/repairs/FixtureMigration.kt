@@ -346,8 +346,8 @@ object FixtureMigration {
 
     /**
      * Why the case of [override] cannot be converted yet, or null when the adapter supports it: a
-     * `testPipeline` case with mapped options and a single-collection documented source without
-     * retypes, corrections or alternative commands.
+     * `testPipeline` case with mapped options and a documented source without retypes, corrections
+     * or alternative commands.
      */
     fun convertible(override: FormOverride, example: CuratedExample): String? =
         when {
@@ -356,7 +356,6 @@ object FixtureMigration {
                 "options ${example.options.map { it.name }} are not mapped yet"
             override.retypes.isNotEmpty() || override.corrections.isNotEmpty() ->
                 "retypes and corrections are not supported yet"
-            override.collections.isNotEmpty() -> "extra collections are not supported yet"
             FormRule.ALTERNATIVE_COMMANDS in override.rules -> "alternative commands"
             else -> null
         }

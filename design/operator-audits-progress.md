@@ -2233,3 +2233,27 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   file operations can still leave that one fixture half-converted (check failures cannot, and
   earlier conversions are recorded); and cases `convertible` excludes are not listed with their
   reason yet. The later cutover slices widen `convertible`, and the coverage report will list them.
+
+- PR #4548 (branch audits-cutover-expressions, base #4547) published.
+
+## Step 5 slice 5c: stages cutover (2026-11-21)
+
+- Branch audits-cutover-stages from #4548. Extra collections no longer block a conversion: the
+  documented data already names every collection, the legacy data files were loaded under those
+  names, and `TemplatedTestBase.loadData(collection, n)` now defers to a converted case's scenario
+  (failing if the scenario does not seed that collection; the `ActionTestOptions` overload goes
+  through it too). The 7 `$lookup` and 2 `$unionWith`
+  cases convert this way.
+- 63 eligible stages cases were tried under both mappers: 49 convert, 14 stay legacy-only (the
+  same set under both):
+  - 10 SERIALIZATION: Int64 sort directions in `$fill` and `$setWindowFields` (7), `$skip` and
+    `$sample`'s `size` emitted as Int64, and `$fill` with `partitionBy` before `sortBy`;
+  - 2 PUBLISHED: `$bucketAuto`'s faceted results;
+  - 2 SOURCE: `densify` and `graphLookup/acrossMultipleCollections`, whose results the shell
+    normalizer cannot read.
+- Totals: form report 60 overrides; ledger 214 cases; `cutover.json` covers expressions and stages
+  with 59 legacy-only cases.
+- Review round 1: nothing significant. Low, noted: a converted body that touches
+  `EXAMPLE_TEST_COLLECTION` directly acts on a collection the runner no longer uses. The one case,
+  `sort/textScoreMetadataSort` (a text index), skips its results; a case like it that ran its
+  results would fail loudly on `$text`, not pass.

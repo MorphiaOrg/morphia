@@ -1,5 +1,0 @@
-{
-      $set: {
-         quizAverage: { $avg: "$quiz" } 
-      }
-   }

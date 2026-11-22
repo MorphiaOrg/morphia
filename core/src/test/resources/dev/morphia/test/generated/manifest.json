@@ -824,6 +824,251 @@
     "name" : "aggregation/expressions/zip/matrixTransposition",
     "scenario" : "/dev/morphia/test/aggregation/expressions/zip/matrixTransposition/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestZip#testMatrixTransposition"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/addFields/addElementToAnArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/addFields/addElementToAnArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testAddElementToAnArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/addFields/addingFieldsToAnEmbeddedDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/addFields/addingFieldsToAnEmbeddedDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testAddingFieldsToAnEmbeddedDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/addFields/overwritingAnExistingField",
+    "scenario" : "/dev/morphia/test/aggregation/stages/addFields/overwritingAnExistingField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testOverwritingAnExistingField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/addFields/removeFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/addFields/removeFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testRemoveFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucket#testUseBucketWithFacetToBucketByMultipleFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/bucketAuto/singleFacetAggregation",
+    "scenario" : "/dev/morphia/test/aggregation/stages/bucketAuto/singleFacetAggregation/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testSingleFacetAggregation"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/count/countAggregationStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/count/countAggregationStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestCount#testCountAggregationStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/documents/useADocumentsStageInALookupStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testUseADocumentsStageInALookupStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue",
+    "scenario" : "/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesWithAConstantValue"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/group/pivotData",
+    "scenario" : "/dev/morphia/test/aggregation/stages/group/pivotData/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestGroup#testPivotData"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformAConciseCorrelatedSubqueryWithLookup"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/performASingleEqualityJoinWithLookup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformASingleEqualityJoinWithLookup"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformAnUncorrelatedSubqueryWithLookup"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/useLookupWithAnArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/useLookupWithAnArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testUseLookupWithAnArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/lookup/useLookupWithMergeObjects",
+    "scenario" : "/dev/morphia/test/aggregation/stages/lookup/useLookupWithMergeObjects/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testUseLookupWithMergeObjects"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/match/equalityMatch",
+    "scenario" : "/dev/morphia/test/aggregation/stages/match/equalityMatch/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestMatch#testEqualityMatch"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/match/performACount",
+    "scenario" : "/dev/morphia/test/aggregation/stages/match/performACount/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestMatch#testPerformACount"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/project/conditionallyExcludeFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/project/conditionallyExcludeFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testConditionallyExcludeFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+    "scenario" : "/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsFromEmbeddedDocuments"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsFromEmbeddedDocumentsAsStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
+    "scenario" : "/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsInOutputDocuments/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsInOutputDocuments"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/project/suppressIdFieldInTheOutputDocuments",
+    "scenario" : "/dev/morphia/test/aggregation/stages/project/suppressIdFieldInTheOutputDocuments/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testSuppressIdFieldInTheOutputDocuments"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
+    "scenario" : "/dev/morphia/test/aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestRedact#testEvaluateAccessAtEveryDocumentLevel"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
+    "scenario" : "/dev/morphia/test/aggregation/stages/redact/excludeAllFieldsAtAGivenLevel/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestRedact#testExcludeAllFieldsAtAGivenLevel"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithADocumentNestedInAnArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithANewDocumentCreatedFromRootAndADefaultDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithANewlyCreatedDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithAnEmbeddedDocumentField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceWith/replaceWithADocumentNestedInAnArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceWith/replaceWithADocumentNestedInAnArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithADocumentNestedInAnArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceWith/replaceWithANewDocumentCreatedFromRootAndADefaultDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewDocumentCreatedFromRootAndADefaultDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithANewDocumentCreatedFromRootAndADefaultDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithANewlyCreatedDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
+    "scenario" : "/dev/morphia/test/aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithAnEmbeddedDocumentField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/set/addElementToAnArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/set/addElementToAnArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSet#testAddElementToAnArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/set/addingFieldsToAnEmbeddedDocument",
+    "scenario" : "/dev/morphia/test/aggregation/stages/set/addingFieldsToAnEmbeddedDocument/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSet#testAddingFieldsToAnEmbeddedDocument"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/set/creatingANewFieldWithExistingFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/set/creatingANewFieldWithExistingFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSet#testCreatingANewFieldWithExistingFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/set/usingTwoSetStages",
+    "scenario" : "/dev/morphia/test/aggregation/stages/set/usingTwoSetStages/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSet#testUsingTwoSetStages"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/sort/ascendingDescendingSort",
+    "scenario" : "/dev/morphia/test/aggregation/stages/sort/ascendingDescendingSort/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSort#testAscendingDescendingSort"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/sort/textScoreMetadataSort",
+    "scenario" : "/dev/morphia/test/aggregation/stages/sort/textScoreMetadataSort/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSort#testTextScoreMetadataSort"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
+    "scenario" : "/dev/morphia/test/aggregation/stages/sortByCount/sortByCountAggregationStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestSortByCount#testSortByCountAggregationStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testCreateAUnionWithSpecifiedDocuments"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testReport1AllSalesByYearAndStoresAndItems"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unionWith/report2AggregatedSalesByItems",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unionWith/report2AggregatedSalesByItems/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testReport2AggregatedSalesByItems"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unset/removeASingleField",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unset/removeASingleField/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveASingleField"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unset/removeEmbeddedFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unset/removeEmbeddedFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveEmbeddedFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unset/removeTopLevelFields",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unset/removeTopLevelFields/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveTopLevelFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unwind/missingOrNonArrayValues",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unwind/missingOrNonArrayValues/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testMissingOrNonArrayValues"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testPreserveNullAndEmptyArraysAndIncludeArrayIndex"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/unwind/unwindArray",
+    "scenario" : "/dev/morphia/test/aggregation/stages/unwind/unwindArray/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testUnwindArray"
   } ],
   "files" : [ {
     "owner" : "PROTECTED",
@@ -1485,6 +1730,202 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/zip/matrixTransposition/scenario.json",
     "sha256" : "d4307681cc67fb36636cb0089917e196ad64cd823512c747516a3fe8f6ea2fe6"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/addFields/addElementToAnArray/scenario.json",
+    "sha256" : "14fcd55ef130ed896965e7804d268b3b71cf80fc34e291e98d1fd955673d701a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/addFields/addingFieldsToAnEmbeddedDocument/scenario.json",
+    "sha256" : "89c754c2ddae74a93eea04f9f825c836d69cc504b8c921ede31ca42526abc967"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/addFields/overwritingAnExistingField/scenario.json",
+    "sha256" : "3ce9f0520289c8698902c398dd5b22b69e677a1a1c4745b275af0c37d07075f1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/addFields/removeFields/scenario.json",
+    "sha256" : "fe8b0adec34c322e6fa81aa39d61d235b506613d2671cdffea16409b617cb7ed"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields/scenario.json",
+    "sha256" : "fc5a9f5fc92db2f058f71d57416a0c162b9148d5bc58da42e305f3efffa0475b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/singleFacetAggregation/scenario.json",
+    "sha256" : "b85a79cd044d6678dea1bb667878caac415a0d4813ab078725e7f2a9333f47ac"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/count/countAggregationStage/scenario.json",
+    "sha256" : "af15251593fee04d147f1af6c99d509baa98656fc9f88a4ade41603fdabd15e4"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage/scenario.json",
+    "sha256" : "41f547604b64f2d32549bb7fc1b1734b28f0dcc5484ef33b6be66b4cc9b7b094"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue/scenario.json",
+    "sha256" : "164afed9a5fa76361d31c70699bc5565a8f0a6660575a8647d2ac8665a7968d3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/group/pivotData/scenario.json",
+    "sha256" : "8177e027e204fa930bfa766dfae08a9f4ccc2ec09a7ccb1e401af7cc872495c1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup/scenario.json",
+    "sha256" : "2e2f0a6b0eb0ea271ff4fb18a7fdd493579af05eed93815c390981d3d96d6eae"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/performASingleEqualityJoinWithLookup/scenario.json",
+    "sha256" : "c73d77b71fde42206f41c4a6e6f2e38839472100c8af8ce1a293374b7b6c2013"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup/scenario.json",
+    "sha256" : "393a03dd0b9c8e5bb063155798c931cc2477cf144351185669b789ef491c5aa0"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup/scenario.json",
+    "sha256" : "77d8825e72ec51523342af32f647869b038fbec40a9442897262ae552c05f930"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/useLookupWithAnArray/scenario.json",
+    "sha256" : "509c969db3562347c8f8b18e62d0cbb3f3fcf9ccdaadb1a84010f1816dc519d6"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/lookup/useLookupWithMergeObjects/scenario.json",
+    "sha256" : "2adacbdaff66a7c6e6ed7258a6ae1e28085fd31142e5b6f77673a0b792ab02d3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/match/equalityMatch/scenario.json",
+    "sha256" : "877c8a3d5c5d00a0400e1db7988eee664b2fc19e9573f8b15d74d3c604eeb50b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/match/performACount/scenario.json",
+    "sha256" : "0bd6f71b834e0451315b61ff1c8a11a781626f0145f89b6aab69b2648c7027a2"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/project/conditionallyExcludeFields/scenario.json",
+    "sha256" : "d57570ddae06bc43887ee926c844c94e18e393348b2a939a6cc4bdfcd0482da1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments/scenario.json",
+    "sha256" : "dfc551dca5dbcd74071a0e3c3595539bb9ebcfe9e0eaadb615b76b32dd36d5b5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage/scenario.json",
+    "sha256" : "57349735250fa31cc4c182ba6b1b0863cbdf559a42ca85e6f3757b5fad9f55a4"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/project/includeSpecificFieldsInOutputDocuments/scenario.json",
+    "sha256" : "c849a519c148de20e12a7183cb6a6cf2f16acc16dd54e4a1e887b1d27a5fb7ed"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/project/suppressIdFieldInTheOutputDocuments/scenario.json",
+    "sha256" : "18b42f63588f7371a6558234a450716dc8996dc5bcdec6c1e48f1dfcc8e07306"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel/scenario.json",
+    "sha256" : "56934dd95be07a023a3f630c5787346fcc5eaef4b90042898990d2c01aba5f74"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/redact/excludeAllFieldsAtAGivenLevel/scenario.json",
+    "sha256" : "4aaf8e903acc89f554344ae4926aad61f2ae7af96e32a32dfe4e51eee3607b07"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray/scenario.json",
+    "sha256" : "d8e96556a72534b0b5e956d979570ebc8689810f6f0433db2b30ded918d6e519"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument/scenario.json",
+    "sha256" : "211f87b1f9cea348a62f48d51784e88bdde65f24808b4306913d23828e84ca9c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument/scenario.json",
+    "sha256" : "ac6d54dc4b17b251f48886bd6a971c69b22ac9808972bd1127bae9d81df95863"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField/scenario.json",
+    "sha256" : "fa3178dceae7f7d3122518b014b16beff664e5aedc149f7017ea7d289c42042e"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceWith/replaceWithADocumentNestedInAnArray/scenario.json",
+    "sha256" : "66c3764cc7afa551c2cda709ed40a132839177a31542387e80f06e1bb30c2a42"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewDocumentCreatedFromRootAndADefaultDocument/scenario.json",
+    "sha256" : "04dc82d5f9d5d218336484d764b1e5c413aace75cf493f08c665f19de15d708d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument/scenario.json",
+    "sha256" : "d147e734e03fc5b2ab53e8d72cbfb872443e34b846e33d850abafa0a0572fc54"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField/scenario.json",
+    "sha256" : "1540546634c6565a16280f113ace46a019fb499139224e571e45c6ef380e63be"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/addElementToAnArray/scenario.json",
+    "sha256" : "6a35e3ef51646f6967a47fdc9017692c61b39427c34fc733d50313d6b2a5959a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/addingFieldsToAnEmbeddedDocument/scenario.json",
+    "sha256" : "f6a3e92cb3bdcb84c323469478b0023c933ec3012fc73fdfdd67470a11be8a1a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/creatingANewFieldWithExistingFields/scenario.json",
+    "sha256" : "9331d64c1b9d65575b1d03636d816733ebb2491222f9cd5f84597e80799c4bd1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/set/usingTwoSetStages/scenario.json",
+    "sha256" : "387ea14536c00b27b5fe06765f66d364a2abdf8ed823e79085a13734d670b2fe"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/sort/ascendingDescendingSort/scenario.json",
+    "sha256" : "c9792bdc2ffb6f5d3f66ff3b8fe2f55095b51a61acde6bf1759c7283cd5981b0"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/sort/textScoreMetadataSort/scenario.json",
+    "sha256" : "35843755f8dcb002699968ecf335645481e57bde27f4382468f354212e991405"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/sortByCount/sortByCountAggregationStage/scenario.json",
+    "sha256" : "c7bc1d49b7e67e935be7ba2607869aa68234d025f880bcd3e2689f1a99270e8b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments/scenario.json",
+    "sha256" : "6dc39e2b84f1bc06cb98f597d2b76d49be261fc0193781887ad7fba63813b5d3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems/scenario.json",
+    "sha256" : "fb1bfc3d5360314942a3acc76f8f196194f6effa0b0d9b2e3dbc63e7489d9b75"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unionWith/report2AggregatedSalesByItems/scenario.json",
+    "sha256" : "c83b5da8fdbd36227eaa7fc5de7cdae7d6fe4feefbf6aa491846ad4803354762"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unset/removeASingleField/scenario.json",
+    "sha256" : "10f904978301cf185162549650be8201b6750a3b345873c6dd5442156ea1cc31"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unset/removeEmbeddedFields/scenario.json",
+    "sha256" : "afc7e578c04a61c2c119d40464c63e65af6f7b59657868093816e34effa503ba"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unset/removeTopLevelFields/scenario.json",
+    "sha256" : "5f95021f05b19697003afbde9a9242c26f835d966942280e4d79379c2fdf2f82"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unwind/missingOrNonArrayValues/scenario.json",
+    "sha256" : "5432a4e914cf2d688613edc1a95e936b1d904d2061c4de2b93332592e99c04a4"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex/scenario.json",
+    "sha256" : "f51fc66d4568f92f6cd98f5104d2f335be54fbc6ebe6068fd15297990bd27b17"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unwind/unwindArray/scenario.json",
+    "sha256" : "0c1bcab16158b08f1bc6cc8f58ed4de8f566a7028ba0b919de4fc223539f00ee"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",

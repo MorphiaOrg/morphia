@@ -1,0 +1,332 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
+  "title": "Perform a Single Equality Join with ``$lookup``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "sku": "almonds",
+        "description": "product 1",
+        "instock": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "sku": "bread",
+        "description": "product 2",
+        "instock": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "sku": "cashews",
+        "description": "product 3",
+        "instock": {
+          "$numberInt": "60"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "sku": "pecans",
+        "description": "product 4",
+        "instock": {
+          "$numberInt": "70"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "sku": null,
+        "description": "Incomplete"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        }
+      }
+    ],
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "almonds",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pecans",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "inventory",
+          "localField": "item",
+          "foreignField": "sku",
+          "as": "inventory_docs"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "inventory_docs",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "sku",
+                      "value": {
+                        "text": "almonds"
+                      }
+                    },
+                    {
+                      "name": "description",
+                      "value": {
+                        "text": "product 1"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "120"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pecans"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "inventory_docs",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    },
+                    {
+                      "name": "sku",
+                      "value": {
+                        "text": "pecans"
+                      }
+                    },
+                    {
+                      "name": "description",
+                      "value": {
+                        "text": "product 4"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "70"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "inventory_docs",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "5"
+                        }
+                      }
+                    },
+                    {
+                      "name": "sku",
+                      "value": {
+                        "exact": null
+                      }
+                    },
+                    {
+                      "name": "description",
+                      "value": {
+                        "text": "Incomplete"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

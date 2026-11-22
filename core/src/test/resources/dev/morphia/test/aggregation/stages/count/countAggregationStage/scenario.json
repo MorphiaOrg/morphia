@@ -1,0 +1,118 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/count/countAggregationStage",
+  "title": "main",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/count.txt",
+    "blob": "7445b2354dcd75c414f0a22c49af09e947346ff8"
+  },
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "88"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "92"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "97"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "71"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "79"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "subject": "History",
+        "score": {
+          "$numberInt": "83"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "scores",
+    "pipeline": [
+      {
+        "$match": {
+          "score": {
+            "$gt": {
+              "$numberInt": "80"
+            }
+          }
+        }
+      },
+      {
+        "$count": "passing_scores"
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "passing_scores",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

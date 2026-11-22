@@ -1,0 +1,430 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/useLookupWithAnArray",
+  "title": "Use ``$lookup`` with an Array",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "classes": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "Reading is ...",
+        "enrollmentlist": [
+          "giraffe2",
+          "pandabear",
+          "artie"
+        ],
+        "days": [
+          "M",
+          "W",
+          "F"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "But Writing ...",
+        "enrollmentlist": [
+          "giraffe1",
+          "artie"
+        ],
+        "days": [
+          "T",
+          "F"
+        ]
+      }
+    ],
+    "members": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "artie",
+        "joined": {
+          "$date": {
+            "$numberLong": "1462060800000"
+          }
+        },
+        "status": "A"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "giraffe",
+        "joined": {
+          "$date": {
+            "$numberLong": "1493596800000"
+          }
+        },
+        "status": "D"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "giraffe1",
+        "joined": {
+          "$date": {
+            "$numberLong": "1506816000000"
+          }
+        },
+        "status": "A"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "panda",
+        "joined": {
+          "$date": {
+            "$numberLong": "1539216000000"
+          }
+        },
+        "status": "A"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "pandabear",
+        "joined": {
+          "$date": {
+            "$numberLong": "1543622400000"
+          }
+        },
+        "status": "A"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "giraffe2",
+        "joined": {
+          "$date": {
+            "$numberLong": "1543622400000"
+          }
+        },
+        "status": "D"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "classes",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "members",
+          "localField": "enrollmentlist",
+          "foreignField": "name",
+          "as": "enrollee_info"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Reading is ..."
+            }
+          },
+          {
+            "name": "enrollmentlist",
+            "value": {
+              "array": [
+                {
+                  "text": "giraffe2"
+                },
+                {
+                  "text": "pandabear"
+                },
+                {
+                  "text": "artie"
+                }
+              ]
+            }
+          },
+          {
+            "name": "days",
+            "value": {
+              "array": [
+                {
+                  "text": "M"
+                },
+                {
+                  "text": "W"
+                },
+                {
+                  "text": "F"
+                }
+              ]
+            }
+          },
+          {
+            "name": "enrollee_info",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "artie"
+                      }
+                    },
+                    {
+                      "name": "joined",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1462060800000"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "A"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "5"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "pandabear"
+                      }
+                    },
+                    {
+                      "name": "joined",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1543622400000"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "A"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "giraffe2"
+                      }
+                    },
+                    {
+                      "name": "joined",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1543622400000"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "D"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "But Writing ..."
+            }
+          },
+          {
+            "name": "enrollmentlist",
+            "value": {
+              "array": [
+                {
+                  "text": "giraffe1"
+                },
+                {
+                  "text": "artie"
+                }
+              ]
+            }
+          },
+          {
+            "name": "days",
+            "value": {
+              "array": [
+                {
+                  "text": "T"
+                },
+                {
+                  "text": "F"
+                }
+              ]
+            }
+          },
+          {
+            "name": "enrollee_info",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "artie"
+                      }
+                    },
+                    {
+                      "name": "joined",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1462060800000"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "A"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "giraffe1"
+                      }
+                    },
+                    {
+                      "name": "joined",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1506816000000"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "A"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

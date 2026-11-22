@@ -783,50 +783,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/stages/addFields/overwritingAnExistingField",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "parser pulls wrong code block for expected",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "265803b8d934ddedd4f37e31f74afdf491f6f75f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/addFields.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/bucketAuto/singleFacetAggregation",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "3b07c7071063998d64970ee0626c4e334f7a7091",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
-      "path" : "source/reference/operator/aggregation/bucketAuto.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
     "includes" : [ {
       "blob" : "324ff3f0609ab2cf2413bbb59ea90d6a5299bdae",
@@ -958,618 +914,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/stages/group/pivotData",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "be3fc6f1f30030dd8caec9c694d2bd8740bd1715",
-      "path" : "source/includes/extracts-agg-operators.yaml"
-    }, {
-      "blob" : "55d38e3e1a1f693539b2a660f6709730110d2fa5",
-      "path" : "source/includes/aggregation/fact-operator-availability.rst"
-    }, {
-      "blob" : "5ba8939bc7515c153aa2f6eef9953927f0183ce2",
-      "path" : "source/includes/fact-sbe-group-overview.rst"
-    }, {
-      "blob" : "421cc6cfc930a7c9b738b0211bdbd9122b2d4999",
-      "path" : "source/includes/fact-group-sales-documents.rst"
-    } ],
-    "justification" : null,
-    "lock" : "docs had wrong results",
-    "marker" : "lock",
-    "origin" : "a0ef888d51998b32d0905c8cb17c5b33ee6a1530",
-    "pageBlob" : "3a27b8e136e0acd5d851b6db24b6a71bbce66998",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
-      "path" : "source/reference/operator/aggregation/group.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange the order",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline\ntweak the data files",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline\n",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline\ntweak the data files",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/lookup/useLookupWithMergeObjects",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
-      "path" : "source/includes/lookup-from.rst"
-    }, {
-      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
-      "path" : "source/includes/uncorrelated-subquery.rst"
-    }, {
-      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
-      "path" : "source/includes/fact-let-variable-access-note.rst"
-    }, {
-      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
-      "path" : "source/includes/expr-operators-and-indexes.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    }, {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
-      "path" : "source/includes/fact-sbe-lookup-overview.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline\ntweak the data files",
-    "marker" : "lock",
-    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
-    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/match/equalityMatch",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/match.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/match/performACount",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "make the $or match morphia's",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
-    "retypes" : [ ],
-    "rules" : [ "FIELD_OPERATORS_AND" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/match.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
-      "path" : "source/includes/project-stage-and-array-index.rst"
-    }, {
-      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
-      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use the short form of $cond",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/project.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
-      "path" : "source/includes/project-stage-and-array-index.rst"
-    }, {
-      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
-      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use the short form of $cond",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/project.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
-      "path" : "source/includes/project-stage-and-array-index.rst"
-    }, {
-      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
-      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
-    } ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/project.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
-    "includes" : [ {
-      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
-      "path" : "source/images/redact-security-architecture.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use the shorter form of $cond",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
-      "path" : "source/reference/operator/aggregation/redact.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
-    "includes" : [ {
-      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
-      "path" : "source/images/redact-security-architecture.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use the shorter form of $cond",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
-      "path" : "source/reference/operator/aggregation/redact.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "f8c2929b446278e8fe95d37f5b21b670097511e4",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
-      "path" : "source/reference/operator/aggregation/replaceRoot.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "parser pulled wrong expected",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
-      "path" : "source/reference/operator/aggregation/replaceWith.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
-      "path" : "source/reference/operator/aggregation/replaceWith.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/set/usingTwoSetStages",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "moved a trailing brace to a new line where it belongs",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "94fa0501865c5fcc9eea1100527e5b70851a37db",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/set.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
     "includes" : [ {
       "blob" : "746f3697da4fb3e58cf7ab15c07fc7998c9a19d8",
@@ -1603,171 +947,6 @@
     "source" : {
       "commit" : "8ab245d2e59dce762882f5c683ad91c683969e7b",
       "path" : "source/reference/operator/aggregation/setWindowFields.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/sort/ascendingDescendingSort",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "e22e38eab782b645f2bb781bcfd48d7f7c294438",
-      "path" : "source/includes/sort-limits.rst"
-    }, {
-      "blob" : "b884f9ca12ac30d63d5adeac7730626cddc85ec7",
-      "path" : "source/includes/fact-sort-consistency.rst"
-    }, {
-      "blob" : "bc1e517b4d931dddf749a147eba8a9bec8086331",
-      "path" : "source/includes/fact-sort-order.rst"
-    }, {
-      "blob" : "ad8da777c6a2df6b7d30cc3a4fa3aeaa2207ecb4",
-      "path" : "source/includes/fact-agg-sort-limit.rst"
-    }, {
-      "blob" : "e8f9db6f95e25179991eaaa8c1cd107b4234c806",
-      "path" : "source/includes/fact-optimizations-subject-to-change.rst"
-    }, {
-      "blob" : "329614c8b1b15b55a77a30a5f5171c593053025a",
-      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
-    } ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "afcda13657d13e72789715e2a277d144edab7a0d",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/sort.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
-    "includes" : [ {
-      "blob" : "7e86ea18abe6cadf6783795f59299eb473070fae",
-      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reformat pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "7f92ddf55c937279fafe343fe4853b49f66ed742",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
-      "path" : "source/reference/operator/aggregation/sortByCount.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "270d1daee078aaaa2b826f6d5b4423d3ec3d3075",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "326f02223a9d4f695be65a4172d46968a828b14e",
-      "path" : "source/reference/operator/aggregation/unionWith.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "morphia doesn't generate this shape of $unwind",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
-    "retypes" : [ ],
-    "rules" : [ "UNWIND_PATH" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/unwind.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "parser pulled wrong expected",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/unwind.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/unwind/unwindArray",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/unwind.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -3751,6 +2930,827 @@
     "source" : {
       "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
       "path" : "source/reference/operator/aggregation/zip.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/addFields/overwritingAnExistingField",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser pulls wrong code block for expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "265803b8d934ddedd4f37e31f74afdf491f6f75f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/addFields.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/bucketAuto/singleFacetAggregation",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3b07c7071063998d64970ee0626c4e334f7a7091",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
+      "path" : "source/reference/operator/aggregation/bucketAuto.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/group/pivotData",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "be3fc6f1f30030dd8caec9c694d2bd8740bd1715",
+      "path" : "source/includes/extracts-agg-operators.yaml"
+    }, {
+      "blob" : "55d38e3e1a1f693539b2a660f6709730110d2fa5",
+      "path" : "source/includes/aggregation/fact-operator-availability.rst"
+    }, {
+      "blob" : "5ba8939bc7515c153aa2f6eef9953927f0183ce2",
+      "path" : "source/includes/fact-sbe-group-overview.rst"
+    }, {
+      "blob" : "421cc6cfc930a7c9b738b0211bdbd9122b2d4999",
+      "path" : "source/includes/fact-group-sales-documents.rst"
+    } ],
+    "justification" : null,
+    "lock" : "docs had wrong results",
+    "marker" : "lock",
+    "origin" : "a0ef888d51998b32d0905c8cb17c5b33ee6a1530",
+    "pageBlob" : "3a27b8e136e0acd5d851b6db24b6a71bbce66998",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
+      "path" : "source/reference/operator/aggregation/group.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange the order",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\ntweak the data files",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\n",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\ntweak the data files",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/useLookupWithMergeObjects",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\ntweak the data files",
+    "marker" : "lock",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/match/equalityMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/match.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/match/performACount",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "make the $or match morphia's",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
+    "retypes" : [ ],
+    "rules" : [ "FIELD_OPERATORS_AND" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/match.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use the short form of $cond",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use the short form of $cond",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
+    "includes" : [ {
+      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
+      "path" : "source/images/redact-security-architecture.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use the shorter form of $cond",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
+      "path" : "source/reference/operator/aggregation/redact.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
+    "includes" : [ {
+      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
+      "path" : "source/images/redact-security-architecture.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use the shorter form of $cond",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
+      "path" : "source/reference/operator/aggregation/redact.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f8c2929b446278e8fe95d37f5b21b670097511e4",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceRoot.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "parser pulled wrong expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceWith.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceWith.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/set/usingTwoSetStages",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "moved a trailing brace to a new line where it belongs",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "94fa0501865c5fcc9eea1100527e5b70851a37db",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/sort/ascendingDescendingSort",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "e22e38eab782b645f2bb781bcfd48d7f7c294438",
+      "path" : "source/includes/sort-limits.rst"
+    }, {
+      "blob" : "b884f9ca12ac30d63d5adeac7730626cddc85ec7",
+      "path" : "source/includes/fact-sort-consistency.rst"
+    }, {
+      "blob" : "bc1e517b4d931dddf749a147eba8a9bec8086331",
+      "path" : "source/includes/fact-sort-order.rst"
+    }, {
+      "blob" : "ad8da777c6a2df6b7d30cc3a4fa3aeaa2207ecb4",
+      "path" : "source/includes/fact-agg-sort-limit.rst"
+    }, {
+      "blob" : "e8f9db6f95e25179991eaaa8c1cd107b4234c806",
+      "path" : "source/includes/fact-optimizations-subject-to-change.rst"
+    }, {
+      "blob" : "329614c8b1b15b55a77a30a5f5171c593053025a",
+      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "afcda13657d13e72789715e2a277d144edab7a0d",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/sort.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
+    "includes" : [ {
+      "blob" : "7e86ea18abe6cadf6783795f59299eb473070fae",
+      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reformat pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "7f92ddf55c937279fafe343fe4853b49f66ed742",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
+      "path" : "source/reference/operator/aggregation/sortByCount.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "270d1daee078aaaa2b826f6d5b4423d3ec3d3075",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "326f02223a9d4f695be65a4172d46968a828b14e",
+      "path" : "source/reference/operator/aggregation/unionWith.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "morphia doesn't generate this shape of $unwind",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
+    "rules" : [ "UNWIND_PATH" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser pulled wrong expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unwind/unwindArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],

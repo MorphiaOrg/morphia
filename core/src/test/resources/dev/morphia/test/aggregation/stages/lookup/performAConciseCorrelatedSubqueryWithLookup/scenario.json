@@ -1,0 +1,261 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+  "title": "Perform a Concise Correlated Subquery with ``$lookup``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "filet",
+        "restaurant_name": "American Steak House"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "cheese pizza",
+        "restaurant_name": "Honest John Pizza",
+        "drink": "lemonade"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "cheese pizza",
+        "restaurant_name": "Honest John Pizza",
+        "drink": "soda"
+      }
+    ],
+    "restaurants": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "American Steak House",
+        "food": [
+          "filet",
+          "sirloin"
+        ],
+        "beverages": [
+          "beer",
+          "wine"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Honest John Pizza",
+        "food": [
+          "cheese pizza",
+          "pepperoni pizza"
+        ],
+        "beverages": [
+          "soda"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "restaurants",
+          "localField": "restaurant_name",
+          "foreignField": "name",
+          "let": {
+            "orders_drink": "$drink"
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$in": [
+                    "$$orders_drink",
+                    "$beverages"
+                  ]
+                }
+              }
+            }
+          ],
+          "as": "matches"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "filet"
+            }
+          },
+          {
+            "name": "restaurant_name",
+            "value": {
+              "text": "American Steak House"
+            }
+          },
+          {
+            "name": "matches",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "cheese pizza"
+            }
+          },
+          {
+            "name": "restaurant_name",
+            "value": {
+              "text": "Honest John Pizza"
+            }
+          },
+          {
+            "name": "drink",
+            "value": {
+              "text": "lemonade"
+            }
+          },
+          {
+            "name": "matches",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "cheese pizza"
+            }
+          },
+          {
+            "name": "restaurant_name",
+            "value": {
+              "text": "Honest John Pizza"
+            }
+          },
+          {
+            "name": "drink",
+            "value": {
+              "text": "soda"
+            }
+          },
+          {
+            "name": "matches",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Honest John Pizza"
+                      }
+                    },
+                    {
+                      "name": "food",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "cheese pizza"
+                          },
+                          {
+                            "text": "pepperoni pizza"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "beverages",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "soda"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

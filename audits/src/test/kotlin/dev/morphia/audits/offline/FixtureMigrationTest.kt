@@ -189,13 +189,9 @@ class FixtureMigrationTest {
                 }
             }
         // Declared rules travel with the scenario.
-        val withRules =
-            form.overrides.first {
-                it.rules == listOf(FormRule.COND_ARRAY) &&
-                    it.retypes.isEmpty() &&
-                    it.corrections.isEmpty() &&
-                    it.collections.isEmpty()
-            }
-        assertTrue("\"COND_ARRAY\"" in FixtureMigration.scenario(withRules, true))
+        val withRules = ledger.migrations.first { FormRule.COND_ARRAY in it.override.rules }
+        assertTrue(
+            "\"COND_ARRAY\"" in FixtureMigration.scenario(withRules.override, withRules.ordered)
+        )
     }
 }
