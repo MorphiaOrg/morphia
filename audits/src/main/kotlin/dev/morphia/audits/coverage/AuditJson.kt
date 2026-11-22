@@ -23,6 +23,8 @@ import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.publish.PublicationJournal
+import dev.morphia.audits.publish.PublicationPolicy
 import dev.morphia.audits.repairs.CaseManifest
 import dev.morphia.audits.repairs.CuratedRepairReport
 import dev.morphia.audits.repairs.CutoverReport
@@ -176,6 +178,12 @@ object AuditJson {
         read(json, FormMigrationReport::class.java)
 
     fun cutover(json: String): CutoverReport = read(json, CutoverReport::class.java)
+
+    fun publicationJournal(json: String): PublicationJournal =
+        read(json, PublicationJournal::class.java)
+
+    fun publicationPolicy(json: String): PublicationPolicy =
+        read(json, PublicationPolicy::class.java)
 
     fun legacyReferences(json: String): LegacyReferenceReport =
         read(json, LegacyReferenceReport::class.java)

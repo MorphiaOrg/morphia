@@ -69,7 +69,7 @@ object CoverageMarkdown {
         appendLine("| --- | --- | --- | --- | --- | --- | --- |")
         report.capabilities.forEach { row ->
             appendLine(
-                "| ${row.capability.id()} | ${row.documentation} | ${row.api} | ${row.introduction.version?.let { version -> "${version.major}.${version.minor}" + (if (version.patch == 0) "" else ".${version.patch}") + version.qualifier?.let { "-$it" }.orEmpty() } ?: row.introduction.state} | ${row.serialization} | ${row.behavior} | ${row.examples} |"
+                "| ${row.capability.id()} | ${row.documentation} | ${row.api} | ${row.introduction.version?.display() ?: row.introduction.state} | ${row.serialization} | ${row.behavior} | ${row.examples} |"
             )
         }
         report.capabilities.forEach { row ->

@@ -141,6 +141,23 @@ data class IssuePatch(
     val milestone: Int? = null,
 )
 
+/** The issue operations the publisher needs; [GhGateway] is the real one. */
+interface IssueTracker {
+    /** Every issue, open and closed. */
+    fun issues(): List<GhIssue>
+
+    /** One issue by number, read directly rather than through the (lagging) listing. */
+    fun issue(number: Int): GhIssue
+
+    fun labels(): List<GhLabel>
+
+    fun milestones(): List<GhMilestone>
+
+    fun create(request: IssueRequest): GhIssue
+
+    fun update(number: Int, patch: IssuePatch): GhIssue
+}
+
 /**
  * The GitHub operations the audit publisher needs, through the `gh` CLI. Every call is an argument
  * array with an explicit host and repository; inherited `GH_HOST`/`GH_REPO` and unrelated tokens
@@ -159,7 +176,7 @@ class GhGateway(
     private val timeout: Duration = Duration.ofSeconds(60),
     private val attempts: Int = 3,
     private val sleeper: (Duration) -> Unit = { Thread.sleep(it.toMillis()) },
-) {
+) : IssueTracker {
     private val mapper = ObjectMapper()
 
     /** Fails unless `gh` is present and within the tested version range. */
@@ -180,23 +197,23 @@ class GhGateway(
     }
 
     /** Every issue, open and closed, without pull requests (the issues endpoint returns both). */
-    fun issues(): List<GhIssue> =
+    override fun issues(): List<GhIssue> =
         pages("${target.path}/issues?state=all&per_page=100")
             .filter { !it.has("pull_request") }
             .map { issue(it) }
 
-    fun issue(number: Int): GhIssue = issue(read("GET", "${target.path}/issues/$number"))
+    override fun issue(number: Int): GhIssue = issue(read("GET", "${target.path}/issues/$number"))
 
-    fun labels(): List<GhLabel> =
+    override fun labels(): List<GhLabel> =
         pages("${target.path}/labels?per_page=100").map { GhLabel(it.text("name")) }
 
-    fun milestones(): List<GhMilestone> =
+    override fun milestones(): List<GhMilestone> =
         pages("${target.path}/milestones?state=all&per_page=100").map {
             GhMilestone(it.integer("number"), it.text("title"), it.text("state"))
         }
 
     /** Creates an issue once; an uncertain result is the caller's to reconcile, not retry. */
-    fun create(request: IssueRequest): GhIssue {
+    override fun create(request: IssueRequest): GhIssue {
         val payload =
             mapper.createObjectNode().apply {
                 put("title", request.title)
@@ -207,7 +224,7 @@ class GhGateway(
         return issue(write("POST", "${target.path}/issues", payload.toString()))
     }
 
-    fun update(number: Int, patch: IssuePatch): GhIssue {
+    override fun update(number: Int, patch: IssuePatch): GhIssue {
         val payload =
             mapper.createObjectNode().apply {
                 patch.title?.let { put("title", it) }

@@ -661,3 +661,20 @@ no binary, credentials or network.
 `GhGatewaySandboxTest` runs only with `-Daudits.sandbox=OWNER/REPO`, against a disposable repository
 that has an `audit` label and a `sandbox` milestone (for this project, the private
 `evanchooly/morphia-audits-sandbox`). It reuses one marked issue across runs.
+
+## Publishing findings
+
+`PublishMainKt <coverage-report.json> audits/catalog/publication-policy.json <journal.json> OWNER/REPO
+[--publish]` files a validated coverage report's findings as issues. Without `--publish` it only
+reports what it would do. Findings come only from a report that is not `INVALID`, and only from
+contexts whose inventory is healthy: a missing typed API (`MISSING_API`) and a missing or wrong
+server-version annotation (`VERSION_ANNOTATION`). `publication-policy.json` names each type's labels
+and the milestone new issues join; any that do not exist stop publication.
+
+Each issue carries its finding's stable key in a marker. The publisher owns only the text between
+its markers, adds its labels without removing others, sets a milestone only where none is set, and
+never reopens or edits a closed issue. Before a create it writes its intent to the journal; a lost
+response leaves the key `POSSIBLY_CREATED`, reconciled by polling for the marker and never created
+again until resolved. Keep the journal between runs: an issue it knows is read by number, since
+GitHub's listing can lag a recent write. `AUDITS_GITHUB_TOKEN`, when set, is the token `gh` uses.
+`PublisherSandboxTest` runs the publisher against the sandbox repository (`-Daudits.sandbox=...`).

@@ -23,6 +23,10 @@ data class ReleaseVersion(val major: Int, val minor: Int, val patch: Int, val qu
                 }
         )
 
+    /** As release notes write it: `8.0`, `7.0.3`, `8.1-rc0`. */
+    fun display(): String =
+        "$major.$minor" + (if (patch == 0) "" else ".$patch") + qualifier?.let { "-$it" }.orEmpty()
+
     override fun compareTo(other: ReleaseVersion): Int {
         compareValuesBy(this, other, { it.major }, { it.minor }, { it.patch })
             .takeIf { it != 0 }

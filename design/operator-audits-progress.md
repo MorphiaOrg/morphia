@@ -2398,3 +2398,27 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `evanchooly/morphia-audits-sandbox` (label `audit`, milestone `sandbox`), created once. The
   sandbox test keeps a single marked issue; two runs left exactly one issue, edited by the second.
 - Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
+
+- PR #4555 (branch audits-gh-gateway, base #4554) published.
+
+## Step 6b: the publisher (2026-11-22)
+
+- Branch audits-publisher from #4555. `Publisher` turns a validated coverage report into findings
+  (`MISSING_API`, `VERSION_ANNOTATION`; only non-invalid reports and healthy contexts) with stable
+  keys, and files them through an `IssueTracker` (`GhGateway`). It owns only the text between its
+  markers, adds labels without removing any, sets a milestone only when none is set, and treats a
+  closed issue as a disposition. Creates go through a durable journal (atomic replace): intent
+  before the POST, `POSSIBLY_CREATED` on any failure, reconciled by polling the all-state listing
+  for the marker and never replayed; an intent with no outcome is recovered the same way. Returned
+  labels and milestone are validated and repaired on the same issue. Missing policy labels or
+  milestones and duplicate markers stop publication.
+- `publication-policy.json`: `MISSING_API` gets `enhancement` and `proposed`, `VERSION_ANNOTATION`
+  gets `bug`, existing labels of MorphiaOrg/morphia; no milestone.
+- The sandbox run found that GitHub's issue listing can lag a create: a just-filed issue was
+  missing from the next listing. An issue the journal knows is now read by number
+  (`IssueTracker.issue`), and the README says to keep the journal between runs.
+- `ReleaseVersion.display()` (`8.0`) replaces the inline formatting in `CoverageMain`; the issue
+  body printed the data class before.
+- `PublisherTest` (11 cases) on a fake tracker; `PublisherSandboxTest` against
+  `evanchooly/morphia-audits-sandbox`, run twice: the repository still holds three issues.
+- Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
