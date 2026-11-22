@@ -2338,3 +2338,21 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Review round 1: server-correct, with no missed or wrongly changed sites. Medium, applied: the
   generated commands change type for anyone reading them (Int32 where it was Int64), so the 3.0
   migration guide gains a note (morphia-docs, `docs-redesign`).
+
+- PR #4552 (branch audits-int32-parameters, base #4551) published, with MorphiaOrg/morphia-docs#40
+  (migration-guide note).
+
+## Ordered maps in four update tests (2026-11-22)
+
+- Branch audits-ordered-maps from #4552, on the user's decision. `TestSet#testSetTopLevelFields`,
+  `TestSlice#testUseSliceWithOtherPushModifiers` and `TestSort`'s two `$push` cases built their
+  values with `Map.of`, whose key order is unspecified, and skipped their action check for that
+  reason. They now build `Document`s in the page's field order (`TestSet`'s `details` is
+  `{model, make}`, as documented), the `skipActionCheck(true)` and its comment are gone, and the
+  legacy path passes with the action check before conversion.
+- Editing a legacy body changes its digest, which the frozen binding catalog pins. A converted
+  ledger entry may now carry a reviewed `BodyEdit` (the frozen digest it starts from and why);
+  `FixtureMigration.remove` applies it only when the catalog records that starting digest. The
+  four entries carry one; the inventory was recaptured (their options lost `skipActionCheck`).
+- All four convert under both mappers. Ledger 345 cases; 29 legacy-only.
+- Review: the independent reviewer hit its weekly limit (resets 2026-11-26); self-reviewed here, and the review will be resent on the PR.

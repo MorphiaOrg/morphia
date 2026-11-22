@@ -7719,7 +7719,7 @@
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSet"
   }, {
-    "assertions" : [ "BEHAVIOR" ],
+    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
     "collections" : { },
     "disabled" : false,
@@ -7728,10 +7728,7 @@
     "helpers" : [ "testUpdate" ],
     "markers" : [ ],
     "method" : "testSetTopLevelFields",
-    "options" : [ {
-      "argument" : "true",
-      "name" : "skipActionCheck"
-    } ],
+    "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSet"
   }, {
     "assertions" : [ "SERIALIZATION" ],
@@ -7788,7 +7785,7 @@
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSlice"
   }, {
-    "assertions" : [ "BEHAVIOR" ],
+    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
     "collections" : { },
     "disabled" : false,
@@ -7797,10 +7794,7 @@
     "helpers" : [ "testUpdate" ],
     "markers" : [ ],
     "method" : "testUseSliceWithOtherPushModifiers",
-    "options" : [ {
-      "argument" : "true",
-      "name" : "skipActionCheck"
-    } ],
+    "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSlice"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
@@ -7815,7 +7809,7 @@
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSort"
   }, {
-    "assertions" : [ "BEHAVIOR" ],
+    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
     "collections" : { },
     "disabled" : false,
@@ -7824,10 +7818,7 @@
     "helpers" : [ "testUpdate" ],
     "markers" : [ ],
     "method" : "testSortArrayOfDocumentsByAFieldInTheDocuments",
-    "options" : [ {
-      "argument" : "true",
-      "name" : "skipActionCheck"
-    } ],
+    "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSort"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
@@ -7842,7 +7833,7 @@
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSort"
   }, {
-    "assertions" : [ "BEHAVIOR" ],
+    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
     "collections" : { },
     "disabled" : false,
@@ -7851,10 +7842,7 @@
     "helpers" : [ "testUpdate" ],
     "markers" : [ ],
     "method" : "testUseSortWithOtherPushModifiers",
-    "options" : [ {
-      "argument" : "true",
-      "name" : "skipActionCheck"
-    } ],
+    "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSort"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
@@ -7976,7 +7964,7 @@
     "assertion.CUSTOM" : 2,
     "assertion.DISABLED" : 7,
     "assertion.NONE" : 26,
-    "assertion.SERIALIZATION" : 508,
+    "assertion.SERIALIZATION" : 512,
     "category.DOCS_ERROR" : 37,
     "category.EXTRACTION" : 68,
     "category.FIXTURE_CURATION" : 21,
@@ -8001,7 +7989,7 @@
     "option.orderMatters" : 107,
     "option.removeIds" : 61,
     "option.serverVersion" : 18,
-    "option.skipActionCheck" : 10,
+    "option.skipActionCheck" : 6,
     "option.skipDataCheck" : 53,
     "option.skipIndex" : 1,
     "option.updateOptions" : 1

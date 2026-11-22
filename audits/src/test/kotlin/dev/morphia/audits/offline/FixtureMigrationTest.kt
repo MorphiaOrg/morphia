@@ -79,6 +79,21 @@ class FixtureMigrationTest {
                 FixtureMigration.remove(projected, tampered)
             }
         assertTrue("changed before it moved" in failure.message!!, failure.message)
+        // A converted body may change only through a reviewed edit from the recorded body.
+        val misdated =
+            ledger.copy(
+                migrations =
+                    ledger.migrations.map { migrated ->
+                        migrated.bodyEdit?.let {
+                            migrated.copy(bodyEdit = it.copy(fromSha256 = "0".repeat(64)))
+                        } ?: migrated
+                    }
+            )
+        val edit =
+            assertThrows(IllegalArgumentException::class.java) {
+                FixtureMigration.remove(projected, misdated)
+            }
+        assertTrue("does not start from the recorded body" in edit.message!!, edit.message)
     }
 
     @Test

@@ -1,12 +1,11 @@
 package dev.morphia.test.query.updates;
 
 import java.util.List;
-import java.util.Map;
 
 import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
+import org.bson.Document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +19,8 @@ public class TestSet extends TemplatedTestBase {
     @Test
     @DisplayName("Set Top-Level Fields")
     public void testSetTopLevelFields() {
-        // skip the action check because the Map order varies
-        testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(Filters.eq("_id", 100)),
-                set("quantity", 500), set("details", Map.of("make", "Fashionaires", "model", "2600")),
+        testUpdate((query) -> query.filter(Filters.eq("_id", 100)),
+                set("quantity", 500), set("details", new Document("model", "2600").append("make", "Fashionaires")),
                 set("tags", List.of("coats", "outerwear", "clothing")));
     }
 

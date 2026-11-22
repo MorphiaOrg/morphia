@@ -1681,6 +1681,11 @@
     "test" : "dev.morphia.test.query.updates.TestSet#testSetFieldsInEmbeddedDocuments"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/updates/set/setTopLevelFields",
+    "scenario" : "/dev/morphia/test/query/updates/set/setTopLevelFields/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSet#testSetTopLevelFields"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/updates/slice/sliceFromTheEndOfTheArray",
     "scenario" : "/dev/morphia/test/query/updates/slice/sliceFromTheEndOfTheArray/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestSlice#testSliceFromTheEndOfTheArray"
@@ -1696,14 +1701,29 @@
     "test" : "dev.morphia.test.query.updates.TestSlice#testUpdateArrayUsingSliceOnly"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/updates/slice/useSliceWithOtherPushModifiers",
+    "scenario" : "/dev/morphia/test/query/updates/slice/useSliceWithOtherPushModifiers/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSlice#testUseSliceWithOtherPushModifiers"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/updates/sort/sortArrayElementsThatAreNotDocuments",
     "scenario" : "/dev/morphia/test/query/updates/sort/sortArrayElementsThatAreNotDocuments/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestSort#testSortArrayElementsThatAreNotDocuments"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments",
+    "scenario" : "/dev/morphia/test/query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSort#testSortArrayOfDocumentsByAFieldInTheDocuments"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/updates/sort/updateArrayUsingSortOnly",
     "scenario" : "/dev/morphia/test/query/updates/sort/updateArrayUsingSortOnly/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestSort#testUpdateArrayUsingSortOnly"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/updates/sort/useSortWithOtherPushModifiers",
+    "scenario" : "/dev/morphia/test/query/updates/sort/useSortWithOtherPushModifiers/scenario.json",
+    "test" : "dev.morphia.test.query.updates.TestSort#testUseSortWithOtherPushModifiers"
   } ],
   "files" : [ {
     "owner" : "PROTECTED",
@@ -3075,6 +3095,10 @@
     "sha256" : "077aaace8ca3d9c6495f70d57d72d5ca7164f3d6d968e48b2f231fb8a58a4621"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/set/setTopLevelFields/scenario.json",
+    "sha256" : "71b6f53d49ba3a92f263b6b486da17f838d9d21c711d427e71b90fdf789aadd0"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/slice/sliceFromTheEndOfTheArray/scenario.json",
     "sha256" : "e4cc320949cbf78c9d05c3d02441c5c6b313849d86a70f0499fc51537715f333"
   }, {
@@ -3087,12 +3111,24 @@
     "sha256" : "484d86f51dcf2d5f4ccc826b229a44f0e9255a3a53d4c298865f539f98ef245e"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/slice/useSliceWithOtherPushModifiers/scenario.json",
+    "sha256" : "81ac1870f7f2a59cea472eb79e3e67e7eb7d04f3ceb204fb7c39482a625301e4"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/sort/sortArrayElementsThatAreNotDocuments/scenario.json",
     "sha256" : "b96e91da47b018958210f767139f68f9fe39d0d44e73a818bdbe03124234c459"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments/scenario.json",
+    "sha256" : "6eddb84c2ba646c6c00a44f5390dc05b5f97ae06fb4fe37e06fbda76f2a50b51"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/sort/updateArrayUsingSortOnly/scenario.json",
     "sha256" : "ff6cdda63b67dfb76dfb5b00eb57adfb92801a75bddb7fbefa44ea6a81f82d6f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/updates/sort/useSortWithOtherPushModifiers/scenario.json",
+    "sha256" : "68ad25fb6d8aed5b13be3d87bd569f5eecceb1ab1dd845adfcce999b744d6be0"
   } ],
   "schemaVersion" : 1
 }

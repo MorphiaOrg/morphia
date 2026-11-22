@@ -1,5 +1,6 @@
 {
   "migrations" : [ {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "eab683c7b4b5cb354920a9f565d6f0abddf9856d47cfec60fe670af8983601b4",
       "data.json" : "a39d565831c5ef2248738bc92988d3ec768676d6692a66d93cb6a48e56abf5bc",
@@ -62,6 +63,7 @@
     "scenarioSha256" : "541d17d79857998deba53cf43b0ee6e6b62c0c4d56ace2ff14ec776ea9ca74ad",
     "test" : "dev.morphia.test.aggregation.expressions.TestAbs#testAbsExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "88c68cffe3459096b3782e710880b1fca4cffea045cae598691871750ed8ccaf",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -118,6 +120,7 @@
     "scenarioSha256" : "1a069d57c8bf52e1c3592f6735d008eb0f1fdd7be22acb146611928ac08cdfdd",
     "test" : "dev.morphia.test.aggregation.expressions.TestAcos#testInverseCosineOfValueInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e9e340fc7cafac5f3063a5c9dd6d5ea39dbc3e6b187988eb847b7ece9f5e06fb",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -174,6 +177,7 @@
     "scenarioSha256" : "847a124acb9b3b1c269921fbd925a2519eb0adbff0bb2b1b3c4e91a6959e5351",
     "test" : "dev.morphia.test.aggregation.expressions.TestAcos#testInverseCosineOfValueInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9883fc97678d713cc25956bc23b4641b9f2408193c528c936a8b98c1b5cba595",
       "data.json" : "8b01e0682e48d09949864a694ab006b2d37109ff58c538599a4bf3b7825405eb",
@@ -235,6 +239,7 @@
     "scenarioSha256" : "fbdf51302992a5dbd1f9a1fe9a0f477b75848f077453fff77550ff4a663df917",
     "test" : "dev.morphia.test.aggregation.expressions.TestAcosh#testInverseHyperbolicCosineInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ede4cc6c1b09b510c1a89c1641695f90cfe1ed31cba0bff54679b5f8cd1de1aa",
       "data.json" : "8e65e86e504e092b8afc82337b1e5e9b215c7a922aac7f100998625ba0c3fed5",
@@ -291,6 +296,7 @@
     "scenarioSha256" : "8fdeca848ec99c5a713cd123674b7f9f8afbef5a6704395a8103f879946d4327",
     "test" : "dev.morphia.test.aggregation.expressions.TestAcosh#testInverseHyperbolicCosineInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4f0b19c97d021986e260aa23f43a82af7824578600756cb902c0af39350d6bca",
       "data.json" : "52b98b3d2b81e0a2e5a9e55959f42e41ab22dc059bfdb57f2112809c79c373e1",
@@ -347,6 +353,7 @@
     "scenarioSha256" : "1a7c2c3e8e6ad1f9ccbe6d55847da58dfe4604d7afeb47cfe8cc99c359f4f340",
     "test" : "dev.morphia.test.aggregation.expressions.TestAdd#testAddNumbers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a4042ccc3c4350fb18fc7451cde7cd47cd8e3b51b843be576117a4c3966797f1",
       "data.json" : "59080617e06f71cfc2a60584cdf8a932c3cade3c10c3c042084f68e1d7bdf69d",
@@ -412,6 +419,7 @@
     "scenarioSha256" : "6ec156682f3787a6b49844b62168b60522fe7250339c5045719bfb95bfc91056",
     "test" : "dev.morphia.test.aggregation.expressions.TestAnd#testAndExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "06fa010aa60c2f5da5e9bc21dbdbfffe0968cc68ad9e8be32a0a13668836cab8",
       "data.json" : "ed53dd5f4c759e494df0cf01d54396b03a2a01b0bc85e1d7c43500eb420a2db4",
@@ -480,6 +488,7 @@
     "scenarioSha256" : "127d141f5a06e599c042bca3e179b706ab604e7e51a80baa84d1fde52e5ae96a",
     "test" : "dev.morphia.test.aggregation.expressions.TestArrayElemAt#testArrayElemAtExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "59ead63d8ca56020c6128d752e15acd7b214a4ab6dd8f8b316b94daaa4ccf26d",
       "data.json" : "6f6b017b283b4b86cbdbfd1a529ff70ed28248bd820429115ee826488ba5a671",
@@ -539,6 +548,7 @@
     "scenarioSha256" : "e45b0e231fc0b197d2337f2021bf91f149829347814967027cb051fd9411abc0",
     "test" : "dev.morphia.test.aggregation.expressions.TestArrayToObject#testArrayToObjectExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "396cab603cd2632c675cbc298ab32250053b00425f5fa1de6a76c0b6812eadac",
       "data.json" : "4d51aeacf5beff8c3273b4953adba4946b1c018693a9522776608474eb755e07",
@@ -598,6 +608,7 @@
     "scenarioSha256" : "c5f1d5b66cf9dee7ce9ebc3ec07f2012f0c3b268c94f31cbbae423cd4880b31f",
     "test" : "dev.morphia.test.aggregation.expressions.TestArrayToObject#testObjectToArrayArrayToObjectExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8125fa0c0b26217c7175d3e870a686a1abe247a259c965c2e4860a6f4455c429",
       "data.json" : "6ae9bbcc7f44a68331cb54efbdc77f174d9388478e755891a168ec53c6e289aa",
@@ -659,6 +670,7 @@
     "scenarioSha256" : "056a5d47fc7f42da51aa18510a4e18b9ab7f44c7e66cb2218fcfd23a89b63546",
     "test" : "dev.morphia.test.aggregation.expressions.TestAsin#testInverseSineOfValueInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e4fa9f7349f1d2d959a05f2c57688e3338ce32a42320afaea7d6be513c95ff24",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -715,6 +727,7 @@
     "scenarioSha256" : "78e7c3f12f5a314d169428beb9a2272e603e4528f5fb4f557c227f2e32e37760",
     "test" : "dev.morphia.test.aggregation.expressions.TestAsin#testInverseSineOfValueInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "395ab51a3e2c9332cf4232790c28ba6741ed5e539361b22979e041b87dcf717a",
       "data.json" : "da7df2318f07d3e31a9287ba31ef272e805d3f8a08188c3296a57d95b1ba2573",
@@ -771,6 +784,7 @@
     "scenarioSha256" : "3f0f1b22d1a2e9025a1c2988ffb1d9f2bf06d76d9d00f27b37e7f6551c71bec0",
     "test" : "dev.morphia.test.aggregation.expressions.TestAsinh#testInverseHyperbolicSineInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0647dca6fcb8872c76e57a79ce1b5ff0b88debc3e081993b15f5c7e7e4aba332",
       "data.json" : "da7df2318f07d3e31a9287ba31ef272e805d3f8a08188c3296a57d95b1ba2573",
@@ -838,6 +852,7 @@
     "scenarioSha256" : "b1f84e9faa00394ace3b4c77433f6cf7051fd739cd99fdcacaa21f00a6cbfddb",
     "test" : "dev.morphia.test.aggregation.expressions.TestAsinh#testInverseHyperbolicSineInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9c766d4b11d5f10e4d83f7323d862280d1dbb198231767d479ed8a4c1e8cf189",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -894,6 +909,7 @@
     "scenarioSha256" : "30ba52bd37faaa986495b0f7a0c9262b013197d9aa5ad997dc338e4bbb2d931c",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtan#testInverseTangentOfValueInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b3bd971b2c3b0b51077dedad8cb2af51a6795fcf330b1802dbd94477beda05de",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -950,6 +966,7 @@
     "scenarioSha256" : "33ced33e41714b80a4d722a47ccd796cc6f4c0d6d9b487db7d566c7f169388de",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtan#testInverseTangentOfValueInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e7540183b56dfb49c31ce060ea0c20ee8104144f58aa5e05c7f5473343d17b99",
       "data.json" : "6ae9bbcc7f44a68331cb54efbdc77f174d9388478e755891a168ec53c6e289aa",
@@ -1011,6 +1028,7 @@
     "scenarioSha256" : "0df6e7a0b224e384c8adde578aaae8d039ade745e36d2fb2d71063c6b7fb280b",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtan2#testInverseTangentOfValueInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8ced0e75306259b3f4bf73e089d8721d400536404887ef0fa88c217d82edc88d",
       "data.json" : "9a05861aec530e1aa738572c4458d404e950b3f61afcb51e055447058bd0558a",
@@ -1067,6 +1085,7 @@
     "scenarioSha256" : "b436b87dea434fc1bf8490dcabeff0b0e268a224d5936b1e79c225c529f8d494",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtan2#testInverseTangentOfValueInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c3584d0c6b6dad3fbeaf0c8ce55a151ac967530f6d7144ba70d5a652deb332c6",
       "data.json" : "4a8d1d99fd291f151eeb4bf1c4282a60f546de71c2dcbd9eb790eab8173ef413",
@@ -1123,6 +1142,7 @@
     "scenarioSha256" : "4f284b27c59d47b17494c14e826346b11ae6c6d53479ee0a368c794a16b822a4",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtanh#testInverseHyperbolicTangentInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a4e272e83bee3132684e55d81785cb228b05b0d3ad15861ae34baaf53123d979",
       "data.json" : "4a8d1d99fd291f151eeb4bf1c4282a60f546de71c2dcbd9eb790eab8173ef413",
@@ -1179,6 +1199,7 @@
     "scenarioSha256" : "b2feaadec12981d83ee335654fc5a30fb83193fc0fb5baf511d957aa1f5634a5",
     "test" : "dev.morphia.test.aggregation.expressions.TestAtanh#testInverseHyperbolicTangentInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6b37ccb2290099d9855ee72ac47db4a9d66bede0cea3b3d08dfc6484be70c7c3",
       "data.json" : "c19398725980cdd99aabf629d09644b8e953313e79555e0a795c333dceccc327",
@@ -1247,6 +1268,7 @@
     "scenarioSha256" : "da6a5210936c835819865827499eb455a4b31821a0bf413c9af45d2b5f351328",
     "test" : "dev.morphia.test.aggregation.expressions.TestAvg#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "607120a889f3c349408eb74cf126af5c23bb9a98de81c3c6524577088cae0c43",
       "data.json" : "e17e39db26a30a1e85b54c272942573dd1c5750e2cb208fbad571af9265dad5a",
@@ -1315,6 +1337,7 @@
     "scenarioSha256" : "4ab3d7ace78b8573655b61a7f71bf9441d907ae4f87ac6bbe2599984da8eedda",
     "test" : "dev.morphia.test.aggregation.expressions.TestAvg#testUseInProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "324c11367d0e0daf793f96bfa1dee19c2958d20c2904b1c5d26508cc09d2c343",
       "data.json" : "e2553eae295f43c472ba5680ba06a1dea76727094a99abb98f021aa492e32f5e",
@@ -1385,6 +1408,7 @@
     "scenarioSha256" : "0ede9658b6d15f5d68b7b46c04b07527050c4326b2234729ed9bf70c696d7cc6",
     "test" : "dev.morphia.test.aggregation.expressions.TestBinarySize#testBinarySizeExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ca345af48cd714db6d1d9834a6a5158f67983cb8c7a0f616ed96ea7caafe1239",
       "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
@@ -1450,6 +1474,7 @@
     "scenarioSha256" : "0171e8635f006816fc962642c566301e8f47c0115ae322a2517e037d9494d7a7",
     "test" : "dev.morphia.test.aggregation.expressions.TestBitNot#testBitNotExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fef3dce268e5a9d50ca4b9f5ea85bbb48eb797ed554b2f9e13923df25c8e3971",
       "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
@@ -1518,6 +1543,7 @@
     "scenarioSha256" : "44684960d2325ade19872d1dafefc2f6330232da67504bc091abbef17e7aa3e8",
     "test" : "dev.morphia.test.aggregation.expressions.TestBitXor#testBitXorExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7a67510e9c2234cb76436e1a40d5948ddc70fa37f9e4833ffb51e18f6f1ee4c8",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -1579,6 +1605,7 @@
     "scenarioSha256" : "368586020dd35b8a7b9c1e562aa6409cfeb8984af99100ac142dce67882fba2a",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottom#testFindTheBottomScore"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cff933faf38a9f8367cbfa3927cad5fe43567e7bef061d3007d5553d4743e92b",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -1635,6 +1662,7 @@
     "scenarioSha256" : "cca76fae04096bf4a4fcaa7a6802b8545b0abe970c3676fbf0f6aeb7db65c4cb",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottom#testFindingTheBottomScoreAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ef71952a21e02cada1aebb7a4fa25e1ffc4af85e7d459b66b1b17143b6d5477d",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -1691,6 +1719,7 @@
     "scenarioSha256" : "9e212b0b53daa3e64a426666180855c51ae4a3f1377d041ca82d45bc75335577",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindTheThreeLowestScores"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ba47a25e3841d7f2e2b52c6b02c8f5fd69e607ccaf779f6be330acee0dee6866",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -1747,6 +1776,7 @@
     "scenarioSha256" : "4016f7704e6f321d9b1aa8a558ee944e70144ff3c2bd4b4a2dec3410b44d95b3",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindingTheThreeLowestScoreDocumentsAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1bdada941ab1b93f26bdbe8f655af2c89c15a19a2d88b1a576af0a8e8b2da9e7",
       "data.json" : "1a5bfd732429b5958bdfdf56dcef4cd78bed00c32847c8385993d41b9fa79914",
@@ -1814,6 +1844,7 @@
     "scenarioSha256" : "a0638327eabf335b40e757394265ebe6bc128deced98c71b9a8b891b799dc620",
     "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnCombinedSizeOfAllDocumentsInACollection"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "55eef3f5fc3aaedd88b5716806ccb457f237fb62214e4c813ee73af9df708a6c",
       "data.json" : "1a5bfd732429b5958bdfdf56dcef4cd78bed00c32847c8385993d41b9fa79914",
@@ -1899,6 +1930,7 @@
     "scenarioSha256" : "7b8a68f8aa78ac2b4e45e8dccdbe9a915e47ec48778cff0e89147c7c141a688b",
     "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnSizesOfDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "dc3df2d71764006416c2683e474f4d163b0f1722ce18869235749c330dddfc78",
       "data.json" : "03ca28acf1bf710681b27f3932606b94b9c43d452cbdea17d7b939c0ac891734",
@@ -1961,6 +1993,7 @@
     "scenarioSha256" : "98cc7651a5c24e56b5fcad277ba8f380c2247a382d901e2257b9144b501a365e",
     "test" : "dev.morphia.test.aggregation.expressions.TestCeil#testCeilExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "3a96d92b4b6c9514c1994d83e4e04870dcf00f0906c28cc33fa2aeb6a2fbbe18",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -2028,6 +2061,7 @@
     "scenarioSha256" : "9eccc26a415cffd3811c4576e0c0ad095cdf190516ea3482a4936cabde4603ce",
     "test" : "dev.morphia.test.aggregation.expressions.TestCmp#testCmpExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "908105095d2d6e6be971b53815baa779a90bb6fc8f7b0cfc12a2a317edce46f5",
       "data.json" : "aa7603e78699bae6313909b691d565ba858d503c8593a234237626c4b53bd90d",
@@ -2084,6 +2118,7 @@
     "scenarioSha256" : "05b2bdf68931d81fe86aac000da270780cbac3767e65aa82d0a6123f2d41283c",
     "test" : "dev.morphia.test.aggregation.expressions.TestConcat#testConcatExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "aff1dba9881807fbc66f5ddfe96d7a3f07102d26f1bb6e304164037388613141",
       "data.json" : "79f18a6c794ae1cd6dd79c9e2bb3e8be8ab7b130642c7983a6ed00221db19b78",
@@ -2140,6 +2175,7 @@
     "scenarioSha256" : "84e6bded21f3f0e1ff455cae4c06d31843c2e94e9268c97b74e40cfedf85f1a9",
     "test" : "dev.morphia.test.aggregation.expressions.TestConcatArrays#testConcatArraysAccumulatorOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5fdbbe45d012f52390c69aad293ba52ec62233c1bc68de6474ce18d98ccfc2f6",
       "data.json" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
@@ -2213,6 +2249,7 @@
     "scenarioSha256" : "db6dfe2a12f2a75851d0c6e3ccf4f4d137adb5daca4e6f182caf2f0a9cf39dca",
     "test" : "dev.morphia.test.aggregation.expressions.TestCond#testCondExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cba91afb9203a0da36382cf949e22df270af0819e8b38267039c6ad06c82e840",
       "data.json" : "8e828fbf08dd6e98197ddd7501d7353930dd8b9460605568fb821363c168ea1f",
@@ -2277,6 +2314,7 @@
     "scenarioSha256" : "d605bc8d476d18d53aa351106c1945bea0b481ae9b6d164677e6feb5a67fe941",
     "test" : "dev.morphia.test.aggregation.expressions.TestCosh#testHyperbolicCosineInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fd05e537b3534ac102a11d2aad7760336bac8d0b780ac4cfc1bf4d6fa7ca7c37",
       "data.json" : "d2f803c2431c0b3ca43f3f428718d26954d8af95c2632900faed5183b1a8b791",
@@ -2336,6 +2374,7 @@
     "scenarioSha256" : "f2988892ba3f1cf632cccb3aff8bd776c77a193813bf3a314534602366242ab8",
     "test" : "dev.morphia.test.aggregation.expressions.TestCosh#testHyperbolicCosineInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "57512bdd49c678a81fc005aa765df97b2d9c3ec0485d99abd9743ca162e7621f",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -2401,6 +2440,7 @@
     "scenarioSha256" : "7a69c4ee5d5761feb28420d6282a567c41b3000e8d0d0d4da8f310a465e9b80e",
     "test" : "dev.morphia.test.aggregation.expressions.TestCovariancePop#testCovariancePopExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "537171018e0199eec3964edad93eb45eb6dc7b78ec8f7842c954bf49a04f00b8",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -2466,6 +2506,7 @@
     "scenarioSha256" : "7c1e15414050822cdecca8929dcae98ed4bd547a36540df91c149c447a8cbe26",
     "test" : "dev.morphia.test.aggregation.expressions.TestCovarianceSamp#testCovarianceSampExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7129380b8e51bf7a540e59df37b15e34cb6ec8563e3ff9389243dc4ae6174a80",
       "data.json" : "59d0d1c9f8af5b1f9651d6de9dd4221a88c14dcfaa36440d8a1d59271a2e9673",
@@ -2525,6 +2566,7 @@
     "scenarioSha256" : "09858a6e5d0ee27c7d3c92e12b78f14197b667bf25c4afb4c2a4e4f74090c2d7",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testElapsedTime"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ad0aa086c0c352b139458bde3169f925a0b417045a4d13a782c7fb62a922b202",
       "data.json" : "a7653b4fb87ab16235ff3836c69f540610b51d0aea4dbdb287014240dc1c5551",
@@ -2584,6 +2626,7 @@
     "scenarioSha256" : "4d9bd0008e76e639f62b06c3a2b97fe74513453d21e66c9f14ce901d31f815d4",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testConvertingDates"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "83675f96baf0e45dd4603481fcebf91a348cb7d355be265b86189af1e82cacd9",
       "data.json" : "f248ff6f799ffbb30268fdf3f8e5777bb958879c8aabb1911cd6f91577db766d",
@@ -2643,6 +2686,7 @@
     "scenarioSha256" : "f93cb508159b18998059f94f56b86f47f391a65f74426056d978726e1328564d",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testOnError"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "20beeade2324310b2dbd99df9b7e1c9ed1206e89c274446c3deed0447e5bccb2",
       "data.json" : "38ab3d399f1701d76f1dcc883db12c3f1e6ca5156bed6eeca2e276d294884a89",
@@ -2719,6 +2763,7 @@
     "scenarioSha256" : "ccb6fe90ee3e8a52708e69f09f8ddb2594a2c2b7320bb86fed1d03894f6d37a8",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testOnNull"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "213d2b8c4af1c560f764ed2a4ace173823f76125507554c4d4f6eedec9194652",
       "data.json" : "9033db26b19b74aed4eb16b76c5a98038288d4af93146ddd9c7931f2758838f2",
@@ -2783,6 +2828,7 @@
     "scenarioSha256" : "182828ee2f1c4c8f223e29af035eda11e2689f37cf26c47135da9d249d225e76",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateToParts#testDateToPartsExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7a3de5545595cbc4e039a1495871b0552af0727fc82eb6bff39bb4b9f60b3a60",
       "data.json" : "b992824e783933784664ec75c80cd9f5c513e90b691128aca2d24eea6b7659f8",
@@ -2862,6 +2908,7 @@
     "scenarioSha256" : "5dcb9ee1d24b63d361ee464174c9e060bcc16d65e211f9455c80baa84bed3b57",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateToString#testDateToStringExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "17148ec357378a0708393117efa6e454ee621e678af820631f8e80934b4037e1",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -2924,6 +2971,7 @@
     "scenarioSha256" : "9a825392e6bb6994ab19ac368a4da7d0d1f2582ceacafd2e6c11150d6018b5a3",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateTrunc#testTruncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -2983,6 +3031,7 @@
     "scenarioSha256" : "24a19b52c794623fc4f7368b106ebe953808d02c7beb2c252f3a2c0a3448a8fe",
     "test" : "dev.morphia.test.aggregation.expressions.TestDayOfMonth#testDayOfMonthExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -3042,6 +3091,7 @@
     "scenarioSha256" : "844690d50ae33bc229e634f24d238c50f055c401e0d3905ebb46c09da3fddf3d",
     "test" : "dev.morphia.test.aggregation.expressions.TestDayOfWeek#testDayOfWeekExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -3101,6 +3151,7 @@
     "scenarioSha256" : "e82fe1832b19084a1015e374fdceb4abb1cefb803797c7083257040b2c499335",
     "test" : "dev.morphia.test.aggregation.expressions.TestDayOfYear#testDayOfYearExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "aa3a6b8742a05a71fdde2111594e7e836cf70762a59583c908db67c90366de4b",
       "data.json" : "49ceccc84fbb81da3c94f6c45d934b8f87bc8544942095e5d2e049a9817bf809",
@@ -3183,6 +3234,7 @@
     "scenarioSha256" : "ffe0d650e63c20189a171bee3d2e2a94a79d6b22331148149c44133fe3ccd51b",
     "test" : "dev.morphia.test.aggregation.expressions.TestDegreesToRadians#testDegreesToRadiansExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b548d001fee8bf7536b4671ede14579408bfe84c427425e6fd298f7d24011f3d",
       "data.json" : "15343e0083eda7b9c31e3823a3b71b21aca78244b6db31c1abfd735cdd96c4d0",
@@ -3268,6 +3320,7 @@
     "scenarioSha256" : "745addb1274cbc5b73931cde897a2f63d29e11cf3ffdc352cdff87bca864b216",
     "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankForDuplicateNullAndMissingValues"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "553e9473308b59a5e9a16e65cff63b577acaf9164367e8ade2248013390c9199",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -3339,6 +3392,7 @@
     "scenarioSha256" : "b181d4abc40c406b48ea3c30dfa5c86a4b228c2968fe2a865abb1ee835bb87ea",
     "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankPartitionsByADateField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b548d001fee8bf7536b4671ede14579408bfe84c427425e6fd298f7d24011f3d",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -3410,6 +3464,7 @@
     "scenarioSha256" : "d401a6dc418c9431d096f1fd274dad1b7719314960b212f4376a78d70fd75d59",
     "test" : "dev.morphia.test.aggregation.expressions.TestDenseRank#testDenseRankPartitionsByAnIntegerField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9c2f76cae3cb31f4ede30e75f717229fbc6a21e9c586d47f378be1e0413c7993",
       "data.json" : "0f728eb67d1ddd765f2e8e2966717dd6013a68cf886021bb8d0137fb9463b6e9",
@@ -3472,6 +3527,7 @@
     "scenarioSha256" : "77d39b98c596cad22c512307faeb686ecec5ad114c7e2c33c452e2301ff675b9",
     "test" : "dev.morphia.test.aggregation.expressions.TestDerivative#testDerivativeWindowFunctionExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7ccfef70c2cb111dcc9155e06283777e4add3db21413f2d24a29c4c363ebaa66",
       "data.json" : "15343e0083eda7b9c31e3823a3b71b21aca78244b6db31c1abfd735cdd96c4d0",
@@ -3537,6 +3593,7 @@
     "scenarioSha256" : "e1704c6dad0ef01a633588fd723e1a308260020feec1b637237ce673fa51e3da",
     "test" : "dev.morphia.test.aggregation.expressions.TestDocumentNumber#testDocumentNumberForDuplicateNullAndMissingValues"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7ccfef70c2cb111dcc9155e06283777e4add3db21413f2d24a29c4c363ebaa66",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -3602,6 +3659,7 @@
     "scenarioSha256" : "657eb7a3699a1c699e24fd644c50e2be7e42ec10c7935a0c0fa7de1656b325a2",
     "test" : "dev.morphia.test.aggregation.expressions.TestDocumentNumber#testDocumentNumberForEachState"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "df1e4665f5b930eb213b67608a162a5c6f513684fca5f20394aa28ec8b5117c4",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -3669,6 +3727,7 @@
     "scenarioSha256" : "e2137f98d049d316cfc33306cda456990a3d61e335b83ca46520d5015c6d67e8",
     "test" : "dev.morphia.test.aggregation.expressions.TestEq#testEqExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0eb426ae13d247d431e5419a81d2e507e0996b24aa25dccb4598e12225465386",
       "data.json" : "d5678bd91fbcb5b1b1ed3279f10685b9980a97aeea548c53b58e6c80a32e6f73",
@@ -3736,6 +3795,7 @@
     "scenarioSha256" : "646ffd17a01887cda9bc370ec75c5c9290dab2e61a724f2fad8340834f76b61c",
     "test" : "dev.morphia.test.aggregation.expressions.TestExp#testExpExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "742411077acf1b6885d8f249666f379d19805acfd98fd016ccd701900bdeff69",
       "data.json" : "3b87c39a52809a3b38b0940ad0ca215027e1da886a0164e1f2d0593e44a5d5b4",
@@ -3798,6 +3858,7 @@
     "scenarioSha256" : "9b3143e022ead352ae0a5cd581a2fc095eb2101c52699f811b10a1cd7da8049b",
     "test" : "dev.morphia.test.aggregation.expressions.TestExpMovingAvg#testExponentialMovingAverageUsingAlpha"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "721bcfce91b25fe32bbb6a8782f7eea0e99c1213c201fd64ad3530225aae672b",
       "data.json" : "3b87c39a52809a3b38b0940ad0ca215027e1da886a0164e1f2d0593e44a5d5b4",
@@ -3860,6 +3921,7 @@
     "scenarioSha256" : "d4cfad0d0945edb2a6b8887a02561b56890b9680939781c198f4f9210b1ec9e3",
     "test" : "dev.morphia.test.aggregation.expressions.TestExpMovingAvg#testExponentialMovingAverageUsingN"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b9eeaab349ae3ce1129857d3cb72fc7fd8dee5d0c5d11f5bea1ef779c83cd78f",
       "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
@@ -3933,6 +3995,7 @@
     "scenarioSha256" : "04c2bdd36afd06a665f23dda7d458797632d8e615c1c2ff058d5e57b7930b3d9",
     "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testFilterBasedOnRegularExpressionMatch"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fc294ae406b7808f690d06d7863972ea347b6a1c6c03c212fc811f5a80d24b33",
       "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
@@ -4006,6 +4069,7 @@
     "scenarioSha256" : "28320eab5e636387f6cceee18d29f4656db5a2c2ef867b7dc8efd90cf0bbacb7",
     "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testFilterBasedOnStringEqualityMatch"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5f6b7c125d5bfad5f3f6783184be47b227caa7c5be53758bd0806bc026231199",
       "data.json" : "3acb538912b8d22186995d4824d01a3e4bfa41b1ee2462be4cb90ceae01438c4",
@@ -4079,6 +4143,7 @@
     "scenarioSha256" : "5064b9d94a493027d100c70e2d08b0e392dc22fca40c906cfe28767e7720d293",
     "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testFilterExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b82fdb97ee37e2e6ed8327e1405e01d46b2b48b4291c6f8cedb9c6ca2653b26b",
       "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
@@ -4152,6 +4217,7 @@
     "scenarioSha256" : "292c59c0adac5406ff6b8fa1d635ab7ea4ec3cd96f8ea0bea1a72a7e49483df1",
     "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testUseTheLimitField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8f768508349aa0a7eae19677bcf6cd5e33d19f2a7f69f9f3c3fe0b94a36e47c6",
       "data.json" : "419ec1324f407354dfffcc224b6df09c7083753e2823678291e4ed4f00508f19",
@@ -4220,6 +4286,7 @@
     "scenarioSha256" : "cd25aaeca3d6579d6f0dddb68fbfdeadfea96b85d74890f855c2556c60681ff7",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirst#testMissingData"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5609cf70b8b420cfba889871dd8d96916d68411d5d4bb7831b10dd510d5aba33",
       "data.json" : "09890556bc30412ccad9972ac5434fe6f82dde4ae1cbde87866099a141df0c92",
@@ -4288,6 +4355,7 @@
     "scenarioSha256" : "9b520b1ee76645b21970c92e946e7979e713b2c4abf5c3725144ff3319d7e247",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirst#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "628baa95b19b04841791426b0257b21a54d774a360cf5059adb35ddbb8bb6e43",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -4349,6 +4417,7 @@
     "scenarioSha256" : "ee43c4b2c3a88011fa8fba900e15dd01353dadd21bff7040f480594915c03fb1",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testComputingNBasedOnTheGroupKeyForGroup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "813bbd775a3a43a5c8e3676da5cd69af016643f3293f9f7ed8e6f0645cabc6ea",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -4405,6 +4474,7 @@
     "scenarioSha256" : "45399e9329e042ee38faf19104d75966952619a6eeea5d0fa051be060e8ed57b",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testFindTheFirstThreePlayerScoresForASingleGame"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a86383e5086ad044dcd4f93002a63fb3ffb14f625f6121e0c8786a380b5ae0b3",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -4461,6 +4531,7 @@
     "scenarioSha256" : "7b2b4f7c4b9182990ad96fb9e7069b44a78945ca724e0d7959c696641c8652db",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testFindingTheFirstThreePlayerScoresAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e81c52d35402d9bb8c7bcd36b21c03e470274bb5e8f4de3f6444eecf65c98cbe",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -4517,6 +4588,7 @@
     "scenarioSha256" : "fe89b2c838f70b11b589dc0afd2344de16ac7e0e22cc5c099bd9e529222b48af",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testUsingSortWithFirstN"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e5d5a2daa28e13a4d227891f3f6944a7fd3be9586ccbde36cffbaf63f38aaf57",
       "data.json" : "03ca28acf1bf710681b27f3932606b94b9c43d452cbdea17d7b939c0ac891734",
@@ -4579,6 +4651,7 @@
     "scenarioSha256" : "061b2a9436348f74943103a0036c0859a99895b5053365f4e027bba621227faa",
     "test" : "dev.morphia.test.aggregation.expressions.TestFloor#testFloorExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "79f26d30be4c1968435313f0e83f8fbb8ab2760145116bb497df3fc0498ea8cd",
       "data.json" : "71a89520dc0d09f884f3664ee07f4bba0d2b0fb59fef04fd886c34a6a0cdff3b",
@@ -4635,6 +4708,7 @@
     "scenarioSha256" : "4e4f13cc79539a1ddc3017b0e2c91dff1e1cf957611aa15afef1386b722d85d9",
     "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryAFieldInASubDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "97274b9ac59c6875c4c9900a191f56f2dcab29d91765f214d4d7ac365e97d97f",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -4702,6 +4776,7 @@
     "scenarioSha256" : "ff867d7d071cce07af7334d16542ab92bd82da509ddc2fb7c54ba1d6744842e8",
     "test" : "dev.morphia.test.aggregation.expressions.TestGt#testGtExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f6fa3710f70ae572aa280a1de89d5cf35f7aacc766147b192be09da0c1e9039a",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -4769,6 +4844,7 @@
     "scenarioSha256" : "1d274d01c0967aa09f86fdf7722da7181174eeb26ff3ca628f971b3de00d6a4c",
     "test" : "dev.morphia.test.aggregation.expressions.TestGte#testGteExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5d32b5efe9126e8278ad857cbf6d6feaa7c411c2a2f7c0f92c429791eb3e0267",
       "data.json" : "1fa2cb70945b16d7846934d41734192c950efc3dc5d0396991bb054d7ffb54f6",
@@ -4839,6 +4915,7 @@
     "scenarioSha256" : "f2939889a4c22b04ca11b2152f6bbf61b47935367fe9b4774516a0897de689a9",
     "test" : "dev.morphia.test.aggregation.expressions.TestHour#testHourExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f186036b684c932fbf390d416cce979abcbd427e86fc469069d426e2a259e0e3",
       "data.json" : "31be48e77387f9980e0eaac7c3de7a42304e55f49cf5c7586fe9961e7162d372",
@@ -4907,6 +4984,7 @@
     "scenarioSha256" : "5e1dd67e54a2388c24deb858621de9484cb951b3bb1cd13c2d5fa0432c01bc5f",
     "test" : "dev.morphia.test.aggregation.expressions.TestIfNull#testMultipleInputExpressions"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f096168501d7bcce793e25dcc7a3b97add1ecb25b5af47036f24b7934b988d62",
       "data.json" : "31be48e77387f9980e0eaac7c3de7a42304e55f49cf5c7586fe9961e7162d372",
@@ -4975,6 +5053,7 @@
     "scenarioSha256" : "c4e0faa4f14f93b541c3c16396e819be2bab40ac53a25f53b0477e483be85f6b",
     "test" : "dev.morphia.test.aggregation.expressions.TestIfNull#testSingleInputExpression"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "94fb820fd8c9d272f153f02d75220112cb861d46dc3bd7fb993f3f3ad4b01d15",
       "data.json" : "1b334c41ae37704995ee6c99259e2c40be179dd0894619dab0d578dc1ec64152",
@@ -5031,6 +5110,7 @@
     "scenarioSha256" : "daaf844542250058d226ea7f4b940e128c3912bef73e5c2d764c12b62a3a95a4",
     "test" : "dev.morphia.test.aggregation.expressions.TestIn#testInExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7467630dd7b6c4fe22d3b89f5d62fb5a20f978563940c99c219869d5f8ce9d2b",
       "data.json" : "9432613a211b630aed5a01a79b40b61845f1534e37c24caf66d985b8c8fc945a",
@@ -5087,6 +5167,7 @@
     "scenarioSha256" : "8ec6cd1702c31b3c586da9ebd7073d31fc183265a069f64b52e35e7b1e53c498",
     "test" : "dev.morphia.test.aggregation.expressions.TestIndexOfArray#testIndexOfArrayExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "29beca3d1118a64cc49415daed82dfddfe2f2bd16babe8aff0b72a78ab87bb60",
       "data.json" : "3ebc8f1258f069d56294d09ed7b5d792cd0677e578a2a1a2fe1a84e7e8cd3351",
@@ -5152,6 +5233,7 @@
     "scenarioSha256" : "ed42a7814cb2e3f1a8c4c4ee30cfd04eb1df47496aa95cb6907091aafddd7aa8",
     "test" : "dev.morphia.test.aggregation.expressions.TestIntegral#testIntegralExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "51b80c3e28f218827b63ee93504a6b4163e549aed479ef13d17b3dc12581111e",
       "data.json" : "cc13858c08c4dacb3059123ed7afb762fe76c2e3d0935c458cb4e18669028b9a",
@@ -5216,6 +5298,7 @@
     "scenarioSha256" : "4c00501486dcf34aaa9aa2dcd324f72b9b33e06ef4e2b20704fb728b43c5b92b",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsArray#testIsArrayExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a418b414c934f27314f3ab82d9650019b575832cce9781f5bf74209fecdf8b3d",
       "data.json" : "0caee00ad9d9a4a2980e09384cf4f29731f5d4cf97137976096cc75844efd1ab",
@@ -5275,6 +5358,7 @@
     "scenarioSha256" : "71d40ff269c6441c51b3b5a21898019ac19c480494d33033ee3eb8c1b157ee37",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsoDayOfWeek#testIsoDayOfWeekExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "442049f5784cde07c7d4cca7deae0d63a9a71d7df1e76c657467bdc15cb8302b",
       "data.json" : "7c875792ec47a19a8f4edcfdb17d9f99e3d63e43e2bd14bcd1374d8f64a7edfe",
@@ -5334,6 +5418,7 @@
     "scenarioSha256" : "321c11e7e6ff0827f0bdf124c01f3db4c075efa5b9c5f45447c3758e06d0def6",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsoWeek#testIsoWeekExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "28a400b1cf91820b75f1c530bb46b2e266223b3409e065cf8c412eea20961462",
       "data.json" : "0ad600ae169900873e861603546d8da505f8271ae91599766ca7779c5d790dd7",
@@ -5402,6 +5487,7 @@
     "scenarioSha256" : "bab394a3bede4fe48d3236d60f3db5170fda6f36b3b54d1178d4fce19efa7de8",
     "test" : "dev.morphia.test.aggregation.expressions.TestLast#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ab2857e07b83bc910e70eea8e43ba781f01bd746d9a2c76f3d744b8659ff090a",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -5463,6 +5549,7 @@
     "scenarioSha256" : "88be9802e9126d0800581691abf37975606bb67273d352eca23a1e614fe18556",
     "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testComputingNBasedOnTheGroupKeyForGroup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "73412d6ec52c39ebd6c4bcdc81a88253846de27a4ee293f26979c9d2795ee833",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -5519,6 +5606,7 @@
     "scenarioSha256" : "9bab4d49194613e357181d42bfb1539f9a4c45f00d6df5db67373ba0236c8ad8",
     "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testFindTheLastThreePlayerScoresForASingleGame"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "800c298c93cb6cd1c836ee84f963cbb32ede8dafccefb5943a121bbd4186f646",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -5575,6 +5663,7 @@
     "scenarioSha256" : "3ec0ab2740676d1fe8c60df03fceeb1436dceb1315db7a613109943cef9211df",
     "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testFindingTheLastThreePlayerScoresAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fc3199257460bf54d75d7e90fc85d1e08d13b6287650866aad63aaf8238c93f7",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -5631,6 +5720,7 @@
     "scenarioSha256" : "0f7201e06ccf391ea41c3748bda4130ac313fe79e9fc9374a7119b1be52ec2d7",
     "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testUsingSortWithLastN"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "3a1e198f2f392072bea2554911237b253c44f51d2cd5a4c48e5c2490e37869fc",
       "data.json" : "d912c28ae6742a047611aae2ab7ff329920db906b2f3bb927701a0451fc1598c",
@@ -5692,6 +5782,7 @@
     "scenarioSha256" : "ddebdb7c88b692f855bd15b3420211d990ec2fa2415b12b3d89dad6f06aadf8d",
     "test" : "dev.morphia.test.aggregation.expressions.TestLet#testLetExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cce095d199805658906312ca7c0f83e3991ae38ef4800c282a4668d06b06f06e",
       "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
@@ -5772,6 +5863,7 @@
     "scenarioSha256" : "d5640e85d0c4098c1170d965bc8000ee0f271d1e372bf5f7c44350f011e4762f",
     "test" : "dev.morphia.test.aggregation.expressions.TestLinearFill#testFillMissingValuesWithLinearInterpolation"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "82aab788d1a86a007dd5eed281dbf967a5c2e24cf3a889f5b482e58663c19909",
       "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
@@ -5852,6 +5944,7 @@
     "scenarioSha256" : "5d3538392393a0beb507134ad79ef7b0d696585c493aa50f40695732ef2e3a46",
     "test" : "dev.morphia.test.aggregation.expressions.TestLinearFill#testUseMultipleFillMethodsInASingleStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "53c42af459f8e6bba6dd3f0ecb98dccd504f49357b613ca29b0cffea2215b846",
       "data.json" : "cc35f6a079846a07a3e41e10b7aa62727063a87344febec23330b9e4adf108e6",
@@ -5908,6 +6001,7 @@
     "scenarioSha256" : "e90c14ad2d94a324df890875a228d377226cafed5e56e2bcf3b58dadfbb1c14c",
     "test" : "dev.morphia.test.aggregation.expressions.TestLiteral#testProjectANewFieldWithValue1"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a71889dcecc76f13dd5b2c34581db69a51164603cbd36c93768afda237bfb2f3",
       "data.json" : "16b5e6c993b14937eb6ef22079be765b8b754b14a5d76c1efd8cfd8a1abd5afd",
@@ -5964,6 +6058,7 @@
     "scenarioSha256" : "c1e19345e1cf676f57dbee87da4c05a0a11b533095025917f8583bec461b519b",
     "test" : "dev.morphia.test.aggregation.expressions.TestLiteral#testTreatAsALiteral"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "26cb92831b7de3c1f0787ac1c330d98c33dcd4878d863c47c84f93ea5926077f",
       "data.json" : "dd0b56b7afcc614a442dcd83cfc213c3216b34de497d0ee898a23bab1721d7f9",
@@ -6026,6 +6121,7 @@
     "scenarioSha256" : "cdf6e899087aa4b34352c2b4d2d6533163068a34b3c71dfbc725c21380268150",
     "test" : "dev.morphia.test.aggregation.expressions.TestLn#testLnExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5b4fcc6564d5600c4a6ee2a84345fe195d7e5e25b14f8831a0d880999de9bddc",
       "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
@@ -6091,6 +6187,7 @@
     "scenarioSha256" : "dc956420ceecad3d67ae664b915a7afd83a90ea9461d717333574bd43abc97af",
     "test" : "dev.morphia.test.aggregation.expressions.TestLocf#testFillMissingValuesWithTheLastObservedValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "82aab788d1a86a007dd5eed281dbf967a5c2e24cf3a889f5b482e58663c19909",
       "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
@@ -6156,6 +6253,7 @@
     "scenarioSha256" : "31492113b2d36d9dd841ba6287eefc3c56d7573a2f28a0dd7e18707483213aac",
     "test" : "dev.morphia.test.aggregation.expressions.TestLocf#testUseMultipleFillMethodsInASingleStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "76068f412b703590689189a0c57cc6bfb48c08dc41a4b3a09bdfe0ae4ed94256",
       "data.json" : "4172b97e5349a1a79a5e2fb4ed822d3e253280404b2a4d663494121f1d0fdddb",
@@ -6218,6 +6316,7 @@
     "scenarioSha256" : "33520c443219bcf2eed651d49c0b66d73d46fd76bce8c472f3e959444e8b4aca",
     "test" : "dev.morphia.test.aggregation.expressions.TestLog#testLogExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6639e8f5eadae8201993e6a16898f7a61a9134804624f6d25f87f7b75967eafd",
       "data.json" : "277264946f4f53a459707fa2afa51c3500101592f5367a7d793e3dd1cd51c9a4",
@@ -6280,6 +6379,7 @@
     "scenarioSha256" : "02340cd348b5aa9d25295dec1901c90490ee36dafe7f9b001049e58ff85f9808",
     "test" : "dev.morphia.test.aggregation.expressions.TestLog10#testLog10ExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "3c924a30d352494e546fd7e64879d6a7c7156787f717e80ae9d4d4d771ef9be6",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -6347,6 +6447,7 @@
     "scenarioSha256" : "ebbf4d0c6f1d5f3ef2bb9d325e355a1e77955a17e4ab3113714bcf90f9e2c359",
     "test" : "dev.morphia.test.aggregation.expressions.TestLt#testLtExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "39b4f9594c7b497f90ea54985e7fb14402cee0cf9c7fbdac43a6c7cc86a7ff39",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -6414,6 +6515,7 @@
     "scenarioSha256" : "7d2cbc9e83704dda8fa37cb3b364df875f25f33ae58794077368e0550a28a489",
     "test" : "dev.morphia.test.aggregation.expressions.TestLte#testLteExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d494f6a8007bff45f3a44063612c78aee967d05721060b80f67eff97084b6503",
       "data.json" : "6784301e16c4430ab78aea22083e5a73dc624e3dd710ba571c2f2647ca5eb5be",
@@ -6490,6 +6592,7 @@
     "scenarioSha256" : "81896aa32966ed9b36add9d1fa1074165633eccb7a29d6e50adc48da09d38313",
     "test" : "dev.morphia.test.aggregation.expressions.TestMap#testAddToEachElementOfAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "84a85de412ad663deb84af83af3857559be7f2d43553e73b9185787d1808cd87",
       "data.json" : "265c314dae4826572205d1e19b1c0ab241f67a9ffb43bbfbb4a7b7d790c9eaeb",
@@ -6566,6 +6669,7 @@
     "scenarioSha256" : "4208d70b0e50f99c39ddf27725145f7a69c3735699cc12d40373b38965ab1b5b",
     "test" : "dev.morphia.test.aggregation.expressions.TestMap#testTruncateEachArrayElement"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "94de14bdfff133259ee72550c4334e1239491a64a9bd8d5527b35f7bd9367275",
       "data.json" : "a743216eb24f70c365cf501d4c8a7dbb0337b83893c0dcf75df3851137559453",
@@ -6634,6 +6738,7 @@
     "scenarioSha256" : "3365729723e5b2311e7072ecdeddc6ffb82c08c943ade3e3a48fd5c68980f296",
     "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f8d0de0a6509712dc0fc52fed79417438d41df29e800b8abe01bc3f04c2eeeff",
       "data.json" : "e17e39db26a30a1e85b54c272942573dd1c5750e2cb208fbad571af9265dad5a",
@@ -6702,6 +6807,7 @@
     "scenarioSha256" : "4adbccb09b18236a05746028fe009edfe75167cfb16c407a6df3567cda94a66b",
     "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8c5f7b373ffe10d97a559417bd1005287b8928c83b4a4191f65b476d36c3f55e",
       "data.json" : "7abdb7b2377903b6ec5c967458fae775e5e0741daa23413803f4365e1f57ba6b",
@@ -6775,6 +6881,7 @@
     "scenarioSha256" : "75668cd38bd3f6db0e12a67f043e5c55ae2062c088fe46246fe71b4e218062c2",
     "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "18d9d3270c402b3f6bd100aa329ea893d97997ff7e05b45a282693b54f9714ca",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -6836,6 +6943,7 @@
     "scenarioSha256" : "e92caa78ad2a2c4200d77c293892cde3f7c35045ee36b449de4042eab88380b6",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testComputingNBasedOnTheGroupKeyForGroup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1a9d39f18bea5cfc833d7a3281f655d2082341fa14ed487ff484a399947b0620",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -6892,6 +7000,7 @@
     "scenarioSha256" : "df0948324601fdfa006cf058bc0df3f96b8e983980b0ecaed44aa966e28fbcfa",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testFindTheMaximumThreeScoresForASingleGame"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "50e559d4ff78094e3a94d8b56c9c4e9b869f12ab9b0eeaddfc240bc5ae9aeaef",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -6948,6 +7057,7 @@
     "scenarioSha256" : "3e45eaf147bb4eb45576e5df0f3f30f502908ca9e9819fdbe3ad98c3cae8230f",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testFindingTheMaximumThreeScoresAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "dc48c3bfb74ba0f620f5971926f167202f1d7efacca1553065e0c039a44209f9",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -7025,6 +7135,7 @@
     "scenarioSha256" : "6d04d042ec4b2ca70e9818ae5eb87105df9b00a97ff9451c0e8e323ed5c670cc",
     "test" : "dev.morphia.test.aggregation.expressions.TestMedian#testUseMedianAsAnAccumulator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fb8b87587b405dbc335f0652eb66562e1155a3431024e803e08d09555921cc73",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -7102,6 +7213,7 @@
     "scenarioSha256" : "ca0b839a02597283b2a996710d434dae729f5c9b5da28c51610cc1bc68153b86",
     "test" : "dev.morphia.test.aggregation.expressions.TestMedian#testUseMedianInAProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9247b93a03b1dae84afb93e7676e36a7c1833f6d2da195e25ad6f49fd5f22b59",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -7179,6 +7291,7 @@
     "scenarioSha256" : "9b723a1d063563f88339d0f0bc1b05587a574e8493b9cb5868715813274ad952",
     "test" : "dev.morphia.test.aggregation.expressions.TestMedian#testUseMedianInASetWindowFieldStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e749e1dc52af7b0894a766ecd25f548d427bcd2f0ba7ef40b43d2989286c18d8",
       "data.json" : "fcb3a176241ec60667e4ff0135eae7f61013c8516ad2816fe2f06858ee1c8fb4",
@@ -7235,6 +7348,7 @@
     "scenarioSha256" : "5ef48d4ffa0a7c283d569de431345146850a2cf54dbd64394b31661545ff7983",
     "test" : "dev.morphia.test.aggregation.expressions.TestMergeObjects#testMergeObjectsAsAnAccumulator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -7294,6 +7408,7 @@
     "scenarioSha256" : "f43296f58e5603bb6ad49099b01b3f5b537cc7bdf8cc3de7ce3b4801f02f6df9",
     "test" : "dev.morphia.test.aggregation.expressions.TestMillisecond#testMillisecondExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "051d2d7087d0eb11c023507cc409c67d7a172e81548e9c18019ea3bda837f190",
       "data.json" : "a743216eb24f70c365cf501d4c8a7dbb0337b83893c0dcf75df3851137559453",
@@ -7362,6 +7477,7 @@
     "scenarioSha256" : "0d6a4243824224d0465167e2ec4aae067da4f567a5da932766269d038226da4f",
     "test" : "dev.morphia.test.aggregation.expressions.TestMin#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "162905d9e0310cf8044541a192e4162f64e1a2fea46f45688c69fdf52f8a4272",
       "data.json" : "e17e39db26a30a1e85b54c272942573dd1c5750e2cb208fbad571af9265dad5a",
@@ -7430,6 +7546,7 @@
     "scenarioSha256" : "2fd58e675fd6970edd98449b2bbfa09356d1e3f631fe2f2a13cae9644b924ba8",
     "test" : "dev.morphia.test.aggregation.expressions.TestMin#testUseInProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "17cf0890f9e899c0105f80e7e127f9c6b46b07da330e8db4915e11ff0b9b85e7",
       "data.json" : "7abdb7b2377903b6ec5c967458fae775e5e0741daa23413803f4365e1f57ba6b",
@@ -7503,6 +7620,7 @@
     "scenarioSha256" : "76bf965cc57c8eeb4e578ac4a9dd8fb1fddc0c78d192d3c0e7e1669f3775f9b4",
     "test" : "dev.morphia.test.aggregation.expressions.TestMin#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "036df52068be5d2165aa4aa7107de7de4675935b14c29d96537051d4bb113507",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -7564,6 +7682,7 @@
     "scenarioSha256" : "af8425fce088653af60a7240f49caaf4a3c8276adb4d5b50e7be4e649ce0d033",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinN#testComputingNBasedOnTheGroupKeyForGroup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2f6a9677d628bfbacad1a2c10538a16e5c88b25657e8b2ace298a47ede6c36ef",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -7620,6 +7739,7 @@
     "scenarioSha256" : "6d4e743c4f75726ad7a56195feec7ed389626735f485b5db6841efe947d0086f",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinN#testFindTheMinimumThreeScoresForASingleGame"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6477ca881dbe58752833826cc8fb6e42725b3fa35abaa29d903cc2c6b4c2a4b9",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -7676,6 +7796,7 @@
     "scenarioSha256" : "c5a0badbf83da42965e0e97523dc1bceabb1c8f6b415f419fc074783055de1a3",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinN#testFindingTheMinimumThreeDocumentsAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -7735,6 +7856,7 @@
     "scenarioSha256" : "82c62b8b24b13c863f3c2c0bf944c4b5023eae03271c7ee73fe692d79abcefc1",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinute#testMinuteExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e0257cdb97ea9239084f5a49e814c8e9125e8518bfd5272550c68085bff7cc79",
       "data.json" : "bff449866dca378b68dfc806b1a2ad84e42e39ad900134750e56568dc2c6b4cc",
@@ -7791,6 +7913,7 @@
     "scenarioSha256" : "785c301fbb1a9e2a48d2f99d8588adb6e57ea7fa732f1b13c51bf26ad5d52f25",
     "test" : "dev.morphia.test.aggregation.expressions.TestMod#testModExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -7850,6 +7973,7 @@
     "scenarioSha256" : "21e3da57930bf0fde02721150fc8f39ecba3d55d0de3b3fd5883e843da1311fc",
     "test" : "dev.morphia.test.aggregation.expressions.TestMonth#testMonthExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9d8f6142bb0295d501d032a1d7148e0c3ed13b3f07b5fbb0348809754155fc3b",
       "data.json" : "bf4616c4049a604703753e1a4e6bc76abefae8abf996c068d1b6a2bd38567cc3",
@@ -7906,6 +8030,7 @@
     "scenarioSha256" : "b1172c1a4e0a9aabc218d0b9048d4b67b4be7af411655be986cfb5144c508241",
     "test" : "dev.morphia.test.aggregation.expressions.TestMultiply#testMultiplyExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d78b5b1e1619c5d30fec77a1617f8c7c491350bc0bbc8598692e650e419f35c4",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
@@ -7973,6 +8098,7 @@
     "scenarioSha256" : "cfcfbbd49199bee13da0e807901aa38fc6ac2f9aad8e99f7bc64337c5b053264",
     "test" : "dev.morphia.test.aggregation.expressions.TestNe#testNeExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1bced5e6ecb39a949e67fe9a85f03421cfffac71b9dbb98fb1a4cac0faf380af",
       "data.json" : "59080617e06f71cfc2a60584cdf8a932c3cade3c10c3c042084f68e1d7bdf69d",
@@ -8035,6 +8161,7 @@
     "scenarioSha256" : "89fc675808d89b9a94b34ecb334e5f2b860cae366fa0d383aae44dc0127ca03e",
     "test" : "dev.morphia.test.aggregation.expressions.TestNot#testNotExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "396cab603cd2632c675cbc298ab32250053b00425f5fa1de6a76c0b6812eadac",
       "data.json" : "4d51aeacf5beff8c3273b4953adba4946b1c018693a9522776608474eb755e07",
@@ -8094,6 +8221,7 @@
     "scenarioSha256" : "a513759a376c9b2e9cd161dd36baa586ff2ab00521a8344c72dcaceb8f35d8a8",
     "test" : "dev.morphia.test.aggregation.expressions.TestObjectToArray#testObjectToArrayArrayToObjectExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e57ffd99f1a20bf39558b24098563b52d808c4a7c39e955b279d2682e8a5bbb9",
       "data.json" : "d69b506b5224edd78b00c65ba71697d185346222ecbf866f490aed07fafb4991",
@@ -8153,6 +8281,7 @@
     "scenarioSha256" : "21a8406a7815e5da31fa73f54459a41ae5585a82a11cfef74ad37b37099e7774",
     "test" : "dev.morphia.test.aggregation.expressions.TestObjectToArray#testObjectToArrayExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c09633947bd0776291e817d447a610671a3bc12448ffbce6662d81dd67919e2d",
       "data.json" : "b02522db83dc861ea9442e91abdd609c643f89217ab4a06e3d9e3dc9d6454cf8",
@@ -8212,6 +8341,7 @@
     "scenarioSha256" : "d0ad65359b924b16f001d11e433d1bb51e432e377ca428171267328a4817856c",
     "test" : "dev.morphia.test.aggregation.expressions.TestObjectToArray#testObjectToArrayToSumNestedFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "554abf3bc7bf23b14f846b854f8ef6753224853c4487d14660d93c6c957e2f09",
       "data.json" : "59080617e06f71cfc2a60584cdf8a932c3cade3c10c3c042084f68e1d7bdf69d",
@@ -8277,6 +8407,7 @@
     "scenarioSha256" : "c30b1b8e2884edc93d899b1a0d39d54717a0a60689fcd9df1611f554a0a1ffe9",
     "test" : "dev.morphia.test.aggregation.expressions.TestOr#testOrExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4a17d209e227e9ed6ef495a5df09fbd21464fe2c8db5796dd4a6b360f48f82c7",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -8364,6 +8495,7 @@
     "scenarioSha256" : "1d4ac3d6fa29521aa86eb2a82a0cb255aca5fcd7fb2bad35370e13b72e72d60d",
     "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testCalculateASingleValueAsAnAccumulator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0bcce7237872e60af2100bd501bd8ea109e0b83d034f7f391cb16c50954a2783",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -8451,6 +8583,7 @@
     "scenarioSha256" : "a06f2e89feee703946b8aacfaab5f81d6a672ff162f9cb1fd30ecebe0c724811",
     "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testCalculateMultipleValuesAsAnAccumulator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0780126f373b349932305a90777f832e327aac9de290b9d192aad0b59b6ee80f",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -8538,6 +8671,7 @@
     "scenarioSha256" : "2640c8f3f54915f4e54f1b7c3f58dd8f31c6b8a7de75b17f870fdd008286e00c",
     "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testUsePercentileInAProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "39ed011af49b580efa8962e2c0deecba5bceb51fbd7be9e70cef9a6d33a2b521",
       "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
@@ -8625,6 +8759,7 @@
     "scenarioSha256" : "cfae87b8765e0063450ca9b223cafff52a14d59dbbc0f5116b6d5f95a77452c4",
     "test" : "dev.morphia.test.aggregation.expressions.TestPercentile#testUsePercentileInASetWindowFieldStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4f548cfd1a75d9bbbe96f52a4000edba1f5d124b883ffcb4cf8c771285950700",
       "data.json" : "4cd7b1285d3d13b4278327c802578c1640af66b1cc9b8965abc8bcf0a8c1c8d3",
@@ -8687,6 +8822,7 @@
     "scenarioSha256" : "594f0920b5d8c3201ec807e386e551a4204e5d7d9cc3834037d603355fc6c0c0",
     "test" : "dev.morphia.test.aggregation.expressions.TestPow#testPowExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ddd905b1a38c877f8bd7e68271e2df365cdd91c3b3bd309bc5b02c20d0396487",
       "data.json" : "9a0ea0fac9e19caae0bd4df7fe2cbafd1768869562d0112442b1ad83b3a289a0",
@@ -8755,6 +8891,7 @@
     "scenarioSha256" : "c74ad11c5fd8bcc4830130a98f85e87aa28e4092ed850588dcf7ee579352a44c",
     "test" : "dev.morphia.test.aggregation.expressions.TestPush#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1e29951d37cf23f0ea72d7e5cf1c195e271e4b8208770c4c51248ec474eca9c5",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -8823,6 +8960,7 @@
     "scenarioSha256" : "fda89ffff83690a47a3a42b80fdb3b401e7d4ab47c42f6c7efb72526bba83267",
     "test" : "dev.morphia.test.aggregation.expressions.TestPush#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8237ce131d729e714e2d6099fd29f8d9164433441e5280f4a05018d34c4ff152",
       "data.json" : "d9d1ac253c9e6ffcb7a3aebaec031ccd13cb729e90f41e8817bdfb3fde7eea23",
@@ -8899,6 +9037,7 @@
     "scenarioSha256" : "efb228f2397cc6287d33c504954bb18b3dd23c332db1ab7a1d2779200054b74d",
     "test" : "dev.morphia.test.aggregation.expressions.TestRadiansToDegrees#testRadiansToDegreesExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "474e7bfb76c1e9e70400a7db777d773b7620f8e39112485b9d8018692144f179",
       "data.json" : "e7539b65d2ee003260f7821727977ddab948337525906bb5b5f1920317214cb0",
@@ -8961,6 +9100,7 @@
     "scenarioSha256" : "879fb8477ca0d14f49ca7d833ba9a8c57999c24c3c4a169e3507dd683627e81b",
     "test" : "dev.morphia.test.aggregation.expressions.TestRand#testGenerateRandomDataPoints"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "3410f2e930e6300d8693c97e978720703ef93efd94dd25758fbd40e2ffb2064e",
       "data.json" : "d2d21026bcbe7ad8640307c52a6ce69f2d3c8c73e49b1520e3617c613c55258b",
@@ -9020,6 +9160,7 @@
     "scenarioSha256" : "1b615569eee8287afc7ebefbab90799667ce2a0e332e49f96c41c5d84b9c15d9",
     "test" : "dev.morphia.test.aggregation.expressions.TestRand#testSelectRandomItemsFromACollection"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b499210db3c12011149a6f03784495a3e847c01ded15b95dfa471306648b1b58",
       "data.json" : "48db5a66ab7d46af37931b4c8f89f6a92eba2439f9f09c365b755d8cfbb8dc7d",
@@ -9081,6 +9222,7 @@
     "scenarioSha256" : "e528f56092c2315c4b73a0fea9661691fabccb9dcd00ebc7757e7460385ed8c5",
     "test" : "dev.morphia.test.aggregation.expressions.TestRange#testRangeExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6aa60c50b85e829f4288ff3abc1b9f0b4a2a97a604bbcc308412c49677f9f71d",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -9152,6 +9294,7 @@
     "scenarioSha256" : "fc1969f77538cb92adb84f9a726da85bcb6ec0418116022659422e85ded30302",
     "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsByADateField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "262218ba330f408ce69b3582050e63f5218c7ffab70313749ccc4f5af42f1748",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -9223,6 +9366,7 @@
     "scenarioSha256" : "a987629b6cc69398836c785e61cd84acaf7ec96bd91e129ef16070b4b7c35beb",
     "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsByAnIntegerField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "262218ba330f408ce69b3582050e63f5218c7ffab70313749ccc4f5af42f1748",
       "data.json" : "15343e0083eda7b9c31e3823a3b71b21aca78244b6db31c1abfd735cdd96c4d0",
@@ -9308,6 +9452,7 @@
     "scenarioSha256" : "3f2a1a371b185e0422d58b25decaca82b898d650f52b51a2eb2c2befc67665ad",
     "test" : "dev.morphia.test.aggregation.expressions.TestRank#testRankPartitionsContainingDuplicateValuesNullsOrMissingData"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1ecec3b964ef8cf01ce2fb1080f1e875c603cb469e088200b911cdfbdeee8095",
       "data.json" : "a6a8f883a0ec568bb2abd95770e5a4562b4a52b5f54e6bce17b6e35bd5e29d2c",
@@ -9375,6 +9520,7 @@
     "scenarioSha256" : "5bbd4c9f5d7e8d6d13c456345827012b40bfd2ac9545f5112beb4547ced0df53",
     "test" : "dev.morphia.test.aggregation.expressions.TestReduce#testArrayConcatenation"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "71010c66f4f1e52f21f0ce94bff3d0f272ecbd418e739d9b473bcfd046da62fb",
       "data.json" : "c2b4e18b477a8547e401c4568310dfc467a3d848306f395fee9e085bde4cb981",
@@ -9442,6 +9588,7 @@
     "scenarioSha256" : "fc4f21d2564c839627f2aa7e94aa0caedf26175c9b414314f2d5af01f2a16892",
     "test" : "dev.morphia.test.aggregation.expressions.TestReduce#testMultiplication"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6d1c07baa84b1eda5fe8226b1269d4962b84c116593b770ba1b281d21e2431ce",
       "data.json" : "e4cafd01c7762ed6d33a551185ef74b38f2f5687b93f21ad7277bc323c4151d6",
@@ -9509,6 +9656,7 @@
     "scenarioSha256" : "3671fe31a128ff251e797424131682ae6f9553ec0655341f30f3d7d60b58f8f9",
     "test" : "dev.morphia.test.aggregation.expressions.TestReduce#testStringConcatenation"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "17ad3aec55a6b753d5947506d52043f2ab1dab39b722018e530affaaf7f94cc1",
       "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
@@ -9576,6 +9724,7 @@
     "scenarioSha256" : "9737e08eb27ee930a80d977c24a796c32eebf1d35d96f2e42a51ad7605fb5897",
     "test" : "dev.morphia.test.aggregation.expressions.TestRegexFind#testRegexFindAndItsOptions"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "dc9aa419eb6929458ae38360a143250609469cd7f78e2461d7a939d89d53a304",
       "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
@@ -9643,6 +9792,7 @@
     "scenarioSha256" : "e5fedcb551c33314fc27d406b41c9ea4e82fbb7e1edda992cb48d528d251bf89",
     "test" : "dev.morphia.test.aggregation.expressions.TestRegexFindAll#testRegexFindAllAndItsOptions"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a9f4c363f1d8a6a9b0a92210cbd00fdcae9f073f09921bf1d2178a6896f41511",
       "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
@@ -9710,6 +9860,7 @@
     "scenarioSha256" : "dab08044de3bef65adb1cc01ca1c44997c092bb96069a045676e57d90542b15c",
     "test" : "dev.morphia.test.aggregation.expressions.TestRegexMatch#testRegexMatchAndItsOptions"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ba64fcca97deb0db79ecce14120b7c456913770b14d2af63abe36c8128f3a9b9",
       "data.json" : "6cc7699f7322e36934945cdd47d40f8b811b45fc42652ac1617ca718ace0341f",
@@ -9766,6 +9917,7 @@
     "scenarioSha256" : "51054ad1fb31dc2c3252eb432d64933a4231e4f0c17e935a45166df2eb5120b1",
     "test" : "dev.morphia.test.aggregation.expressions.TestReplaceAll#testReplaceAllExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5c4d717c6a7edb6ac7cc3fafbb278a8fbd60bce2f612cfbdd25e197b8c5a35f6",
       "data.json" : "6cc7699f7322e36934945cdd47d40f8b811b45fc42652ac1617ca718ace0341f",
@@ -9822,6 +9974,7 @@
     "scenarioSha256" : "86fc304f436032c60c77237785b41167f7f0307c796583c5ac41897afd77d4be",
     "test" : "dev.morphia.test.aggregation.expressions.TestReplaceOne#testReplaceOneExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a555431029d637a578833d3edf849ffbbe0265eedd9cbca0de106512549dc832",
       "data.json" : "262551e491408265b59ce905c845329863785ce1b151e1392627dc379a2e32c4",
@@ -9884,6 +10037,7 @@
     "scenarioSha256" : "205d41ca978d6faadf54d9cef0462b71fdf8fdc20627bb6cd6658d8d02e2d6df",
     "test" : "dev.morphia.test.aggregation.expressions.TestReverseArray#testReverseArrayExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d021d059fcb4c579e318b3b18c4b2741f0f7ac93716ad642a485e9c71ec06fbb",
       "data.json" : "669ec93b0aaf5f20eb39340618bbdb152ed0b1b8c411d33c8e2a57a6588f3f6d",
@@ -9945,6 +10099,7 @@
     "scenarioSha256" : "250c3054a8e40ed14a0aaa36cafa2d7f8e5b324987937c61a7732e718848802d",
     "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -10004,6 +10159,7 @@
     "scenarioSha256" : "2dfe3cdcf7fe67e6bf54b8e95f2a6a0881f9a58e9e79da969e9bbcf4d58999ca",
     "test" : "dev.morphia.test.aggregation.expressions.TestSecond#testSecondExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "27bd806d72da1bdf2f2ba28859dbbbbf8aa278500c2cc127c682e7d360bb75d5",
       "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
@@ -10074,6 +10230,7 @@
     "scenarioSha256" : "17912bd4d9a87e2ecb01c862c930ff2528539d215c26d412fc9745da6270cc92",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetDifference#testSetDifferenceExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4a7d132e2b85296097f21bf4a1a28dcab05a3a2a1eeddd7e07c95d0fac50161a",
       "data.json" : "50425e64a2bf6fc0ec915aaa9fd03102f62a79f5273ac3e6f6ecdefb256b38e0",
@@ -10136,6 +10293,7 @@
     "scenarioSha256" : "a50d9a7ba05a086a5c9e6865635ecb18b960ba3f2424a1e9c268927bd1b4d39e",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetEquals#testSetEqualsExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bcaed603e5d72198e6c17f7c863927511a575027561bb5e9fbb2744fa903658d",
       "data.json" : "3ed42cddfaabb46c6a5b8509bd57e037b5d13d7f290c878a14ca5fd9fef8ccb0",
@@ -10192,6 +10350,7 @@
     "scenarioSha256" : "537a71615d451b8c40cfef465beebe2c072b480d02fc2e78abe3b88c8a0ecd00",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testAddFieldsThatContainPeriods"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9910287cf91ecb3d90e11aee31d88333b41fdd092011aca06db395371e445dac",
       "data.json" : "3ed42cddfaabb46c6a5b8509bd57e037b5d13d7f290c878a14ca5fd9fef8ccb0",
@@ -10248,6 +10407,7 @@
     "scenarioSha256" : "77fd9fcfe59079f844dd3a1702743deda72b7c4f6956c3e96d09cde52cb85291",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testAddFieldsThatStartWithADollarSign"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5ffb56d43d7095fc9030c9f358f43034005af822d3704a00ea8879498efcef65",
       "data.json" : "7ea651635e251dc74303a1035e62c33f8ab51cc3033bb9f79f9701394d7f12b6",
@@ -10304,6 +10464,7 @@
     "scenarioSha256" : "80265cd98b9c918b37bf2e6c6441db8046fb8fa07e819789bd1954fe5b683a25",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testRemoveFieldsThatContainPeriods"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "3dc8e9cd8cdd9a7ccbf22f881a37c7aa8e95b262d2878e00ab70cde2e558b4d2",
       "data.json" : "7ea651635e251dc74303a1035e62c33f8ab51cc3033bb9f79f9701394d7f12b6",
@@ -10360,6 +10521,7 @@
     "scenarioSha256" : "0a1e1756d434375fe7c0dc288b9f4fcf8fa57090b2bbe32426e157df870c913c",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testUpdateFieldsThatContainPeriods"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cb27eeca32921cddb57476d4c390fa0d3548425954f19ee89c7b662fc809f242",
       "data.json" : "c83554fb7a7799f06c68ad67fa38a07a9a5762678cbb86af18037e7d34b04ed3",
@@ -10416,6 +10578,7 @@
     "scenarioSha256" : "360ee0b7ce0b841b301515f9dcf9e10aff13bc5b56f3220b43c3d3493b305544",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testUpdateFieldsThatStartWithADollarSign"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0b134270dce3c0cf23d90635460dce61c82062ae1453f78c93ee547d0f96fef5",
       "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
@@ -10510,6 +10673,7 @@
     "scenarioSha256" : "d4a0026425d28c0d497452412adf7cb041397d6b429ffee7049204a54c496ce5",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetIntersection#testElementsArrayExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "944fbca0a50f7e411177508d8d312a8b800711f8220e32136ec9713f5e70e6bc",
       "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
@@ -10583,6 +10747,7 @@
     "scenarioSha256" : "28249d4a3cb6fa2a39597236da8cc74a984c8e875db5f04c45a69fc3764d8480",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetIsSubset#testSetIsSubsetExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5ed4cf4e10b723c1ee8ee4690af49ad85af1bf5631e7b8e5ffdcdf7fca05aea5",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -10645,6 +10810,7 @@
     "scenarioSha256" : "75c44f30abcc7bb654a42d42817254e98b87e49d5f6d38dffcabc7ff1df30ebd",
     "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingANegativeInteger"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fcae806208cb3a4286ac8aaf67d380311baf52483c2fb1286f61d3314d1d6fd9",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -10707,6 +10873,7 @@
     "scenarioSha256" : "9119adbfb5daaf4a12e0202158d6f961b333cc21349eda1b3f8a89f469a1c47c",
     "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingAPositiveInteger"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "721f3f6845341f2da64606bd6939ba044429bae3ae27deae3b0a617f8980298d",
       "data.json" : "73251ee25bdb190d0d63dcbe1691cc8db4c28d63544d7ce3e9a11be0677cafe1",
@@ -10766,6 +10933,7 @@
     "scenarioSha256" : "b222267753c7c5d8a6cfcc5cbd7b220477fa2f11dca4d397b480fec1d730617e",
     "test" : "dev.morphia.test.aggregation.expressions.TestSinh#testHyperbolicSineOfValueInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "311a67e381d2a2f5cee057f9d83d3f65a389412e8142d59c2222ab4cf78cd79e",
       "data.json" : "7bc8fec6e595a165c74f4234f45c418c62b4e52873ed1d82e37d4260689386c8",
@@ -10822,6 +10990,7 @@
     "scenarioSha256" : "0260e228fc81496ae6b717cc0beeac2950354d5385b28f865f7e04eede043b74",
     "test" : "dev.morphia.test.aggregation.expressions.TestSinh#testHyperbolicSineOfValueInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "dd92d298a1191b2bfe47aedf35258b7deb6bfb3e0457271c2e62297ca92017b2",
       "data.json" : "ff7538eae13f527665e22771e62b9495e7e17f32568cfad2adfa85ba0576bfec",
@@ -10895,6 +11064,7 @@
     "scenarioSha256" : "9ca231e2bc9d1b82f6383287e5181f53f6a39707650cd7c2a93506aca9c66540",
     "test" : "dev.morphia.test.aggregation.expressions.TestSize#testSizeExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e3fafa417b7f1ffb83298e76669680f7b41ee94cad195084d21d359486d3594c",
       "data.json" : "ed53dd5f4c759e494df0cf01d54396b03a2a01b0bc85e1d7c43500eb420a2db4",
@@ -10951,6 +11121,7 @@
     "scenarioSha256" : "90e15c48aee9ee2962bd08690c59b980176684dc5d7319e53cd3e82bbc779fb0",
     "test" : "dev.morphia.test.aggregation.expressions.TestSlice#testSliceExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "449241b657e5d3de01f6bddeea2060eb30b6a2ce3e9b7d85cf05b3e7dbcf095e",
       "data.json" : "81cb34491173765095462de9145afa64aade6db69c9c167eaaffeb073c93b830",
@@ -11012,6 +11183,7 @@
     "scenarioSha256" : "d637ee0ec93c764de3569fafbe2c5dcbf8bd056b232031a8f805f5879b6859de",
     "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortAnArrayOfIntegers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cf5111528b770e19cc096f07d7fda6a8d763059e58e5b55bb2201f6461507211",
       "data.json" : "5b0023c5f86cf03ebff51d5ee10e0935fa8f16e454552e3f244966eccc3230da",
@@ -11068,6 +11240,7 @@
     "scenarioSha256" : "3adb3b9c0c6cbce6eb116c3c052235db6d06ac7a76a3242fba2d0cb9ab79902d",
     "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnASubfield"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c71a76a532434797ef610d133174dd57c74951d5b3a3359c379f458852a6a973",
       "data.json" : "249a0c550901ef9df36c07cfce986e5c31ddf04a7087192a7b2ec4dde1f37087",
@@ -11132,6 +11305,7 @@
     "scenarioSha256" : "53dacee4388282565106d1eea5956bcb8e9e0b69f724b4ed96d28567d66ca5c4",
     "test" : "dev.morphia.test.aggregation.expressions.TestSplit#testSplitExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "95c223b23e31c416f572ed03ae98ecc0638de6bc459bebe9c0892f7e9776b8a6",
       "data.json" : "d1dda1939e02171d69cd3a0ebaa8354e27e97719b8562028c0dd1ec3fded6ec5",
@@ -11194,6 +11368,7 @@
     "scenarioSha256" : "984f57a6beae585da98ba5b6cb00477d09c1f0ff90b243a8179128aa0760efa8",
     "test" : "dev.morphia.test.aggregation.expressions.TestSqrt#testSqrtExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6096606527505422fcc67cbc5dc34080c7fbd982372df80b9a0ce71e432799ec",
       "data.json" : "01b8df89e8cce206de3f7202f76b6a677ec3853481ef602d47d9583e8b2d5ecf",
@@ -11265,6 +11440,7 @@
     "scenarioSha256" : "ae66a939b5420dff1900143f552a95316bd9732e0bf185517c1137b953fdce41",
     "test" : "dev.morphia.test.aggregation.expressions.TestStdDevPop#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d17bcabd10e8258f25c05843ad9c40155caff7486e00af527b289da113bd9dec",
       "data.json" : "4cd7b1285d3d13b4278327c802578c1640af66b1cc9b8965abc8bcf0a8c1c8d3",
@@ -11336,6 +11512,7 @@
     "scenarioSha256" : "d75470bd732b64a01098b33466e42e9cf6f1caea95d769126f4f8c07d5469af8",
     "test" : "dev.morphia.test.aggregation.expressions.TestStdDevPop#testUseInProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d368078a51118c0ad7fa6228c98b23b18c3d6baf77662c7b3294be2645a9a81f",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -11407,6 +11584,7 @@
     "scenarioSha256" : "2d3520907ea31f878ed5a4594e519a22d2732666bb58b63d6c23e575e49fce2a",
     "test" : "dev.morphia.test.aggregation.expressions.TestStdDevPop#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d09087b6da35d62e829e862a6f0e62a0db4379d00a2e52c2d5c788990fc13daf",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -11478,6 +11656,7 @@
     "scenarioSha256" : "c6325d2dd0c4b53a24051798bbbaa930ec189be151a4244330b7be1f85cd5cfd",
     "test" : "dev.morphia.test.aggregation.expressions.TestStdDevSamp#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a9b251b26c7eca2916133f1a891866bb9bf34c238bb365b8dd300115511e2998",
       "data.json" : "6c0bdb0182f8f15d884ab97ad6e87d8a0a98fd1b2af8e0a36e30f0121abbf45b",
@@ -11543,6 +11722,7 @@
     "scenarioSha256" : "5b77b0cb49310fdaa4fa0dfdce410f7d3b2a8bc2c48e77a57c98c027362d6569",
     "test" : "dev.morphia.test.aggregation.expressions.TestStrLenBytes#testSingleByteAndMultibyteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a67fe94b945cf34337f76176f83ef8e23680c54835facf67f8de1feed5789eeb",
       "data.json" : "5d1b657fcf58fa0fad91c36c7b22e11f29684ca7e4751175c88bf73f57ba757d",
@@ -11605,6 +11785,7 @@
     "scenarioSha256" : "f21d9d1a2d4531ca88ab8b8dcdae5b7f01bff04580b8e2bf19be80eaf7666ad1",
     "test" : "dev.morphia.test.aggregation.expressions.TestStrLenCP#testSingleByteAndMultibyteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fcea7af842c23949b9dc37aedc9e3381bc9495a6d93510f8963b0bce75d831c1",
       "data.json" : "f143d678268c9414706eac7a327e4f73eca31eb2bae4f85e341fe56e71e84303",
@@ -11664,6 +11845,7 @@
     "scenarioSha256" : "f53aff7c885ebb696a5e7f6abe1c9502350f9b40c372959078c4e4144b9c7348",
     "test" : "dev.morphia.test.aggregation.expressions.TestStrcasecmp#testStrcasecmpExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9bd581ee47f19f44d47a6c64ce339ddebb69afbb90b12c6dc9951cb4c8c440c6",
       "data.json" : "68de023cc60a5bf4863ea47c6a23d58548135475603b512df131bf0cb7682691",
@@ -11729,6 +11911,7 @@
     "scenarioSha256" : "9502d7c536f79ba9916e4c434456fed89ab73d13d66d79faf1bfae5b2fdbb9fc",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubstrBytes#testSingleByteAndMultibyteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7f84e84b9f37ebeaf09392ac1829dc6501d28dbf719c7dbb959401c0851c1c4d",
       "data.json" : "f143d678268c9414706eac7a327e4f73eca31eb2bae4f85e341fe56e71e84303",
@@ -11794,6 +11977,7 @@
     "scenarioSha256" : "81aa6b5649b6bf5174a458ffc9f428355d04597b4be768e257c75d1f5ea4a9ca",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubstrBytes#testSingleByteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e6b7d7e8317584ac7724f1f2382d99442ccda8e30eda6048911adb22147bee1c",
       "data.json" : "68de023cc60a5bf4863ea47c6a23d58548135475603b512df131bf0cb7682691",
@@ -11856,6 +12040,7 @@
     "scenarioSha256" : "a3552a0e62b2a8b3296660d45c967fcffbdeeddfc96d9f2725a856f7f7ebab84",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubstrCP#testSingleByteAndMultibyteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cd316bc1c8d343bfde9d936f3c6eabebde14156df5c2d53d5b990394f825e5e2",
       "data.json" : "f143d678268c9414706eac7a327e4f73eca31eb2bae4f85e341fe56e71e84303",
@@ -11918,6 +12103,7 @@
     "scenarioSha256" : "0c0a72bd1e97407c279a5e0693939e39a47d46fc2bf456c9417e83fbc7f67e52",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubstrCP#testSingleByteCharacterSet"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "959cdb90020df508eb3161c32aefeedc0eb61cc9443a97f6e28f1987bf420670",
       "data.json" : "e7e2963f612be79022cd45be77dd0b95dac6480327212612c5b76f39e247ba2e",
@@ -11974,6 +12160,7 @@
     "scenarioSha256" : "63bd0e3ade7d431ad913e49216641fd060adf64c66ff0646bd8a576730f9a9b1",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubtract#testSubtractNumbers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "71e5b7a8b07a3e2e3666e230b647f71e231fc6bc1dfab96a4035fc05a651c2b6",
       "data.json" : "e7e2963f612be79022cd45be77dd0b95dac6480327212612c5b76f39e247ba2e",
@@ -12033,6 +12220,7 @@
     "scenarioSha256" : "ce86f2a7e491a64b2d6d688bb2e455fe00eb243836ed11dbcdaa8183d8b3d3d5",
     "test" : "dev.morphia.test.aggregation.expressions.TestSubtract#testSubtractTwoDates"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0f9302358fb4bddb9c4cac1b538a04db3aa8eb3283c529d55833fabeba6b5856",
       "data.json" : "dd1bcaa55b6e4b3a7a08f29ea3f54b60897ed3cd7ef9090d3d04277a27aa739e",
@@ -12118,6 +12306,7 @@
     "scenarioSha256" : "8983a5ecd37237bcf5170e453fdfdedf328ad090b538b66f3131c7832234af9a",
     "test" : "dev.morphia.test.aggregation.expressions.TestSum#testUseInGroupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c163ca921a8130e1f92ec0e250bc5f2cb146ea84df9f0eecb0e59ff6abd81210",
       "data.json" : "e17e39db26a30a1e85b54c272942573dd1c5750e2cb208fbad571af9265dad5a",
@@ -12198,6 +12387,7 @@
     "scenarioSha256" : "e287c3747710cfe9717d2bb21be26d1007b6ba9044274ad09917f22a6fd7ec7c",
     "test" : "dev.morphia.test.aggregation.expressions.TestSum#testUseInProjectStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6f10311980a1a7429c4be9461b2c7039bb6c5d40701899d5d6b07856f6c264af",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -12278,6 +12468,7 @@
     "scenarioSha256" : "1ebdda0af5fe53505d0db4d6a1201dd358ea988c61c53463fd22ed77a426e79f",
     "test" : "dev.morphia.test.aggregation.expressions.TestSum#testUseInSetWindowFieldsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "20bb233dfff93b958ab388e8331599773faf15195698d77660c165b4e72a29da",
       "data.json" : "29f1cbc2a897e02b2249303daa735602ced36ae13e67ddacb96f0bd55dfa71fd",
@@ -12334,6 +12525,7 @@
     "scenarioSha256" : "0bf7ddb543c506156f97158a50c1731374d9bf38e232c155e274bc75226ffc63",
     "test" : "dev.morphia.test.aggregation.expressions.TestSwitch#testSwitchAggregationExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ffced3e891acc2d844f4dfb0d229c3518f673a4f261e900056b3518ac127b0ad",
       "data.json" : "0731457d368258f5e3f1048598c08d560b739faa8207daef35100fbf76364973",
@@ -12393,6 +12585,7 @@
     "scenarioSha256" : "37e2ccb3b2f845e72d4f62952f10c539fe8d54bd9dd55ebea35622b6672cd522",
     "test" : "dev.morphia.test.aggregation.expressions.TestTanh#testHyperbolicTangentInDegrees"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "73969d1ee61138cc532c195402e3d56abc48e8aadc9a0bf0e7b32dee5426b29f",
       "data.json" : "3c97732f5bbb84b8c8b1945a4c8a1215d7508a7b0fe60a4eff5cd1213509ecb3",
@@ -12449,6 +12642,7 @@
     "scenarioSha256" : "5aa0a906184c3c3a7089ec23b30fa4fefc1a96a7bb036fabf03016ca25b83b79",
     "test" : "dev.morphia.test.aggregation.expressions.TestTanh#testHyperbolicTangentInRadians"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4f1b48741b76b267c7d47c1548dab19302cf163aa7ceaa436a553b1737736071",
       "data.json" : "5b5349329d0c344cb298e13fe8c64f812a50797f189e53cdeae32d65c6f943f7",
@@ -12510,6 +12704,7 @@
     "scenarioSha256" : "764dee39e65cbdb57a430ec13acfd59f451e265ac0c410170e16e165fb426549",
     "test" : "dev.morphia.test.aggregation.expressions.TestToBool#testToBoolExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ef89bfa918c2372135aec7177e610934a69791c0758172f7db9fa5b9b67db5c0",
       "data.json" : "8c74a7742b6b737c975ae521a72bbef723bc92087efb0ee1ff800dd5783cf318",
@@ -12571,6 +12766,7 @@
     "scenarioSha256" : "609d4170615d66bad67d773ed7bd9df19502e529c6fceaaf9b0967ade127a584",
     "test" : "dev.morphia.test.aggregation.expressions.TestToDate#testToDateExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
       "data.json" : "e019101e7a2bf444039d383b7e8c2a89f058c64a289745d7e39de7416fd75e17",
@@ -12632,6 +12828,7 @@
     "scenarioSha256" : "5141984460a4d0c8aa98d2d81890d52feedab3e709e91d44c81c922a39bb37d6",
     "test" : "dev.morphia.test.aggregation.expressions.TestToDecimal#testToDecimalExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "955ca2cdffe60be3cd0395a61e2aca37b7f84975747b61e56b6fbd73d581860d",
       "data.json" : "b45cad3e5392190b461dc7c5a85edebbfeb69d5897259a621767344ccf679cc7",
@@ -12693,6 +12890,7 @@
     "scenarioSha256" : "3830aa5b85c38e5e1529403c514c7184d78ef3e148b4af18c8cea5b02571d2d0",
     "test" : "dev.morphia.test.aggregation.expressions.TestToDouble#testToDoubleExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
       "data.json" : "ade906b6207d03678c0949b60f1e056f43e37f5844ace92902dd719c30c68074",
@@ -12754,6 +12952,7 @@
     "scenarioSha256" : "f6d5b077dd072c5f8f64fbb0e746a78ea5c4416888b22f7be32a957d4dc3234e",
     "test" : "dev.morphia.test.aggregation.expressions.TestToInt#testToIntExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "95e1c2aee3ffbb7287d6e47dbae66bf319bd69c077ec37cf8589f1ac23941bee",
       "data.json" : "ff1c4286b247c904155b5f85cfdea487fca34274348081bf391ddf2ffb4d7bac",
@@ -12815,6 +13014,7 @@
     "scenarioSha256" : "4da19bc7219158edaba09a8fe7d850e729bcfd2c10e9042f36405a5c3a2e4fcc",
     "test" : "dev.morphia.test.aggregation.expressions.TestToLong#testToLongExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1ad81188314d265975b3c3bd9c06b9610846fe23cfd4e11d9023c18777207bf9",
       "data.json" : "bebc57fa789d3c3464bdf1ca3e32535ab1e043d6de2448a0c0c4125da5f1fab1",
@@ -12874,6 +13074,7 @@
     "scenarioSha256" : "97ed42845785fb93f9a3d3b20c072c7afccbbc6b29f90226d5b65c3bda6d24d9",
     "test" : "dev.morphia.test.aggregation.expressions.TestToLower#testToLowerExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "481dc3c044bea7b59be8cf0a0dc38fe22cb723bf2a52e05c4697d7986fe06d83",
       "data.json" : "f85d410fa66c6541e18d6291ea787fb70f71ba6ab39db3014dc7b5a47d284855",
@@ -12935,6 +13136,7 @@
     "scenarioSha256" : "1b18ae6286c17ebb6abbb2f0cc392848f7a866c78a302bae82f91d43ffadea2a",
     "test" : "dev.morphia.test.aggregation.expressions.TestToObjectId#testToObjectIdExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "17982e27a41e3039045032b5a51119df82a662fff896b21d56b12dc7833c3288",
       "data.json" : "daf486e3c2e43e3837c9485f48d6628d63c0344dbfbdddbecf8d67cc42deb3cc",
@@ -12996,6 +13198,7 @@
     "scenarioSha256" : "167a85b4993d5fa813ec23c54771d56df090932f2938bfabf9f1d31402790999",
     "test" : "dev.morphia.test.aggregation.expressions.TestToString#testToStringExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4e283a4c5326b4804decfe82c3ced4abeb955b614f310c3d5a9783a6c8df9da3",
       "data.json" : "129c8046e84da0ced9aa183db798737e790000149219a9d018d29b36a4288d48",
@@ -13066,6 +13269,7 @@
     "scenarioSha256" : "b85be9f65ed330610657abc11682b82af0da594159cb8fdf6b5257d4c5e009f7",
     "test" : "dev.morphia.test.aggregation.expressions.TestToUUID#testToUuidExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "043958d598e98fef209b56db2d35ac072d664ca81dd3087168c37f317b6cc94b",
       "data.json" : "bebc57fa789d3c3464bdf1ca3e32535ab1e043d6de2448a0c0c4125da5f1fab1",
@@ -13125,6 +13329,7 @@
     "scenarioSha256" : "5c10aadb1f6574908965f8f37f838c9b3d3cf9721a6effcf129029e7b1923462",
     "test" : "dev.morphia.test.aggregation.expressions.TestToUpper#testToUpperExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "79cd62d235577a2eaa4139f8d65a7548e9312acd5b740f9788b16a7fd126f26f",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -13186,6 +13391,7 @@
     "scenarioSha256" : "ab7abbe46e4fcecae67ee4cc9a850fcd1ad9c6e3dd8eed96dfb1072751c5a074",
     "test" : "dev.morphia.test.aggregation.expressions.TestTop#testFindTheTopScore"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "56cac57867a757a5cec96707af4e2dd1b7e62eba63eda9cd6ba24db1def77bd5",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -13247,6 +13453,7 @@
     "scenarioSha256" : "46621c13739291528010a1b86c592690e6f8349e3818452beb5909421b430cab",
     "test" : "dev.morphia.test.aggregation.expressions.TestTop#testFindTheTopScoreAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ef3b911bb270ec864118ceb7ff03599fe2756b1f5e13cf9e161c18fef8b9c3bc",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -13303,6 +13510,7 @@
     "scenarioSha256" : "a5031524c2277b1f99f943b1cdc764f18cb83d6c52c0a2b69b5ff2309e97572f",
     "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindTheThreeHighestScores"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c6bc4cb5a1ddbd7970852409d3001d0546595512d64701ab97916d6fd4112c2a",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
@@ -13359,6 +13567,7 @@
     "scenarioSha256" : "9b946666706d1e4ffe7bc49ee891a85eaa3b73336572a27a5003e93ba8b80ddb",
     "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindingTheThreeHighestScoreDocumentsAcrossMultipleGames"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5491eaf37c07ffb8cf5e7912e43d7881718c2dbfe2a081612221d9d546dd0b7f",
       "data.json" : "e92f409d4f4d66bf0ca619c7ed5ec8ff5e09040dfbe324229fe00a18b144d8ff",
@@ -13420,6 +13629,7 @@
     "scenarioSha256" : "e1cdbcce4b5d2a8c40575efb7784b8a815e9ba73143e17f17bcb798b8e8c288b",
     "test" : "dev.morphia.test.aggregation.expressions.TestTrunc#testTruncExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "39904f1ea453dab39c5f95f50a3fef15a17d0ee61c1f53843ac99f1cdfaeb9ed",
       "data.json" : "8f3ba9b30a404a6c614e8364f7ddc11aad70a2cc6d9d682b235f5e0aa7058ea7",
@@ -13493,6 +13703,7 @@
     "scenarioSha256" : "7603a7e28a326b937d5f4029bf74b15494f705209b35b7d934160aeafa3f22c6",
     "test" : "dev.morphia.test.aggregation.expressions.TestTsSecond#testObtainTheNumberOfSecondsFromATimestampField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "751501c8281a087ba55714938458165bb7beb694a91ae105874a256bce40a134",
       "data.json" : "aad2dbd0e6f9c98dc8e39b6a04e73d1db24465a39b8429a64f5c6a4400ef0345",
@@ -13563,6 +13774,7 @@
     "scenarioSha256" : "cb79c4138d520c835d0740646d6ca3904b8a3a43394b9fdc03a432952ba32f92",
     "test" : "dev.morphia.test.aggregation.expressions.TestType#testTypeExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2050fbba7da71470358a86f13f506e9a6cf283ef5b8de7b32f1ff7566c87e806",
       "data.json" : "d5ef2dea789c103e422846fe18ea87cd93f4d6a284e83b96f1f53df58e128b63",
@@ -13619,6 +13831,7 @@
     "scenarioSha256" : "b8219bbf2602dc7d194021eeb2d5d7b7c4ca302698de4988c609c76023c3bab6",
     "test" : "dev.morphia.test.aggregation.expressions.TestUnsetField#testRemoveASubfield"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "67486b036fd164e036930f89dc24d409bf834df8001a18ecefdb8d519497a7f5",
       "data.json" : "fef49b56a4763a735c63ad43266c001694ea30ed88994b07e0def213508478bd",
@@ -13675,6 +13888,7 @@
     "scenarioSha256" : "2f93eac63cfd21cfe396e45d0103d56f2a628f7830819434caba61827dba8c1d",
     "test" : "dev.morphia.test.aggregation.expressions.TestUnsetField#testRemoveFieldsThatContainPeriods"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5af83ecd88c5c5da9ed3e7999990f3d9acea1618d5c1a34f066f4037038ab489",
       "data.json" : "834168ddbe1d200d46c7dd8095eb03088f836652a29bfdba8051eb4dd0ac2271",
@@ -13731,6 +13945,7 @@
     "scenarioSha256" : "e05d66a6b8840a6362b44f21f0a04c603db927165378ed802469200073dec867",
     "test" : "dev.morphia.test.aggregation.expressions.TestUnsetField#testRemoveFieldsThatStartWithADollarSign"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -13790,6 +14005,7 @@
     "scenarioSha256" : "017eef6ba9db38d4bc8525792e05b4931c3ca786fbd1680e453bff4d4c849a1b",
     "test" : "dev.morphia.test.aggregation.expressions.TestWeek#testWeekExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bb75cf363c7a69ee66b8579924fa5fab5876f73967a327f54eecb0e7a6ba8404",
       "data.json" : "c9deabb7d1ad5cd5b4de3a9a299f442c72a17b2735c8400fbb22ec4bf872d02c",
@@ -13849,6 +14065,7 @@
     "scenarioSha256" : "8e71e2d5cdf993cc7e0b9ea7e3523f5e9a20708e935bd9906ff9662da695b456",
     "test" : "dev.morphia.test.aggregation.expressions.TestYear#testYearExpressionOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f8a07842c446d16891aa1ebafe51fd8e2cb33609078b5ff72289b46d4a5a5902",
       "data.json" : "d54e8b49b7eeff7d6b51d12e856a2cd7ee035cadf8e6810485f53b327ccb6754",
@@ -13916,6 +14133,7 @@
     "scenarioSha256" : "d4307681cc67fb36636cb0089917e196ad64cd823512c747516a3fe8f6ea2fe6",
     "test" : "dev.morphia.test.aggregation.expressions.TestZip#testMatrixTransposition"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e31d13e4223a5c44884d7b595f1d3c98334dfdfed31c5110bed7419f8a77772b",
       "data.json" : "7eecec387ba748d343273d1ec5a3af4e91704d8261e80c50ac1159bdfca7e051",
@@ -13984,6 +14202,7 @@
     "scenarioSha256" : "14fcd55ef130ed896965e7804d268b3b71cf80fc34e291e98d1fd955673d701a",
     "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testAddElementToAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b29efecc2784d63db1f7423c0fec9a9dfd41daf860331378d061ca36e171a423",
       "data.json" : "c2fd14fb1e81f72e6152eeb185aa87cedbee69042636a88a66acbb0f5aece610",
@@ -14052,6 +14271,7 @@
     "scenarioSha256" : "89c754c2ddae74a93eea04f9f825c836d69cc504b8c921ede31ca42526abc967",
     "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testAddingFieldsToAnEmbeddedDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2d97a3cef4e8131f65e6ea8d59a600d689b429144b2a218a7900738d852cf7cb",
       "data.json" : "b36c9743a00058c4baa04b3a684b1bc09498892672f89dce1d1e4fe7bf91856d",
@@ -14125,6 +14345,7 @@
     "scenarioSha256" : "3ce9f0520289c8698902c398dd5b22b69e677a1a1c4745b275af0c37d07075f1",
     "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testOverwritingAnExistingField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2b343c57e7bd04321740cd1a293fb794e1fbec553c850658e27cc3a87e2ffd69",
       "data.json" : "fb98c9e479f278503b33f85efdff11ba5a43a45046a38f36821d78747f44b214",
@@ -14199,6 +14420,7 @@
     "scenarioSha256" : "fe8b0adec34c322e6fa81aa39d61d235b506613d2671cdffea16409b617cb7ed",
     "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testRemoveFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "80aea156825cfefcf5d074c2bbebe2bfb2f216cde74f12db69d7a276bf62e2ab",
       "data.json" : "51c9dd871b0dee072dfd515ba63f8c0605063e2a17f5a637f6a651c404857dea",
@@ -14255,6 +14477,7 @@
     "scenarioSha256" : "fc5a9f5fc92db2f058f71d57416a0c162b9148d5bc58da42e305f3efffa0475b",
     "test" : "dev.morphia.test.aggregation.stages.TestBucket#testUseBucketWithFacetToBucketByMultipleFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "bd7397fd73472834df81f65dc3496e4f656dcf3f8b6c927ffa116b2b7bc267b5",
       "data.json" : "fe47cc7fe7daf092dbbd29a2a308f7737714df927a2e8ebf5d72198c65a9dcfa",
@@ -14316,6 +14539,7 @@
     "scenarioSha256" : "b85a79cd044d6678dea1bb667878caac415a0d4813ab078725e7f2a9333f47ac",
     "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testSingleFacetAggregation"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8ecfd5a1581747b7259e8e3b410451e26fdb1fc534f9e89713cbfd3c2be51a85",
       "data.json" : "ddeb7ddcefe23b8a5cf9a73f58aed587fe150bf16176c2abe1ed686605fbdc17",
@@ -14384,6 +14608,7 @@
     "scenarioSha256" : "af15251593fee04d147f1af6c99d509baa98656fc9f88a4ade41603fdabd15e4",
     "test" : "dev.morphia.test.aggregation.stages.TestCount#testCountAggregationStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0788ccc31a8b3f2daae0dbb13a599b150cfc88016059a26375934d8e7d7ad05a",
       "data.json" : "1184bb963db28396c74728a12f42ab996dd3fc5133901e40b5150981ca3b5d21",
@@ -14443,6 +14668,7 @@
     "scenarioSha256" : "41f547604b64f2d32549bb7fc1b1734b28f0dcc5484ef33b6be66b4cc9b7b094",
     "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testUseADocumentsStageInALookupStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "dd48c806fc47babc9d2aa3a1cfd489b7e46cc0b9aa1c6097b0eaeddec495915a",
       "data.json" : "3c4ae01059f234af1e9f69c6df59fded5aa269bc9460106886323d5e4241dd68",
@@ -14505,6 +14731,7 @@
     "scenarioSha256" : "768aed80a7d5a97616d22affe8626590b2392a8d59c34c348b8e838ef1a15270",
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesBasedOnTheLastObservedValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5cccd962eb0615000356f582df66430b39da4d5ec28f3938b027472706487fae",
       "data.json" : "3c05f5ffae9d67247240eecb9797e9e7f361932f99b2fe0b9ecb68c33d13a4c8",
@@ -14567,6 +14794,7 @@
     "scenarioSha256" : "164afed9a5fa76361d31c70699bc5565a8f0a6660575a8647d2ac8665a7968d3",
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesWithAConstantValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c89dc5832ebf5b10f9df4a41ad3edd2e5ad13af3b9d8f1e19d0bb9a22d0bd4e3",
       "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
@@ -14629,6 +14857,7 @@
     "scenarioSha256" : "8cf1f2543f4c1d8e017efbda2a8c0fc8d05535416ef17f26bc8e6a5e2c2d2158",
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillMissingFieldValuesWithLinearInterpolation"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4ce6e3b236764a89b149648c25217035f295946d3727d31d7d9a1312e4a2205b",
       "data.json" : "3c4ae01059f234af1e9f69c6df59fded5aa269bc9460106886323d5e4241dd68",
@@ -14691,6 +14920,7 @@
     "scenarioSha256" : "9fc2340e7a6542e49d906f0db3657c46fb4b65cf627837632b5c69e957eb6f53",
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testIndicateIfAFieldWasPopulatedUsingFill"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "57a872d3744d26b330c8e35afb8c1ec1258cc4297b346fc8dcfda80de3ec6552",
       "data.json" : "ae231898ac59a7b84184e617f440b5435961799c0a24e2f6bdcdc1ea50d456a8",
@@ -14776,6 +15006,7 @@
     "scenarioSha256" : "8177e027e204fa930bfa766dfae08a9f4ccc2ec09a7ccb1e401af7cc872495c1",
     "test" : "dev.morphia.test.aggregation.stages.TestGroup#testPivotData"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ef7be37c6af7c4b5a5b9931973e645cbc2b54226e8a66c8ee89a85f9dfad38a8",
       "data.json" : "bc9a58f4f42bc0a666158b7b4371c9e9c4fb676cc56a37c0c9f90e4434d69723",
@@ -14878,6 +15109,7 @@
     "scenarioSha256" : "2e2f0a6b0eb0ea271ff4fb18a7fdd493579af05eed93815c390981d3d96d6eae",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformAConciseCorrelatedSubqueryWithLookup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "59c78a8e5f8627d1f89fe77a38e9200426006287932fb593be9c4d64acb8d5ff",
       "data.json" : "b3e4e8dbc7e63c02cde150019e2b2c0706d24ebe1a8ee45c886e5036fa5381d4",
@@ -14980,6 +15212,7 @@
     "scenarioSha256" : "c73d77b71fde42206f41c4a6e6f2e38839472100c8af8ce1a293374b7b6c2013",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformASingleEqualityJoinWithLookup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a3ec80c20735f09ad6ebd7d9f12088717dcd3bae3fad1a2b3efcef13586f2e52",
       "data.json" : "8f16230f7edcb5bbe9f8cf91bded56cda78db07f7e5510e68dc0ef7c67157cf9",
@@ -15082,6 +15315,7 @@
     "scenarioSha256" : "393a03dd0b9c8e5bb063155798c931cc2477cf144351185669b789ef491c5aa0",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformAnUncorrelatedSubqueryWithLookup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9976f0f7ed6edb3ab79834eabc4bbc8d47a7da71f354f25349b3bfdfcee0867f",
       "data.json" : "b6e571c27a19ec2d623ffcc4f09fb074347839f7b8c23c036077f284aa2e20cf",
@@ -15184,6 +15418,7 @@
     "scenarioSha256" : "77d8825e72ec51523342af32f647869b038fbec40a9442897262ae552c05f930",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a186c77576e3b19fbde8728392ee50c89f66bcd9914fd0c9afbd25c6af522fad",
       "data.json" : "b9bfd226be0341f0749038958b84c00101b8b23619a918e0a4701525fd1a26d2",
@@ -15286,6 +15521,7 @@
     "scenarioSha256" : "509c969db3562347c8f8b18e62d0cbb3f3fcf9ccdaadb1a84010f1816dc519d6",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testUseLookupWithAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a21865ccf7fc1cbbdafff5687fd9855f52af3438df033897d5f9815b09d7c79b",
       "data.json" : "78330e949054bd3dec2e425e7f9bd2860a803cbcbfc51ced4d24c940f9665972",
@@ -15388,6 +15624,7 @@
     "scenarioSha256" : "2adacbdaff66a7c6e6ed7258a6ae1e28085fd31142e5b6f77673a0b792ab02d3",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testUseLookupWithMergeObjects"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "eefb468a693b26ec615c15fd8b6e9f16882b215895dd5e15eed8953af16fbf68",
       "data.json" : "c4c317a7e7d91b8a07497e4d8e15846483453e3f49cdc47e2ef8babb32ea3e8d",
@@ -15464,6 +15701,7 @@
     "scenarioSha256" : "877c8a3d5c5d00a0400e1db7988eee664b2fc19e9573f8b15d74d3c604eeb50b",
     "test" : "dev.morphia.test.aggregation.stages.TestMatch#testEqualityMatch"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "37e93b76aea565b45b41dd52c2e131c10c72a2b313196f27565f8a59bb58f705",
       "data.json" : "c4c317a7e7d91b8a07497e4d8e15846483453e3f49cdc47e2ef8babb32ea3e8d",
@@ -15543,6 +15781,7 @@
     "scenarioSha256" : "0bd6f71b834e0451315b61ff1c8a11a781626f0145f89b6aab69b2648c7027a2",
     "test" : "dev.morphia.test.aggregation.stages.TestMatch#testPerformACount"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "44cb19a2455e91a568bdf0f604949c375b5a7a65a695b86601d6053fd127dc64",
       "data.json" : "9199f6cdd2b313b53a2d04204c1a8419d0b4f51e90509424d70c800f363bfb7f",
@@ -15622,6 +15861,7 @@
     "scenarioSha256" : "d57570ddae06bc43887ee926c844c94e18e393348b2a939a6cc4bdfcd0482da1",
     "test" : "dev.morphia.test.aggregation.stages.TestProject#testConditionallyExcludeFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1815f3b328d84819af65dd0e2f6335648c70fb6ec0578958679deaea7f106c7c",
       "data.json" : "416e6f532d41ad064859dff2e7241a0847403046944278d39a86d08feee026c9",
@@ -15701,6 +15941,7 @@
     "scenarioSha256" : "dfc551dca5dbcd74071a0e3c3595539bb9ebcfe9e0eaadb615b76b32dd36d5b5",
     "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsFromEmbeddedDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8dcb54c1febd28eab88f064fbf78c4ef2af691613146a0b5063a17d85af198b7",
       "data.json" : "416e6f532d41ad064859dff2e7241a0847403046944278d39a86d08feee026c9",
@@ -15775,6 +16016,7 @@
     "scenarioSha256" : "57349735250fa31cc4c182ba6b1b0863cbdf559a42ca85e6f3757b5fad9f55a4",
     "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsFromEmbeddedDocumentsAsStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d3499614ebdf39ea0af9e25af09b72da6ab9a8265cf7d54c90364f0c61b8aa64",
       "data.json" : "7f770d6c84f0abce820e87b71121d4d772fd8b5829deef2cb8ab5c9385a0387b",
@@ -15854,6 +16096,7 @@
     "scenarioSha256" : "c849a519c148de20e12a7183cb6a6cf2f16acc16dd54e4a1e887b1d27a5fb7ed",
     "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeSpecificFieldsInOutputDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7444b3431b0a4d8c5a828ccc3bcf8352b44de3b889e9c7c13776bbf71bd6680a",
       "data.json" : "7f770d6c84f0abce820e87b71121d4d772fd8b5829deef2cb8ab5c9385a0387b",
@@ -15928,6 +16171,7 @@
     "scenarioSha256" : "18b42f63588f7371a6558234a450716dc8996dc5bcdec6c1e48f1dfcc8e07306",
     "test" : "dev.morphia.test.aggregation.stages.TestProject#testSuppressIdFieldInTheOutputDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "32261187412d91e32aec318d8d5d7a5732403dea8a831773fbe8795b998976b8",
       "data.json" : "98acc97988766c5a7e2e5acc65dc04c77d51055874786d84c0e6d2ae5252d137",
@@ -15992,6 +16236,7 @@
     "scenarioSha256" : "56934dd95be07a023a3f630c5787346fcc5eaef4b90042898990d2c01aba5f74",
     "test" : "dev.morphia.test.aggregation.stages.TestRedact#testEvaluateAccessAtEveryDocumentLevel"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e7389b7bd0c26e1c15e0df013c3ac9ce746556050a5cac247246abd068b5d113",
       "data.json" : "bab3c3d2ed8257f97c0c8e128703a1845294f5192bcad338507698668d1393d7",
@@ -16056,6 +16301,7 @@
     "scenarioSha256" : "4aaf8e903acc89f554344ae4926aad61f2ae7af96e32a32dfe4e51eee3607b07",
     "test" : "dev.morphia.test.aggregation.stages.TestRedact#testExcludeAllFieldsAtAGivenLevel"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6608f2ded894263092991e961e2f9a1ddb16af3d16cec512b6eed6ebbd9aa752",
       "data.json" : "86941dec8eae72f3acb9d88eda423c7c922004ce9ef14c6ef812d0fa231e3c12",
@@ -16112,6 +16358,7 @@
     "scenarioSha256" : "d8e96556a72534b0b5e956d979570ebc8689810f6f0433db2b30ded918d6e519",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithADocumentNestedInAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "de000ce6dc8dafedab07532f1209703613988d0dd22a9c4ffdf46b37a75604e4",
       "data.json" : "8e6d4cc74af8bdc7516b1c1702d8cca2499701194a0dcfe7584d05b09387f9b6",
@@ -16168,6 +16415,7 @@
     "scenarioSha256" : "211f87b1f9cea348a62f48d51784e88bdde65f24808b4306913d23828e84ca9c",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithANewDocumentCreatedFromRootAndADefaultDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "70bdb537fad9fcc4033408838c08cd367bcc6d4ea8d6bc48bde00b5077589751",
       "data.json" : "20bbb2206fac4a8f3896df2adbf6dee016a726a26f0c68e04df9f8c77a1f3734",
@@ -16224,6 +16472,7 @@
     "scenarioSha256" : "ac6d54dc4b17b251f48886bd6a971c69b22ac9808972bd1127bae9d81df95863",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithANewlyCreatedDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "74626cc58c23406ab0cb4a46079a9f550fe62e3d62a469345cf0f52883ff2a4d",
       "data.json" : "7afc35fd723650d0cf218d4f982456d1643f1bbfa8de05d5a10c90824493284e",
@@ -16285,6 +16534,7 @@
     "scenarioSha256" : "fa3178dceae7f7d3122518b014b16beff664e5aedc149f7017ea7d289c42042e",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceRoot#testReplaceRootWithAnEmbeddedDocumentField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "856fa28fc75887e7b028965489f933bbf4eb8311e017a0381098d6449d022183",
       "data.json" : "86941dec8eae72f3acb9d88eda423c7c922004ce9ef14c6ef812d0fa231e3c12",
@@ -16341,6 +16591,7 @@
     "scenarioSha256" : "66c3764cc7afa551c2cda709ed40a132839177a31542387e80f06e1bb30c2a42",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithADocumentNestedInAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a09ac78b600b0d6259412955fe5ecdd57c9611272608b3f567e7a87af926af5f",
       "data.json" : "b6417bbf1022c63a7376d71017f41fff62288397e4727d641fd5fedfedf848c7",
@@ -16397,6 +16648,7 @@
     "scenarioSha256" : "04dc82d5f9d5d218336484d764b1e5c413aace75cf493f08c665f19de15d708d",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithANewDocumentCreatedFromRootAndADefaultDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fb6821c17bd5579592db306b00f6e71ff6f17cfe21e1d6e40fdeaf91982fc0b3",
       "data.json" : "9684189fddb9732872eede484b1d12dcb6aa516c08a06b2c099364c68a0084a8",
@@ -16461,6 +16713,7 @@
     "scenarioSha256" : "d147e734e03fc5b2ab53e8d72cbfb872443e34b846e33d850abafa0a0572fc54",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithANewlyCreatedDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "96a11701d52a67094e5bbfd35ad6a285434c3905f2e1e4854fb3c20ff609e863",
       "data.json" : "fdce649834d5d66afc28cb0bbb9850c979dba47a0b0124c49dcf17b2a872b932",
@@ -16522,6 +16775,7 @@
     "scenarioSha256" : "1540546634c6565a16280f113ace46a019fb499139224e571e45c6ef380e63be",
     "test" : "dev.morphia.test.aggregation.stages.TestReplaceWith#testReplaceWithAnEmbeddedDocumentField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b7ae9344ddce66b2d33d6066f5cbdc58e1fd45d08c93ebd9048579994fc3a051",
       "data.json" : "ff6f595f5d01af0c756a37e78899ef125d44eadc0c71e900f8f0ef89676a68b7",
@@ -16575,6 +16829,7 @@
     "scenarioSha256" : "bd96874b61be365510374fd3f4189cb05d60599a0de52c6c7910b25a4ca6b1ed",
     "test" : "dev.morphia.test.aggregation.stages.TestSample#testSampleAggregationStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9a0fdf109d556c14ebc149d4916bcb6697ae0ad163fc7a9cf5eb442c160938b2",
       "data.json" : "7eecec387ba748d343273d1ec5a3af4e91704d8261e80c50ac1159bdfca7e051",
@@ -16643,6 +16898,7 @@
     "scenarioSha256" : "6a35e3ef51646f6967a47fdc9017692c61b39427c34fc733d50313d6b2a5959a",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testAddElementToAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "4c617893e750486e48eccddb005e1534e2b6f4a9e872fec5f1e8475ba977346f",
       "data.json" : "c2fd14fb1e81f72e6152eeb185aa87cedbee69042636a88a66acbb0f5aece610",
@@ -16711,6 +16967,7 @@
     "scenarioSha256" : "f6a3e92cb3bdcb84c323469478b0023c933ec3012fc73fdfdd67470a11be8a1a",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testAddingFieldsToAnEmbeddedDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "93224427b47c77d1014d3a458924664fc6b7c8e6c6f3d7c2fea421acd0369ff7",
       "data.json" : "7eecec387ba748d343273d1ec5a3af4e91704d8261e80c50ac1159bdfca7e051",
@@ -16779,6 +17036,7 @@
     "scenarioSha256" : "9331d64c1b9d65575b1d03636d816733ebb2491222f9cd5f84597e80799c4bd1",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testCreatingANewFieldWithExistingFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b9a45791c703a59bf155b1107b61378240fee3703e7a904e4b2294f1a8758ea9",
       "data.json" : "7eecec387ba748d343273d1ec5a3af4e91704d8261e80c50ac1159bdfca7e051",
@@ -16852,6 +17110,7 @@
     "scenarioSha256" : "387ea14536c00b27b5fe06765f66d364a2abdf8ed823e79085a13734d670b2fe",
     "test" : "dev.morphia.test.aggregation.stages.TestSet#testUsingTwoSetStages"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6d15bb3ee1c65ee5b040141d47fb1d9174f5278b97c8d495d09ca31342c816d6",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -16929,6 +17188,7 @@
     "scenarioSha256" : "472c45c3f048d6b745ac819add6a45c30f20f95d2d346b81f9fd01e9255e35bd",
     "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testComparisonWithPreviousValuesExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1b9618e3c8789ad14c913194406ecb3ad51e25ac451ef7b08a01e5eca8c14681",
       "data.json" : "bd112f600f3faf09e09f4acabf7c9ed0be4a7b2373ffe503bfd6938c05f2cd2a",
@@ -17011,6 +17271,7 @@
     "scenarioSha256" : "0afe4eb726768219320325f5247826cfb8f57471617bc2b1eeac9d7afb3fa255",
     "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testDocumentsWindowExamples"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "04eb08f20dfeef631be469eb3c0c676388f769c6d72a3a69f5a4ee5528372245",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -17088,6 +17349,7 @@
     "scenarioSha256" : "11e13d2b9d5f754202bd676b3c26081912f2b68791b2af23928a091909f500bf",
     "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testRangeWindowExample"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "04690fe50ec3d10cc6e16d953e72ed50eb87e1eaf484ded38d85c69c3df6e58a",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
@@ -17165,6 +17427,7 @@
     "scenarioSha256" : "b85804ae785d6fad5ea08d232debed7278f79d4b27be50f2227b9cb94018b3c4",
     "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testTimeRangeWindowExamples"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d1853099744f86f2305bc140415fee6b173c34537f184f667105d78811184675",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
@@ -17212,6 +17475,7 @@
     "scenarioSha256" : "08fdbb6515720d75422d49992597212678041dee376059f795525eda5b796531",
     "test" : "dev.morphia.test.aggregation.stages.TestSkip#testSkipAggregationStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "32f3267aa6c853708b936dc9e5d64ce01b08b7a94fe93416ecf5eb738118adaf",
       "lock" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
@@ -17294,6 +17558,7 @@
     "scenarioSha256" : "c9792bdc2ffb6f5d3f66ff3b8fe2f55095b51a61acde6bf1759c7283cd5981b0",
     "test" : "dev.morphia.test.aggregation.stages.TestSort#testAscendingDescendingSort"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "84ddf82f48399fb9d54e0395bd0cd81e56ad00ad8ff8b9b5d1c8e255e8c94001",
       "name" : "b5c87fed6e6e3dce14a671e389e7df4f8347abeb1683f63bc8b7856df2056b56"
@@ -17371,6 +17636,7 @@
     "scenarioSha256" : "35843755f8dcb002699968ecf335645481e57bde27f4382468f354212e991405",
     "test" : "dev.morphia.test.aggregation.stages.TestSort#testTextScoreMetadataSort"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "539fbf46c1779231965703efd74e119320ad57302bb7dcdfd6b3c745558bb8a8",
       "data.json" : "5a13b9fba73cd0853b69a82931a46ed48dc95b535710d7bf21a68321eefb7ff2",
@@ -17435,6 +17701,7 @@
     "scenarioSha256" : "c7bc1d49b7e67e935be7ba2607869aa68234d025f880bcd3e2689f1a99270e8b",
     "test" : "dev.morphia.test.aggregation.stages.TestSortByCount#testSortByCountAggregationStage"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9ee9725d4b670dca32ba60c1aa6702987e0d4244ea02ea71d4e29895f08481ba",
       "data.json" : "acab25973fa9a0aaf0978020afe34ee8e1ccb5e958dbde08bd15d415f1f5321f",
@@ -17494,6 +17761,7 @@
     "scenarioSha256" : "6dc39e2b84f1bc06cb98f597d2b76d49be261fc0193781887ad7fba63813b5d3",
     "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testCreateAUnionWithSpecifiedDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "949d46c403ebdc36d82257ba207eb1c435da34ca17bc10d8781aa521358e36ca",
       "data.json" : "7911941b76b7f64d91ab216227d6a88a5b0999c789a0b55c9ab7dfcd90673ac0",
@@ -17577,6 +17845,7 @@
     "scenarioSha256" : "fb1bfc3d5360314942a3acc76f8f196194f6effa0b0d9b2e3dbc63e7489d9b75",
     "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testReport1AllSalesByYearAndStoresAndItems"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1ce9272ec8a0ec26c40d5feb65c40bf73ab79bf94e78bf81559ac59dcb665616",
       "data.json" : "7911941b76b7f64d91ab216227d6a88a5b0999c789a0b55c9ab7dfcd90673ac0",
@@ -17655,6 +17924,7 @@
     "scenarioSha256" : "c83b5da8fdbd36227eaa7fc5de7cdae7d6fe4feefbf6aa491846ad4803354762",
     "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testReport2AggregatedSalesByItems"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "43290eba5b27d6c4cd3e5f34f174e0e56b6e7fe4648c1bf70d5db07a8296c0ed",
       "data.json" : "e9f11b4cd0c6a2162b3385a7a97ea0d7a1f7c42434706665f039c3f98f49439f",
@@ -17711,6 +17981,7 @@
     "scenarioSha256" : "10f904978301cf185162549650be8201b6750a3b345873c6dd5442156ea1cc31",
     "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveASingleField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8dc8e45537ca6edf744566da6f322843c99d36c8bceb1357981fdabd27bc19fc",
       "data.json" : "e9f11b4cd0c6a2162b3385a7a97ea0d7a1f7c42434706665f039c3f98f49439f",
@@ -17767,6 +18038,7 @@
     "scenarioSha256" : "afc7e578c04a61c2c119d40464c63e65af6f7b59657868093816e34effa503ba",
     "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveEmbeddedFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "888e4fa9c3400587aa93b87898e48bea7f2fb811a2a24a64148b3821a692d8c3",
       "data.json" : "e9f11b4cd0c6a2162b3385a7a97ea0d7a1f7c42434706665f039c3f98f49439f",
@@ -17823,6 +18095,7 @@
     "scenarioSha256" : "5f95021f05b19697003afbde9a9242c26f835d966942280e4d79379c2fdf2f82",
     "test" : "dev.morphia.test.aggregation.stages.TestUnset#testRemoveTopLevelFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "57fc7715ef88f485071aab39e29b1ee7721bc8e9db0b7c598d3fae715379559a",
       "data.json" : "ad1d98ccb8fc72ccefc9ae5139c36a8866480027332a86c86a86f78f24827722",
@@ -17896,6 +18169,7 @@
     "scenarioSha256" : "5432a4e914cf2d688613edc1a95e936b1d904d2061c4de2b93332592e99c04a4",
     "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testMissingOrNonArrayValues"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "59b3f6c7c3abb444f82ba9f17973c5da52db4709e060119228fa5b0a15d21b61",
       "data.json" : "8e2d0546fa7e6691038abe1ff2c33516f7094be96e7c0184d85e73e8cdc5f8f6",
@@ -17969,6 +18243,7 @@
     "scenarioSha256" : "f51fc66d4568f92f6cd98f5104d2f335be54fbc6ebe6068fd15297990bd27b17",
     "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testPreserveNullAndEmptyArraysAndIncludeArrayIndex"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ce14b146ce74c470bb9be7ce32e1f96dcb1c85ac8ad2318d7c7830e4be5157a7",
       "data.json" : "cc276b36a89239a3eeba0e80f74ccc67fa49912798238f0c5facbf77ff2e0564",
@@ -18042,6 +18317,7 @@
     "scenarioSha256" : "0c1bcab16158b08f1bc6cc8f58ed4de8f566a7028ba0b919de4fc223539f00ee",
     "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testUnwindArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b3fce6f6b35f7eb4f9fd91510d9fa72092b3a7ada1ddfa663e46a7eb9c8a5b9e",
       "data.json" : "f8926c1cc0f8960de30e30f0fb235ac2f89e74ffbb84a4669e5df249a73e3850",
@@ -18113,6 +18389,7 @@
     "scenarioSha256" : "e1f092b652082ea2c3804e1ec65c08113aa8aa42fe10d6c65baefa6cf2f7ffd4",
     "test" : "dev.morphia.test.query.filters.TestAll#testUseAllToMatchValues"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "f26a44be9aa4105e60520122ea59c9865c3f4fad6b4d0c198f21ba9847421914",
       "data.json" : "f8926c1cc0f8960de30e30f0fb235ac2f89e74ffbb84a4669e5df249a73e3850",
@@ -18189,6 +18466,7 @@
     "scenarioSha256" : "358bea4c84994369a5b82518450360bd70e5b4e6e17eea6044b6c4ae731ef3ba",
     "test" : "dev.morphia.test.query.filters.TestAll#testUseAllWithElemMatch"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "062fa8ddbdefee03e93c498dbd076de1916d2b0f286b07fedc16353e0aee81ec",
       "name" : "f30dc6f26dbb793838005f6cb9fb8f9f488a2c383a52c0abc1e2aacb558497e9"
@@ -18251,6 +18529,7 @@
     "scenarioSha256" : "3b359582591c1fa79116e3a56615386429252b50bd9f2e5644bb3a9ff1efd699",
     "test" : "dev.morphia.test.query.filters.TestAnd#testAndQueriesWithMultipleExpressionsSpecifyingTheSameField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c9b93557c3d8901c005b421a460d912cb64f26426fff5db2cf74564b9b1ccd97",
       "name" : "9d2c8536073930bd088091c4d578a655cc5cc8d8651a0d983e775907a9c8040f"
@@ -18313,6 +18592,7 @@
     "scenarioSha256" : "81cfdb08330b35253eaed197446465985aab7b32b73851cea29a2d2e68644aba",
     "test" : "dev.morphia.test.query.filters.TestAnd#testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8701a8532da8f23eeec49d42078bd9cf58ac0057f8beb1216118171d38bcbea5",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -18373,6 +18653,7 @@
     "scenarioSha256" : "a1c4525fe9ce43cf397c6d7cda6627173114fa37e1abb50ded55c550dd65a6ee",
     "test" : "dev.morphia.test.query.filters.TestBox#testBoxQueryPredicateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0cd91baeb0505a896b263fcde046f5cc7cc7110a4a2bc1c8bb3e3147242b55a7",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -18433,6 +18714,7 @@
     "scenarioSha256" : "87ca00f6f72275bafb3527cce577dbd24b33d64cfaacd009990ff895817a351c",
     "test" : "dev.morphia.test.query.filters.TestCenter#testCenterQueryPredicateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c1460d1506d198aec8ef336c988d3efa3e8a631fdd52f26beab9e7c7f3ab8b0e",
       "data.json" : "9d97f25050cf8d8b8980a9e3455ea1e112d539bb45766df44a4b97136e4653c6",
@@ -18504,6 +18786,7 @@
     "scenarioSha256" : "a72d768c91ae682232c9626129468860193a0fdfb9fc546994ade4fc0cab76f6",
     "test" : "dev.morphia.test.query.filters.TestElemMatch#testArrayOfEmbeddedDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9834262588b88c95eff7e9d84acd6600abd86b6ef2103bd8f54eec7181bbef3b",
       "data.json" : "4c97a99506b224d716ac57a4fc0ee43628b0ee18ac1b810944100c94bdd2edb9",
@@ -18580,6 +18863,7 @@
     "scenarioSha256" : "93bc95e882fd9fd5d550eb52e6f01b55eafeacfc962da6997a228b862491405c",
     "test" : "dev.morphia.test.query.filters.TestElemMatch#testElementMatch"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cec796547f5dedb0a18f94df5235860d4e5a48bd9dd47188ca8b8a4d2e7c472f",
       "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
@@ -18656,6 +18940,7 @@
     "scenarioSha256" : "aab381c0b8c5c17ce46678c13d63ac8897ecdbf8a5e8479f6003cfc445c48b41",
     "test" : "dev.morphia.test.query.filters.TestEq#testArrayElementEqualsAValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e1ffe9129e84a91107a98566d5c0ac064cf528a52979b8b5dd5e4d3ef986e143",
       "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
@@ -18732,6 +19017,7 @@
     "scenarioSha256" : "0cd20011ee6d65420a23b729a8e825171326dde1d004e67672f61d65db6c378f",
     "test" : "dev.morphia.test.query.filters.TestEq#testEqualsASpecifiedValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0ce698bb9952fdaac5d2408b468a47e287157a7df3a6a17d7d635ed2fefab7df",
       "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
@@ -18808,6 +19094,7 @@
     "scenarioSha256" : "48748aacd07c427e864244c2791f9ec8ed226166ef118dde10cd0be830375819",
     "test" : "dev.morphia.test.query.filters.TestEq#testEqualsAnArrayValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c6d631398ae13f757366fbf1e152f3eae1ce476102154fceca2b6749a93945dc",
       "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
@@ -18884,6 +19171,7 @@
     "scenarioSha256" : "096d24cde7f95ed12234c0f3f056e89ab64e28e0b11b0c2ffde0b051cf4aae1c",
     "test" : "dev.morphia.test.query.filters.TestEq#testFieldInEmbeddedDocumentEqualsAValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7fce4ed9c9774010bf8459e658721eebe927e350f559788e0170fa17cebffdbc",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -18947,6 +19235,7 @@
     "scenarioSha256" : "10339f8ed4cd019f417a0f9a0270784b8925b355a7a422e0fee9ae4d890337b1",
     "test" : "dev.morphia.test.query.filters.TestGeoIntersects#testIntersectsABigPolygon"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6470d93c0519d07d95e541b63d312bddad9f1621af81be74b8d772748c47fadc",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -19010,6 +19299,7 @@
     "scenarioSha256" : "0d1d14b54755c5ad4bada282e28d7a8cb58aff3d9139abc8164e7f65429e338b",
     "test" : "dev.morphia.test.query.filters.TestGeoIntersects#testIntersectsAPolygon"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "24d90a4402c168d3202a64b5e961467a10ab371dbd0d5c460d6ab0715f9441c9",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -19070,6 +19360,7 @@
     "scenarioSha256" : "a80908208d2d3339484ff71fecc9d4395617685cbfd73f2f8eb4abe1b14aab82",
     "test" : "dev.morphia.test.query.filters.TestGeoWithin#testWithinABigPolygon"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2fbe454cd3fd69b4eb58a28eafcc21a3f5c8a91823b23060f32d0e559b3e2bc7",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -19130,6 +19421,7 @@
     "scenarioSha256" : "4b7e1d364cd2a9cb2fc68b0c752805256dbb4a15e745d55b530043948cd46f12",
     "test" : "dev.morphia.test.query.filters.TestGeoWithin#testWithinAPolygon"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "cf9521385dd59d82a0fdadc8a8ee54bc5600d6365deab18a382154dd2c690526",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19207,6 +19499,7 @@
     "scenarioSha256" : "ff8b2dc308388c7fafa3b6abf95e326c3b585ff677d88fa8813f4f34a6c28029",
     "test" : "dev.morphia.test.query.filters.TestGt#testMatchDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "aa1b9e4f365e075aa33436193dd3024156bb9df98be1927b05de7a4052feef25",
       "data.json" : "6abceeffac86c63551aa519ac7700da26268681340dd6598a408b936b1ccf884",
@@ -19289,6 +19582,7 @@
     "scenarioSha256" : "b5b90f0bc5fd2dfd595eeb25354f8ad1a6596057bea3bedbfac1d35372486eac",
     "test" : "dev.morphia.test.query.filters.TestGte#testMatchDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ce4e5184f4b29b9670207a1f8ada77216768ea93e0777b96e95618be33f3f277",
       "data.json" : "6abceeffac86c63551aa519ac7700da26268681340dd6598a408b936b1ccf884",
@@ -19371,6 +19665,7 @@
     "scenarioSha256" : "240da48253c0ae273da07a1c1fac1d18b5460f3d4cbf47af47b25613585f1b39",
     "test" : "dev.morphia.test.query.filters.TestGte#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "0b6c350f9f05015a2dedca9da30efbbc5eba59458d0c56e9082ff91fc7e1e206",
       "data.json" : "910d4131c4df803d0c71de3bc9f99ec55e9d48a6d4ed185e0b5cd799c44bd190",
@@ -19456,6 +19751,7 @@
     "scenarioSha256" : "ac5db471cbed86163f90abcc6789c772aed1f7386ecb66d24d942f0b9535c771",
     "test" : "dev.morphia.test.query.filters.TestIn#testUseTheInOperatorToMatchValuesInAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b661caf9acfc3558e3c84e2ad502cc800b182300e82279211387d56e382f0cbb",
       "data.json" : "3c19bf53287bf63afd65452615a4c519164d079bd292f58fce062e921dc15df3",
@@ -19530,6 +19826,7 @@
     "scenarioSha256" : "35950536f684e28c2b00ca69ffee89d92ce6fa63cb294997fdde899841295e1b",
     "test" : "dev.morphia.test.query.filters.TestIn#testUseTheInOperatorWithARegularExpression"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "99565b101cef170a107bd81f171692a8c847e59c56c055b9e6f74150dd8f24af",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19595,6 +19892,7 @@
     "scenarioSha256" : "5a07d00e4ed69af66941748d6279dcbcaa381e8123eef84eea13739a2f196e91",
     "test" : "dev.morphia.test.query.filters.TestLt#testMatchDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "77f3bf8bdd3a6b1c9217c19baedafa0e94fad92894a71e7483d4fc8358e7609b",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19660,6 +19958,7 @@
     "scenarioSha256" : "61c14c21aad2867d8b9ca346a375327a7f6c1460d8cb883413909387b2155bce",
     "test" : "dev.morphia.test.query.filters.TestLt#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "a3da1e9d878cbda76be29853da507a2470af0d6d0c57740d84cb408eedb06f23",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19725,6 +20024,7 @@
     "scenarioSha256" : "4ce16654240f752f34079f0d3bf57fb801f1656e38c6d0ff7fe437a1eae952db",
     "test" : "dev.morphia.test.query.filters.TestLte#testMatchDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "53d083cc8931f3fc7ffb6b69a0417dca823a473b79001af3ac29b29aa69ba25f",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19790,6 +20090,7 @@
     "scenarioSha256" : "12ffc3c86e336ec5e9fd249eedc5dd3dffa2595806c967fafd23bd3e8b9a5706",
     "test" : "dev.morphia.test.query.filters.TestLte#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6c9c47f3652e7e37a0e21aaaa92109348681a1d084b11e5999063971a226dd0e",
       "data.json" : "7312197da8cdaef2640d3aef16f5fba1a5d7b44c85e4629d7be14f0104d2fd7a",
@@ -19859,6 +20160,7 @@
     "scenarioSha256" : "86c18526e3a76447e4209465e68fdaaf71d871ed7818b1d80cd0bef53c36a2bc",
     "test" : "dev.morphia.test.query.filters.TestMod#testFloatingPointArguments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "d09f7535fdd64be040d27e5c231ac87c5ad1335d002b6d175236fd259b657646",
       "data.json" : "a674b0773da455282a2ddc7e4450cd2f26f813b9f098b99d27215e6a540c3c15",
@@ -19918,6 +20220,7 @@
     "scenarioSha256" : "a10c5d7401f951dbde4c01898060cd4685fa8c70daa55aa4b2276cbb9655e74c",
     "test" : "dev.morphia.test.query.filters.TestMod#testUseModToSelectDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b8800198999e24a8730bd4a51146085dbd8c41bbcb11847cd916a0b06fb60e86",
       "data.json" : "4b56f340b070caea296974f909c0be6ba96c470326d6c0dfa28a437c421911e7",
@@ -19998,6 +20301,7 @@
     "scenarioSha256" : "2d10a740dd2544173bd3657d00d08bfaa2b570c7a27a617c8283fb3a89ddd8de",
     "test" : "dev.morphia.test.query.filters.TestNe#testMatchDocumentFieldsThatAreNotEqual"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "584a24ed3029977fd85411132cab968a3adbdcc80be8eaa923b7f959f7e6a9fd",
       "lock" : "29e937aea7ad4e11fc0364647a71756f72454f2cf9e919bb0e945f42129b6baa",
@@ -20070,6 +20374,7 @@
     "scenarioSha256" : "ce1aaf608b9b3486ff0ded6f7d18ea1655862ab594544bbacce81ec69aedcfd9",
     "test" : "dev.morphia.test.query.filters.TestNear#testQueryOnGeoJsonData"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2ce632ab7d2cd3a04c7480698c1db2f14609fe93e8cdbb6dbedcc5bbfdc39325",
       "lock" : "881863e574fae6e1e1e7e272397b0e074a2a762f546cd6440e57375f3b5be698",
@@ -20139,6 +20444,7 @@
     "scenarioSha256" : "e542a4a0092203869ffeaf3f39db98c1408fd3e1f9eeb735c45de12dd513531e",
     "test" : "dev.morphia.test.query.filters.TestNearSphere#testSpecifyCenterPointUsingGeoJson"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "efca0a24efdce75f887b6e9fb6eadc51756de5472f28e71efb15ceee2e6da88c",
       "name" : "5b7f2b136388f8a9eaa01f5ce379f3a420f145314ef260dd6efddfc90c1cfc86"
@@ -20186,6 +20492,7 @@
     "scenarioSha256" : "64f238040904a4bda89b63b62196d79f61779de919ebd0a453a2d62b831a428a",
     "test" : "dev.morphia.test.query.filters.TestNor#testNorAndAdditionalComparisons"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "b7cbe223b26a65be509ac2e6814650c2af5ed5d74f0c78d1ddc65c208e4bbca7",
       "name" : "536f3cbce48824b9d377fc3b110f33b0edf219bfc87a48f1b3c9a3ff864e4b26"
@@ -20233,6 +20540,7 @@
     "scenarioSha256" : "a7aad676e2fd1b2dcd67325e261b42cae63c486253810883fac45bf00cc8f407",
     "test" : "dev.morphia.test.query.filters.TestNor#testNorAndExists"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "23e73af04f6bc5224c455b6d322a568c32349ce6817f683582fdf9d0183f32a5",
       "name" : "d3cad6a8427c5f562835e48c6335ac71531558c8776b7e23565c31d959ce770c"
@@ -20280,6 +20588,7 @@
     "scenarioSha256" : "616b204d9bba7bb5f1d5e2043741936b1222150222bab204d6ba307f4553333f",
     "test" : "dev.morphia.test.query.filters.TestNor#testNorQueryWithTwoExpressions"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "572ae2ba8fbfd8b1124713c0391cda120d9a6715b10e7de2c896878d75bfda7e",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
@@ -20340,6 +20649,7 @@
     "scenarioSha256" : "bfd3628c1fe644cb1a33c89f2fa73bceca2fcb64d4792c3c04fe8a4fb94aef75",
     "test" : "dev.morphia.test.query.filters.TestPolygon#testPolygonQueryPredicateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "5bf9d97cf5b4f98444de09d07ae48e56235c919c9c362ed47a11f9d7280b58f1",
       "data.json" : "0232ec5bcdaf988555f622efa08974691ae84793083a54d71ce6e5f3b62bcbc7",
@@ -20419,6 +20729,7 @@
     "scenarioSha256" : "4f628b36f14ba15d1ad3003a1a79889e4db218c46bb2bd861f52a91986155fb9",
     "test" : "dev.morphia.test.query.filters.TestRegex#testExtendRegexOptionsToMatchCharactersOutsideOfAscii"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "745740405d9e99d1588cefbd142d35129496b53ce273519162355708abfecbdd",
       "data.json" : "8e1421a9db77213d4a205160660be2a1e901cbf617aad59e52b005af9c700edc",
@@ -20502,6 +20813,7 @@
     "scenarioSha256" : "9f73d2286a8c4dbce7216faebbb746a81fffb2149ba6c8a874448c8f3accf323",
     "test" : "dev.morphia.test.query.updates.TestAddToSet#testEachModifier"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e5b68d4762417144381df100038212e4a630374e8f112b63e66710b48c4bbb21",
       "data.json" : "8316ab742d2ec3cdecf5090b7acb86f6f04852ecd20352a40bb9ae9012d1329e",
@@ -20588,6 +20900,7 @@
     "scenarioSha256" : "a3eb43446812ff406ab5048e7c92ec8f72d5c2136c3c7508991758b2f724a509",
     "test" : "dev.morphia.test.query.updates.TestCurrentDate#testCurrentDateUpdateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "70ef86fa02eca695e530360e8834be527c30e6fc813d5514f74e0825771e5fb4",
       "data.json" : "3fc8f9dc3eaf279b862658b606d66258ff6372edbdd88240f28bc78b5c005bed",
@@ -20668,6 +20981,7 @@
     "scenarioSha256" : "39ae0486648e9b7135fcc9f3c05a7b22f29ef1f4404a4baf6fa368c3b5d2170c",
     "test" : "dev.morphia.test.query.updates.TestInc#testIncUpdateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "fe6aa7f4a71a2dfccd4c6b50cf6d52cb49dcbda56b7500176eb997dc5e9d1e4a",
       "data.json" : "90a8f9ccb51dc604ee5cfd41766594948e0b06bd535504a75fa6c93f580252b6",
@@ -20747,6 +21061,7 @@
     "scenarioSha256" : "1b750ec23ad0b93d8b3ca58fd75f638b98e8f07ad9ad9abe71f156bf1dd8cd61",
     "test" : "dev.morphia.test.query.updates.TestMax#testUseMaxToCompareDates"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "617e1b0dc038093c3470432eb7fbebaf75083ebbae9e52493a47918c51e1d5dc",
       "data.json" : "7edecbe2d7e70495d6cf45401e9af6e4f5fb4c24669f6f8b6ef6b633b0b89629",
@@ -20815,6 +21130,7 @@
     "scenarioSha256" : "78a304731f0670ae270b60da3248f039cdc0d4ca0c9bfe3ab70156305b8268ae",
     "test" : "dev.morphia.test.query.updates.TestMax#testUseMaxToCompareNumbers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7f32c3ffc172c042c892db8cc58c2acbebb4d55f28d4aa804fa5f6371901ec2c",
       "data.json" : "ae6354bf15c49a458e027df4fec2e3a8e30a60180e25a27638f0270b8278464b",
@@ -20883,6 +21199,7 @@
     "scenarioSha256" : "cb2b2d4aa5f30ff1da17e4697f5c79ccb4cd7ef5b2d7a5ccd4cc3952c0502b54",
     "test" : "dev.morphia.test.query.updates.TestMin#testUseMinToCompareDates"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "2130601fe69024cf01996b36408ccf97bc73a0e41f793c691102a7c559bdd2c8",
       "data.json" : "7edecbe2d7e70495d6cf45401e9af6e4f5fb4c24669f6f8b6ef6b633b0b89629",
@@ -20951,6 +21268,7 @@
     "scenarioSha256" : "917ee28898fcbd31df0945c971c8281861312265d42202d2ae600dad91f9cc76",
     "test" : "dev.morphia.test.query.updates.TestMin#testUseMinToCompareNumbers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7587a4c994c1060dc12e35c51c5c63cfedc07f82d7d4f10a9cb8b781bb0e8a21",
       "data.json" : "85e8fb8a57ea1662ce09aff6ecf1d51ae3ccb6916d257d82fcc54d88bd92c402",
@@ -21024,6 +21342,7 @@
     "scenarioSha256" : "9d3d33436273a14a9fb19f9805b61502f3b10ccae8d29062fb82becb7136c802",
     "test" : "dev.morphia.test.query.updates.TestMul#testMultiplyMixedNumericTypes"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1cd77c1bb4f7a42c1e896640d4307a879dc485f3f7bb9827bb9314ae9f1014d8",
       "data.json" : "6cd99c25c30b6829630b17c4a2d44ece6b639745ccb50b70a2e34ef818ba0128",
@@ -21092,6 +21411,7 @@
     "scenarioSha256" : "1246b3f749eee35f7de1fc87bf05d36495fc963a9bc49fa95e7801af63ac48ea",
     "test" : "dev.morphia.test.query.updates.TestPop#testRemoveTheFirstItemOfAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "7386602e5bf7085b04b49746790b02a3535657a8639c5bb52ecf8509e7c971a3",
       "data.json" : "b73a6ec3678019affa35176a2084c1bb896c0bed7ba39d0067a37e01a5f60e03",
@@ -21160,6 +21480,7 @@
     "scenarioSha256" : "6a76d989c30d41c9964bc31ab6b63245ff2bce74ac3674bfab2ae4e9ab8c9eed",
     "test" : "dev.morphia.test.query.updates.TestPop#testRemoveTheLastItemOfAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "564c53be7dba5eb3a1320d62c88bc3f32f9e27c08625fe7597fdbba1c7e2cc44",
       "data.json" : "4806038710af3052884212ee9a16ba928b59c77f416e6507e2824cb219e6a6c8",
@@ -21219,6 +21540,7 @@
     "scenarioSha256" : "86e5c6b3d26e85c4f07718872ec3a826cbb8a9391bac0e6bc205798b70172740",
     "test" : "dev.morphia.test.query.updates.TestPosition#testAddElementsAtTheStartOfTheArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "542876f37d21b7a7e2dc9c62c6e2a38198e4da17e2d27e468ffb368887a89ed6",
       "data.json" : "b2cc7e30f9ae089a833d3a8fa2b1f244d59430e69d9b21db8c3569c5f1ce72ac",
@@ -21278,6 +21600,7 @@
     "scenarioSha256" : "77ad9cc893d3100d42923378da871dc99c78b5c42b9204cf3ea8dce801ea62fa",
     "test" : "dev.morphia.test.query.updates.TestPosition#testAddElementsToTheMiddleOfTheArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "e0b20600d3d78941efbbf3e4bc089e68b5b1403571abac6f5d08b6f6e95a26e5",
       "data.json" : "59a9859325d3a82665c94b57588fc81a957ea362f5ffac8206ca2a2ffa0632c2",
@@ -21337,6 +21660,7 @@
     "scenarioSha256" : "75e74dd2085e42ef97cb400c42afff00351759516b524443f4ab5bbd451786c3",
     "test" : "dev.morphia.test.query.updates.TestPosition#testUseANegativeArrayIndexPositionToAddElementsToTheArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "db9594930b49f2f238061d755d86b0eca4a26f5bb1a94c3b4a39400ea947026b",
       "data.json" : "d2308ebcf577f7297f690bbfd45390c72588020162a1a3beb2e26cd0e61c272d",
@@ -21408,6 +21732,7 @@
     "scenarioSha256" : "d3043540fe72d6b689a75a79ccfa5f472fad3854dc7cf66e4d3b17a590f6049b",
     "test" : "dev.morphia.test.query.updates.TestPositional#testUpdateEmbeddedDocumentsUsingMultipleFieldMatches"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "967e6186d7e8f8be2a1f83d9f3edab49236d1b4be27e73af51b0f8b14c9580f9",
       "data.json" : "ff2fe35874a73c1657871891318c0c13f0235828c7c6d84e925397186381c480",
@@ -21482,6 +21807,7 @@
     "scenarioSha256" : "02a39148b356703f33f3b9ac8a0bae5a9b87183724eefaf4cd76060bb83d2177",
     "test" : "dev.morphia.test.query.updates.TestPositional#testUpdateValuesInAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "1385944f7124a834e4ec0443c01581c1ab0f004412da3674275c4a3f477d014a",
       "data.json" : "ed969e7cd5837331381d970a0712300a9321f1a81fa1b562be4a650e56d383e6",
@@ -21553,6 +21879,7 @@
     "scenarioSha256" : "723ca30d53fb10f657b6e0012a66b7017f106035ee833d312f267ba0d1b3a1e7",
     "test" : "dev.morphia.test.query.updates.TestPositional#testUpdateWithMultipleArrayMatches"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6a74e25702ba6d920a9c9fb47805dc37da6de38761f5ae1c3864eeb74455f4c3",
       "data.json" : "1cf2028319ebcada195f2c90333b2f3e7dd40196deffbc5ea92916a3d8e39d20",
@@ -21633,6 +21960,7 @@
     "scenarioSha256" : "d30d5cec6a2ca841e2a5c099659d9960ea92a19ead35f55d8068819aa6273846",
     "test" : "dev.morphia.test.query.updates.TestPull#testRemoveAllItemsThatEqualASpecifiedValue"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "81b6b0bb0f4a7ef5e9f2f0bc072b2895cbba571422d330f91f2370d784782aa2",
       "data.json" : "0b6b3bbeb7f1f173f47ae77da6b5a7493fc4cfcd0fed0650121eab3e6b395d51",
@@ -21713,6 +22041,7 @@
     "scenarioSha256" : "f5a9327cb9a739e74ad5e3be32e352de7f0690eebb0ddc4e22b057e6d67a5bb2",
     "test" : "dev.morphia.test.query.updates.TestPull#testRemoveAllItemsThatMatchASpecifiedPullCondition"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "ad8e3e126f93721769fba6709015a9796c564c13f9e1d81f53e17e09d9a4069c",
       "data.json" : "c93eb422529646deaf3a6277d8ea3e2b8b555c527c8f0714c9fa919f3b00cc23",
@@ -21793,6 +22122,7 @@
     "scenarioSha256" : "0778d603a863179ac74ba95fe2039d1530665c2b472126248cb49991ac3a5f68",
     "test" : "dev.morphia.test.query.updates.TestPull#testRemoveItemsFromAnArrayOfDocuments"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9aa7f4db347eb241d88eaa9470aab8619024655fca436eb27763ab4b7ae98e92",
       "data.json" : "535cedfd2c0543a05011376c16b7f8f1abbe45511bbfb01511a93faf24673316",
@@ -21861,6 +22191,7 @@
     "scenarioSha256" : "a35ce2edf006683855e18929e8f6c5e001dfaf238a484794df7c4affe4227955",
     "test" : "dev.morphia.test.query.updates.TestPullAll#testPullAllUpdateOperator"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "61aa27b256274b298f03053b177c432a377be532440ff56f9ace36315213aec7",
       "data.json" : "d20c186ec0b20da69719c8891dcda4c8c0f67835dd9de84ef0103670ed197738",
@@ -21947,6 +22278,7 @@
     "scenarioSha256" : "89268d03ac56c0f97f8535159519b24cbbdae40bfcd401b16b19c657680aded7",
     "test" : "dev.morphia.test.query.updates.TestPush#testAppendAValueToAnArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
       "data.json" : "a141a776c1fdf43d5a1cd68d70b28baf78f111e31044c33ea33ad6b164b10c7f",
@@ -22033,6 +22365,7 @@
     "scenarioSha256" : "270ca4090810ea6147814be070a466997485705f4e619961af82839dc02a9ce0",
     "test" : "dev.morphia.test.query.updates.TestPush#testUsePushOperatorWithMultipleModifiers"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "04317974e3c10ff88b9d109d1411b9b3b495b916801b285ed17a4b27dbf632c2",
       "data.json" : "1eae6d432c3d2de085a63e340088f6aff3d60e72ced0ddffe48063a26ac5a5e3",
@@ -22095,6 +22428,7 @@
     "scenarioSha256" : "a61314b1d61a79537c8bf229cbd424b92fcb7c0427bfe611bc1486104c9fdc93",
     "test" : "dev.morphia.test.query.updates.TestRename#testRenameAField"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "9c0fd63e1ea62c7936a2e2ca1123d5eeee03a3e89ecf278666709dfeafa3a31f",
       "data.json" : "61a5ccfa038faeecb0fc74a9b44bafce760e6f9546580556efc9923d78c4b3ee",
@@ -22195,6 +22529,7 @@
     "scenarioSha256" : "90b396b17d62400772b2aa23502b46c659d7ac091e8a6a291c95a1962f4f248d",
     "test" : "dev.morphia.test.query.updates.TestRename#testRenameAFieldInAnEmbeddedDocument"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c8f5fbc3f4cc4bacf65f388c90e3407fae7aa9530162d7e00f6b2f492d3b571e",
       "data.json" : "e851b34643ae091a110ad33349b9641efbc2a1b6ff3d4138ea5dece71e539f05",
@@ -22304,6 +22639,7 @@
     "scenarioSha256" : "eb223366c7386706f8f844c34061caa9ae5764381d60ffbcdb4ecd21dcfa9941",
     "test" : "dev.morphia.test.query.updates.TestSet#testSetElementsInArrays"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "6245b23361cce95b458ae674d73810ad0f59c669b760ce1b79a278b4a8f9b1ac",
       "data.json" : "e851b34643ae091a110ad33349b9641efbc2a1b6ff3d4138ea5dece71e539f05",
@@ -22407,6 +22743,91 @@
     "scenarioSha256" : "077aaace8ca3d9c6495f70d57d72d5ca7164f3d6d968e48b2f231fb8a58a4621",
     "test" : "dev.morphia.test.query.updates.TestSet#testSetFieldsInEmbeddedDocuments"
   }, {
+    "bodyEdit" : {
+      "fromSha256" : "a069acfacd67d8ff0cc5777e6227015f81eeb4760c9f46c8871758fc07f0b066",
+      "reason" : "Map.of, whose key order is unspecified, replaced by ordered Documents in the documented field order, so the strict checks and the action check hold"
+    },
+    "files" : {
+      "action.json" : "b6a468159a2e743e862efdc366701b5b045d5c2ad418b5a19cc9d830facb953c",
+      "data.json" : "e851b34643ae091a110ad33349b9641efbc2a1b6ff3d4138ea5dece71e539f05",
+      "expected.json" : "0f560f6826e503559765b03ffc7c8323f9aacc2236619fb1a59f8aa28e45e7bb",
+      "name" : "407cf12971f27b1b65e67aac2d21dcb7632d5c85580e5f469a4bf5a30d23e4f5"
+    },
+    "fixture" : "query/updates/set/setTopLevelFields",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testUpdate((query) -> query.filter(Filters.eq(\"_id\", 100)),\n                set(\"quantity\", 500), set(\"details\", new Document(\"model\", \"2600\").append(\"make\", \"Fashionaires\")),\n                set(\"tags\", List.of(\"coats\", \"outerwear\", \"clothing\")));\n    }",
+    "legacyBodySha256" : "036b6103adcdaea6cb3ac85e3889a1824bba478416d2e2326a815ddfad3e1a54",
+    "legacyMethod" : "testSetTopLevelFields",
+    "legacyType" : "dev.morphia.test.query.updates.TestSet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "b6a468159a2e743e862efdc366701b5b045d5c2ad418b5a19cc9d830facb953c",
+        "text" : "db.products.updateOne(\n   { _id: 100 },\n   { $set:\n      {\n        quantity: 500,\n        details: { model: \"2600\", make: \"Fashionaires\" },\n        tags: [ \"coats\", \"outerwear\", \"clothing\" ]\n      }\n   }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "ef8a4925b974d304993ffe7b49bbc307faa203362530f984a358aa3ea42631af",
+        "text" : "db.products.insertOne(\n   {\n     _id: 100,\n     quantity: 250,\n     instock: true,\n     reorder: false,\n     details: { model: \"14QQ\", make: \"Clothes Corp\" },\n     tags: [ \"apparel\", \"clothing\" ],\n     ratings: [ { by: \"Customer007\", rating: 4 } ]\n   }\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "f710a8b9785468c8ca5b03d15c6b004e02cd29f8feefaeefe25e78cefe4aaecb",
+        "text" : "{\n  _id: 100,\n  quantity: 500,\n  instock: true,\n  reorder: false,\n  details: { model: '2600', make: 'Fashionaires' },\n  tags: [ 'coats', 'outerwear', 'clothing' ],\n  ratings: [ { by: 'Customer007', rating: 4 } ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Set Top-Level Fields",
+      "fixture" : "query/updates/set/setTopLevelFields",
+      "fixtureFiles" : {
+        "action.json" : "b6a468159a2e743e862efdc366701b5b045d5c2ad418b5a19cc9d830facb953c",
+        "data.json" : "e851b34643ae091a110ad33349b9641efbc2a1b6ff3d4138ea5dece71e539f05",
+        "expected.json" : "0f560f6826e503559765b03ffc7c8323f9aacc2236619fb1a59f8aa28e45e7bb",
+        "name" : "407cf12971f27b1b65e67aac2d21dcb7632d5c85580e5f469a4bf5a30d23e4f5"
+      },
+      "includes" : [ {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+        "path" : "source/includes/use-dot-notation.rst"
+      }, {
+        "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+        "path" : "source/includes/fact-update-operator-processing-order.rst"
+      }, {
+        "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+        "path" : "source/includes/extracts-update-operations.yaml"
+      }, {
+        "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+        "path" : "source/includes/extracts-update-operations-base.yaml"
+      } ],
+      "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+      "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "UPDATE",
+      "source" : {
+        "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
+        "path" : "source/reference/operator/update/set.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/updates/set/setTopLevelFields/scenario.json",
+    "scenarioSha256" : "71b6f53d49ba3a92f263b6b486da17f838d9d21c711d427e71b90fdf789aadd0",
+    "test" : "dev.morphia.test.query.updates.TestSet#testSetTopLevelFields"
+  }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "c4214b24045750d1e7e1e02ba24c2d136ca6094d5d50c14e44f2970d30774fb8",
       "data.json" : "aec80235e46c5caab477b5bb2f88351bdebcdf5272182d916b7fa2868565f30c",
@@ -22469,6 +22890,7 @@
     "scenarioSha256" : "e4cc320949cbf78c9d05c3d02441c5c6b313849d86a70f0499fc51537715f333",
     "test" : "dev.morphia.test.query.updates.TestSlice#testSliceFromTheEndOfTheArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "407c4d58ecbd82c51054313ed01898292ad7d7bf07196c6158ce2878b0dbc693",
       "data.json" : "b7da62e8efbe55e322b90eeeb41aa249d6e98963d46c8c4efde9d1c6f18d2262",
@@ -22531,6 +22953,7 @@
     "scenarioSha256" : "e77b20ff8581dad8e78034b53a99c00789594184718e9a264f94e3a5f8ec22f5",
     "test" : "dev.morphia.test.query.updates.TestSlice#testSliceFromTheFrontOfTheArray"
   }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "311df6b65dc8e6a034e76e45015a0da327d92e4fff87484ed19c2391daf06f32",
       "data.json" : "2457e1a2c318c8b95c35fa0c064c421b5f7b89a476696adcc0ef3447acf4f716",
@@ -22593,6 +23016,73 @@
     "scenarioSha256" : "484d86f51dcf2d5f4ccc826b229a44f0e9255a3a53d4c298865f539f98ef245e",
     "test" : "dev.morphia.test.query.updates.TestSlice#testUpdateArrayUsingSliceOnly"
   }, {
+    "bodyEdit" : {
+      "fromSha256" : "39332bed8e3b9a7b483eb458132ead5537b540ede71aa538cf2b43d9d95b60b6",
+      "reason" : "Map.of, whose key order is unspecified, replaced by ordered Documents in the documented field order, so the strict checks and the action check hold"
+    },
+    "files" : {
+      "action.json" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+      "data.json" : "a141a776c1fdf43d5a1cd68d70b28baf78f111e31044c33ea33ad6b164b10c7f",
+      "expected.json" : "21d4a937c9a21839c1c260c35c1ef18df98dd0375e11f97251f26ad1e3587707",
+      "name" : "1450704c6cf0f30380ba8ace4d5ad644a0d3cfd029616b86a65af685403d7911"
+    },
+    "fixture" : "query/updates/slice/useSliceWithOtherPushModifiers",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testUpdate((query) -> query.filter(eq(\"_id\", 5)),\n                push(\"quizzes\",\n                        List.of(new Document(\"wk\", 5).append(\"score\", 8), new Document(\"wk\", 6).append(\"score\", 7),\n                                new Document(\"wk\", 7).append(\"score\", 6)))\n                        .sort(descending(\"score\")).slice(3));\n    }",
+    "legacyBodySha256" : "29fbcbfe214ab860ea20a64a56a44e84a4c835eac0d1e0b96ddfc0639be824ee",
+    "legacyMethod" : "testUseSliceWithOtherPushModifiers",
+    "legacyType" : "dev.morphia.test.query.updates.TestSlice",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+        "text" : "db.students.updateOne(\n   { _id: 5 },\n   {\n     $push: { \n       quizzes: { \n          $each: [ { wk: 5, score: 8 }, { wk: 6, score: 7 }, { wk: 7, score: 6 } ],\n          $sort: { score: -1 },\n          $slice: 3\n       }\n     }\n   }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d02e914a328ec72334a51b3e5fe34465ef176dfc6e5155da7152a7366fbe33b0",
+        "text" : "{\n   \"_id\" : 5,\n   \"quizzes\" : [\n      { \"wk\": 1, \"score\" : 10 },\n      { \"wk\": 2, \"score\" : 8 },\n      { \"wk\": 3, \"score\" : 5 },\n      { \"wk\": 4, \"score\" : 6 }\n   ]\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "2edda5f9f011040edfc6709731c9cf5c6ce552e8531807d9635a681f1011c6ac",
+        "text" : "{\n  \"_id\" : 5,\n  \"quizzes\" : [\n     { \"wk\" : 1, \"score\" : 10 },\n     { \"wk\" : 2, \"score\" : 8 },\n     { \"wk\" : 5, \"score\" : 8 }\n  ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Use ``$slice`` with Other ``$push`` Modifiers",
+      "fixture" : "query/updates/slice/useSliceWithOtherPushModifiers",
+      "fixtureFiles" : {
+        "action.json" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+        "data.json" : "a141a776c1fdf43d5a1cd68d70b28baf78f111e31044c33ea33ad6b164b10c7f",
+        "expected.json" : "21d4a937c9a21839c1c260c35c1ef18df98dd0375e11f97251f26ad1e3587707",
+        "name" : "1450704c6cf0f30380ba8ace4d5ad644a0d3cfd029616b86a65af685403d7911"
+      },
+      "includes" : [ {
+        "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+        "path" : "source/includes/fact-update-operator-processing-order.rst"
+      }, {
+        "blob" : "fadc42755b46b1b566a0610e20e2680a567b84bc",
+        "path" : "source/includes/example-push-with-multiple-modifiers.rst"
+      } ],
+      "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+      "pageBlob" : "7d3869a48427f0dd75fe8949986ce58001bc7dae",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "UPDATE",
+      "source" : {
+        "commit" : "23d941b5a8dda3b6408bfd3cb4cc79930c836dd1",
+        "path" : "source/reference/operator/update/slice.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/updates/slice/useSliceWithOtherPushModifiers/scenario.json",
+    "scenarioSha256" : "81ac1870f7f2a59cea472eb79e3e67e7eb7d04f3ceb204fb7c39482a625301e4",
+    "test" : "dev.morphia.test.query.updates.TestSlice#testUseSliceWithOtherPushModifiers"
+  }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8a9c381a4040e273db27866d3ac536ccff0ede9d8f94b190893b2173dbc2589f",
       "data.json" : "24886d01bcbd4759fb88c22424daaaf7beddc7fe34b62fc5def5ad5e1d8e4b8f",
@@ -22655,6 +23145,73 @@
     "scenarioSha256" : "b96e91da47b018958210f767139f68f9fe39d0d44e73a818bdbe03124234c459",
     "test" : "dev.morphia.test.query.updates.TestSort#testSortArrayElementsThatAreNotDocuments"
   }, {
+    "bodyEdit" : {
+      "fromSha256" : "ea10331027c98fa8ca59f125b65c38721fff036183d200b413dcdc7f669c5adf",
+      "reason" : "Map.of, whose key order is unspecified, replaced by ordered Documents in the documented field order, so the strict checks and the action check hold"
+    },
+    "files" : {
+      "action.json" : "7011e1c9838947af6ed0ad4cf75113e22a7afd4a68f6ae4798224329647cb5b9",
+      "data.json" : "8ef604212278cf2d09b5927ceb275121262136c677e1052473c88401500bd632",
+      "expected.json" : "108f29fdaba37574b129bea022a482d80a38cb138004cd3ebc3b8e7620366eec",
+      "name" : "76a23cf336130fe9f39c63e8b0550eb5bfacdacadf6f87514ab78676c4c777e3"
+    },
+    "fixture" : "query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testUpdate((query) -> query.filter(eq(\"_id\", 1)),\n                push(\"quizzes\",\n                        List.of(new Document(\"id\", 3).append(\"score\", 8), new Document(\"id\", 4).append(\"score\", 7),\n                                new Document(\"id\", 5).append(\"score\", 6)))\n                        .sort(ascending(\"score\")));\n    }",
+    "legacyBodySha256" : "4eb5d1d85751e2baa8ee9d10ea0a5ea22e2d341f468b551fe635f0aeaf471f77",
+    "legacyMethod" : "testSortArrayOfDocumentsByAFieldInTheDocuments",
+    "legacyType" : "dev.morphia.test.query.updates.TestSort",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "7011e1c9838947af6ed0ad4cf75113e22a7afd4a68f6ae4798224329647cb5b9",
+        "text" : "db.students.updateOne(\n   { _id: 1 },\n   {\n     $push: {\n       quizzes: {\n         $each: [ { id: 3, score: 8 }, { id: 4, score: 7 }, { id: 5, score: 6 } ],\n         $sort: { score: 1 }\n       }\n     }\n   }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "8d40885fe0178bbc4b7cd8afbf90a7f52c4965f90605b1bd6426eafd9fb83dc0",
+        "text" : "db.students.insertOne(\n   {\n     \"_id\": 1,\n     \"quizzes\": [\n       { \"id\" : 1, \"score\" : 6 },\n       { \"id\" : 2, \"score\" : 9 }\n     ]\n   }\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9bb73b6d36a5e7b79e6a81dd1f812e1dc3421be9c33ec72766c187099f909381",
+        "text" : "{\n  \"_id\" : 1,\n  \"quizzes\" : [\n     { \"id\" : 1, \"score\" : 6 },\n     { \"id\" : 5, \"score\" : 6 },\n     { \"id\" : 4, \"score\" : 7 },\n     { \"id\" : 3, \"score\" : 8 },\n     { \"id\" : 2, \"score\" : 9 }\n  ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Sort Array of Documents by a Field in the Documents",
+      "fixture" : "query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments",
+      "fixtureFiles" : {
+        "action.json" : "7011e1c9838947af6ed0ad4cf75113e22a7afd4a68f6ae4798224329647cb5b9",
+        "data.json" : "8ef604212278cf2d09b5927ceb275121262136c677e1052473c88401500bd632",
+        "expected.json" : "108f29fdaba37574b129bea022a482d80a38cb138004cd3ebc3b8e7620366eec",
+        "name" : "76a23cf336130fe9f39c63e8b0550eb5bfacdacadf6f87514ab78676c4c777e3"
+      },
+      "includes" : [ {
+        "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+        "path" : "source/includes/fact-update-operator-processing-order.rst"
+      }, {
+        "blob" : "6a1f204cebd6db80c2057b3ddd2b0d05ab1b2de2",
+        "path" : "source/includes/example-push-with-multiple-modifiers.rst"
+      } ],
+      "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+      "pageBlob" : "fa57bcf52a8fc29d1461f5f1ae67fb9ee3b851cf",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "UPDATE",
+      "source" : {
+        "commit" : "1382fdc5825108f2596a92106fc9d0281e22fd9b",
+        "path" : "source/reference/operator/update/sort.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments/scenario.json",
+    "scenarioSha256" : "6eddb84c2ba646c6c00a44f5390dc05b5f97ae06fb4fe37e06fbda76f2a50b51",
+    "test" : "dev.morphia.test.query.updates.TestSort#testSortArrayOfDocumentsByAFieldInTheDocuments"
+  }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "42401d371f33a9b2e6d1b82281367002dbe18b9b4fdeb1e6348ce51ec26e8f59",
       "data.json" : "16e1e65200e1657a325585a3604fc0be2687e19b5fc963ec48f242178c0657f0",
@@ -22716,6 +23273,72 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/query/updates/sort/updateArrayUsingSortOnly/scenario.json",
     "scenarioSha256" : "ff6cdda63b67dfb76dfb5b00eb57adfb92801a75bddb7fbefa44ea6a81f82d6f",
     "test" : "dev.morphia.test.query.updates.TestSort#testUpdateArrayUsingSortOnly"
+  }, {
+    "bodyEdit" : {
+      "fromSha256" : "39332bed8e3b9a7b483eb458132ead5537b540ede71aa538cf2b43d9d95b60b6",
+      "reason" : "Map.of, whose key order is unspecified, replaced by ordered Documents in the documented field order, so the strict checks and the action check hold"
+    },
+    "files" : {
+      "action.json" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+      "data.json" : "a141a776c1fdf43d5a1cd68d70b28baf78f111e31044c33ea33ad6b164b10c7f",
+      "expected.json" : "21d4a937c9a21839c1c260c35c1ef18df98dd0375e11f97251f26ad1e3587707",
+      "name" : "f4108438cb3908e02c252257c789ed363b6f59559b7fbd96d63cb657d7cb4bbf"
+    },
+    "fixture" : "query/updates/sort/useSortWithOtherPushModifiers",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testUpdate((query) -> query.filter(eq(\"_id\", 5)),\n                push(\"quizzes\",\n                        List.of(new Document(\"wk\", 5).append(\"score\", 8), new Document(\"wk\", 6).append(\"score\", 7),\n                                new Document(\"wk\", 7).append(\"score\", 6)))\n                        .sort(descending(\"score\")).slice(3));\n    }",
+    "legacyBodySha256" : "29fbcbfe214ab860ea20a64a56a44e84a4c835eac0d1e0b96ddfc0639be824ee",
+    "legacyMethod" : "testUseSortWithOtherPushModifiers",
+    "legacyType" : "dev.morphia.test.query.updates.TestSort",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+        "text" : "db.students.updateOne(\n   { _id: 5 },\n   {\n     $push: { \n       quizzes: { \n          $each: [ { wk: 5, score: 8 }, { wk: 6, score: 7 }, { wk: 7, score: 6 } ],\n          $sort: { score: -1 },\n          $slice: 3\n       }\n     }\n   }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "6b11826c7f8807c2d64175e72ebbcf77326faebb82b200b5547bc7fcfc293ff0",
+        "text" : "db.students.insertOne(\n   {\n      \"_id\" : 5,\n      \"quizzes\" : [\n         { \"wk\": 1, \"score\" : 10 },\n         { \"wk\": 2, \"score\" : 8 },\n         { \"wk\": 3, \"score\" : 5 },\n         { \"wk\": 4, \"score\" : 6 }\n      ]\n   }\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "2edda5f9f011040edfc6709731c9cf5c6ce552e8531807d9635a681f1011c6ac",
+        "text" : "{\n  \"_id\" : 5,\n  \"quizzes\" : [\n     { \"wk\" : 1, \"score\" : 10 },\n     { \"wk\" : 2, \"score\" : 8 },\n     { \"wk\" : 5, \"score\" : 8 }\n  ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Use ``$sort`` with Other ``$push`` Modifiers",
+      "fixture" : "query/updates/sort/useSortWithOtherPushModifiers",
+      "fixtureFiles" : {
+        "action.json" : "85576b5cf31826140932cf8fee87e69ad79e4269bd5965ac009ea689ebde6c7f",
+        "data.json" : "a141a776c1fdf43d5a1cd68d70b28baf78f111e31044c33ea33ad6b164b10c7f",
+        "expected.json" : "21d4a937c9a21839c1c260c35c1ef18df98dd0375e11f97251f26ad1e3587707",
+        "name" : "f4108438cb3908e02c252257c789ed363b6f59559b7fbd96d63cb657d7cb4bbf"
+      },
+      "includes" : [ {
+        "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+        "path" : "source/includes/fact-update-operator-processing-order.rst"
+      }, {
+        "blob" : "6a1f204cebd6db80c2057b3ddd2b0d05ab1b2de2",
+        "path" : "source/includes/example-push-with-multiple-modifiers.rst"
+      } ],
+      "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+      "pageBlob" : "fa57bcf52a8fc29d1461f5f1ae67fb9ee3b851cf",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "UPDATE",
+      "source" : {
+        "commit" : "1382fdc5825108f2596a92106fc9d0281e22fd9b",
+        "path" : "source/reference/operator/update/sort.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/updates/sort/useSortWithOtherPushModifiers/scenario.json",
+    "scenarioSha256" : "68ad25fb6d8aed5b13be3d87bd569f5eecceb1ab1dd845adfcce999b744d6be0",
+    "test" : "dev.morphia.test.query.updates.TestSort#testUseSortWithOtherPushModifiers"
   } ],
   "schemaVersion" : 1
 }

@@ -116,22 +116,6 @@
     "check" : "SOURCE",
     "detail" : "the page creates an index, which the runner does not seed yet",
     "fixture" : "query/filters/text/textWithAnExactString"
-  }, {
-    "check" : "TEST",
-    "detail" : "the test builds an update value with Map.of, whose key order is unspecified (it skips its action check for that reason); results differ at /0/details: key order ['model', 'make'], Morphia stores ['make', 'model']",
-    "fixture" : "query/updates/set/setTopLevelFields"
-  }, {
-    "check" : "TEST",
-    "detail" : "the test builds an update value with Map.of, whose key order is unspecified (it skips its action check for that reason); results differ at /0/quizzes/2: key order ['wk', 'score'], Morphia stores ['score', 'wk']",
-    "fixture" : "query/updates/slice/useSliceWithOtherPushModifiers"
-  }, {
-    "check" : "TEST",
-    "detail" : "the test builds an update value with Map.of, whose key order is unspecified (it skips its action check for that reason); results differ at /0/quizzes/1: key order ['id', 'score'], Morphia stores ['score', 'id']",
-    "fixture" : "query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments"
-  }, {
-    "check" : "TEST",
-    "detail" : "the test builds an update value with Map.of, whose key order is unspecified (it skips its action check for that reason); results differ at /0/quizzes/2: key order ['wk', 'score'], Morphia stores ['score', 'wk']",
-    "fixture" : "query/updates/sort/useSortWithOtherPushModifiers"
   } ],
   "schemaVersion" : 1
 }

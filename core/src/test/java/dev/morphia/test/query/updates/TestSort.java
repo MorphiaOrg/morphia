@@ -1,11 +1,10 @@
 package dev.morphia.test.query.updates;
 
 import java.util.List;
-import java.util.Map;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
+import org.bson.Document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +21,10 @@ public class TestSort extends TemplatedTestBase {
     @Test
     @DisplayName("Sort Array of Documents by a Field in the Documents")
     public void testSortArrayOfDocumentsByAFieldInTheDocuments() {
-        // the Map order throws off structural checks
-        testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 1)),
+        testUpdate((query) -> query.filter(eq("_id", 1)),
                 push("quizzes",
-                        List.of(Map.of("id", 3, "score", 8), Map.of("id", 4, "score", 7), Map.of("id", 5, "score", 6)))
+                        List.of(new Document("id", 3).append("score", 8), new Document("id", 4).append("score", 7),
+                                new Document("id", 5).append("score", 6)))
                         .sort(ascending("score")));
     }
 
@@ -53,10 +52,10 @@ public class TestSort extends TemplatedTestBase {
     @Test
     @DisplayName("Use ``$sort`` with Other ``$push`` Modifiers")
     public void testUseSortWithOtherPushModifiers() {
-        // the Map order throws off structural checks
-        testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),
+        testUpdate((query) -> query.filter(eq("_id", 5)),
                 push("quizzes",
-                        List.of(Map.of("wk", 5, "score", 8), Map.of("wk", 6, "score", 7), Map.of("wk", 7, "score", 6)))
+                        List.of(new Document("wk", 5).append("score", 8), new Document("wk", 6).append("score", 7),
+                                new Document("wk", 7).append("score", 6)))
                         .sort(descending("score")).slice(3));
     }
 }

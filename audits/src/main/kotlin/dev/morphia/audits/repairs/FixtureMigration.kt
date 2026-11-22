@@ -48,7 +48,15 @@ data class MigratedFixture(
     val legacyBody: String = "",
     /** The legacy test's options other than `orderMatters`, which the scenario maps. */
     val options: List<OptionCall> = emptyList(),
+    /** A reviewed edit of a converted case's legacy body, made so that its strict checks hold. */
+    val bodyEdit: BodyEdit? = null,
 )
+
+/**
+ * A reviewed edit of a legacy test body: [fromSha256] is the body digest the frozen binding catalog
+ * records, and [reason] says why the body changed. The edited body is the entry's `legacyBody`.
+ */
+data class BodyEdit(val fromSha256: String, val reason: String)
 
 data class FixtureMigrationLedger(
     val schemaVersion: Int = 1,
@@ -581,7 +589,9 @@ object FixtureMigration {
             .toMap()
 
     /**
-     * [catalog] without the legacy methods the migration moved; each must be exactly as recorded.
+     * [catalog] without the legacy methods the migration moved, each exactly as recorded, and with
+     * each converted method's reviewed [BodyEdit] applied: the catalog must record the body the
+     * edit starts from, and then records the edited one.
      */
     fun remove(
         catalog: LegacyBindingCatalog,
@@ -592,7 +602,7 @@ object FixtureMigration {
                 .filter { it.kind == MIGRATED }
                 .associateBy { it.legacyType to it.legacyMethod }
         val problems =
-            moved.values.mapNotNull { migrated ->
+            moved.values.mapNotNullTo(mutableListOf()) { migrated ->
                 val method =
                     catalog.methods.singleOrNull {
                         it.type == migrated.legacyType && it.method == migrated.legacyMethod
@@ -604,8 +614,38 @@ object FixtureMigration {
                     else -> null
                 }
             }
+        val edited =
+            ledger.migrations
+                .filter { it.kind == CONVERTED && it.bodyEdit != null }
+                .associateBy { it.legacyType to it.legacyMethod }
+        edited.values.forEach { migrated ->
+            val method =
+                catalog.methods.singleOrNull {
+                    it.type == migrated.legacyType && it.method == migrated.legacyMethod
+                }
+            when {
+                method == null ->
+                    problems += "${migrated.legacyType}#${migrated.legacyMethod} is not bound"
+                method.bodySha256 != migrated.bodyEdit!!.fromSha256 ->
+                    problems +=
+                        "${migrated.legacyType}#${migrated.legacyMethod}: the edit does not start " +
+                            "from the recorded body"
+                migrated.bodyEdit.reason.isBlank() ->
+                    problems +=
+                        "${migrated.legacyType}#${migrated.legacyMethod}: edit has no reason"
+            }
+        }
         require(problems.isEmpty()) { problems.joinToString("\n") }
-        return catalog.copy(methods = catalog.methods.filter { (it.type to it.method) !in moved })
+        return catalog.copy(
+            methods =
+                catalog.methods
+                    .filter { (it.type to it.method) !in moved }
+                    .map { method ->
+                        edited[method.type to method.method]?.let {
+                            method.copy(bodySha256 = it.legacyBodySha256)
+                        } ?: method
+                    }
+        )
     }
 
     /**
