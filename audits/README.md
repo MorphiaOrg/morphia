@@ -646,3 +646,18 @@ requires it to equal a fresh capture and every example to have one owner. See th
 [test generation design](../design/operator-audits-test-generation.md). An audits test rechecks the committed
 report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).
 
+
+## GitHub transport
+
+`dev.morphia.audits.publish.GhGateway` is the publisher's only route to GitHub: the `gh` CLI, run as
+an argument array with an explicit host and repository (inherited `GH_HOST`, `GH_REPO` and unrelated
+tokens are removed from its environment; prompts, pagers and update notices are off). A
+`REPORT_ONLY` gateway never spawns a mutating command, and a `PUBLISH` gateway may only create or
+edit issues in its target repository. Reads paginate (`--paginate --slurp`, flattened in Kotlin),
+drop pull requests from the issues endpoint, and retry rate limits, timeouts and server errors with
+bounded backoff; creates are never replayed. Its unit tests replay recorded process results and need
+no binary, credentials or network.
+
+`GhGatewaySandboxTest` runs only with `-Daudits.sandbox=OWNER/REPO`, against a disposable repository
+that has an `audit` label and a `sandbox` milestone (for this project, the private
+`evanchooly/morphia-audits-sandbox`). It reuses one marked issue across runs.

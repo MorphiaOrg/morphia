@@ -2378,3 +2378,23 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   so the int32 and ordered-maps runs wrote `form-review.json` into the int32 worktree. Their
   committed files were unaffected (the ordered-maps run promoted nothing, and the stray write came
   after the int32 commit); the stray change was discarded and the pattern fixed.
+
+- PR #4554 (branch audits-documented-collections, base #4553) published.
+
+## Step 6a: the gh gateway (2026-11-22)
+
+- Branch audits-gh-gateway from #4554. The legacy Java GitHub client is already gone, so this is
+  the publisher's transport from scratch, as the plan specifies: `GhGateway` over a fakeable
+  `ProcessExecutor` (argument arrays, replaced environment, bounded wait and output), a tested
+  `gh` range (2.40 to 2.x), and a command policy: `REPORT_ONLY` never spawns a mutating command,
+  and `PUBLISH` may only POST `repos/O/R/issues` or PATCH `repos/O/R/issues/N`. Reads paginate
+  and flatten slurped pages, filter pull requests out of the issues endpoint, and normalize
+  issues (milestone by `number`, not `id`), labels and milestones. Failures are classified
+  (missing binary, version, authentication, permission, not found, rate limit, timeout, server
+  error, invalid JSON); reads retry the transient ones with backoff, creates are never replayed.
+- `GhGatewayTest` (9 cases) replays recorded process results. `GhGatewaySandboxTest` runs only
+  with `-Daudits.sandbox=OWNER/REPO`.
+- The user approved a private disposable repository and asked that the tests reuse it:
+  `evanchooly/morphia-audits-sandbox` (label `audit`, milestone `sandbox`), created once. The
+  sandbox test keeps a single marked issue; two runs left exactly one issue, edited by the second.
+- Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
