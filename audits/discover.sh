@@ -47,7 +47,7 @@ def load(name):
     path = os.path.join(out, name)
     return json.load(open(path)) if os.path.exists(path) else None
 inventory = load("documented-examples.json")
-gaps = load("candidate/gaps.json") or []
+gaps = (load("candidate/gaps.json") or {}).get("gaps", [])
 attestation = load("candidate/attestation.json")
 candidate = load("candidate/candidate.json")
 lines = [f"# Operator example discovery at mongodb/docs `{inventory['commit'][:10]}`", ""]

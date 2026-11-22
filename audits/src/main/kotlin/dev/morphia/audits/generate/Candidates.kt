@@ -143,7 +143,10 @@ object Candidates {
             Files.write(target, bytes)
         }
         Files.writeString(out.resolve(DESCRIPTOR), AuditJson.write(candidate))
-        Files.writeString(out.resolve(GAPS), AuditJson.write(generation.gaps))
+        Files.writeString(
+            out.resolve(GAPS),
+            AuditJson.write(GenerationGaps(gaps = generation.gaps)),
+        )
         return candidate
     }
 

@@ -49,7 +49,19 @@ Every command below runs through the exec plugin from the repository root, after
 ## Weekly discovery
 
 `.github/workflows/operator-discovery.yml` runs `audits/discover.sh` every Monday against the head
-of mongodb/docs, read-only. Open the run's summary and its `operator-discovery` artifact:
+of mongodb/docs, then its Publish job files the findings as issues in this repository:
+
+- **Bind `<node>` for generated operator tests** (`enhancement`, `aggregation`, `proposed`): an
+  MQL node that documented examples need and `dsl-bindings.json` lacks, with the examples it blocks.
+- **Cover the documented `<operator>` example "…"** (`Task`, `proposed`): an example that appeared
+  upstream since the committed inventory, with no test.
+- **Generated operator cases fail integration** (`bug`), naming the failing tests.
+
+Each issue carries a hidden marker, so a rerun updates the publisher's section of an open issue
+instead of filing it again, and keeps any edits outside that section. The journal of filed issues
+carries over from run to run. A closed issue is a decision and is not reopened. A manual run can
+set `publish` off to see what it would file. Open the run's summary and its `operator-discovery`
+artifact:
 
 - **The inventory matches**: nothing changed upstream that the inventory sees.
 - **`inventory.diff` is not empty**: examples were added, renamed or removed. Accept it locally:
@@ -122,8 +134,9 @@ never-locked fixtures come from `fetch.py references`, `fetch.py pages` and
 
 ## Publishing findings
 
-`PublishMainKt <coverage-report.json> <policy.json> <journal.json> <owner/repo>` only prints what
-it would file. Add `--publish` to file issues, which needs `gh` authenticated with write access to
+`PublishMainKt <coverage-report.json> <policy.json> <journal.json> <owner/repo>`, or
+`PublishMainKt discovery <discovery-out> <committed-inventory.json> <policy.json> <journal.json> <owner/repo>`
+for a discovery run's findings, only prints what it would file. Add `--publish` to file issues, which needs `gh` authenticated with write access to
 issues (or `AUDITS_GITHUB_TOKEN`). The journal makes reruns idempotent: keep it, and never point a
 trial run at MorphiaOrg/morphia. Use the disposable sandbox repository instead.
 

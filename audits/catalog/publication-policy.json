@@ -1,7 +1,24 @@
 {
   "labels" : {
-    "MISSING_API" : [ "enhancement", "proposed" ],
-    "VERSION_ANNOTATION" : [ "bug" ]
+    "INTEGRATION_FAILURE" : [
+      "bug"
+    ],
+    "MISSING_API" : [
+      "enhancement",
+      "proposed"
+    ],
+    "MISSING_BINDING" : [
+      "enhancement",
+      "aggregation",
+      "proposed"
+    ],
+    "NEW_EXAMPLE" : [
+      "Task",
+      "proposed"
+    ],
+    "VERSION_ANNOTATION" : [
+      "bug"
+    ]
   },
   "milestone" : null,
   "schemaVersion" : 1

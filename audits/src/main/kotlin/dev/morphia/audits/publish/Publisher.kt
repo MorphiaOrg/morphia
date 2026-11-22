@@ -17,6 +17,12 @@ enum class FindingType {
     MISSING_API,
     /** A Morphia declaration whose server-version annotation is missing or wrong. */
     VERSION_ANNOTATION,
+    /** An MQL node that generated cases need and the DSL bindings do not cover. */
+    MISSING_BINDING,
+    /** A documented example that appeared upstream and no test covers. */
+    NEW_EXAMPLE,
+    /** Generated cases that fail integration under a mapper. */
+    INTEGRATION_FAILURE,
 }
 
 /**

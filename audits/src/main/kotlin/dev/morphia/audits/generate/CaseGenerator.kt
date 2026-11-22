@@ -33,6 +33,9 @@ data class GenerationGap(
     val detail: String,
 )
 
+/** The gaps of one generation, as `candidate` writes them to `gaps.json`. */
+data class GenerationGaps(val schemaVersion: Int = 1, val gaps: List<GenerationGap>)
+
 /** A reviewed exclusion of a generated case, by its qualified name. */
 data class Exclusion(val name: String, val reason: String)
 
