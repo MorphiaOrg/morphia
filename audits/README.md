@@ -160,5 +160,3 @@ its users does.
   extraction and resolves tested code snippets, which hold most stage examples.
 - **The frozen legacy documentation tables** stay until a separate documentation migration retires
   them.
-- **`SinceAudit`** compares two hardcoded Morphia releases' binaries. No test or workflow runs it,
-  and its disposition is a separate decision.
