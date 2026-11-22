@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.generate.Candidates
 import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FixtureMigration
 import dev.morphia.audits.repairs.FormRule
@@ -166,7 +167,7 @@ class FixtureMigrationTest {
     @Test
     fun theCommittedManifestListsEveryCaseWithOneOwner() {
         val manifest = AuditJson.caseManifest(read(CaseManifests.PATH))
-        assertEquals(CaseManifests.capture(root, ledger), manifest)
+        assertEquals(Candidates.manifest(root, ledger), manifest)
         val descriptor =
             AuditJson.bindingDescriptor(
                 read("core/src/test/resources/dev/morphia/test/example-bindings.json")

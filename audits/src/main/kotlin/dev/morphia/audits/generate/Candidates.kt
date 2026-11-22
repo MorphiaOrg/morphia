@@ -1,8 +1,10 @@
 package dev.morphia.audits.generate
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.repairs.CaseManifest
 import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FixtureMigration
+import dev.morphia.audits.repairs.FixtureMigrationLedger
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.exists
@@ -75,9 +77,14 @@ object Candidates {
     const val SCENARIO_SCHEMA = 1
     private const val LEDGER = "audits/catalog/fixture-migration.json"
     private const val DESCRIPTOR = "candidate.json"
+    private const val GAPS = "gaps.json"
     val MAPPERS = listOf("critter", "reflection")
 
-    /** Generates the namespace of [repository]'s ledger into [out], which must be empty or new. */
+    /**
+     * Generates the namespace of [repository]'s ledger, and the cases [CaseGenerator] generates
+     * from its documented examples, into [out], which must be empty or new. Returns the candidate
+     * and the generation's gaps, which `candidate` also writes beside it as `gaps.json`.
+     */
     fun candidate(repository: Path, out: Path, revision: String): Candidate {
         val root = repository.toRealPath()
         require(!out.exists() || Files.list(out).use { it.findAny().isEmpty }) {
@@ -89,9 +96,21 @@ object Candidates {
             contents[it.scenario] =
                 FixtureMigration.scenario(it.override, it.ordered, it.options).toByteArray()
         }
-        val manifest = CaseManifests.capture(root, ledger, contents)
-        contents[CaseManifests.PATH] = AuditJson.write(manifest).toByteArray()
         val current = currentManifest(root)
+        val generation = generation(root, current)
+        generation.files.forEach { (path, text) ->
+            require(path !in contents) { "$path is both migrated and generated" }
+            contents[path] = text.toByteArray()
+        }
+        val manifest =
+            CaseManifests.capture(
+                root,
+                ledger,
+                contents,
+                generation.cases.map { it.manifest },
+                generation.files.keys.toList(),
+            )
+        contents[CaseManifests.PATH] = AuditJson.write(manifest).toByteArray()
         val protected = manifest.files.filter { it.owner == "PROTECTED" }.map { "core/${it.path}" }
         val stale =
             current.files
@@ -124,7 +143,36 @@ object Candidates {
             Files.write(target, bytes)
         }
         Files.writeString(out.resolve(DESCRIPTOR), AuditJson.write(candidate))
+        Files.writeString(out.resolve(GAPS), AuditJson.write(generation.gaps))
         return candidate
+    }
+
+    /**
+     * The manifest of [root]'s namespace as it stands: the ledger's cases and the generated ones.
+     */
+    fun manifest(root: Path, ledger: FixtureMigrationLedger): CaseManifest {
+        val generation = generation(root, currentManifest(root))
+        return CaseManifests.capture(
+            root,
+            ledger,
+            generated = generation.cases.map { it.manifest },
+            generatedFiles = generation.files.keys.toList(),
+        )
+    }
+
+    /**
+     * The generated cases of [root]'s documented examples under its bindings and review; none when
+     * the repository has no inventory yet. A file the [current] manifest protects is never written.
+     */
+    fun generation(root: Path, current: CaseManifest): Generation {
+        val inventory = root.resolve(DocumentedExamples.PATH)
+        if (!Files.exists(inventory)) return Generation(emptyMap(), emptyList(), emptyList())
+        return CaseGenerator.generate(
+            AuditJson.exampleInventory(Files.readString(inventory)),
+            AuditJson.dslBindings(Files.readString(root.resolve(DslBindings.PATH))),
+            AuditJson.generationReview(Files.readString(root.resolve(CaseGenerator.REVIEW))),
+            current.files.filter { it.owner == "PROTECTED" }.map { "core/${it.path}" }.toSet(),
+        )
     }
 
     fun read(out: Path): Candidate = AuditJson.candidate(Files.readString(out.resolve(DESCRIPTOR)))

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "families": [
+    "aggregation/expressions"
+  ],
+  "excluded": [
+    {
+      "name": "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
+      "reason": "The page prints $bitAnd's results: it shows Long(\"0\"), Long(\"2\") and Long(\"3\"), but a | 63 is 63 for each document, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/dateDiff/yearBoundaryCrossing",
+      "reason": "$dateDiff returns a long, which mongosh prints as Long('1'); the page prints 1, which only an Int32 or a Double prints as. Serialization and behavior pass."
+    },
+    {
+      "name": "aggregation/expressions/filter/useIdxToAccessTheIndex",
+      "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912)."
+    }
+  ]
+}

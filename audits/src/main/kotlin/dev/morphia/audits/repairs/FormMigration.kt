@@ -210,6 +210,16 @@ data class FormOverride(
 
 data class FormInclude(val path: String, val blob: String)
 
+/** One example as the legacy extractor reads it from a page: its title and source blocks. */
+data class PageExample(val name: String, val blocks: List<SourceBlock>)
+
+data class PageExamples(
+    val pageBlob: String,
+    val includes: List<FormInclude>,
+    val unexpandedIncludes: List<String>,
+    val examples: List<PageExample>,
+)
+
 data class FormRuleDescription(val rule: FormRule, val description: String)
 
 data class FormMigrationReport(
@@ -836,10 +846,6 @@ object FormMigration {
         recorded: String? = null,
     ): Examined {
         val folder = folder(root, fixture)
-        val page = pages.resolve(source.commit).resolve(source.path)
-        require(page.isRegularFile()) { "Missing source page $page" }
-        val bytes = Files.readAllBytes(page)
-        val blob = gitBlob(bytes)
         val type =
             when (fixture.substringBeforeLast('/').substringBeforeLast('/')) {
                 "aggregation/expressions" -> OperatorType.EXPRESSION
@@ -848,29 +854,17 @@ object FormMigration {
                 "query/updates" -> OperatorType.UPDATE
                 else -> throw IllegalArgumentException("Not an operator fixture: $fixture")
             }
-        val includes = mutableListOf<FormInclude>()
-        val unexpanded = mutableListOf<String>()
-        val examples =
+        val page = pages.resolve(source.commit).resolve(source.path)
+        require(page.isRegularFile()) { "Missing source page $page" }
+        val read =
             try {
-                val lines =
-                    expand(
-                        pages.resolve(source.commit),
-                        source.path.substring(0, source.path.indexOf("source/") + "source".length),
-                        source.path,
-                        includes,
-                        unexpanded,
-                        0,
-                    )
-                RstDocument(
-                        Operator(type, page.toFile()),
-                        lines
-                            .dropWhile { line -> line.trim() !in listOf("Example", "Examples") }
-                            .toMutableList(),
-                    )
-                    .examples
+                pageExamples(pages, source, type)
             } catch (failure: RuntimeException) {
                 return Examined.Gap(FormGap.PAGE_UNSUPPORTED, failure.message ?: "$failure")
             }
+        val blob = read.pageBlob
+        val includes = read.includes
+        val examples = read.examples
         if (recorded == null && !folder.resolve("name").isRegularFile()) {
             return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "the fixture has no name file")
         }
@@ -879,17 +873,7 @@ object FormMigration {
         val example =
             examples.singleOrNull { it.name == name }
                 ?: return Examined.Gap(FormGap.NO_MATCHING_EXAMPLE, name)
-        fun block(role: BlockRole, lines: List<String>): SourceBlock {
-            val text = lines.joinToString("\n")
-            return SourceBlock(role, text, sha256(text.toByteArray()))
-        }
-        val blocks =
-            listOfNotNull(example.actionBlock?.let { block(BlockRole.ACTION, it.code()) }) +
-                example.dataBlock.map { block(BlockRole.DATA, it.code()) } +
-                listOfNotNull(
-                    example.expectedBlock?.let { block(BlockRole.EXPECTED, it.code()) },
-                    example.indexBlock?.let { block(BlockRole.INDEX, it.code()) },
-                )
+        val blocks = example.blocks
         val shape =
             when (val documented = documented(blocks)) {
                 is Examined.Gap -> return documented
@@ -901,19 +885,100 @@ object FormMigration {
                 shape,
                 blocks,
                 pageBlob = blob,
-                includes = includes.distinct(),
+                includes = includes,
                 example = example.name,
             )
         }
         return when (val outcome = reproduce(folder, shape, blocks, facts)) {
             is Examined.Gap -> outcome
             is Examined.Reproduced ->
-                outcome.copy(
-                    pageBlob = blob,
-                    example = example.name,
-                    includes = includes.distinct(),
-                )
+                outcome.copy(pageBlob = blob, example = example.name, includes = includes)
         }
+    }
+
+    /**
+     * Every example the legacy extractor reads on [source]'s page, with its source blocks, after
+     * splicing the page's includes. Throws when the page cannot be read.
+     */
+    fun pageExamples(pages: Path, source: FormSource, type: OperatorType): PageExamples {
+        val page = pages.resolve(source.commit).resolve(source.path)
+        require(page.isRegularFile()) { "Missing source page $page" }
+        val includes = mutableListOf<FormInclude>()
+        val unexpanded = mutableListOf<String>()
+        val lines =
+            expand(
+                pages.resolve(source.commit),
+                source.path.substring(0, source.path.indexOf("source/") + "source".length),
+                source.path,
+                includes,
+                unexpanded,
+                0,
+            )
+        val examples =
+            RstDocument(
+                    Operator(type, page.toFile()),
+                    lines
+                        .dropWhile { line -> line.trim() !in listOf("Example", "Examples") }
+                        .toMutableList(),
+                )
+                .examples
+        fun block(role: BlockRole, lines: List<String>): SourceBlock {
+            val text = lines.joinToString("\n")
+            return SourceBlock(role, text, sha256(text.toByteArray()))
+        }
+        return PageExamples(
+            gitBlob(Files.readAllBytes(page)),
+            includes.distinct(),
+            unexpanded.distinct(),
+            examples.map { example ->
+                PageExample(
+                    example.name,
+                    listOfNotNull(example.actionBlock?.let { block(BlockRole.ACTION, it.code()) }) +
+                        example.dataBlock.map { block(BlockRole.DATA, it.code()) } +
+                        listOfNotNull(
+                            example.expectedBlock?.let { block(BlockRole.EXPECTED, it.code()) },
+                            example.indexBlock?.let { block(BlockRole.INDEX, it.code()) },
+                        ),
+                )
+            },
+        )
+    }
+
+    /**
+     * The documented operation in [blocks], or a gap naming why it cannot be lowered: the same
+     * reading as [documented] of an override, without one.
+     */
+    fun documented(
+        label: String,
+        shape: ActionShape?,
+        blocks: List<SourceBlock>,
+    ): DocumentedScenario {
+        val documented =
+            when (val parsed = documented(blocks)) {
+                is Examined.Gap -> throw IllegalArgumentException("$label: ${parsed.detail}")
+                else -> parsed as Documented
+            }
+        val action = documented.alternatives.single()
+        require(shape == null || action.shape == shape) { "$label: action is ${action.shape}" }
+        val expected = blocks.filter { it.role == BlockRole.EXPECTED }
+        require(blocks.none { it.role == BlockRole.INDEX }) { "$label: indexes are not supported" }
+        val printed =
+            if (expected.isEmpty()) null
+            else
+                when (val read = published(documented.collection, expected)) {
+                    is Examined.Gap -> throw IllegalArgumentException("$label: ${read.detail}")
+                    else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
+                }
+        val listed = expected.map { documents(it.text) }
+        return DocumentedScenario(
+            documented.collection,
+            documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
+            action.shape,
+            action.values,
+            printed,
+            action.many,
+            listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
+        )
     }
 
     /**
@@ -932,36 +997,7 @@ object FormMigration {
                 "${override.fixture}: ${it.role} source text digest mismatch"
             }
         }
-        val documented =
-            when (val parsed = documented(override.blocks)) {
-                is Examined.Gap ->
-                    throw IllegalArgumentException("${override.fixture}: ${parsed.detail}")
-                else -> parsed as Documented
-            }
-        val action = documented.alternatives.single()
-        require(action.shape == override.shape) { "${override.fixture}: action is ${action.shape}" }
-        val expected = override.blocks.filter { it.role == BlockRole.EXPECTED }
-        require(override.blocks.none { it.role == BlockRole.INDEX }) {
-            "${override.fixture}: indexes are not supported"
-        }
-        val printed =
-            if (expected.isEmpty()) null
-            else
-                when (val read = published(documented.collection, expected)) {
-                    is Examined.Gap ->
-                        throw IllegalArgumentException("${override.fixture}: ${read.detail}")
-                    else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
-                }
-        val listed = expected.map { documents(it.text) }
-        return DocumentedScenario(
-            documented.collection,
-            documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
-            action.shape,
-            action.values,
-            printed,
-            action.many,
-            listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
-        )
+        return documented(override.fixture, override.shape, override.blocks)
     }
 
     private data class Action(

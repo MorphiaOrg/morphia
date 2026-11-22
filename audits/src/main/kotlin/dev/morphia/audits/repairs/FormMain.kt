@@ -2,6 +2,7 @@ package dev.morphia.audits.repairs
 
 import dev.morphia.audits.bindings.LegacyBindings
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.generate.Candidates
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -175,7 +176,7 @@ fun main(args: Array<String>) {
                 AuditJson.fixtureMigration(read("${args[1]}/audits/catalog/fixture-migration.json"))
             Files.writeString(
                 root.resolve(CaseManifests.PATH),
-                AuditJson.write(CaseManifests.capture(root, ledger)),
+                AuditJson.write(Candidates.manifest(root, ledger)),
             )
         }
         else -> throw IllegalArgumentException(USAGE)

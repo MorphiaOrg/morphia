@@ -1,0 +1,303 @@
+{
+  "schemaVersion": 1,
+  "bindings": [
+    {
+      "operator": "$add",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.MathExpressions",
+      "method": "add",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$bitAnd",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.MathExpressions",
+      "method": "bitAnd",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$bitOr",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.MathExpressions",
+      "method": "bitOr",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$concat",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "concat",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$dateDiff",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateDiff",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "dev.morphia.aggregation.expressions.TimeUnit"
+      ],
+      "arguments": [
+        "startDate",
+        "endDate",
+        "unit"
+      ],
+      "options": {
+        "timezone": {
+          "method": "timezone",
+          "parameters": [
+            "dev.morphia.aggregation.expressions.impls.Expression"
+          ]
+        }
+      },
+      "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$eq",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "eq",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$filter",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.Expressions",
+      "method": "filter",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "arguments": [
+        "input",
+        "cond"
+      ],
+      "options": {
+        "as": {
+          "method": "as",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "limit": {
+          "method": "limit",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
+      "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$mod",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.MathExpressions",
+      "method": "mod",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$reduce",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "reduce",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "arguments": [
+        "input",
+        "initialValue",
+        "in"
+      ],
+      "options": {},
+      "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$replaceAll",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "replaceAll",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "arguments": [
+        "input",
+        "find",
+        "replacement"
+      ],
+      "options": {},
+      "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$replaceOne",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "replaceOne",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "arguments": [
+        "input",
+        "find",
+        "replacement"
+      ],
+      "options": {},
+      "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$toString",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.TypeExpressions",
+      "method": "toString",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$addFields",
+      "position": "STAGE",
+      "form": "FIELDS",
+      "owner": "dev.morphia.aggregation.stages.AddFields",
+      "method": "addFields",
+      "parameters": [],
+      "fields": {
+        "value": {
+          "method": "field",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        }
+      },
+      "varargs": false,
+      "arguments": [],
+      "options": {}
+    },
+    {
+      "operator": "$project",
+      "position": "STAGE",
+      "form": "PROJECTION",
+      "owner": "dev.morphia.aggregation.stages.Projection",
+      "method": "project",
+      "parameters": [],
+      "fields": {
+        "include": {
+          "method": "include",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "exclude": {
+          "method": "exclude",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "suppressId": {
+          "method": "suppressId",
+          "parameters": []
+        },
+        "value": {
+          "method": "include",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        }
+      },
+      "varargs": false,
+      "arguments": [],
+      "options": {}
+    },
+    {
+      "operator": "$set",
+      "position": "STAGE",
+      "form": "FIELDS",
+      "owner": "dev.morphia.aggregation.stages.Set",
+      "method": "set",
+      "parameters": [],
+      "fields": {
+        "value": {
+          "method": "field",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        }
+      },
+      "varargs": false,
+      "arguments": [],
+      "options": {}
+    }
+  ]
+}

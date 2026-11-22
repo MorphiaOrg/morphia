@@ -357,6 +357,29 @@ A candidate records:
 7. **Bindings and generator.** Emit Java and `scenario.json` for unowned examples, as a candidate
    only until it is integrated and promoted through slice 6. The first family is the one with the
    most unowned, environment-independent examples at that time.
+   - **Inventory:** `fetch.py current` lists every operator page at one mongodb/docs commit and
+     `fetch.py pages` fetches them; `GenerateMainKt inventory` writes
+     `audits/catalog/documented-examples.json`, matching each example to its owner by title, or by
+     its action text when the page renamed it since the fixture was written. Statuses are `OWNED`,
+     `UNOWNED`, `UNNAMED` (a generic title) and `AMBIGUOUS` (a shared title or name, or several
+     owners). Unowned examples keep their source text, so generation never reads a page. At
+     `e4b0c153` the inventory reads 197 pages: 300 examples are owned, 32 unowned and 11 unnamed.
+     The other 103 pages hold their examples in tested code-example snippets
+     (`.. input:: /code-examples/...`), which the extractor cannot resolve yet; they include most
+     stage pages.
+   - **Bindings:** `audits/catalog/dsl-bindings.json`, in four forms (positional, named with
+     chained options, projection, fields). `GenerateMainKt candidate` checks every binding against
+     `MorphiaApiInventory` of core's current source before generating.
+   - **Generator:** `CaseGenerator` emits one class per operator under
+     `dev.morphia.test.generated.<family>` (between `spotless:off` and `spotless:on`, since the
+     manifest pins the bytes) and a scenario per case; anything else is a gap naming its reason or
+     its first unbound node, written beside the candidate as `gaps.json`.
+     `audits/catalog/generation-review.json` names the generated families (expressions first) and
+     the reviewed exclusions.
+   - **First run:** four expressions cases generated and integrated. `$add`'s passes; `$bitOr`'s and
+     `$dateDiff`'s fail only the published check, because their pages print the wrong results, and
+     `$filter`'s `$$IDX` needs a newer server than the tests run. Those three are excluded with
+     their evidence.
 Each slice's acceptance: its cases pass under both mappers; no generated test lacks a real DSL body;
 a second generation run changes no file; and the coverage report counts a case as supported only
 when its checks pass, showing every missing check with its reason.

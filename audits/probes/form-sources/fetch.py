@@ -18,6 +18,11 @@ This is the only networked step of the form migration. It never edits the reposi
       fixture was written from its page and never edited to match Morphia: the candidates for
       its pinned reference.
 
+  fetch.py current <out.json> [commit]
+      Every operator page of the manual at one mongodb/docs commit (default: the head of the
+      default branch), for the generator's inventory of documented examples. Writes a sources
+      file that `pages` fetches.
+
   fetch.py pages <sources.json> <pages-dir>
       Fetch every page named by a candidates or review file, plus its absolute
       `.. include::` targets (recursively), at the exact recorded commit, into
@@ -117,6 +122,27 @@ def search(root, which, out, selected):
                        "source": {"commit": docs, "path": path, "relation": relation}})
     with open(out, "w") as handle:
         json.dump({"schemaVersion": 1, "candidates": result}, handle, indent=2)
+        handle.write("\n")
+
+
+CURRENT_DIRECTORIES = ("aggregation", "query", "update")
+
+
+def current(out, commit=None):
+    if commit is None:
+        branch = run("gh", "api", f"repos/{REPOSITORY}", "--jq", ".default_branch").strip()
+        commit = run("gh", "api", f"repos/{REPOSITORY}/commits/{branch}", "--jq", ".sha").strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        sys.exit(f"Not a full commit SHA: {commit}")
+    result = []
+    for directory in CURRENT_DIRECTORIES:
+        folder = f"content/manual/manual/source/reference/operator/{directory}"
+        names = run("gh", "api", f"repos/{REPOSITORY}/contents/{folder}?ref={commit}",
+                    "--jq", '.[] | select(.type == "file") | .name').split()
+        result += [{"source": {"commit": commit, "path": f"{folder}/{name}"}}
+                   for name in sorted(names) if name.endswith(".txt")]
+    with open(out, "w") as handle:
+        json.dump({"schemaVersion": 1, "commit": commit, "pages": result}, handle, indent=2)
         handle.write("\n")
 
 
@@ -293,7 +319,8 @@ def prefill(pages):
 def pages(sources, directory):
     prefill(directory)
     data = json.load(open(sources))
-    entries = data.get("candidates", []) + data.get("declarations", []) + data.get("unresolved", [])
+    entries = (data.get("candidates", []) + data.get("declarations", []) + data.get("unresolved", [])
+               + data.get("pages", []))
     for entry in entries:
         fetch(entry["source"]["commit"], entry["source"]["path"], directory)
 
@@ -303,6 +330,8 @@ if __name__ == "__main__":
         candidates(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5:] or ("MORPHIA_FORM",))
     elif len(sys.argv) == 5 and sys.argv[1] == "references" and sys.argv[3] in ("first", "last"):
         references(sys.argv[2], sys.argv[3], sys.argv[4])
+    elif len(sys.argv) in (3, 4) and sys.argv[1] == "current":
+        current(*sys.argv[2:])
     elif len(sys.argv) == 4 and sys.argv[1] == "pages":
         pages(sys.argv[2], sys.argv[3])
     else:

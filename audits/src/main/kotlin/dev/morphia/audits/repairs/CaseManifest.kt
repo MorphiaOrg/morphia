@@ -30,12 +30,15 @@ object CaseManifests {
      * The manifest for the cases in [ledger]: each case, its scenario (generated from the override)
      * and, for a migrated case, its test source (a moved handwritten body, so protected). A file in
      * [contents] (by repository path) is hashed from there rather than from disk, so a candidate
-     * can describe files it has not written.
+     * can describe files it has not written. [generated] cases and their [generatedFiles]
+     * (scenarios and test classes, by repository path) are listed beside the ledger's.
      */
     fun capture(
         repository: Path,
         ledger: FixtureMigrationLedger,
         contents: Map<String, ByteArray> = emptyMap(),
+        generated: List<ManifestCase> = emptyList(),
+        generatedFiles: List<String> = emptyList(),
     ): CaseManifest {
         val root = repository.toRealPath()
         val cases =
@@ -44,7 +47,7 @@ object CaseManifests {
                     "${it.fixture}: scenario outside core"
                 }
                 ManifestCase(it.fixture, it.kind, it.scenario.removePrefix(resources), it.test)
-            }
+            } + generated
         val files =
             ledger.migrations
                 .flatMap { migrated ->
@@ -56,6 +59,7 @@ object CaseManifests {
                     if (migrated.kind == CONVERTED) listOf(migrated.scenario to "GENERATED")
                     else listOf(migrated.scenario to "GENERATED", source to "PROTECTED")
                 }
+                .plus(generatedFiles.map { it to "GENERATED" })
                 .plus(protectedResources(root).map { it to "PROTECTED" })
                 .distinct()
                 .map { (path, owner) ->

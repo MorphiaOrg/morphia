@@ -25,6 +25,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/acosh/inverseHyperbolicCosineInRadians/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestAcosh#testInverseHyperbolicCosineInRadians"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/add/addNonIntegerValuesToADate",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/add/addNonIntegerValuesToADate/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestAdd#addNonIntegerValuesToADate"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/add/addNumbers",
     "scenario" : "/dev/morphia/test/aggregation/expressions/add/addNumbers/scenario.json",
@@ -1731,6 +1736,10 @@
     "test" : "dev.morphia.test.query.updates.TestSort#testUseSortWithOtherPushModifiers"
   } ],
   "files" : [ {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestAdd.java",
+    "sha256" : "0a3bed7e8749f53389cb2e7934de336864e4e47766d612e4b2cddf5738aa91af"
+  }, {
     "owner" : "PROTECTED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestRound.java",
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
@@ -2834,6 +2843,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/unwind/unwindArray/scenario.json",
     "sha256" : "0c1bcab16158b08f1bc6cc8f58ed4de8f566a7028ba0b919de4fc223539f00ee"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/add/addNonIntegerValuesToADate/scenario.json",
+    "sha256" : "a8a5d9b730661bb7a2b4e5f9b8be75a967708b4d55c62737784210fbfe16ec2a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",

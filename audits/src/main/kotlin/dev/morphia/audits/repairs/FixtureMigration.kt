@@ -98,6 +98,7 @@ data class CutoverReport(
 
 const val MIGRATED = "MIGRATED"
 const val CONVERTED = "CONVERTED"
+const val GENERATED = "GENERATED"
 
 object FixtureMigration {
     private const val resources = "core/src/test/resources/dev/morphia/test/"
@@ -111,7 +112,8 @@ object FixtureMigration {
             "Not an operator fixture: $fixture"
         }
         return when (kind) {
-            MIGRATED ->
+            MIGRATED,
+            GENERATED ->
                 "${resources}generated/fixtures/${segments.drop(1).joinToString("/")}/scenario.json"
             CONVERTED -> "$resources$fixture/scenario.json"
             else -> throw IllegalArgumentException("Unknown migration kind $kind")

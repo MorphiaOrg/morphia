@@ -692,3 +692,17 @@ the tests owning its cases under Critter and then reflection, and writes `<out>/
 same manifest digest and every protected file unchanged (uncommitted edits included). It deletes a
 stale file only while it still has its recorded hash, refuses to overwrite a file the manifest does
 not own, and restores every original if any change fails.
+
+## Generated cases
+
+`fetch.py current <out.json>` lists every operator page at one mongodb/docs commit, and
+`fetch.py pages <out.json> <pages>` fetches them. `GenerateMainKt inventory <root> <pages> <out.json>`
+then writes `audits/catalog/documented-examples.json`, which records every example's owner and the
+source text of the unowned ones.
+
+`GenerateMainKt candidate <root> <out> <core-classpath-file>` checks `audits/catalog/dsl-bindings.json`
+against core's current source (pass `./mvnw dependency:build-classpath -pl :morphia-core` output, and
+build core first), then generates the families that `audits/catalog/generation-review.json` names into
+`<out>`, with `<out>/gaps.json` listing every example it could not generate and why. `integrate` and
+`promote` then take the candidate into the checkout. A case that fails integration is excluded in the
+review with its evidence, never generated looser.
