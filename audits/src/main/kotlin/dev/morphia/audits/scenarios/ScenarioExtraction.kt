@@ -210,6 +210,10 @@ object ScenarioExtraction {
                         }
                 )
                 require(policy.additionalShellLanguages.all { it in setOf("bash", "sh") })
+                require(
+                    policy.unlabeledLanguage == null ||
+                        policy.unlabeledLanguage in p.referenceLanguages
+                )
                 require(policy.scenarioTabs.all { it.matches(Regex("[A-Za-z0-9][A-Za-z0-9_.-]*")) })
                 require(
                     policy.scenarioTabs
@@ -373,6 +377,16 @@ object ScenarioExtraction {
             return report
         }
 
+        /** The language (or other) choices a selected-content block is shown for. */
+        fun selections(container: ScenarioContainer): List<String?> =
+            container.attributes["selections"]?.let {
+                try {
+                    AuditJson.textValues(it).ifEmpty { listOf(null) }
+                } catch (_: Exception) {
+                    listOf(null)
+                }
+            } ?: listOf(null)
+
         fun value(values: Map<String, String>, key: String): String? =
             values[key]?.let {
                 try {
@@ -496,7 +510,16 @@ object ScenarioExtraction {
                     "step",
                     "steps",
                     "list-table",
+                    "composable-tutorial",
+                    "selected-content",
+                    // Shared content a page pulls in from an include.
+                    "extract",
                 )
+            // A composable tutorial's selected content names its selection the way a tab does.
+            val selections =
+                containers
+                    .filter { it.kind == "directive" && it.name == "selected-content" }
+                    .flatMap { selections(it) }
             val tabs =
                 containers
                     .filter {
@@ -504,7 +527,7 @@ object ScenarioExtraction {
                             it.name == "tab" &&
                             it.domain in setOf(null, "", "mongodb", "std")
                     }
-                    .map { value(it.options, "tabid") }
+                    .map { value(it.options, "tabid") } + selections
             if (tabs.any { it in rule.foreignTabs }) return ScenarioVariant.FOREIGN
             if (
                 containers.any {
@@ -525,7 +548,12 @@ object ScenarioExtraction {
             val languages =
                 code
                     .filter { it.role in setOf(ProgramRole.ACTION, ProgramRole.SETUP) }
-                    .map { it.language }
+                    // JSON is data a page shows or seeds; `none` turns highlighting off.
+                    .filter { it.language != "json" }
+                    .map {
+                        it.language?.takeUnless { l -> l == "none" }
+                            ?: rule.sectionAssembly?.unlabeledLanguage
+                    }
             if (languages.isEmpty() || languages.any { it == null })
                 return ScenarioVariant.UNRESOLVED
             if (
@@ -611,7 +639,9 @@ object ScenarioExtraction {
                 locator,
                 source,
                 sha(source),
-                value(node.attributes, "lang"),
+                // The parser leaves code-block options after the language: `javascript\n:copyable:
+                // true`.
+                value(node.attributes, "lang")?.lineSequence()?.first()?.trim()?.ifEmpty { null },
                 node.attributes,
                 node.origin,
                 roles.singleOrNull(),
@@ -653,6 +683,7 @@ object ScenarioExtraction {
             val owners = linkedMapOf<List<Int>, Owner>()
             val pendingIo = mutableListOf<() -> Unit>()
             var sharedSetup = emptyList<ScenarioCode>()
+            var sharedSetupSkipped = emptyList<SkippedCode>()
             var setupProblem: String? = null
             val ownedResources =
                 (listOf(prefix + page.id) +
@@ -680,7 +711,11 @@ object ScenarioExtraction {
                     if (node.kind !in setOf("root", "section", "code")) containers + container(node)
                     else containers
                 val nextOwner =
-                    if (node.kind == "section" || (node.kind == "directive" && node.name == "tab"))
+                    if (
+                        node.kind == "section" ||
+                            (node.kind == "directive" &&
+                                node.name in setOf("tab", "selected-content"))
+                    )
                         locator
                     else owner
                 if (
@@ -756,9 +791,17 @@ object ScenarioExtraction {
                 val selectedSetup = mutableSetOf<Owner>()
                 val rawSetup = mutableListOf<ScenarioCode>()
                 policy.sharedSetupSections.forEach { anchor ->
+                    val all = owners.values.filter { it.sections.lastOrNull()?.anchor == anchor }
+                    // A section with one selected-content branch per language shares its shell
+                    // one; when only other languages show code, it shares nothing.
                     val matches =
-                        owners.values.filter { it.sections.lastOrNull()?.anchor == anchor }
-                    if (matches.size != 1) {
+                        all.filter {
+                            ownVariant(rule, it.blocks, it.containers, true) !=
+                                ScenarioVariant.FOREIGN
+                        }
+                    if (all.isNotEmpty() && matches.isEmpty()) {
+                        // The foreign branches stay ordinary foreign groups.
+                    } else if (matches.size != 1) {
                         setupProblem = "MISSING_OR_AMBIGUOUS_SHARED_SETUP"
                         problem(
                             requireNotNull(setupProblem),
@@ -772,14 +815,18 @@ object ScenarioExtraction {
                 }
                 if (rawSetup.isNotEmpty()) {
                     val assignment = SectionPrograms.shared(rawSetup, rule.dialect)
+                    sharedSetupSkipped = assignment.skipped
+                    // Sample documents that seed data are data, whatever their highlighting.
                     val knownReference =
-                        rawSetup.all {
-                            variant(
-                                rule,
-                                listOf(it.copy(role = ProgramRole.ACTION)),
-                                it.containers,
-                            ) == ScenarioVariant.REFERENCE
-                        }
+                        assignment.blocks
+                            .filter { it.format == null }
+                            .all {
+                                variant(
+                                    rule,
+                                    listOf(it.copy(role = ProgramRole.ACTION)),
+                                    it.containers,
+                                ) == ScenarioVariant.REFERENCE
+                            }
                     if (assignment.problem != null || !knownReference) {
                         setupProblem = assignment.problem ?: "UNRESOLVED_SHARED_SETUP_LANGUAGE"
                         problem(
@@ -793,43 +840,53 @@ object ScenarioExtraction {
                 owners.values
                     .filter { it !in selectedSetup }
                     .forEach { owner ->
-                        require(++groups <= limits.maximumGroups) {
-                            "Scenario group budget exceeded"
-                        }
                         val ownVariant = ownVariant(rule, owner.blocks, owner.containers, true)
                         val setup =
                             if (ownVariant == ScenarioVariant.REFERENCE) sharedSetup
                             else emptyList()
-                        chargeSetup(setup)
-                        val assignment =
+                        val assignments =
                             when {
                                 policy.layout == SectionLayout.SOURCE_ONLY ->
-                                    SectionPrograms.Assignment(
-                                        setup + owner.blocks,
-                                        "SOURCE_ONLY_SECTION",
+                                    listOf(
+                                        SectionPrograms.Assignment(
+                                            setup + owner.blocks,
+                                            "SOURCE_ONLY_SECTION",
+                                        )
                                     )
                                 ownVariant == ScenarioVariant.FOREIGN ->
-                                    SectionPrograms.Assignment(owner.blocks, "FOREIGN_SECTION")
+                                    listOf(
+                                        SectionPrograms.Assignment(owner.blocks, "FOREIGN_SECTION")
+                                    )
                                 ownVariant == ScenarioVariant.UNRESOLVED ->
-                                    SectionPrograms.Assignment(
-                                        owner.blocks,
-                                        "UNRESOLVED_SECTION_LANGUAGE",
+                                    listOf(
+                                        SectionPrograms.Assignment(
+                                            owner.blocks,
+                                            "UNRESOLVED_SECTION_LANGUAGE",
+                                        )
                                     )
                                 else -> SectionPrograms.assign(setup, owner.blocks, rule.dialect)
                             }
-                        emit(
-                            rule,
-                            page,
-                            owner.sections,
-                            owner.containers,
-                            owner.source,
-                            emptyList(),
-                            assignment.blocks,
-                            false,
-                            setupProblem ?: assignment.problem,
-                            sectionOwned = true,
-                            sharedSetupBlocks = setup.size,
-                        )
+                        assignments.forEach { assignment ->
+                            // Each action a section splits into is a group of its own.
+                            require(++groups <= limits.maximumGroups) {
+                                "Scenario group budget exceeded"
+                            }
+                            chargeSetup(setup)
+                            emit(
+                                rule,
+                                page,
+                                owner.sections,
+                                owner.containers,
+                                owner.source,
+                                emptyList(),
+                                assignment.blocks,
+                                false,
+                                setupProblem ?: assignment.problem,
+                                sectionOwned = true,
+                                sharedSetupBlocks = setup.size,
+                                skipped = assignment.skipped,
+                            )
+                        }
                     }
                 pendingIo.forEach { it() }
             }
@@ -893,6 +950,7 @@ object ScenarioExtraction {
                     sourceDiagnostics,
                     complete,
                     sharedSetup,
+                    sharedSetupSkipped,
                 )
         }
 
@@ -955,14 +1013,17 @@ object ScenarioExtraction {
             containers: List<ScenarioContainer>,
             sectionOwned: Boolean,
         ): ScenarioVariant {
-            // The reviewed layout declares its output tail independently of input semantics.
+            // Documents are data: the code around them decides the language, wherever they sit.
             val inputs =
                 if (
                     sectionOwned &&
-                        rule.sectionAssembly?.layout == SectionLayout.COMMANDS_THEN_RESULT &&
-                        blocks.size >= 2
+                        rule.sectionAssembly?.layout == SectionLayout.COMMANDS_THEN_RESULT
                 )
-                    blocks.dropLast(1)
+                    blocks
+                        .filter {
+                            it.role != ProgramRole.EXPECTED && !SectionPrograms.isDocument(it)
+                        }
+                        .ifEmpty { blocks }
                 else blocks
             return variant(
                 rule,
@@ -984,6 +1045,7 @@ object ScenarioExtraction {
             ownershipProblem: String?,
             sectionOwned: Boolean = false,
             sharedSetupBlocks: Int = 0,
+            skipped: List<SkippedCode> = emptyList(),
         ) {
             val scenarioTabs =
                 containers.filter {
@@ -1008,7 +1070,13 @@ object ScenarioExtraction {
                     .takeIf { it.isNotBlank() }
             val ownBlocks = assembledBlocks.drop(sharedSetupBlocks)
             val variant = ownVariant(rule, ownBlocks, containers, sectionOwned)
-            val blocks = if (variant == ScenarioVariant.REFERENCE) assembledBlocks else ownBlocks
+            var blocks = if (variant == ScenarioVariant.REFERENCE) assembledBlocks else ownBlocks
+            var skippedCode = skipped
+            if (variant == ScenarioVariant.REFERENCE) {
+                val (seeded, unused) = SectionPrograms.resolveSeeds(blocks, rule.dialect)
+                blocks = seeded
+                skippedCode = skippedCode + unused
+            }
             if (!sectionOwned && variant == ScenarioVariant.REFERENCE)
                 chargeSetup(assembledBlocks.take(sharedSetupBlocks))
             val id =
@@ -1018,7 +1086,15 @@ object ScenarioExtraction {
                             rule.id,
                             sections.map { listOf(it.anchor, it.explicitLabels) },
                             attachedLabels,
-                            containers.map { listOf(it.name, it.argument, it.options) },
+                            // Selections tell apart branches that show the same code.
+                            containers.map {
+                                listOf(
+                                    it.name,
+                                    it.argument,
+                                    it.options,
+                                    it.attributes["selections"],
+                                )
+                            },
                             blocks.map {
                                 listOf(it.role, it.sha256, it.snippets.map { s -> s.identity })
                             },
@@ -1072,31 +1148,50 @@ object ScenarioExtraction {
                     blocks
                         .filter { it.role == ProgramRole.EXPECTED }
                         .all {
+                            // Pages label printed results as JSON, or not at all.
                             it.language in
                                 rule.referenceLanguages +
-                                    rule.sectionAssembly?.additionalShellLanguages.orEmpty()
+                                    rule.sectionAssembly?.additionalShellLanguages.orEmpty() +
+                                    listOf(null, "json", "none")
                         }
-            val program =
-                if (canNormalize)
-                    ShellPrograms.normalize(
-                        ShellProgramRequest(
-                            dialect = rule.dialect,
-                            blocks =
-                                blocks.mapIndexed { i, b ->
-                                    ProgramBlock(
-                                        "block-$i",
-                                        b.source,
-                                        requireNotNull(b.role),
-                                        format =
-                                            if (b.role == ProgramRole.EXPECTED)
+            fun normalize(blocks: List<ScenarioCode>) =
+                ShellPrograms.normalize(
+                    ShellProgramRequest(
+                        dialect = rule.dialect,
+                        blocks =
+                            blocks.mapIndexed { i, b ->
+                                ProgramBlock(
+                                    "block-$i",
+                                    b.source,
+                                    requireNotNull(b.role),
+                                    format =
+                                        b.format
+                                            ?: if (b.role == ProgramRole.EXPECTED)
                                                 ProgramFormat.SHELL_RESULTS
                                             else ProgramFormat.SHELL,
-                                    )
-                                },
-                            resultOrder = rule.resultOrder,
-                        )
+                                    namespace = b.namespace,
+                                )
+                            },
+                        resultOrder = rule.resultOrder,
                     )
-                else null
+                )
+            var program = if (canNormalize) normalize(blocks) else null
+            // A printed result the grammar can't read (a truncated `...` listing) leaves the
+            // example serialization-only rather than losing it.
+            val result = blocks.lastOrNull()?.takeIf { it.role == ProgramRole.EXPECTED }
+            if (
+                sectionOwned &&
+                    result != null &&
+                    program != null &&
+                    program.state != ShellLiteralState.NORMALIZED
+            ) {
+                val without = normalize(blocks.dropLast(1))
+                if (without.state == ShellLiteralState.NORMALIZED) {
+                    program = without
+                    blocks = blocks.dropLast(1)
+                    skippedCode = skippedCode + SkippedCode(result, "UNREADABLE_RESULT")
+                }
+            }
             program?.let {
                 programBytes += AuditJson.requireMaximumSize(it, limits.maximumReportBytes)
                 require(programBytes <= limits.maximumReportBytes) {
@@ -1145,6 +1240,7 @@ object ScenarioExtraction {
                             "UNSUPPORTED_IO_OR_OUTPUT_LANGUAGE"
                         else null,
                     naming,
+                    skippedCode,
                 )
         }
 

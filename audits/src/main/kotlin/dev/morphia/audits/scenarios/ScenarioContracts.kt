@@ -36,6 +36,8 @@ data class SectionAssemblyPolicy(
     val scenarioTabs: List<String> = emptyList(),
     /** Explicit legacy highlighting aliases, still parsed with the closed shell grammar. */
     val additionalShellLanguages: List<String> = emptyList(),
+    /** The reviewed language of code the page leaves unlabeled, when the page has such code. */
+    val unlabeledLanguage: String? = null,
 )
 
 enum class SectionLayout {
@@ -82,6 +84,10 @@ data class ScenarioCode(
     val role: ProgramRole?,
     val containers: List<ScenarioContainer>,
     val snippets: List<ScenarioSnippet>,
+    /** How the program reads this block, when not by its role: a sample document seeds data. */
+    val format: ProgramFormat? = null,
+    /** The collection a sample document seeds. */
+    val namespace: LogicalNamespace? = null,
 )
 
 enum class ScenarioVariant {
@@ -104,7 +110,12 @@ data class ExtractedScenario(
     val program: ShellProgramResult?,
     val normalizationProblem: String?,
     val naming: NamingScenario?,
+    /** Selected source the program leaves out, each with the reason. */
+    val skipped: List<SkippedCode> = emptyList(),
 )
+
+/** Source a section shows that no program role fits, such as a syntax template. */
+data class SkippedCode(val code: ScenarioCode, val reason: String)
 
 data class ScenarioExtractionProblem(
     val code: String,
@@ -133,6 +144,8 @@ data class ExtractedScenarioPage(
     val namingComplete: Boolean,
     /** Declared setup is retained even if all consumers disappear. */
     val sharedSetup: List<ScenarioCode> = emptyList(),
+    /** Source in the shared setup sections that isn't setup, each with the reason. */
+    val sharedSetupSkipped: List<SkippedCode> = emptyList(),
 )
 
 enum class ScenarioExtractionState {

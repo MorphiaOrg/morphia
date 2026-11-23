@@ -2761,3 +2761,8 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Per the user: the Atlas Search and hybrid-search stages, the diagnostic and administration stages,
   and the Queryable Encryption operators are excluded with their reasons (32 exclusions with facets);
   14 missing APIs remain, all new server expressions.
+- Parser retirement, step 1 (section roles): section assembly classifies each block by the shell
+  grammar instead of accepting one trailing command and result. Sample documents seed where nothing
+  inserts, each action is its own scenario, and skipped source is recorded with a reason. Over all
+  297 operator pages (docs e4b0c153) with a draft plan, 605 scenarios normalize, against 582
+  examples in the legacy inventory; 508 of those match by title.

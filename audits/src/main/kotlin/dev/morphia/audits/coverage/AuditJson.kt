@@ -222,6 +222,13 @@ object AuditJson {
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))
 
+    /** The values of a JSON object's members, null where a value isn't text. */
+    fun textValues(json: String): List<String?> =
+        mapper.readTree(json).let { tree ->
+            require(tree.isObject) { "Expected a JSON object" }
+            tree.properties().map { (_, value) -> value.textValue() }
+        }
+
     private fun <T> read(json: String, type: Class<T>): T {
         val tree = requireNotNull(mapper.readTree(json)) { "Empty JSON input" }
         require(

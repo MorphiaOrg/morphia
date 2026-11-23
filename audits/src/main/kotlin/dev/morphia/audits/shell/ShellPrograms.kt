@@ -44,6 +44,7 @@ object ShellPrograms {
             result.state,
             result.commands.map { it.id.block to it.operation.kind },
             result.problems,
+            result.commands.map { it.id.block to it.namespace },
         )
     }
 
@@ -51,6 +52,7 @@ object ShellPrograms {
         val state: ShellLiteralState,
         val operations: List<Pair<String, ShellOperationKind>>,
         val problems: List<ProgramProblem>,
+        val namespaces: List<Pair<String, LogicalNamespace>> = emptyList(),
     )
 
     private class Stop(
@@ -948,20 +950,40 @@ object ShellPrograms {
                 unit.namespace
                     ?: stop("FRAGMENT_NAMESPACE", "Legacy setup/action needs an explicit namespace")
             val parsed = LegacyDocuments.parse(unit.source, limits.values)
-            if (parsed.state != ShellLiteralState.NORMALIZED)
-                stop(
-                    "LEGACY_DOCUMENTS",
-                    parsed.problems.joinToString { "${it.code}: ${it.message}" },
-                )
+            val documents =
+                if (parsed.state == ShellLiteralState.NORMALIZED) parsed.documents
+                else
+                    shellDocuments(unit.source)
+                        ?: stop(
+                            "LEGACY_DOCUMENTS",
+                            parsed.problems.joinToString { "${it.code}: ${it.message}" },
+                        )
             val op =
                 if (unit.role == ProgramRole.SETUP)
-                    InsertOperation("seed", true, parsed.documents.map { snapshot(it) }, null)
+                    InsertOperation("seed", true, documents.map { snapshot(it) }, null)
                 else
                     AggregateOperation(
-                        snapshot(pipeline(BsonArray(parsed.documents), EmptyExpression())),
+                        snapshot(pipeline(BsonArray(documents), EmptyExpression())),
                         null,
                     )
             add(Planned(namespace, op, emptyList()))
+        }
+
+        /**
+         * A comma-separated document list in the shell's own value grammar, which also reads the
+         * printed constructors (`Decimal128(...)`) the extended JSON reader rejects.
+         */
+        fun shellDocuments(source: String): List<BsonDocument>? {
+            val value =
+                ShellLiterals.normalize("[" + source + "\n]", request.dialect, limits.values)
+                    .takeIf { it.state == ShellLiteralState.NORMALIZED }
+                    ?.value as? BsonArray ?: return null
+            val documents =
+                value.values.singleOrNull()?.takeIf { it is BsonArray }?.asArray()?.values
+                    ?: value.values
+            return documents
+                .takeIf { it.isNotEmpty() && it.all { d -> d is BsonDocument } }
+                ?.map { it.asDocument() }
         }
 
         fun expected(unit: ProgramBlock) {

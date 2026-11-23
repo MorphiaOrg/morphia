@@ -4,58 +4,218 @@ import dev.morphia.audits.shell.*
 
 /**
  * A reviewed commands-then-result layout plus closed parsing establishes roles, never proximity
- * alone.
+ * alone. Each block is classified by what the shell grammar makes of it in the context of the
+ * blocks accepted before it: setup (inserts, indexes and declarations), an action, the published
+ * result directly after an action, a sample document, or source the program skips (a syntax
+ * template, a second command in one block), recorded with its reason.
+ *
+ * A sample document seeds the collection of the action that follows it only where nothing the
+ * scenario runs inserts data; otherwise it illustrates and is skipped.
  */
 internal object SectionPrograms {
     private val setupKinds = setOf(ShellOperationKind.INSERT, ShellOperationKind.INDEX)
+    // Syntax templates name their operands in angle brackets: `{ $add: [ <expression1>, ... ] }`.
+    private val placeholder = Regex("<[A-Za-z][^<>\n]*>")
+    private val quoted = Regex("""'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"""")
 
-    data class Assignment(val blocks: List<ScenarioCode>, val problem: String?)
+    // Only source the grammar rejects is a template, and a quoted `'<value>'` is a string.
+    private fun template(source: String) = placeholder.containsMatchIn(source.replace(quoted, ""))
 
-    fun shared(blocks: List<ScenarioCode>, dialect: ShellDialect): Assignment {
-        if (blocks.isEmpty()) return Assignment(blocks, "EMPTY_SHARED_SETUP")
-        val inspection = inspect(blocks, dialect)
-        if (
-            inspection.state != ShellLiteralState.NORMALIZED ||
-                inspection.operations.any { it.second !in setupKinds }
-        )
-            return Assignment(blocks, "UNSUPPORTED_SHARED_SETUP")
-        return Assignment(blocks.map { it.copy(role = ProgramRole.SETUP) }, null)
+    data class Assignment(
+        val blocks: List<ScenarioCode>,
+        val problem: String?,
+        val skipped: List<SkippedCode> = emptyList(),
+    )
+
+    private sealed interface Kind {
+        data class Setup(val inserts: Boolean) : Kind
+
+        data class Action(val update: Boolean, val namespace: LogicalNamespace) : Kind
+
+        data object Document : Kind
+
+        data class Skip(val reason: String) : Kind
     }
 
+    /**
+     * The setup an examples section shares; its commands and anything unreadable are skipped, with
+     * reasons. Its documents are candidate seeds; [resolveSeeds] decides per scenario.
+     */
+    fun shared(blocks: List<ScenarioCode>, dialect: ShellDialect): Assignment {
+        if (blocks.isEmpty()) return Assignment(blocks, "EMPTY_SHARED_SETUP")
+        val kinds = classify(emptyList(), blocks, dialect)
+        val setup =
+            blocks.mapIndexedNotNull { i, block ->
+                when (kinds[i]) {
+                    is Kind.Setup -> block.copy(role = ProgramRole.SETUP)
+                    Kind.Document -> seed(block)
+                    else -> null
+                }
+            }
+        val skipped =
+            blocks.mapIndexedNotNull { i, block ->
+                when (val kind = kinds[i]) {
+                    is Kind.Skip -> SkippedCode(block, kind.reason)
+                    is Kind.Action -> SkippedCode(block, "SHARED_SECTION_COMMAND")
+                    else -> null
+                }
+            }
+        return Assignment(setup, null, skipped)
+    }
+
+    /**
+     * One assignment per action the section owns. An action's result is the document-shaped block
+     * directly after it; without one the scenario has no published result. The documents before an
+     * action are its candidate seeds.
+     */
     fun assign(
         shared: List<ScenarioCode>,
         own: List<ScenarioCode>,
         dialect: ShellDialect,
-    ): Assignment {
-        val all = shared + own
-        if (own.size < 2) return Assignment(all, "MISSING_COMMAND_OR_RESULT")
-        // The selected policy declares a single trailing published result. No parser fallback
-        // chooses it.
-        val input = all.dropLast(1)
-        val inspection = inspect(input, dialect)
-        if (inspection.state != ShellLiteralState.NORMALIZED)
-            return Assignment(all, "UNSUPPORTED_SECTION_INPUT")
-        val byBlock = inspection.operations.groupBy({ it.first }, { it.second })
-        val actionIds = inspection.operations.filter { it.second !in setupKinds }.map { it.first }
-        if (actionIds.size != 1) return Assignment(all, "AMBIGUOUS_SECTION_ACTION")
-        val action = actionIds.single()
-        val actionIndex = input.indices.single { "block-$it" == action }
-        if (byBlock.getValue(action).any { it in setupKinds } || actionIndex != input.lastIndex)
-            return Assignment(all, "MIXED_SECTION_ROLES")
-        return Assignment(
-            all.mapIndexed { i, block ->
-                block.copy(
-                    role =
+    ): List<Assignment> {
+        val kinds = classify(shared.filter { it.format == null }, own, dialect)
+        val actions = own.indices.filter { kinds[it] is Kind.Action }
+        // What a page prints after an update is the read it runs next, not the update's result.
+        fun updated(i: Int) = (kinds.getOrNull(i - 1) as? Kind.Action)?.update == true
+        fun result(i: Int) = kinds[i] == Kind.Document && kinds.getOrNull(i - 1) is Kind.Action
+        // Setup and seeds only reach the actions after them.
+        fun trailing(i: Int) = actions.none { it > i }
+        val skipped =
+            own.mapIndexedNotNull { i, block ->
+                when (val kind = kinds[i]) {
+                    is Kind.Skip -> SkippedCode(block, kind.reason)
+                    Kind.Document ->
                         when {
-                            i == all.lastIndex -> ProgramRole.EXPECTED
-                            i == actionIndex -> ProgramRole.ACTION
-                            else -> ProgramRole.SETUP
+                            updated(i) -> SkippedCode(block, "UPDATE_RESULT")
+                            result(i) -> null
+                            trailing(i) -> SkippedCode(block, "SAMPLE_DOCUMENT")
+                            else -> null
                         }
-                )
-            },
-            null,
-        )
+                    is Kind.Setup ->
+                        if (actions.isNotEmpty() && trailing(i))
+                            SkippedCode(block, "TRAILING_SETUP")
+                        else null
+                    is Kind.Action -> null
+                }
+            }
+        if (actions.isEmpty())
+            return listOf(Assignment(shared + own, "MISSING_COMMAND_OR_RESULT", skipped))
+        return actions.map { action ->
+            // Setup the section shows before this action; earlier actions are other scenarios.
+            val setup =
+                own.indices
+                    .filter { it < action }
+                    .mapNotNull { i ->
+                        when {
+                            kinds[i] is Kind.Setup -> own[i].copy(role = ProgramRole.SETUP)
+                            kinds[i] == Kind.Document && !result(i) -> seed(own[i])
+                            else -> null
+                        }
+                    }
+            val result =
+                own.getOrNull(action + 1)
+                    ?.takeIf { result(action + 1) && !updated(action + 1) }
+                    ?.copy(role = ProgramRole.EXPECTED)
+            // A read after an update in the same section sees the update's effect, which this
+            // scenario doesn't run; the update's own read will cover it.
+            val afterWrite = actions.any { it < action && (kinds[it] as Kind.Action).update }
+            Assignment(
+                shared +
+                    setup +
+                    own[action].copy(role = ProgramRole.ACTION) +
+                    listOfNotNull(result),
+                if (afterWrite) "AFTER_EARLIER_WRITE" else null,
+                skipped,
+            )
+        }
     }
+
+    /**
+     * Settles a scenario's candidate seeds against the setup it actually runs. Where that setup
+     * inserts, the documents only illustrate and are skipped; otherwise they seed the action's
+     * collection.
+     */
+    fun resolveSeeds(
+        blocks: List<ScenarioCode>,
+        dialect: ShellDialect,
+    ): Pair<List<ScenarioCode>, List<SkippedCode>> {
+        val seeds = blocks.filter { it.format != null && it.namespace == null }
+        if (seeds.isEmpty()) return blocks to emptyList()
+        val program = blocks.filter { it.format == null && it.role != ProgramRole.EXPECTED }
+        val inspection = inspect(program, dialect)
+        val action = program.indexOfLast { it.role == ProgramRole.ACTION }
+        val namespace = inspection.namespaces.lastOrNull { it.first == "block-$action" }?.second
+        if (
+            inspection.state != ShellLiteralState.NORMALIZED ||
+                namespace == null ||
+                inspection.operations.any { it.second == ShellOperationKind.INSERT }
+        )
+            return blocks.filterNot { it in seeds } to
+                seeds.map { SkippedCode(it, "SAMPLE_DOCUMENT") }
+        return blocks.map { if (it in seeds) it.copy(namespace = namespace) else it } to emptyList()
+    }
+
+    private fun seed(block: ScenarioCode) =
+        block.copy(role = ProgramRole.SETUP, format = ProgramFormat.LEGACY_DOCUMENTS)
+
+    private fun classify(
+        shared: List<ScenarioCode>,
+        blocks: List<ScenarioCode>,
+        dialect: ShellDialect,
+    ): List<Kind> {
+        val accepted = shared.toMutableList()
+        return blocks.map { block ->
+            val inspection = inspect(accepted + block, dialect)
+            val id = "block-${accepted.size}"
+            val own = inspection.operations.filter { it.first == id }
+            when {
+                inspection.state != ShellLiteralState.NORMALIZED ->
+                    when {
+                        template(block.source) -> Kind.Skip("SYNTAX_TEMPLATE")
+                        expression(block) -> Kind.Skip("OPERATOR_EXPRESSION")
+                        isDocument(block) -> Kind.Document
+                        else -> Kind.Skip("UNSUPPORTED_SOURCE")
+                    }
+                own.isEmpty() ->
+                    if (expression(block)) Kind.Skip("OPERATOR_EXPRESSION")
+                    else if (isDocument(block)) Kind.Document
+                    else Kind.Setup(false).also { accepted += block }
+                own.all { it.second in setupKinds } ->
+                    Kind.Setup(own.any { it.second == ShellOperationKind.INSERT }).also {
+                        accepted += block
+                    }
+                own.count { it.second !in setupKinds } > 1 -> Kind.Skip("SEVERAL_COMMANDS")
+                // One role per block: setup beside an action would be read as part of it.
+                own.any { it.second in setupKinds } -> Kind.Skip("MIXED_SECTION_ROLES")
+                // An action isn't setup for the actions after it, which are other scenarios.
+                else ->
+                    Kind.Action(
+                        own.any { it.second == ShellOperationKind.UPDATE },
+                        inspection.namespaces.last { it.first == id }.second,
+                    )
+            }
+        }
+    }
+
+    // Another language's code can open with a bracket too: a C# `[BsonIgnoreExtraElements]`.
+    private val documentLanguages =
+        setOf(null, "none", "json", "javascript", "js", "shell", "mongosh", "bash", "sh")
+
+    /** A document or document list in a data or shell language: data, not program code. */
+    fun isDocument(block: ScenarioCode) =
+        block.language in documentLanguages &&
+            block.source.replace(leadingComments, "").let {
+                it.startsWith("{") || it.startsWith("[")
+            }
+
+    // `{ $regexMatch: { ... } }` shows an expression; data and results don't lead with an operator.
+    private val operatorKey = Regex("""^\[?\s*\{\s*["']?\$[A-Za-z]""")
+
+    private fun expression(block: ScenarioCode) =
+        isDocument(block) && operatorKey.containsMatchIn(block.source.replace(leadingComments, ""))
+
+    // Pages caption printed results with a comment: `// The result` above the documents.
+    private val leadingComments = Regex("""^(?:\s|//[^\n]*(?:\n|$)|/\*[\s\S]*?\*/)*""")
 
     private fun inspect(blocks: List<ScenarioCode>, dialect: ShellDialect) =
         ShellPrograms.inspect(

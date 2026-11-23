@@ -185,7 +185,7 @@ methods or fixture directories disagree with it.
 | `naming` | Descriptive example names, and the name registry reconciler. | Names: yes. Reconciler: not yet. |
 | `rst`, `model` | The legacy line-based RST extractor. | Yes, until the structured parser replaces it |
 | `sources`, `documents`, `discovery` | Pinned Git source bundles, the Snooty parser adapter, capability discovery. | Yes, weekly |
-| `scenarios` | Structured scenario extraction. | Not yet |
+| `scenarios` | Structured scenario extraction: native input/output groups, and section assembly, which gives each block a role by what the shell grammar makes of it. | Not yet; it replaces `rst` next |
 | `coverage` | Capability catalog and plan contracts, coverage comparison, and `AuditJson`, the strict JSON codec every package uses. | Yes, weekly |
 
 Each package with a command has a `*Main.kt` entry point, run through the exec plugin with

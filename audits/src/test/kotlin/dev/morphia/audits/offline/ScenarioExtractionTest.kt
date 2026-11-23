@@ -910,10 +910,7 @@ class ScenarioExtractionTest {
                             node(
                                 "directive",
                                 name = "input",
-                                children =
-                                    listOf(
-                                        code("db.items.find({});", "javascript\n:broken-option:")
-                                    ),
+                                children = listOf(code("db.items.find({});", "pseudocode")),
                             )
                         )
                 )
@@ -951,7 +948,7 @@ class ScenarioExtractionTest {
                     children =
                         io().children.map {
                             if (it.name == "output")
-                                it.copy(children = listOf(code("[{v:1}]", "json")))
+                                it.copy(children = listOf(code("[{v:1}]", "python")))
                             else it
                         }
                 )
@@ -1124,21 +1121,27 @@ class ScenarioExtractionTest {
     }
 
     @Test
-    fun sharedSetupCannotBeAnActionOrAnUnresolvedLanguage() {
-        for (setup in
-            listOf(code("db.items.find({});"), code("db.items.insertOne({v:1});", "bash"))) {
-            val report =
-                extract(
-                    root(
-                        section("Shared", "shared", setup),
-                        standalone("Read Items", "read", "db.items.find({});", "[]"),
-                    ),
-                    assembledRule(shared = listOf("shared")),
-                )
-            assertEquals(ScenarioExtractionState.PARTIAL, report.state)
-            assertTrue(report.pages.single().unassigned.isNotEmpty())
-            assertTrue(report.scenarios.all { it.naming == null && it.program == null })
-        }
+    fun sharedSetupSkipsCommandsAndRejectsAnUnresolvedLanguage() {
+        fun shared(setup: DocumentNode) =
+            extract(
+                root(
+                    section("Shared", "shared", setup),
+                    standalone("Read Items", "read", "db.items.find({});", "[]"),
+                ),
+                assembledRule(shared = listOf("shared")),
+            )
+        // A command the shared section shows is skipped, with its reason; the consumer still runs.
+        val command = shared(code("db.items.find({});"))
+        assertEquals(ScenarioExtractionState.READY, command.state, command.problems.toString())
+        assertEquals(
+            listOf("SHARED_SECTION_COMMAND"),
+            command.pages.single().sharedSetupSkipped.map { it.reason },
+        )
+        assertNotNull(command.scenarios.single().program)
+        val unresolved = shared(code("db.items.insertOne({v:1});", "bash"))
+        assertEquals(ScenarioExtractionState.PARTIAL, unresolved.state)
+        assertTrue(unresolved.pages.single().unassigned.isNotEmpty())
+        assertTrue(unresolved.scenarios.all { it.naming == null && it.program == null })
         val missing =
             extract(
                 root(standalone("Read Items", "read", "db.items.find({});", "[]")),
@@ -1244,27 +1247,311 @@ class ScenarioExtractionTest {
     }
 
     @Test
-    fun ambiguousCommandsAndPrintedSamplesRemainOwnedWithoutExecutablePlans() {
-        val sources =
-            listOf(
-                listOf("{v:1}", "db.items.find({});", "[{v:1}]"),
-                listOf("db.items.find({});", "db.items.find({v:1});", "[]"),
-                listOf("db.items.insertOne({v:1}); db.items.find({});", "[]"),
-                listOf("db.items.find({});", "const n=1;", "[]"),
-            )
-        for (blocks in sources) {
-            val report =
-                extract(
-                    root(standalone("Read Items", "read", *blocks.toTypedArray())),
+    fun splittingASectionKeepsEachActionIndependentAndCharged() {
+        // Setup beside an action in one block is skipped rather than read as the action.
+        val mixed =
+            extract(
+                    root(
+                        standalone(
+                            "Read Items",
+                            "read",
+                            "db.items.insertOne({v:1}); db.items.find({});",
+                            "[{v:1}]",
+                        )
+                    ),
                     assembledRule(),
                 )
-            assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
-            val scenario = report.scenarios.single()
-            assertNull(scenario.program)
-            assertNotNull(scenario.normalizationProblem)
-            assertNotNull(scenario.naming)
-            assertEquals(blocks, scenario.blocks.map { it.source })
+                .scenarios
+                .single()
+        assertNull(mixed.program)
+        assertEquals(
+            listOf("MIXED_SECTION_ROLES", "SAMPLE_DOCUMENT"),
+            mixed.skipped.map { it.reason },
+        )
+        // Earlier actions don't count toward a later one's program limits.
+        val finds = (1..70).map { "db.items.find({v:$it});" }.toTypedArray()
+        val many = extract(root(standalone("Read Items", "read", *finds)), assembledRule())
+        assertEquals(70, many.scenarios.count { it.program?.state == ShellLiteralState.NORMALIZED })
+        // Each scenario a section splits into is charged against the group budget.
+        val (bundle, document) =
+            fixture(
+                root(
+                    standalone("Read Items", "read", "db.items.find({});", "db.items.find({v:1});")
+                )
+            )
+        assertThrows(IllegalArgumentException::class.java) {
+            ScenarioExtraction.extract(
+                bundle,
+                document,
+                plan(assembledRule()),
+                ScenarioExtractionLimits(maximumGroups = 1),
+            )
         }
+        // So is the shared setup each of them repeats: 26 + 18 + 21 selected, plus 26 twice.
+        val seed = "db.items.insertOne({v:1});"
+        val (sharedBundle, sharedDocument) =
+            fixture(
+                root(
+                    standalone("Shared", "shared", seed),
+                    standalone("Read Items", "read", "db.items.find({});", "db.items.find({v:1});"),
+                )
+            )
+        fun charged(budget: Int) =
+            ScenarioExtraction.extract(
+                sharedBundle,
+                sharedDocument,
+                plan(assembledRule(shared = listOf("shared"))),
+                ScenarioExtractionLimits(maximumCodeCharacters = budget),
+            )
+        assertEquals(2, charged(117).scenarios.size)
+        assertThrows(IllegalArgumentException::class.java) { charged(116) }
+        // A read after an update in the same section depends on it, so it isn't run alone.
+        val reads =
+            extract(
+                    root(
+                        standalone(
+                            "Update Items",
+                            "update",
+                            "db.items.insertOne({v:1});",
+                            "db.items.updateOne({}, {${'$'}set: {v: 2}});",
+                            "db.items.find({});",
+                            "[{v:2}]",
+                        )
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+        val read = reads.single { it.blocks.any { b -> b.source == "db.items.find({});" } }
+        assertEquals("AFTER_EARLIER_WRITE", read.normalizationProblem)
+        assertNull(read.program)
+    }
+
+    @Test
+    fun seedsFollowTheSetupEachScenarioRuns() {
+        fun extracted(vararg nodes: DocumentNode, shared: List<String> = emptyList()) =
+            extract(root(*nodes), assembledRule(shared = shared))
+        fun seeds(scenario: ExtractedScenario) =
+            scenario.blocks.filter { it.format == ProgramFormat.LEGACY_DOCUMENTS }
+
+        // Shared declarations don't insert, so the section's sample still seeds.
+        val declared =
+            extracted(
+                    standalone("Shared", "shared", "const n=1;"),
+                    standalone("Read Items", "read", "{v:1}", "db.items.find({});", "[{v:1}]"),
+                    shared = listOf("shared"),
+                )
+                .scenarios
+                .single()
+        assertEquals("items", seeds(declared).single().namespace!!.collection)
+        assertEquals(ShellLiteralState.NORMALIZED, declared.program!!.state)
+        // An insert after an action is another scenario's setup, not this one's.
+        val first =
+            extracted(
+                    standalone(
+                        "Read Items",
+                        "read",
+                        "{v:1}",
+                        "db.items.find({});",
+                        "db.items.insertOne({v:2});",
+                        "db.items.find({v:2});",
+                    )
+                )
+                .scenarios
+                .single { it.blocks.any { b -> b.source == "db.items.find({});" } }
+        assertEquals(1, seeds(first).size)
+        // A shared sample beside a section's own insert only illustrates.
+        val inserted =
+            extracted(
+                    standalone("Shared", "shared", "{v:9}"),
+                    standalone(
+                        "Read Items",
+                        "read",
+                        "db.items.insertOne({v:1});",
+                        "db.items.find({});",
+                    ),
+                    shared = listOf("shared"),
+                )
+                .scenarios
+                .single()
+        assertTrue(seeds(inserted).isEmpty())
+        assertEquals(listOf("SAMPLE_DOCUMENT"), inserted.skipped.map { it.reason })
+        // A shared sample seeds a native input/output group's collection too.
+        val native =
+            extracted(
+                    standalone("Shared", "shared", "{v:1}"),
+                    section("Match Values", "values", io()),
+                    shared = listOf("shared"),
+                )
+                .scenarios
+                .single()
+        assertEquals("items", seeds(native).single().namespace!!.collection)
+        assertEquals(ShellLiteralState.NORMALIZED, native.program!!.state)
+    }
+
+    @Test
+    fun languagesAndTemplatesAreReadFromTheCodeNotItsPosition() {
+        fun scenarios(vararg blocks: DocumentNode) =
+            extract(root(section("Read Items", "read", *blocks)), assembledRule()).scenarios
+        // The action's own language counts, even with no result after it.
+        assertEquals(
+            ScenarioVariant.UNRESOLVED,
+            scenarios(code("db.items.insertOne({v:1});"), code("db.items.find({});", "pseudocode"))
+                .single()
+                .variant,
+        )
+        // A JSON sample before the action doesn't decide the language.
+        assertEquals(
+            ScenarioVariant.REFERENCE,
+            scenarios(code("{\"v\": 1}", "json"), code("db.items.find({});")).single().variant,
+        )
+        // Angle brackets inside a string are a value, not a template.
+        val quoted = scenarios(code("db.items.find({v:'<value>'});")).single()
+        assertEquals(listOf(ProgramRole.ACTION), quoted.blocks.map { it.role })
+        assertTrue(quoted.skipped.isEmpty())
+        // Sibling selections are separate examples.
+        fun selected(tab: String) =
+            node(
+                "directive",
+                name = "selected-content",
+                attributes = mapOf("selections" to "{\"language\":\"$tab\"}"),
+                children = listOf(code("db.items.find({});")),
+            )
+        assertEquals(
+            setOf(ScenarioVariant.REFERENCE, ScenarioVariant.FOREIGN),
+            scenarios(selected("shell"), selected("nodejs")).map { it.variant }.toSet(),
+        )
+        // Branches that show the same code are still separate examples.
+        val same =
+            extract(
+                root(section("Read Items", "read", selected("nodejs"), selected("csharp"))),
+                assembledRule(),
+            )
+        assertEquals(2, same.scenarios.map { it.id }.distinct().size)
+        assertTrue(same.problems.none { it.code == "AMBIGUOUS_GROUP" })
+        // A displayed operator expression is neither data nor a result.
+        val shown =
+            scenarios(
+                    code("// Specify i\n{ ${'$'}regexMatch: { input: 'a', regex: /a/i } }"),
+                    code("db.items.find({});"),
+                )
+                .single()
+        assertEquals(listOf("OPERATOR_EXPRESSION"), shown.skipped.map { it.reason })
+        // A caption comment above printed results doesn't hide them.
+        val captioned =
+            scenarios(code("db.items.find({});"), code("// The result\n[{v:1}]")).single()
+        assertEquals(
+            listOf(ProgramRole.ACTION, ProgramRole.EXPECTED),
+            captioned.blocks.map { it.role },
+        )
+        // A selection that names nothing stays unresolved.
+        for (selections in listOf("{}", "[]")) {
+            val empty =
+                node(
+                    "directive",
+                    name = "selected-content",
+                    attributes = mapOf("selections" to selections),
+                    children = listOf(code("db.items.find({});")),
+                )
+            assertEquals(ScenarioVariant.UNRESOLVED, scenarios(empty).single().variant)
+        }
+        // A shared section that shows code only in other languages shares nothing.
+        val foreignOnly =
+            extract(
+                root(
+                    section("Shared", "shared", selected("nodejs"), selected("csharp")),
+                    standalone("Read Items", "read", "db.items.find({});", "[]"),
+                ),
+                assembledRule(shared = listOf("shared")),
+            )
+        assertTrue(foreignOnly.problems.none { it.code == "MISSING_OR_AMBIGUOUS_SHARED_SETUP" })
+        assertNotNull(
+            foreignOnly.scenarios.single { it.variant == ScenarioVariant.REFERENCE }.program
+        )
+    }
+
+    @Test
+    fun sectionAssemblyReadsHowPagesPrintAndLabelTheirCode() {
+        fun scenario(vararg blocks: DocumentNode, policy: SectionAssemblyPolicy? = null) =
+            extract(
+                    root(section("Read Items", "read", *blocks)),
+                    policy?.let { rule().copy(sectionAssembly = it) } ?: assembledRule(),
+                )
+                .scenarios
+                .single()
+        // A seed may use the printed constructors the extended JSON reader rejects.
+        val decimal = scenario(code("{ v: Decimal128(\"1.5\") }"), code("db.items.find({});"))
+        assertEquals(ShellLiteralState.NORMALIZED, decimal.program!!.state)
+        // A truncated listing leaves the example serialization-only.
+        val truncated = scenario(code("db.items.find({});"), code("[ {v:1} ]\n..."))
+        assertEquals(ShellLiteralState.NORMALIZED, truncated.program!!.state)
+        assertEquals(listOf(ProgramRole.ACTION), truncated.blocks.map { it.role })
+        assertEquals(listOf("UNREADABLE_RESULT"), truncated.skipped.map { it.reason })
+        // Code the page leaves unhighlighted takes the reviewed language, when there is one.
+        val unlabeled = code("db.items.find({});", "none")
+        assertEquals(ScenarioVariant.UNRESOLVED, scenario(unlabeled).variant)
+        val reviewed =
+            SectionAssemblyPolicy(
+                SectionLayout.COMMANDS_THEN_RESULT,
+                unlabeledLanguage = "javascript",
+            )
+        assertEquals(ScenarioVariant.REFERENCE, scenario(unlabeled, policy = reviewed).variant)
+        // A composable tutorial's selected content is classified like a tab.
+        fun selected(tab: String) =
+            node(
+                "directive",
+                name = "selected-content",
+                attributes = mapOf("selections" to "{\"language\":\"$tab\"}"),
+                children = listOf(code("db.items.find({});")),
+            )
+        assertEquals(ScenarioVariant.REFERENCE, scenario(selected("shell")).variant)
+        assertEquals(ScenarioVariant.FOREIGN, scenario(selected("nodejs")).variant)
+    }
+
+    @Test
+    fun sectionBlocksTakeTheirRolesFromTheShellGrammar() {
+        fun scenarios(vararg blocks: String) =
+            extract(root(standalone("Read Items", "read", *blocks)), assembledRule()).scenarios
+        fun roles(scenario: ExtractedScenario) = scenario.blocks.map { it.role }
+        val read = listOf(ProgramRole.SETUP, ProgramRole.ACTION, ProgramRole.EXPECTED)
+
+        // A sample document seeds the collection where nothing inserts.
+        val seeded = scenarios("{v:1}", "db.items.find({});", "[{v:1}]").single()
+        assertEquals(ShellLiteralState.NORMALIZED, seeded.program!!.state)
+        assertEquals(read, roles(seeded))
+        assertEquals(ProgramFormat.LEGACY_DOCUMENTS, seeded.blocks.first().format)
+        assertEquals("items", seeded.blocks.first().namespace!!.collection)
+        // Where the section inserts, a sample document only illustrates.
+        val inserted =
+            scenarios("db.items.insertOne({v:1});", "{v:2}", "db.items.find({});", "[{v:1}]")
+                .single()
+        assertEquals(read, roles(inserted))
+        assertEquals(listOf("SAMPLE_DOCUMENT"), inserted.skipped.map { it.reason })
+        // Each action is its own scenario, with the result printed right after it, if any.
+        val two = scenarios("db.items.find({});", "db.items.find({v:1});", "[]")
+        assertEquals(
+            setOf(listOf(ProgramRole.ACTION), listOf(ProgramRole.ACTION, ProgramRole.EXPECTED)),
+            two.map(::roles).toSet(),
+        )
+        // A syntax template is skipped, and so is setup no action follows.
+        val template =
+            scenarios("{ ${'$'}match: { <query> } }", "db.items.find({});", "const n=1;").single()
+        assertEquals(listOf(ProgramRole.ACTION), roles(template))
+        assertEquals(
+            listOf("SYNTAX_TEMPLATE", "TRAILING_SETUP"),
+            template.skipped.map { it.reason },
+        )
+        // What a page prints after an update is a later read's result, kept for that read.
+        val update =
+            scenarios(
+                    "db.items.insertOne({v:1});",
+                    "db.items.updateOne({}, {${'$'}set: {v: 2}});",
+                    "[{v:2}]",
+                )
+                .single()
+        assertEquals(listOf(ProgramRole.SETUP, ProgramRole.ACTION), roles(update))
+        assertEquals(listOf("UPDATE_RESULT"), update.skipped.map { it.reason })
+        // A section without a command has nothing to run.
+        assertEquals("MISSING_COMMAND_OR_RESULT", scenarios("{v:1}").single().normalizationProblem)
     }
 
     @Test
@@ -1413,8 +1700,11 @@ class ScenarioExtractionTest {
                 root(first, second, consumer),
                 assembledRule(shared = listOf("a-second", "z-first")),
             )
-        assertEquals(ScenarioExtractionState.PARTIAL, reversed.state)
-        assertTrue(reversed.problems.any { it.code == "UNSUPPORTED_SHARED_SETUP" })
+        // In the other order the insert reads a binding not yet declared, so it isn't setup.
+        assertEquals(
+            listOf("db.items.insertOne({v:n});" to "UNSUPPORTED_SOURCE"),
+            reversed.pages.single().sharedSetupSkipped.map { it.code.source to it.reason },
+        )
     }
 
     @Test
