@@ -1,0 +1,182 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears",
+  "title": "Find the Three Highest Rated Movies Across Multiple Years",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/maxN.txt",
+    "blob": "cf1200c4cd68051729b66c1e31462cd0cf6d1b1a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$in": [
+              {
+                "$numberInt": "1999"
+              },
+              {
+                "$numberInt": "2000"
+              },
+              {
+                "$numberInt": "2001"
+              }
+            ]
+          },
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "topThreeRatings": {
+            "$maxN": {
+              "input": "$imdb.rating",
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1999"
+              }
+            }
+          },
+          {
+            "name": "topThreeRatings",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "8.9"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.7"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.7"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2000"
+              }
+            }
+          },
+          {
+            "name": "topThreeRatings",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "8.5"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.5"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.5"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2001"
+              }
+            }
+          },
+          {
+            "name": "topThreeRatings",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "9.6"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "9.2"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.8"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

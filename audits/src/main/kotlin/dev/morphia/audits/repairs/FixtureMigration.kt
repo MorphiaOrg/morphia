@@ -257,12 +257,15 @@ object FixtureMigration {
     /**
      * The scenario a runner executes for [override]: its documented data, action and results.
      * [ordered] is whether the legacy test compared results in order, and [options] are its other
-     * options, each one of [mappedOptions].
+     * options, each one of [mappedOptions]. A [dataset] names the sample dataset the example
+     * queries instead of seeding its own data; the tests do not load one, so its results are not
+     * checked.
      */
     fun scenario(
         override: FormOverride,
         ordered: Boolean,
         options: List<OptionCall> = emptyList(),
+        dataset: String? = null,
     ): String {
         require(options.all { it.name in mappedOptions && it.name != "orderMatters" }) {
             "${override.fixture}: options ${options.map { it.name }} are not mapped"
@@ -276,6 +279,12 @@ object FixtureMigration {
         if (option("skipDataCheck") == "true") {
             skipped["results"] =
                 BsonString("the legacy test skipped its data check (skipDataCheck)")
+        }
+        if (dataset != null) {
+            skipped["results"] =
+                BsonString(
+                    "the example queries the $dataset sample dataset, which the tests do not load"
+                )
         }
         val documented = pinned(override, FormMigration.documented(override))
         val action =
@@ -318,7 +327,7 @@ object FixtureMigration {
                         .append("path", BsonString(override.source.path))
                         .append("blob", BsonString(override.pageBlob)),
                 )
-                .append("dataset", BsonNull.VALUE)
+                .append("dataset", dataset?.let { BsonString(it) } ?: BsonNull.VALUE)
                 .append("collections", collections)
                 .append("indexes", BsonArray())
                 .append("action", action)

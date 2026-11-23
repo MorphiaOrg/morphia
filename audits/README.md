@@ -34,7 +34,7 @@ Every command below runs through the exec plugin from the repository root, after
 | --- | --- |
 | `audits/catalog/documented-examples.json` | Every example on the current operator pages, with its owner; unowned examples keep their source text. |
 | `audits/catalog/dsl-bindings.json` | Reviewed MQL-to-Morphia factory bindings the generator uses. |
-| `audits/catalog/generation-review.json` | The generated families and the reviewed exclusions, each with its evidence. |
+| `audits/catalog/generation-review.json` | The generated families, the reviewed exclusions with their evidence, and the sample-dataset collections. |
 | `audits/catalog/fixture-migration.json` | The ledger of legacy cases moved onto the case runner, with their documented sources. |
 | `audits/catalog/cutover.json` | Legacy cases that stay on the legacy path, with the check that fails and its first difference. |
 | `audits/catalog/form-review.json`, `form-migration.json` | Reviewed equivalences that retired MORPHIA_FORM locks, and the gaps left. |

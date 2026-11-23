@@ -130,6 +130,16 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/bitXor/bitXorExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBitXor#testBitXorExpressionOperator"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/bottom/findTheBottomRatingAcrossMultipleYears",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingAcrossMultipleYears/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestBottom#findTheBottomRatingAcrossMultipleYears"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/bottom/findTheBottomRatingInAGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingInAGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestBottom#findTheBottomRatingInAGenre"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bottom/findTheBottomScore",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bottom/findTheBottomScore/scenario.json",
@@ -144,6 +154,11 @@
     "name" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/bottomN/findTheThreeLowestRatedMoviesInASingleGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/bottomN/findTheThreeLowestRatedMoviesInASingleGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestBottomN#findTheThreeLowestRatedMoviesInASingleGenre"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bottomN/findTheThreeLowestScores",
@@ -355,6 +370,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testComputingNBasedOnTheGroupKeyForGroup"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/firstN/findTheFirstThreeMoviesForASingleGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesForASingleGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestFirstN#findTheFirstThreeMoviesForASingleGenre"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/firstN/findTheFirstThreePlayerScoresForASingleGame",
     "scenario" : "/dev/morphia/test/aggregation/expressions/firstN/findTheFirstThreePlayerScoresForASingleGame/scenario.json",
@@ -555,6 +575,16 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/maxN/findTheMaximumThreeScoresForASingleGame/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testFindTheMaximumThreeScoresForASingleGame"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMaxN#findTheThreeHighestRatedMoviesAcrossMultipleYears"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMaxN#findTheThreeHighestRatedMoviesForASingleYear"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames",
     "scenario" : "/dev/morphia/test/aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames/scenario.json",
@@ -604,6 +634,11 @@
     "name" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
     "scenario" : "/dev/morphia/test/aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/minN/findTheMinimumThreeRatingsForASingleGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsForASingleGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMinN#findTheMinimumThreeRatingsForASingleGenre"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/minN/findTheMinimumThreeScoresForASingleGame",
@@ -1035,6 +1070,16 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/toUpper/toUpperExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestToUpper#testToUpperExpressionOperator"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/top/findTheTopRatingAcrossMultipleRatings",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingAcrossMultipleRatings/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestTop#findTheTopRatingAcrossMultipleRatings"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/top/findTheTopRatingInAGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingInAGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestTop#findTheTopRatingInAGenre"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/top/findTheTopScore",
     "scenario" : "/dev/morphia/test/aggregation/expressions/top/findTheTopScore/scenario.json",
@@ -1049,6 +1094,11 @@
     "name" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
     "scenario" : "/dev/morphia/test/aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestTopN#findTheThreeHighestRatedMoviesInASingleGenre"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/topN/findTheThreeHighestScores",
@@ -1825,9 +1875,37 @@
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestAdd.java",
     "sha256" : "0a3bed7e8749f53389cb2e7934de336864e4e47766d612e4b2cddf5738aa91af"
   }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestBottom.java",
+    "sha256" : "b5494de085da1f077e1de4d7220e1a63531597b4d661e1689b2868be84ec66c6"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestBottomN.java",
+    "sha256" : "4a2bd26d75fedd9d2362420193fcf77745c91e6c62c05aed370052dd099ee641"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFirstN.java",
+    "sha256" : "c95471f1b217c4881fbf8018009f52f4f50d63d21a241c99a6f42a8bebacb3f5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMaxN.java",
+    "sha256" : "4f95b5f229f7fb00e340c3ded0f48ca1444335c71152a6f4a6a39c14c4acca8b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMinN.java",
+    "sha256" : "bc0d5fc21f1a298c678e407a4aafaf07c778dd0259ca7e8ec150e7c004d8111d"
+  }, {
     "owner" : "PROTECTED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestRound.java",
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestTop.java",
+    "sha256" : "9456ea99778a76a345f605776d296946fec36a7d67f25d152da69118be1f874f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestTopN.java",
+    "sha256" : "60d9727f2c4e2891bfed4f4689c7853e9248d56ab24b06ad3ab982ac17d92e9c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/abs/absExpressionOperator/scenario.json",
@@ -2954,8 +3032,48 @@
     "sha256" : "a8a5d9b730661bb7a2b4e5f9b8be75a967708b4d55c62737784210fbfe16ec2a"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingAcrossMultipleYears/scenario.json",
+    "sha256" : "386a320bce697eb4944f465f8423cd9b447cdfd1180d6b6b625935e53b1a2e77"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingInAGenre/scenario.json",
+    "sha256" : "ca01406e371ac6d641ed62694c18090af9777d6b061a58ddd5850f7e6228f790"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/findTheThreeLowestRatedMoviesInASingleGenre/scenario.json",
+    "sha256" : "22053109001193c7bb877b43311df5ac88254c3c38b4b70a95c1299539932466"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesForASingleGenre/scenario.json",
+    "sha256" : "e6b04741d3a95332d0b6530eaba9197231cc7355c15a718a754a70252581ff02"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears/scenario.json",
+    "sha256" : "58b899553d1f69903b4888716263c7e729356dda9fcb1e8937acd58f6346536f"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear/scenario.json",
+    "sha256" : "2f9a52e4361e091ed0af097cb67085665606deb9afa35bbf05c4696c3ef257ca"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsForASingleGenre/scenario.json",
+    "sha256" : "39119f69699062f533d5e6facae77297af5757e7e0351fbb0f0e1152119c62f0"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
     "sha256" : "250c3054a8e40ed14a0aaa36cafa2d7f8e5b324987937c61a7732e718848802d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingAcrossMultipleRatings/scenario.json",
+    "sha256" : "a68bef250e2fcc2f0a3898874873d0aef30d0bfd6a8a4c5b986190fc7ea795b3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingInAGenre/scenario.json",
+    "sha256" : "4ec04e434e2517e18ed05c11129fae06d55dee0c5f743a354fc40152ccd81e37"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
+    "sha256" : "60aa1a5031c2b402052f2c1f619abe9d70b98b55a5ca499a6e2df6ee8a53eae5"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",

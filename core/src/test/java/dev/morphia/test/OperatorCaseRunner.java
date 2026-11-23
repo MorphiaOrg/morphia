@@ -54,7 +54,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * published comparison only, a
  * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
  * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
- * and no tolerances, datasets or indexes; a scenario that needs any of them fails rather than being checked loosely.
+ * and no tolerances or indexes, and a dataset only when the scenario skips its results; a scenario that needs any
+ * of them fails rather than being checked loosely.
  */
 public class OperatorCaseRunner {
     // Canonical extended JSON, so a failure shows BSON types: relaxed JSON prints an Int64 like an Int32.
@@ -294,7 +295,8 @@ public class OperatorCaseRunner {
     private static void supported(OperatorCase operatorCase, BsonDocument scenario) {
         BsonDocument comparison = scenario.getDocument("comparison");
         List<String> unsupported = new ArrayList<>();
-        if (!scenario.get("dataset").isNull()) {
+        // A sample dataset is not loaded, so a case that names one must skip its results.
+        if (!scenario.get("dataset").isNull() && !scenario.getDocument("skipped", new BsonDocument()).containsKey("results")) {
             unsupported.add("dataset");
         }
         if (!scenario.getArray("indexes").isEmpty()) {

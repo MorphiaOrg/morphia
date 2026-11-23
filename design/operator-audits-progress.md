@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 1 generated case.
+- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 11 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 433 examples owned, 115 unowned, 30 unnamed, 4 ambiguous), reviewed DSL bindings checked against core's API, and the
@@ -41,8 +41,9 @@ Waiting on reviews or decisions:
   Do not report them ourselves.
 
 Step 5, generation and cutover:
-- **Bindings for the gaps** the weekly job files as issues (today `$match`, `$serializeEJSON`,
-  `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
+- **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
+  `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
+  compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
 - **Reviewed names** for the 30 unnamed and 4 ambiguous examples.
 - **The remaining legacy fixtures:** 193 directories.
@@ -2609,3 +2610,20 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   bindings). Many snippets query MongoDB's sample datasets and print elided results.
 - The new inventory is committed with the change, so the weekly job does not file every newly
   visible example as NEW_EXAMPLE.
+
+## Filters, groups and sample datasets (2026-11-23)
+
+- Branch audits-match-filters, with the core fix on audits-ranked-sortby (#4571).
+- New binding forms: `FILTERS` (`$match`), `FIELD` (query operators on a field), `GROUP` and `SORT`,
+  plus a `FILTER` position. Bindings: `$match`, `$unwind`, `$group`, `$sort`; `$eq`, `$ne`, `$gt`,
+  `$gte`, `$lt`, `$lte`, `$in`, `$exists`; `$top`, `$bottom`, `$topN`, `$bottomN`, `$firstN`,
+  `$lastN`, `$maxN`, `$minN`, `$map`, `$convert`; and `[]` (array literals, as
+  `ArrayExpressions.array`). `Iterable` arguments are `List.of`, sort documents `Sort` varargs.
+- Generated scenarios declare the rules their spelling needs (`EQ_SHORTHAND`,
+  `FIELD_OPERATORS_AND`). `generation-review.json`'s `sampleDatasets` (`movies` ->
+  `sample_mflix`) marks unseeded examples; their scenarios name the dataset and skip results, and
+  the runner accepts a dataset only with that skip.
+- Integration found a Morphia bug: ranked accumulators wrote several sort keys as an array of
+  one-key documents. Fixed in #4571 (2.5 has the same code).
+- 10 new generated cases (`$top`, `$bottom`, `$topN`, `$bottomN`, `$firstN`, `$maxN`, `$minN`), all
+  sample-dataset cases checking serialization. Core: 689 tests under each mapper; audits: 456.

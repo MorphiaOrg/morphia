@@ -1,11 +1,14 @@
 package dev.morphia.audits.generate
 
 import dev.morphia.audits.repairs.ActionShape
+import dev.morphia.audits.repairs.BlockRole
 import dev.morphia.audits.repairs.FixtureMigration
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormOverride
+import dev.morphia.audits.repairs.FormRule
 import dev.morphia.audits.repairs.GENERATED
 import dev.morphia.audits.repairs.ManifestCase
+import org.bson.BsonBoolean
 import org.bson.BsonValue
 
 /** Why an example of a generated family has no generated case. */
@@ -41,12 +44,15 @@ data class Exclusion(val name: String, val reason: String)
 
 /**
  * The reviewed scope of generation: the families (legacy packages) whose unowned examples are
- * generated, and the cases excluded from them, each with its reason.
+ * generated, and the cases excluded from them, each with its reason. [sampleDatasets] maps a
+ * collection of MongoDB's sample datasets to its dataset: an example that queries one without
+ * seeding data is generated with that dataset, and only its serialization is checked.
  */
 data class GenerationReview(
     val schemaVersion: Int = 1,
     val families: List<String>,
     val excluded: List<Exclusion> = emptyList(),
+    val sampleDatasets: Map<String, String> = emptyMap(),
 )
 
 /** A generated case: its manifest entry, its scenario's text, and its test method's source. */
@@ -72,6 +78,10 @@ object CaseGenerator {
     private const val PACKAGE = "dev.morphia.test.generated"
     private const val OBJECT = "java.lang.Object"
     private const val STRING = "java.lang.String"
+    private const val ITERABLE = "java.lang.Iterable"
+    private const val SORTS = "dev.morphia.query.Sort[]"
+    /** The binding key of an array literal in an expression. */
+    const val ARRAY = "[]"
 
     /**
      * [protected] holds the repository paths that generation must not write: moved handwritten
@@ -90,6 +100,10 @@ object CaseGenerator {
         val expressions =
             catalog.bindings
                 .filter { it.position == BindingPosition.EXPRESSION }
+                .associateBy { it.operator }
+        val filters =
+            catalog.bindings
+                .filter { it.position == BindingPosition.FILTER }
                 .associateBy { it.operator }
         val excluded = review.excluded.associate { it.name to it.reason }
         val cases = mutableListOf<Pair<GeneratedCase, Emitter>>()
@@ -138,7 +152,7 @@ object CaseGenerator {
                             "a ${documented.shape} action is not generated yet",
                         )
                     }
-                    val emitted = Emitter(stages, expressions)
+                    val emitted = Emitter(stages, expressions, filters)
                     val pipeline =
                         try {
                             documented.action.mapIndexed { index, stage ->
@@ -146,6 +160,12 @@ object CaseGenerator {
                             }
                         } catch (unbound: Unbound) {
                             return@forEach gap(GapKind.UNBOUND, unbound.message!!)
+                        }
+                    // An example that seeds nothing and queries a sample collection runs against
+                    // that dataset, which the tests do not load.
+                    val dataset =
+                        review.sampleDatasets[documented.collection].takeIf {
+                            example.blocks.none { it.role == BlockRole.DATA }
                         }
                     val scenario = FixtureMigration.scenarioPath(name, GENERATED)
                     val override =
@@ -159,7 +179,7 @@ object CaseGenerator {
                             example = example.title,
                             shape = documented.shape,
                             blocks = example.blocks,
-                            rules = emptyList(),
+                            rules = emitted.rules.sorted(),
                             retiredLock = null,
                             fixtureFiles = emptyMap(),
                         )
@@ -179,7 +199,7 @@ object CaseGenerator {
                     cases +=
                         GeneratedCase(
                             ManifestCase(name, GENERATED, resource, "$PACKAGE.$folder.$type#$stem"),
-                            FixtureMigration.scenario(override, ordered = true),
+                            FixtureMigration.scenario(override, ordered = true, dataset = dataset),
                             method,
                         ) to emitted
                 }
@@ -274,11 +294,17 @@ object CaseGenerator {
     private class Emitter(
         val stages: Map<String, DslBinding>,
         val expressions: Map<String, DslBinding>,
+        val filters: Map<String, DslBinding>,
     ) {
         /** Owner and method of every factory called. */
         val calls = mutableSetOf<Pair<String, String>>()
         /** Types named in the source, such as an enum argument's. */
         val types = mutableSetOf<String>()
+        /**
+         * The form rules the emitted spelling needs: Morphia writes an implicit equality as `$eq`
+         * and several operators on one field as one filter each.
+         */
+        val rules = mutableSetOf<FormRule>()
 
         fun stage(value: BsonValue, path: String): String {
             val (operator, argument) =
@@ -359,6 +385,57 @@ object CaseGenerator {
                             ".$method(${literal(field)}, ${value(each, OBJECT, "$path/$field")})"
                         }
                 }
+                BindingForm.FILTERS -> {
+                    if (!argument.isDocument)
+                        throw Unbound("$path: ${binding.operator} takes a query document")
+                    factory.format(
+                        argument
+                            .asDocument()
+                            .entries
+                            .flatMap { (field, predicate) ->
+                                predicates(field, predicate, "$path/$field")
+                            }
+                            .joinToString(", ")
+                    )
+                }
+                BindingForm.FIELD ->
+                    throw Unbound("$path: ${binding.operator} is a query operator, not a value")
+                BindingForm.GROUP -> {
+                    if (!argument.isDocument || "_id" !in argument.asDocument())
+                        throw Unbound("$path: ${binding.operator} takes a document with an _id")
+                    val id = binding.fields.getValue("id")
+                    val group = argument.asDocument()
+                    val key = group["_id"]!!
+                    if (key.isDocument && operator(key, "$path/_id") == null)
+                        throw Unbound("$path/_id: a compound _id has no binding")
+                    calls += binding.owner to id.method
+                    factory.format("${id.method}(${value(key, OBJECT, "$path/_id")})") +
+                        group.entries
+                            .filter { it.key != "_id" }
+                            .joinToString("") { (field, each) ->
+                                val method = binding.fields.getValue("value").method
+                                ".$method(${literal(field)}, ${value(each, OBJECT, "$path/$field")})"
+                            }
+                }
+                BindingForm.SORT -> {
+                    if (!argument.isDocument)
+                        throw Unbound("$path: ${binding.operator} takes a document")
+                    factory.format("") +
+                        argument.asDocument().entries.joinToString("") { (field, each) ->
+                            val direction =
+                                when {
+                                    each.isNumber && each.asNumber().doubleValue() == 1.0 ->
+                                        "ascending"
+                                    each.isNumber && each.asNumber().doubleValue() == -1.0 ->
+                                        "descending"
+                                    else ->
+                                        throw Unbound(
+                                            "$path/$field: a sort by $each has no binding"
+                                        )
+                                }
+                            ".${binding.fields.getValue(direction).method}(${literal(field)})"
+                        }
+                }
                 BindingForm.PROJECTION -> {
                     if (!argument.isDocument)
                         throw Unbound("$path: ${binding.operator} takes a document")
@@ -384,6 +461,41 @@ object CaseGenerator {
             }
         }
 
+        /** The filters of one field's predicate: one per operator, or `$eq` for a plain value. */
+        private fun predicates(field: String, predicate: BsonValue, path: String): List<String> {
+            if (field.startsWith("$")) throw Unbound("$path: query operator $field has no binding")
+            val operators =
+                predicate
+                    .takeIf { it.isDocument }
+                    ?.asDocument()
+                    ?.takeIf { it.isNotEmpty() && it.keys.all { key -> key.startsWith("$") } }
+            if (operators == null) {
+                rules += FormRule.EQ_SHORTHAND
+                return listOf(filter("\$eq", field, predicate, path))
+            }
+            if (operators.size > 1) rules += FormRule.FIELD_OPERATORS_AND
+            return operators.entries.map { (operator, value) ->
+                filter(operator, field, value, "$path/$operator")
+            }
+        }
+
+        private fun filter(
+            operator: String,
+            field: String,
+            value: BsonValue,
+            path: String,
+        ): String {
+            val binding =
+                filters[operator] ?: throw Unbound("$path: query operator $operator has no binding")
+            calls += binding.owner to binding.method
+            if (binding.parameters.size == 1) {
+                if (value != BsonBoolean.TRUE)
+                    throw Unbound("$path: $operator $value has no binding")
+                return "${binding.method}(${literal(field)})"
+            }
+            return "${binding.method}(${literal(field)}, ${value(value, binding.parameters[1], path)})"
+        }
+
         /**
          * Whether a projection value is an inclusion (`1`, `true`) or an exclusion (`0`, `false`).
          */
@@ -405,6 +517,34 @@ object CaseGenerator {
                 val binding =
                     expressions[operator] ?: throw Unbound("$path: $operator has no binding")
                 return call(binding, argument, "$path/$operator")
+            }
+            if (value.isArray && type == ITERABLE) {
+                val items = value.asArray().values
+                if (items.any { it.isNull }) throw Unbound("$path: List.of cannot hold null")
+                types += "java.util.List"
+                return items
+                    .mapIndexed { index, item -> value(item, OBJECT, "$path/$index") }
+                    .joinToString(", ", "List.of(", ")")
+            }
+            if (value.isDocument && type == SORTS) {
+                // `{f: -1, g: 1}` as `Sort` varargs, in order.
+                return value.asDocument().entries.joinToString(", ") { (field, each) ->
+                    val direction =
+                        when {
+                            each.isNumber && each.asNumber().doubleValue() == 1.0 -> "ascending"
+                            each.isNumber && each.asNumber().doubleValue() == -1.0 -> "descending"
+                            else -> throw Unbound("$path/$field: a sort by $each has no binding")
+                        }
+                    calls += SORTS.removeSuffix("[]") to direction
+                    "$direction(${literal(field)})"
+                }
+            }
+            if (value.isArray && type == OBJECT) {
+                // An array argument, such as `$top`'s output of several fields, is an expression
+                // in Morphia; its binding is the catalog's `[]` entry.
+                val binding =
+                    expressions[ARRAY] ?: throw Unbound("$path: an array literal has no binding")
+                return call(binding, value, "$path/$ARRAY")
             }
             if (value.isDocument) throw Unbound("$path: a document literal has no binding")
             if (value.isArray) throw Unbound("$path: an array literal has no binding")

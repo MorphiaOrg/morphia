@@ -3,10 +3,13 @@ package dev.morphia.audits.generate
 import dev.morphia.audits.api.ApiInventory
 import dev.morphia.audits.api.DeclarationKind
 
-/** Where an MQL operator appears: as a pipeline stage or inside an expression. */
+/**
+ * Where an MQL operator appears: as a pipeline stage, inside an expression, or in a query filter.
+ */
 enum class BindingPosition {
     STAGE,
     EXPRESSION,
+    FILTER,
 }
 
 /** How an operator's BSON value becomes the factory's arguments. */
@@ -29,6 +32,26 @@ enum class BindingForm {
     PROJECTION,
     /** `{$addFields: {field: value, …}}`: no arguments, then the `value` call per field. */
     FIELDS,
+    /**
+     * `{$match: {field: predicate, …}}`: one varargs parameter taking a filter per predicate. A
+     * field's `{$op: v, …}` is a [FIELD] filter per operator; any other value is `$eq`.
+     */
+    FILTERS,
+    /**
+     * A query operator on a field, `{field: {$op: v}}`: the factory takes the field name and, when
+     * it has a second parameter, `v`. A one-parameter factory (`$exists`) takes only `true`.
+     */
+    FIELD,
+    /**
+     * `{$group: {_id: v, field: value, …}}`: the factory takes the [DslBinding.fields] `id` call of
+     * `v` (a static factory of the stage's class), then the `value` call per field.
+     */
+    GROUP,
+    /**
+     * `{$sort: {field: 1 | -1, …}}`: no arguments, then the `ascending` or `descending` call per
+     * field, in order.
+     */
+    SORT,
 }
 
 /** A method called on a factory's result, by name and erased parameter types. */
@@ -57,6 +80,7 @@ data class DslBindingCatalog(val schemaVersion: Int = 1, val bindings: List<DslB
 object DslBindings {
     const val PATH = "audits/catalog/dsl-bindings.json"
     private val projectionFields = setOf("include", "exclude", "suppressId", "value")
+    private const val FILTER = "dev.morphia.query.filters.Filter"
 
     /**
      * Checks every binding against [api]: its factory is a public static method of its owner with
@@ -105,6 +129,27 @@ object DslBindings {
                     if (binding.fields.keys != projectionFields || binding.parameters.isNotEmpty())
                         problems +=
                             "$label: a projection takes no arguments and binds $projectionFields"
+                BindingForm.FILTERS ->
+                    if (!binding.varargs || binding.parameters != listOf("$FILTER[]"))
+                        problems += "$label: a filters stage takes only $FILTER varargs"
+                BindingForm.GROUP ->
+                    if (binding.fields.keys != setOf("id", "value") || binding.parameters.size != 1)
+                        problems += "$label: a group stage takes its id and binds [id, value]"
+                BindingForm.SORT ->
+                    if (
+                        binding.fields.keys != setOf("ascending", "descending") ||
+                            binding.parameters.isNotEmpty()
+                    )
+                        problems +=
+                            "$label: a sort stage takes no arguments and binds [ascending, descending]"
+                BindingForm.FIELD ->
+                    if (
+                        binding.position != BindingPosition.FILTER ||
+                            binding.parameters.firstOrNull() != "java.lang.String" ||
+                            binding.parameters.size !in 1..2
+                    )
+                        problems +=
+                            "$label: a field filter takes the field name and at most a value"
             }
             val result = erase(factory.returnType ?: "")
             (binding.options + binding.fields).forEach { (key, call) ->

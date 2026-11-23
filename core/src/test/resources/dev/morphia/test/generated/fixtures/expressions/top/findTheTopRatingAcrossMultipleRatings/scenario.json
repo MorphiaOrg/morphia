@@ -1,0 +1,182 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/top/findTheTopRatingAcrossMultipleRatings",
+  "title": "Find the Top Rating Across Multiple Ratings",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/top.txt",
+    "blob": "a44a9ba7c0218bd34c9b72de45d12a4a9a7d800e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "imdb.rating": {
+            "$gt": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$rated",
+          "highestRatedMovie": {
+            "$top": {
+              "output": [
+                "$title",
+                "$imdb.rating"
+              ],
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G"
+            }
+          },
+          {
+            "name": "highestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "text": "Modern Times"
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG"
+            }
+          },
+          {
+            "name": "highestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "text": "Life"
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "9.2"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "highestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "text": "A Brave Heart: The Lizzie Velasquez Story"
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "9.4"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "highestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "text": "The Shawshank Redemption"
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "9.3"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

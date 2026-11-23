@@ -47,6 +47,44 @@
       "fields": {}
     },
     {
+      "operator": "$bottom",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "bottom",
+      "parameters": [
+        "java.lang.Object",
+        "dev.morphia.query.Sort[]"
+      ],
+      "varargs": true,
+      "arguments": [
+        "output",
+        "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$bottomN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "bottomN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "dev.morphia.query.Sort[]"
+      ],
+      "varargs": true,
+      "arguments": [
+        "n",
+        "output",
+        "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$concat",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -58,6 +96,24 @@
       ],
       "varargs": true,
       "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$convert",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.TypeExpressions",
+      "method": "convert",
+      "parameters": [
+        "java.lang.Object",
+        "dev.morphia.aggregation.expressions.impls.ConvertType"
+      ],
+      "varargs": false,
+      "arguments": [
+        "input",
+        "to"
+      ],
       "options": {},
       "fields": {}
     },
@@ -132,6 +188,103 @@
         }
       },
       "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$firstN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "firstN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "n",
+        "input"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$lastN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "lastN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "n",
+        "input"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$map",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "map",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "input",
+        "in"
+      ],
+      "options": {
+        "as": {
+          "method": "as",
+          "parameters": [
+            "java.lang.String"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$maxN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "maxN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "n",
+        "input"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$minN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "minN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "n",
+        "input"
+      ],
+      "options": {},
       "fields": {}
     },
     {
@@ -224,6 +377,177 @@
       "fields": {}
     },
     {
+      "operator": "$top",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "top",
+      "parameters": [
+        "java.lang.Object",
+        "dev.morphia.query.Sort[]"
+      ],
+      "varargs": true,
+      "arguments": [
+        "output",
+        "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$topN",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "topN",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "dev.morphia.query.Sort[]"
+      ],
+      "varargs": true,
+      "arguments": [
+        "n",
+        "output",
+        "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "[]",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "array",
+      "parameters": [
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$eq",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "eq",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$exists",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "exists",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$gt",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "gt",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$gte",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "gte",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$in",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "in",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Iterable"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$lt",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "lt",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$lte",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "lte",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$ne",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "ne",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$addFields",
       "position": "STAGE",
       "form": "FIELDS",
@@ -242,6 +566,48 @@
       "varargs": false,
       "arguments": [],
       "options": {}
+    },
+    {
+      "operator": "$group",
+      "position": "STAGE",
+      "form": "GROUP",
+      "owner": "dev.morphia.aggregation.stages.Group",
+      "method": "group",
+      "parameters": [
+        "dev.morphia.aggregation.stages.Group.GroupId"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {
+        "id": {
+          "method": "id",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "value": {
+          "method": "field",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        }
+      }
+    },
+    {
+      "operator": "$match",
+      "position": "STAGE",
+      "form": "FILTERS",
+      "owner": "dev.morphia.aggregation.stages.Match",
+      "method": "match",
+      "parameters": [
+        "dev.morphia.query.filters.Filter[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     },
     {
       "operator": "$project",
@@ -298,6 +664,47 @@
       "varargs": false,
       "arguments": [],
       "options": {}
+    },
+    {
+      "operator": "$sort",
+      "position": "STAGE",
+      "form": "SORT",
+      "owner": "dev.morphia.aggregation.stages.Sort",
+      "method": "sort",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {
+        "ascending": {
+          "method": "ascending",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.String[]"
+          ]
+        },
+        "descending": {
+          "method": "descending",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.String[]"
+          ]
+        }
+      }
+    },
+    {
+      "operator": "$unwind",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.Unwind",
+      "method": "unwind",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     }
   ]
 }

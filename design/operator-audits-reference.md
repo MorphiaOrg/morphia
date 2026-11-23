@@ -711,6 +711,11 @@ build core first), then generates the families that `audits/catalog/generation-r
 `promote` then take the candidate into the checkout. A case that fails integration is excluded in the
 review with its evidence, never generated looser.
 
+Generated scenarios declare the form rules their emitted spelling needs (`EQ_SHORTHAND`,
+`FIELD_OPERATORS_AND`). An example that seeds no data and queries a collection the review's
+`sampleDatasets` maps names that dataset; its scenario skips the results checks with that reason,
+and the runner accepts a dataset only alongside that skip.
+
 ## Scheduled discovery
 
 `.github/workflows/operator-discovery.yml` runs weekly and on demand with read-only permissions.

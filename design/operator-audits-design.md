@@ -237,17 +237,30 @@ then show up as generation gaps.
 `GenerateMainKt candidate` turns each unowned example of the reviewed families into a scenario and
 a test method:
 
-1. **Verify the bindings.** Each entry in `dsl-bindings.json` maps an MQL operator, as a stage or
-   an expression, to a Morphia factory by its exact erased signature, with the form its BSON takes
-   (`POSITIONAL`, `NAMED`, `PROJECTION` or `FIELDS`). The API inventory of core's current source
-   must contain every one; a stale binding stops generation.
+1. **Verify the bindings.** Each entry in `dsl-bindings.json` maps an MQL operator, as a stage, an
+   expression or a query filter, to a Morphia factory by its exact erased signature, with the form
+   its BSON takes:
+   - `POSITIONAL` and `NAMED` for operators, `PROJECTION`, `FIELDS`, `GROUP` and `SORT` for those
+     stages, `FILTERS` for `$match`, and `FIELD` for a query operator on a field;
+   - the `[]` entry binds an array literal (`ArrayExpressions.array`).
+
+   The API inventory of core's current source must contain every one; a stale binding stops
+   generation.
 2. **Lower the source.** `FormMigration.documented` turns the example's mongosh blocks into typed
    seed data, an action and expected results, through `ShellPrograms`.
 3. **Emit the call.** The emitter walks the pipeline. Every stage and operator node needs a binding,
-   and every value is emitted only in a form its parameter type accepts. The first node without a
-   binding makes the example a gap.
+   and every value is emitted only in a form its parameter type accepts: an array as `List.of` for
+   an `Iterable`, a sort document as `Sort` varargs. The first node without a binding makes the
+   example a gap.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
-   case uses, ordered, with no form rules.
+   case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
+   plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter
+   each.
+
+An example that seeds no data and queries a collection of MongoDB's sample datasets, as most tested
+snippets do, names that dataset (`generation-review.json`'s `sampleDatasets`). The tests do not load
+sample datasets, so its scenario skips the results checks with that reason, and only its
+serialization is checked: Morphia must still build exactly the documented pipeline.
 
 Examples that are not generated are listed in `gaps.json`, each with its reason:
 
@@ -259,8 +272,9 @@ Examples that are not generated are listed in `gaps.json`, each with its reason:
 | `EXCLUDED` | A reviewed exclusion. | Its reason says what would lift it. |
 | `PROTECTED_CLASS` | The operator's class holds a moved handwritten body. | Move the body or the case. |
 
-Only aggregation expressions are generated today. Stages, queries and updates need more bindings
-and generator support for find and update actions.
+Only the aggregation expressions family is generated today, its pipelines using the bound stages.
+Stage pages, queries and updates need more bindings and generator support for find and update
+actions.
 
 ### Candidates, integration and promotion
 

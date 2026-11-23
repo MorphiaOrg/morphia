@@ -1,0 +1,123 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/firstN/findTheFirstThreeMoviesForASingleGenre",
+  "title": "Find the First Three Movies for a Single Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/firstN.txt",
+    "blob": "0bc605aac52ba143b2d5c2f4be44cb68254dcafe"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "genres": "Horror"
+        }
+      },
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "Horror",
+          "firstThreeMovies": {
+            "$firstN": {
+              "input": [
+                "$title",
+                "$year"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Horror"
+            }
+          },
+          {
+            "name": "firstThreeMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Dr. Jekyll and Mr. Hyde"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1931"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Dracula"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1931"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Black Cat"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1934"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear",
+  "title": "Find the Three Highest Rated Movies for a Single Year",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/maxN.txt",
+    "blob": "cf1200c4cd68051729b66c1e31462cd0cf6d1b1a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$numberInt": "1999"
+          },
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "$numberInt": "1999"
+          },
+          "topThreeRatings": {
+            "$maxN": {
+              "input": "$imdb.rating",
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1999"
+              }
+            }
+          },
+          {
+            "name": "topThreeRatings",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "8.9"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.7"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.7"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

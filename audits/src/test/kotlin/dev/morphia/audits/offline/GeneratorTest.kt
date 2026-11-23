@@ -23,6 +23,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writeText
+import org.bson.BsonDocument
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -303,6 +304,104 @@ class GeneratorTest {
                 emptySet(),
             )
         assertTrue(none.cases.isEmpty() && none.gaps.isEmpty())
+    }
+
+    /**
+     * Sample-dataset examples, generated with the committed bindings: query filters, a group with a
+     * ranked accumulator, and a sort. Each seeds nothing and queries `movies`.
+     */
+    @Test
+    fun sampleDatasetExamplesCheckTheirSerialization() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        fun movies(pipeline: String) = block("db.movies.aggregate( [ $pipeline ] )")
+        page(
+            "top",
+            "group",
+            """
+            |Examples
+            |--------
+            |
+            |Top Rated by Year
+            |~~~~~~~~~~~~~~~~~
+            |
+            |${movies("""{ ${'$'}match: { genres: "Comedy", year: { ${'$'}gte: 2010, ${'$'}lte: 2012 }, rated: { ${'$'}in: [ "G", "PG" ] }, "imdb.rating": { ${'$'}exists: true } } },
+            |  { ${'$'}group: { _id: "${'$'}year", best: { ${'$'}top: { output: [ "${'$'}title", "${'$'}imdb.rating" ], sortBy: { "imdb.rating": -1, title: 1 } } } } },
+            |  { ${'$'}sort: { _id: 1 } }""")}
+            |${block("[ { _id: 2010, best: [ 'A', 9 ] } ]")}
+            |Grouped by Two Fields
+            |~~~~~~~~~~~~~~~~~~~~~
+            |
+            |${movies("""{ ${'$'}group: { _id: { y: "${'$'}year" }, best: { ${'$'}top: { output: "${'$'}title", sortBy: { year: 1 } } } } }""")}
+            |Without a Rating
+            |~~~~~~~~~~~~~~~~
+            |
+            |${movies("""{ ${'$'}match: { "imdb.rating": { ${'$'}exists: false } } }""")}
+            |Typed Years
+            |~~~~~~~~~~~
+            |
+            |${movies("""{ ${'$'}match: { year: { ${'$'}type: "int" } } }""")}"""
+                .trimMargin(),
+        )
+        val inventory =
+            DocumentedExamples.capture(
+                root,
+                directory.resolve("pages"),
+                CurrentPages(
+                    commit = commit,
+                    pages = listOf(CurrentPage(FormSource(commit, "$folder/top.txt"))),
+                ),
+            )
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val committed =
+            AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH)))
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                committed,
+                GenerationReview(
+                    families = listOf("aggregation/expressions"),
+                    sampleDatasets = mapOf("movies" to "sample_mflix"),
+                ),
+                emptySet(),
+            )
+        val case = generation.cases.single().manifest
+        assertEquals("aggregation/expressions/top/topRatedByYear", case.name)
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/expressions/TestTop.java"
+            )
+        val pipeline =
+            "match(eq(\"genres\", \"Comedy\"), gte(\"year\", 2010), lte(\"year\", 2012), " +
+                "in(\"rated\", List.of(\"G\", \"PG\")), exists(\"imdb.rating\")),\n" +
+                "                        group(id(\"\$year\")).field(\"best\", top(array(\"\$title\", " +
+                "\"\$imdb.rating\"), descending(\"imdb.rating\"), ascending(\"title\"))),\n" +
+                "                        sort().ascending(\"_id\")"
+        assertTrue(pipeline in source, source)
+        assertTrue("import java.util.List;" in source, source)
+        val scenario =
+            BsonDocument.parse(generation.files.getValue("core/src/test/resources${case.scenario}"))
+        assertEquals("sample_mflix", scenario.getString("dataset").value)
+        assertTrue("sample_mflix" in scenario.getDocument("skipped").getString("results").value)
+        assertEquals(
+            listOf("EQ_SHORTHAND", "FIELD_OPERATORS_AND"),
+            scenario.getDocument("comparison").getArray("rules").map { it.asString().value },
+        )
+        assertEquals(
+            mapOf(
+                "Grouped by Two Fields" to "/pipeline/0/\$group/_id: a compound _id has no binding",
+                "Without a Rating" to
+                    "/pipeline/0/\$match/imdb.rating/\$exists: \$exists BsonBoolean{value=false} has no binding",
+                "Typed Years" to
+                    "/pipeline/0/\$match/year/\$type: query operator \$type has no binding",
+            ),
+            generation.gaps.associate { it.title to it.detail },
+        )
     }
 
     @Test
