@@ -942,14 +942,14 @@ object FormMigration {
         require(page.isRegularFile()) { "Missing source page $page" }
         val includes = mutableListOf<FormInclude>()
         val unexpanded = mutableListOf<String>()
+        val tree = pages.resolve(source.commit)
+        val sourceRoot = source.path.substring(0, source.path.indexOf("source/") + "source".length)
         val lines =
-            expand(
-                pages.resolve(source.commit),
-                source.path.substring(0, source.path.indexOf("source/") + "source".length),
-                source.path,
+            snippets(
+                tree,
+                sourceRoot,
+                shellTabs(expand(tree, sourceRoot, source.path, includes, unexpanded, 0)),
                 includes,
-                unexpanded,
-                0,
             )
         val examples =
             RstDocument(
@@ -1480,6 +1480,151 @@ object FormMigration {
     }
 
     private val include = Regex("""^(\s*)\.\. include::\s+(/\S+)\s*$""")
+
+    private val driverTabs = Regex("""^(\s*)\.\. tabs-drivers::\s*$""")
+
+    private val selectedContent = Regex("""^(\s*)\.\. selected-content::\s*$""")
+
+    /**
+     * Keeps only the mongosh content of a page's language choices: each `.. tabs-drivers::` set
+     * becomes its `shell` tab's content, and each `.. selected-content::` block of a composable
+     * tutorial is kept only when it is selected for `shell`, both re-indented to their directive.
+     * The audits check mongosh examples, and the other drivers' content holds their own code (and
+     * remote shared includes) that would otherwise merge into the example.
+     */
+    internal fun shellTabs(lines: List<String>): List<String> {
+        val result = mutableListOf<String>()
+        var index = 0
+        while (index < lines.size) {
+            val selected = selectedContent.matchEntire(lines[index])
+            if (selected != null) {
+                val indent = selected.groupValues[1].length
+                index++
+                val body = mutableListOf<String>()
+                while (
+                    index < lines.size &&
+                        (lines[index].isBlank() ||
+                            lines[index].indexOfFirst { !it.isWhitespace() } > indent)
+                ) {
+                    body += lines[index++]
+                }
+                val options = body.takeWhile { it.isNotBlank() && it.trim().startsWith(":") }
+                if (
+                    options.any { it.trim().split(whitespace) == listOf(":selections:", "shell") }
+                ) {
+                    result += reindent(body.drop(options.size), indent)
+                }
+                continue
+            }
+            val match = driverTabs.matchEntire(lines[index])
+            if (match == null) {
+                result += lines[index++]
+                continue
+            }
+            val indent = match.groupValues[1].length
+            index++
+            val body = mutableListOf<String>()
+            while (
+                index < lines.size &&
+                    (lines[index].isBlank() ||
+                        lines[index].indexOfFirst { !it.isWhitespace() } > indent)
+            ) {
+                body += lines[index++]
+            }
+            // A tab's options come first, before any content; the shell tab's list is kept.
+            var shell: MutableList<String>? = null
+            var tab: MutableList<String>? = null
+            for (line in body) {
+                val current = tab
+                when {
+                    line.trim() == ".. tab::" -> tab = mutableListOf()
+                    current == null -> Unit
+                    current.isEmpty() && line.trim() == ":tabid: shell" -> shell = current
+                    current.isEmpty() && line.trim().startsWith(":") -> Unit
+                    else -> current += line
+                }
+            }
+            result += reindent(shell.orEmpty(), indent)
+        }
+        return result
+    }
+
+    private val whitespace = Regex("""\s+""")
+
+    /**
+     * [lines] without their surrounding blank lines, re-indented to [indent], then a blank line.
+     */
+    private fun reindent(lines: List<String>, indent: Int): List<String> {
+        val content = lines.dropWhile { it.isBlank() }.dropLastWhile { it.isBlank() }
+        val margin =
+            content
+                .filter { it.isNotBlank() }
+                .minOfOrNull { line -> line.indexOfFirst { !it.isWhitespace() } } ?: 0
+        return content.map { if (it.isBlank()) "" else " ".repeat(indent) + it.substring(margin) } +
+            ""
+    }
+
+    private val snippet =
+        Regex(
+            """^(\s*)\.\. (input|output|literalinclude)::\s+(/(?:code-examples|includes)/\S+)\s*$"""
+        )
+
+    /**
+     * Splices the files a page's code directives name (`.. input::`, `.. output::` and `..
+     * literalinclude::` targets under `/code-examples/` or `/includes/`) into it as inline blocks,
+     * so the extractor reads them as it reads inline code. Tested snippets live outside the manual:
+     * its `source/code-examples/tested` is a repository symlink to
+     * `../../../../code-examples/tested`, so they are read from `content/code-examples`. Each file
+     * is recorded with its blob, like an include. The directives' options only style the output,
+     * and stay. A target that is not in the checkout is left in place, and the extractor rejects it
+     * only inside an example.
+     */
+    internal fun snippets(
+        tree: Path,
+        sourceRoot: String,
+        lines: List<String>,
+        includes: MutableList<FormInclude>,
+    ): List<String> {
+        val examples =
+            Path.of(sourceRoot, "code-examples").resolve("../../../../code-examples").normalize()
+        val result = mutableListOf<String>()
+        var index = 0
+        while (index < lines.size) {
+            val match = snippet.matchEntire(lines[index])
+            val target = match?.groupValues?.get(3)
+            val path =
+                when {
+                    target == null || ".." in target.split('/') -> null
+                    target.startsWith("/code-examples/") ->
+                        examples.resolve(target.removePrefix("/code-examples/")).toString()
+                    else -> sourceRoot + target
+                }
+            if (match == null || path == null || !tree.resolve(path).isRegularFile()) {
+                result += lines[index++]
+                continue
+            }
+            val indent = match.groupValues[1]
+            val kind = match.groupValues[2]
+            result += indent + if (kind == "literalinclude") ".. code-block::" else ".. $kind::"
+            index++
+            while (
+                index < lines.size &&
+                    lines[index].isNotBlank() &&
+                    lines[index].indexOfFirst { !it.isWhitespace() } > indent.length &&
+                    lines[index].trim().startsWith(":")
+            ) {
+                result += lines[index++]
+            }
+            val bytes = Files.readAllBytes(tree.resolve(path))
+            includes += FormInclude(path, gitBlob(bytes))
+            result += ""
+            bytes.decodeToString(throwOnInvalidSequence = true).trimEnd().lines().forEach {
+                result += if (it.isBlank()) "" else "$indent   $it"
+            }
+            result += ""
+        }
+        return result
+    }
 
     /**
      * Splices `.. include::` targets into the page, as Sphinx does, re-indented to the directive.

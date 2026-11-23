@@ -20,8 +20,8 @@ Every step of the plan (0–7) has been started. What stands:
 
 - **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 1 generated case.
   Core gate: 662 tests under each mapper; audits: 452.
-- **Generation:** inventory of mongodb/docs `e4b0c153` (197 pages read; 300 examples owned,
-  32 unowned, 11 unnamed), reviewed DSL bindings checked against core's API, and the
+- **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
+  included; 433 examples owned, 115 unowned, 30 unnamed, 4 ambiguous), reviewed DSL bindings checked against core's API, and the
   candidate → integrate → promote path. One expressions case is generated, and three are
   excluded with evidence.
 - **Monitoring:** a weekly discovery workflow that re-inventories the docs, regenerates,
@@ -41,12 +41,10 @@ Waiting on reviews or decisions:
   Do not report them ourselves.
 
 Step 5, generation and cutover:
-- **A resolver for tested code snippets** (`.. input:: /code-examples/...`). 103 pages, most
-  stage pages among them, are skipped without it. It is the largest unlock.
 - **Bindings for the gaps** the weekly job files as issues (today `$match`, `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
-- **Reviewed names** for the 11 examples with generic titles.
+- **Reviewed names** for the 30 unnamed and 4 ambiguous examples.
 - **The remaining legacy fixtures:** 193 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
   - 23 are legacy-only in `cutover.json`.
@@ -2590,3 +2588,24 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   one that changes nothing, or one without a reason.
 - Totals: ledger 363 cases; references 251, unresolved 69; 193 legacy directories. Core operator
   tests: 678 under each mapper; audits: 453.
+
+## Tested snippets in the inventory (2026-11-23)
+
+- Branch audits-snippets. 103 operator pages were skipped because their examples are tested
+  snippets (`.. input:: /code-examples/tested/...`) or sit beside other drivers' tabs whose remote
+  shared includes the extractor rejected.
+- `FormMigration.shellTabs` keeps only mongosh content: the `shell` tab of each `.. tabs-drivers::`
+  set and the `.. selected-content::` blocks selected for `shell`. `FormMigration.snippets` splices
+  in the files `.. input::`, `.. output::` and `.. literalinclude::` name under `/code-examples/`
+  (read from `content/code-examples`, the target of the `source/code-examples/tested` symlink) or
+  `/includes/`, each recorded with its blob among the page's includes. Options only style output,
+  and none in the manual selects lines.
+- `fetch.py pages` follows those targets; the discovery workflow and README clone add
+  `/content/code-examples/tested/` (9.2 MB).
+- Inventory at `e4b0c153`: 297 pages read (was 197), 3 skipped (the non-operator `interface`,
+  `search`, `searchMeta`); 433 examples owned (was 300), 115 unowned, 30 unnamed, 4 ambiguous. No
+  example on the 197 pages read before changed status. Generation is unchanged: the new unowned
+  examples are stage pages outside the generated families, or gaps (29 `$match`, 5 `$unwind`
+  bindings). Many snippets query MongoDB's sample datasets and print elided results.
+- The new inventory is committed with the change, so the weekly job does not file every newly
+  visible example as NEW_EXAMPLE.

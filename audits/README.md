@@ -77,7 +77,8 @@ To run discovery locally, clone the pages the same way (about 5 seconds):
 ```sh
 git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git /tmp/docs
 git -C /tmp/docs sparse-checkout set --no-cone \
-  /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/
+  /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/ \
+  /content/code-examples/tested/
 git -C /tmp/docs checkout -q
 audits/discover.sh /tmp/docs /tmp/discovery --integrate
 ```
@@ -155,7 +156,7 @@ trial run at MorphiaOrg/morphia. Use the disposable sandbox repository instead.
 | `Exclusions of cases that are not generated` | An exclusion outlived its case. Remove it. |
 | A removed scenario still runs | Stale `core/target/test-classes`; delete it and rebuild. |
 | `Owned file changed` in `GeneratedCasesTest` | A generated or protected file was edited. Regenerate, or run `FormMainKt manifest` after a reviewed edit. |
-| `External snippet requires a source resolver` | The page keeps its examples in tested code snippets, which the extractor does not resolve yet; the page is skipped. |
+| `External snippet requires a source resolver` | A code directive inside an example names a file that is not in the pages directory: a remote shared include, or a snippet outside the sparse clone (include `/content/code-examples/tested/`). The page is skipped. |
 | `gh` rate limits while fetching pages | Use a git clone and `fetch.py local`, as discovery does, instead of `fetch.py pages`. |
 
 ## Legacy paths still in use
@@ -171,7 +172,8 @@ its users does.
   - 23 are tracked as legacy-only in `cutover.json`;
   - 69 never-locked fixtures have no pinned reference.
 - **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory
-  read pages through it. It goes once the structured parser (`scenarios/`) owns example
-  extraction and resolves tested code snippets, which hold most stage examples.
+  read pages through it, with tested snippets spliced in and only the mongosh content of each
+  language choice kept. It goes once the structured parser (`scenarios/`) owns example extraction,
+  snippets included.
 - **The frozen legacy documentation tables** stay until a separate documentation migration retires
   them.

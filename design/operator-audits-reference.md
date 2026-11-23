@@ -695,7 +695,14 @@ not own, and restores every original if any change fails.
 `fetch.py current <out.json>` lists every operator page at one mongodb/docs commit, and
 `fetch.py pages <out.json> <pages>` fetches them. `GenerateMainKt inventory <root> <pages> <out.json>`
 then writes `audits/catalog/documented-examples.json`, which records every example's owner and the
-source text of the unowned ones.
+source text of the unowned ones. `FormMigration.pageExamples` first keeps only the `shell` tab of each
+`.. tabs-drivers::` set and the `.. selected-content::` blocks selected for `shell`
+(`FormMigration.shellTabs`), then splices in the files that `.. input::`, `.. output::` and
+`.. literalinclude::` name under `/code-examples/` or `/includes/` (`FormMigration.snippets`).
+`source/code-examples/tested` is a repository symlink to `../../../../code-examples/tested`, so
+tested snippets are read from `content/code-examples`; every spliced file is recorded with its git
+blob among the page's includes. `fetch.py pages` fetches those targets too, and the local clone
+needs `/content/code-examples/tested/` in its sparse checkout.
 
 `GenerateMainKt candidate <root> <out> <core-classpath-file>` checks `audits/catalog/dsl-bindings.json`
 against core's current source (pass `./mvnw dependency:build-classpath -pl :morphia-core` output, and

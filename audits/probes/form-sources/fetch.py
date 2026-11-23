@@ -25,12 +25,13 @@ This is the only networked step of the form migration. It never edits the reposi
 
   fetch.py local <docs-checkout> <out.json> <pages-dir>
       The same sources file for a local mongodb/docs checkout (sparse is enough: the operator
-      directories and source/includes), at its checked-out commit. Links <pages-dir>/<commit> to
+      directories, source/includes and content/code-examples/tested), at its checked-out commit. Links <pages-dir>/<commit> to
       the checkout instead of fetching, so it makes no API calls; git already checked every blob.
 
   fetch.py pages <sources.json> <pages-dir>
       Fetch every page named by a candidates or review file, plus its absolute
-      `.. include::` targets (recursively), at the exact recorded commit, into
+      `.. include::` targets (recursively) and the tested snippets and include files its
+      `.. input::`, `.. output::` and `.. literalinclude::` directives name, at the exact recorded commit, into
       <pages-dir>/<commit>/<path>. Every file, fetched or already present, must be exactly the
       git blob GitHub reports for that path and commit; ids already checked are cached in
       <pages-dir>/.verified.json and reused while a file's bytes still hash to them. A generated /includes/extracts/ file
@@ -54,6 +55,8 @@ DOCS_DIRECTORY = {
     "query/updates": "update",
 }
 INCLUDE = re.compile(r"^\s*\.\. include::\s+(/\S+)\s*$")
+# Code directives whose target the generator splices in: tested snippets and include files.
+SNIPPET = re.compile(r"^\s*\.\. (?:input|output|literalinclude)::\s+(/(?:code-examples|includes)/\S+)\s*$")
 
 
 def run(*command, cwd=None, text=True):
@@ -249,15 +252,27 @@ def fetch(commit, path, pages, include=False):
         with open(target, "wb") as handle:
             handle.write(content)
         remember(pages, key, expected)
+    if "source/" not in path:
+        return  # a tested snippet, outside the manual's source tree
     source_root = path[: path.index("source/") + len("source")]
     with open(target, encoding="utf-8") as handle:
         for line in handle.read().split("\n"):
             match = INCLUDE.match(line)
+            snippet = SNIPPET.match(line)
             if match:
                 nested = source_root + match.group(1)
-                if ".." in nested.split("/"):
-                    sys.exit(f"Invalid include {nested}")
-                fetch(commit, nested, pages, True)
+            elif snippet and snippet.group(1).startswith("/code-examples/"):
+                # source/code-examples/tested is a repository symlink to ../../../../code-examples/tested.
+                nested = os.path.normpath(os.path.join(
+                    source_root, "code-examples", "../../../../code-examples",
+                    snippet.group(1)[len("/code-examples/"):]))
+            elif snippet:
+                nested = source_root + snippet.group(1)
+            else:
+                continue
+            if ".." in nested.split("/"):
+                sys.exit(f"Invalid include {nested}")
+            fetch(commit, nested, pages, True)
 
 
 FETCHED_EXTRACTS = set()

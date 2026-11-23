@@ -42,7 +42,8 @@ jobs:
         run: |
           git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git "$RUNNER_TEMP/docs"
           git -C "$RUNNER_TEMP/docs" sparse-checkout set --no-cone \
-            /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/
+            /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/ \
+            /content/code-examples/tested/
           git -C "$RUNNER_TEMP/docs" checkout -q
 
       - name: Discover, generate and integrate

@@ -221,8 +221,16 @@ Each example gets one status:
 - **AMBIGUOUS**: its name collides with another.
 
 Generated cases never count as owners: generation derives them from the unowned examples on
-every run. A page whose examples are in tested code snippets is skipped with a reason until the
-snippet resolver exists.
+every run.
+
+Before extraction, a page is reduced to its mongosh content. Of a `.. tabs-drivers::` set only
+the `shell` tab is kept, and of a composable tutorial only the `.. selected-content::` selected for
+`shell`; the other drivers' content holds their own code and remote shared includes. The files that
+`.. input::`, `.. output::` and `.. literalinclude::` name are then spliced in as inline blocks:
+MongoDB's tested snippets (`/code-examples/tested/...`, read from `content/code-examples`) and
+include files. Each is recorded with its blob, like an include. Many tested snippets query MongoDB's
+sample datasets (`db.movies`) and print elided results; they extract like any other example and
+then show up as generation gaps.
 
 ### Generation
 
@@ -377,8 +385,9 @@ flowchart LR
   is absent.
 
 Two pieces are missing before this path replaces the legacy extractor and runs on a schedule: an
-accepted production baseline for the plan, and a resolver for tested code snippets. Until then,
-example extraction uses the legacy RST extractor described above.
+accepted production baseline for the plan, and snippet resolution in the structured scenario
+extraction (the legacy extractor splices snippets in itself). Until then, example extraction uses
+the legacy RST extractor described above.
 
 ## Testing the audits
 
