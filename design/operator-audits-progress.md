@@ -2537,3 +2537,11 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   duplicates. The job now restores the previous run's journal and runs in a concurrency group.
   The duplicate-marker guard refused once the listing caught up.
 - Filed alongside: #4562 (unordered-array comparison) and #4563 (the docs-error reminder).
+
+## Step 6e: milestone from the pom (2026-11-23)
+
+- Branch audits-milestone. Issues join the milestone of the release the root `pom.xml` builds
+  (`3.0.0-SNAPSHOT` → `3.0.0`), as decided on #4556. The publisher creates it first when it is
+  missing and there is something to publish; a closed one stops publication. `PublishMainKt`
+  takes the pom as an argument, and the policy no longer names a milestone.
+- The gateway may now also POST `repos/O/R/milestones`; the job's `issues: write` covers it.

@@ -194,7 +194,7 @@ every file. The ones the running system depends on:
 | `fixture-migration.json` | `FormMainKt migrate` / `convert` | The manifest, candidates, `rescenario`. |
 | `cutover.json` | Hand, from failed conversions | The conversion completeness check. |
 | `form-review.json`, `form-migration.json` | Review, then `FormMainKt capture` | Conversion, which carries the rules into each scenario. |
-| `publication-policy.json` | Hand | The publisher: the labels and milestone for each finding type. |
+| `publication-policy.json` | Hand | The publisher: the labels for each finding type. |
 
 ### Example inventory
 
@@ -334,13 +334,15 @@ made with the same commands.
 - Before each create it writes its intent to a journal, so a lost response is reconciled, not
   duplicated. The journal is carried between scheduled runs, because GitHub's issue listing can lag
   a recent create.
-- Labels and the milestone come from `publication-policy.json`. A label that does not exist stops
-  publication.
+- Labels come from `publication-policy.json`. A label that does not exist stops publication.
+- Issues join the milestone of the release the root `pom.xml` is building: `3.0.1-SNAPSHOT` gives
+  `3.0.1`. When that milestone does not exist and there is something to publish, the publisher
+  creates it first. A closed one stops publication, because that version has already shipped.
 
 `GhGateway` is the only route to GitHub. It runs `gh` with an explicit repository and a cleaned
 environment. A report-only gateway cannot spawn a mutating command, and a publishing gateway can
-only create or edit issues. Trial runs go to a disposable sandbox repository, never
-MorphiaOrg/morphia.
+only create or edit issues and create milestones. Trial runs go to a disposable sandbox repository,
+never MorphiaOrg/morphia.
 
 ### Capability coverage
 

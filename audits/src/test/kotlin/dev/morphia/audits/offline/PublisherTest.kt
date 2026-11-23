@@ -29,6 +29,7 @@ import dev.morphia.audits.publish.IssueRequest
 import dev.morphia.audits.publish.IssueTracker
 import dev.morphia.audits.publish.JournalEntry
 import dev.morphia.audits.publish.JournalState
+import dev.morphia.audits.publish.ProjectMilestone
 import dev.morphia.audits.publish.PublicationAction
 import dev.morphia.audits.publish.PublicationJournal
 import dev.morphia.audits.publish.PublicationPolicy
@@ -53,8 +54,7 @@ class PublisherTest {
                 mapOf(
                     FindingType.MISSING_API to listOf("enhancement"),
                     FindingType.VERSION_ANNOTATION to listOf("bug"),
-                ),
-            milestone = "3.x",
+                )
         )
 
     private val finding =
@@ -80,7 +80,12 @@ class PublisherTest {
         override fun labels() = listOf("enhancement", "bug", "manual").map { GhLabel(it) }
 
         // The milestone's number differs from any id it might have.
-        override fun milestones() = listOf(GhMilestone(7, "3.x", "open"))
+        val milestones = mutableListOf(GhMilestone(7, "3.x", "open"))
+
+        override fun milestones() = milestones.toList()
+
+        override fun createMilestone(title: String) =
+            GhMilestone(milestones.maxOf { it.number } + 1, title, "open").also { milestones += it }
 
         override fun create(request: IssueRequest): GhIssue {
             creates++
@@ -125,7 +130,7 @@ class PublisherTest {
     }
 
     private fun publisher(fake: Fake, publish: Boolean = true, polls: Int = 3) =
-        Publisher(fake, policy, journal, publish, polls = polls, sleeper = {})
+        Publisher(fake, policy, journal, publish, "3.x", polls = polls, sleeper = {})
 
     @Test
     fun aFindingIsFiledOnceAndRerunsChangeNothing() {
@@ -156,7 +161,7 @@ class PublisherTest {
                 override fun issues() = emptyList<GhIssue>()
             }
         val result =
-            Publisher(lagging, policy, journal, true, sleeper = {})
+            Publisher(lagging, policy, journal, true, "3.x", sleeper = {})
                 .publish(listOf(finding))
                 .single()
         assertEquals(PublicationAction.UNCHANGED, result.action)
@@ -216,7 +221,7 @@ class PublisherTest {
                 }
             }
         val result =
-            Publisher(tracker, policy, journal, true, polls = 3, sleeper = {})
+            Publisher(tracker, policy, journal, true, "3.x", polls = 3, sleeper = {})
                 .publish(listOf(finding))
                 .single()
         assertEquals(PublicationAction.CREATED, result.action)
@@ -284,6 +289,54 @@ class PublisherTest {
         assertEquals(1, fake.issues.size)
         assertEquals(listOf("enhancement"), fake.issues.single().labels)
         assertEquals(7, fake.issues.single().milestone)
+    }
+
+    @Test
+    fun aMissingMilestoneIsCreatedOnlyWhenThereIsSomethingToPublish() {
+        val fake = Fake()
+        fun publisher(publish: Boolean) =
+            Publisher(fake, policy, journal, publish, "3.0.1", sleeper = {})
+        publisher(true).publish(emptyList())
+        publisher(false).publish(listOf(finding))
+        assertEquals(listOf("3.x"), fake.milestones.map { it.title })
+        publisher(true).publish(listOf(finding))
+        assertEquals(GhMilestone(8, "3.0.1", "open"), fake.milestones.last())
+        assertEquals(8, fake.issues.single().milestone)
+        // The next run finds it rather than creating another.
+        publisher(true).publish(listOf(finding))
+        assertEquals(2, fake.milestones.size)
+    }
+
+    @Test
+    fun aClosedMilestoneStopsPublication() {
+        val fake = Fake()
+        fake.milestones += GhMilestone(8, "2.5.3", "closed")
+        assertThrows(IllegalArgumentException::class.java) {
+            Publisher(fake, policy, journal, true, "2.5.3").publish(listOf(finding))
+        }
+        assertEquals(0, fake.creates)
+    }
+
+    @Test
+    fun theMilestoneIsTheReleaseThePomBuilds() {
+        fun pom(version: String) =
+            directory.resolve("pom.xml").also {
+                Files.writeString(
+                    it,
+                    "<project><parent><version>73</version></parent>$version<dependencies>" +
+                        "<dependency><version>9.9.9</version></dependency></dependencies></project>",
+                )
+            }
+        assertEquals("3.0.1", ProjectMilestone.of(pom("<version>3.0.1-SNAPSHOT</version>")))
+        assertEquals("3.1.0", ProjectMilestone.of(pom("<version>3.1.0</version>")))
+        assertThrows(IllegalArgumentException::class.java) { ProjectMilestone.of(pom("")) }
+        assertThrows(IllegalArgumentException::class.java) {
+            ProjectMilestone.of(pom("<version>\${revision}</version>"))
+        }
+        val root =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        assertTrue(Regex("""\d+\.\d+\.\d+""").matches(ProjectMilestone.of(root.resolve("pom.xml"))))
     }
 
     @Test

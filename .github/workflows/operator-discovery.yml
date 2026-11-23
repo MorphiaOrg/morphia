@@ -115,7 +115,7 @@ jobs:
           flag=$([ "$PUBLISH" = "true" ] && echo --publish || true)
           ./mvnw -B -ntp -q -Daudits -pl audits compile exec:java \
             -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
-            -Dexec.args="discovery $RUNNER_TEMP/discovery $PWD/audits/catalog/documented-examples.json $PWD/audits/catalog/publication-policy.json $RUNNER_TEMP/journal.json ${{ github.repository }} $flag" \
+            -Dexec.args="discovery $RUNNER_TEMP/discovery $PWD/audits/catalog/documented-examples.json $PWD/audits/catalog/publication-policy.json $RUNNER_TEMP/journal.json $PWD/pom.xml ${{ github.repository }} $flag" \
             | tee "$RUNNER_TEMP/publications.json"
 
       - name: Upload publications

@@ -36,8 +36,7 @@ class PublisherSandboxTest {
                 mapOf(
                     FindingType.MISSING_API to listOf("audit"),
                     FindingType.VERSION_ANNOTATION to listOf("audit"),
-                ),
-            milestone = "sandbox",
+                )
         )
 
     private val findings =
@@ -62,7 +61,7 @@ class PublisherSandboxTest {
         // One journal across runs, as a real publisher keeps; issues are checked by number, since
         // the listing can lag a write.
         val journal = directory.resolve("journal.json")
-        fun publisher() = Publisher(gateway, policy, journal, true)
+        fun publisher() = Publisher(gateway, policy, journal, true, "sandbox")
 
         val first = publisher().publish(findings)
         assertTrue(

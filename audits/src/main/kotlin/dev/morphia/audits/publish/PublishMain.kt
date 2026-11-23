@@ -5,20 +5,21 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 private const val USAGE =
-    """Usage: PublishMainKt <coverage-report.json> <policy.json> <journal.json> <OWNER/REPO> [--publish]
-       PublishMainKt discovery <discovery-out> <committed-inventory.json> <policy.json> <journal.json> <OWNER/REPO> [--publish]"""
+    """Usage: PublishMainKt <coverage-report.json> <policy.json> <journal.json> <pom.xml> <OWNER/REPO> [--publish]
+       PublishMainKt discovery <discovery-out> <committed-inventory.json> <policy.json> <journal.json> <pom.xml> <OWNER/REPO> [--publish]"""
 
 /**
  * Files findings as issues in OWNER/REPO: a validated coverage report's, or, with `discovery`,
- * those of an `audits/discover.sh` output directory against the committed example inventory.
- * Without `--publish` it only reports what it would do and never spawns a mutating command.
+ * those of an `audits/discover.sh` output directory against the committed example inventory. Issues
+ * join the milestone of the release `pom.xml`'s version is building, created when missing. Without
+ * `--publish` it only reports what it would do and never spawns a mutating command.
  * `AUDITS_GITHUB_TOKEN`, when set, is the token `gh` uses (CI maps its job token to it); otherwise
  * `gh` uses its stored credentials. Prints each publication.
  */
 fun main(args: Array<String>) {
     fun read(path: Path) = Files.readString(path)
     val discovery = args.firstOrNull() == "discovery"
-    val positional = if (discovery) 6 else 4
+    val positional = if (discovery) 7 else 5
     require(args.size == positional || args.size == positional + 1 && args.last() == "--publish") {
         USAGE
     }
@@ -56,6 +57,7 @@ fun main(args: Array<String>) {
                 AuditJson.publicationPolicy(read(Path.of(policy))),
                 Path.of(journal),
                 publish,
+                ProjectMilestone.of(Path.of(args[positional - 2])),
             )
             .publish(findings)
     println(AuditJson.write(publications))

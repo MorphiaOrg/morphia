@@ -153,6 +153,9 @@ interface IssueTracker {
 
     fun milestones(): List<GhMilestone>
 
+    /** Creates an open milestone once; like an issue create, it is never replayed. */
+    fun createMilestone(title: String): GhMilestone
+
     fun create(request: IssueRequest): GhIssue
 
     fun update(number: Int, patch: IssuePatch): GhIssue
@@ -212,6 +215,12 @@ class GhGateway(
             GhMilestone(it.integer("number"), it.text("title"), it.text("state"))
         }
 
+    override fun createMilestone(title: String): GhMilestone {
+        val payload = mapper.createObjectNode().put("title", title)
+        val created = write("POST", "${target.path}/milestones", payload.toString())
+        return GhMilestone(created.integer("number"), created.text("title"), created.text("state"))
+    }
+
     /** Creates an issue once; an uncertain result is the caller's to reconcile, not retry. */
     override fun create(request: IssueRequest): GhIssue {
         val payload =
@@ -267,7 +276,8 @@ class GhGateway(
         // Report-only gateways never spawn a mutating command.
         check(mode == GhMode.PUBLISH) { "A report-only gateway cannot $method $path" }
         check(
-            method == "POST" && path == "${target.path}/issues" ||
+            method == "POST" &&
+                path in setOf("${target.path}/issues", "${target.path}/milestones") ||
                 method == "PATCH" && Regex("""\Q${target.path}\E/issues/\d+""").matches(path)
         ) {
             "$method $path is not a publisher operation"

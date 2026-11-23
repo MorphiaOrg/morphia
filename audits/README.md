@@ -43,7 +43,7 @@ Every command below runs through the exec plugin from the repository root, after
 | `audits/catalog/legacy-bindings.json`, `binding-policy.json` | The frozen import of which legacy test owns which fixture, and its reviewed exceptions. |
 | `audits/catalog/name-backport*.json` | Descriptive names given to the legacy fixtures. |
 | `audits/catalog/legacy-corpus.json` | The preservation snapshot of the legacy corpus. |
-| `audits/catalog/publication-policy.json` | Labels and milestone the publisher applies. |
+| `audits/catalog/publication-policy.json` | Labels the publisher applies. |
 | `core/src/test/resources/dev/morphia/test/generated/manifest.json` | Every case on the runner and every file the generated namespace owns. |
 | `core/src/test/java/dev/morphia/test/generated/` | Generated test classes; never edit them by hand. |
 
@@ -135,10 +135,11 @@ never-locked fixtures come from `fetch.py references`, `fetch.py pages` and
 
 ## Publishing findings
 
-`PublishMainKt <coverage-report.json> <policy.json> <journal.json> <owner/repo>`, or
-`PublishMainKt discovery <discovery-out> <committed-inventory.json> <policy.json> <journal.json> <owner/repo>`
+`PublishMainKt <coverage-report.json> <policy.json> <journal.json> pom.xml <owner/repo>`, or
+`PublishMainKt discovery <discovery-out> <committed-inventory.json> <policy.json> <journal.json> pom.xml <owner/repo>`
 for a discovery run's findings, only prints what it would file. Add `--publish` to file issues, which needs `gh` authenticated with write access to
-issues (or `AUDITS_GITHUB_TOKEN`). The journal makes reruns idempotent: keep it, and never point a
+issues (or `AUDITS_GITHUB_TOKEN`). Issues join the milestone of the release `pom.xml` is building
+(`3.0.1-SNAPSHOT` → `3.0.1`), which is created first if it does not exist. The journal makes reruns idempotent: keep it, and never point a
 trial run at MorphiaOrg/morphia. Use the disposable sandbox repository instead.
 
 ## Troubleshooting

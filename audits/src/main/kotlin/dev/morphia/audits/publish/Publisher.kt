@@ -31,12 +31,8 @@ enum class FindingType {
  */
 data class Finding(val key: String, val type: FindingType, val title: String, val body: String)
 
-/** Which labels each finding type gets and which milestone new issues join; all must exist. */
-data class PublicationPolicy(
-    val schemaVersion: Int = 1,
-    val labels: Map<FindingType, List<String>>,
-    val milestone: String?,
-)
+/** Which labels each finding type gets; all must exist. */
+data class PublicationPolicy(val schemaVersion: Int = 1, val labels: Map<FindingType, List<String>>)
 
 enum class JournalState {
     /** The create was about to be sent; no outcome was recorded. */
@@ -81,12 +77,16 @@ data class Publication(
  * issue is never reopened or edited. Before sending a create, the intent is written to the
  * [journal]; a lost or failed response leaves it `POSSIBLY_CREATED`, and the key is then reconciled
  * against the all-state listing by its marker, never created again until a reviewer resolves it.
+ *
+ * Issues join the open [milestone] with that title. When it does not exist and there is something
+ * to publish, it is created first; a closed one stops publication, since its version has shipped.
  */
 class Publisher(
     private val tracker: IssueTracker,
     private val policy: PublicationPolicy,
     private val journal: Path,
     private val publish: Boolean,
+    private val milestone: String? = null,
     private val polls: Int = 5,
     private val interval: Duration = Duration.ofSeconds(2),
     private val sleeper: (Duration) -> Unit = { Thread.sleep(it.toMillis()) },
@@ -99,11 +99,12 @@ class Publisher(
         val missing = policy.labels.values.flatten().toSet() - labels
         require(missing.isEmpty()) { "The policy's labels do not exist: ${missing.sorted()}" }
         val milestone =
-            policy.milestone?.let { title ->
-                tracker
-                    .milestones()
-                    .singleOrNull { it.title == title && it.state == "open" }
-                    ?.number ?: throw IllegalArgumentException("No open milestone named $title")
+            milestone?.let { title ->
+                val found = tracker.milestones().filter { it.title == title }
+                require(found.all { it.state == "open" }) { "The milestone $title is closed" }
+                found.singleOrNull()?.number
+                    ?: if (publish && findings.isNotEmpty()) tracker.createMilestone(title).number
+                    else null
             }
         // An intent with no recorded outcome may have reached GitHub before a crash.
         var state =

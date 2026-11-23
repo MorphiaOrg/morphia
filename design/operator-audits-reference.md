@@ -635,7 +635,7 @@ report against the tree without the pages. See the [migration design](operator-a
 an argument array with an explicit host and repository (inherited `GH_HOST`, `GH_REPO` and unrelated
 tokens are removed from its environment; prompts, pagers and update notices are off). A
 `REPORT_ONLY` gateway never spawns a mutating command, and a `PUBLISH` gateway may only create or
-edit issues in its target repository. Reads paginate (`--paginate --slurp`, flattened in Kotlin),
+edit issues and create milestones in its target repository. Reads paginate (`--paginate --slurp`, flattened in Kotlin),
 drop pull requests from the issues endpoint, and retry rate limits, timeouts and server errors with
 bounded backoff; creates are never replayed. Its unit tests replay recorded process results and need
 no binary, credentials or network.
@@ -646,12 +646,14 @@ that has an `audit` label and a `sandbox` milestone (for this project, the priva
 
 ## Publishing findings
 
-`PublishMainKt <coverage-report.json> audits/catalog/publication-policy.json <journal.json> OWNER/REPO
-[--publish]` files a validated coverage report's findings as issues. Without `--publish` it only
+`PublishMainKt <coverage-report.json> audits/catalog/publication-policy.json <journal.json> pom.xml
+OWNER/REPO [--publish]` files a validated coverage report's findings as issues. Without `--publish` it only
 reports what it would do. Findings come only from a report that is not `INVALID`, and only from
 contexts whose inventory is healthy: a missing typed API (`MISSING_API`) and a missing or wrong
-server-version annotation (`VERSION_ANNOTATION`). `publication-policy.json` names each type's labels
-and the milestone new issues join; any that do not exist stop publication.
+server-version annotation (`VERSION_ANNOTATION`). `publication-policy.json` names each type's labels;
+any that do not exist stop publication. Issues join the milestone named for the release `pom.xml`'s
+own `project/version` builds, without `-SNAPSHOT` (`3.0.1-SNAPSHOT` gives `3.0.1`). A missing one is
+created, but only when publishing with something to publish; a closed one stops publication.
 
 Each issue carries its finding's stable key in a marker. The publisher owns only the text between
 its markers, adds its labels without removing others, sets a milestone only where none is set, and
@@ -662,7 +664,7 @@ GitHub's listing can lag a recent write. `AUDITS_GITHUB_TOKEN`, when set, is the
 `PublisherSandboxTest` runs the publisher against the sandbox repository (`-Daudits.sandbox=...`).
 
 `PublishMainKt discovery <discovery-out> audits/catalog/documented-examples.json <policy.json>
-<journal.json> OWNER/REPO [--publish]` files a discovery run's findings instead (`DiscoveryFindings`):
+<journal.json> pom.xml OWNER/REPO [--publish]` files a discovery run's findings instead (`DiscoveryFindings`):
 `MISSING_BINDING`, one per node the generator has no binding for, listing the examples it blocks;
 `NEW_EXAMPLE`, an unowned example absent from the committed inventory; and `INTEGRATION_FAILURE`,
 naming the failing tests from `integration.log`. The scheduled workflow restores the previous run's

@@ -3,6 +3,7 @@ package dev.morphia.audits.offline
 import dev.morphia.audits.publish.GhException
 import dev.morphia.audits.publish.GhFailure
 import dev.morphia.audits.publish.GhGateway
+import dev.morphia.audits.publish.GhMilestone
 import dev.morphia.audits.publish.GhMode
 import dev.morphia.audits.publish.GhTarget
 import dev.morphia.audits.publish.IssuePatch
@@ -102,7 +103,19 @@ class GhGatewayTest {
         assertThrows(IllegalStateException::class.java) {
             gateway.update(1, IssuePatch(body = "b"))
         }
+        assertThrows(IllegalStateException::class.java) { gateway.createMilestone("3.0.1") }
         assertTrue(recorder.calls.isEmpty())
+    }
+
+    @Test
+    fun createMilestonePostsItsTitleOnce() {
+        val created =
+            Recorder(ok("""{"id": 99, "number": 102, "title": "3.0.1", "state": "open"}"""))
+        val milestone = gateway(created, GhMode.PUBLISH).createMilestone("3.0.1")
+        assertEquals(GhMilestone(102, "3.0.1", "open"), milestone)
+        val (command, _, stdin) = created.calls.single()
+        assertTrue(command.containsAll(listOf("--method", "POST", "repos/owner/repo/milestones")))
+        assertEquals("""{"title":"3.0.1"}""", stdin)
     }
 
     @Test
