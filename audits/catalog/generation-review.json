@@ -1,7 +1,9 @@
 {
   "schemaVersion": 1,
   "families": [
-    "aggregation/expressions"
+    "aggregation/expressions",
+    "query/filters",
+    "query/updates"
   ],
   "excluded": [
     {
@@ -15,6 +17,10 @@
     {
       "name": "aggregation/expressions/filter/useIdxToAccessTheIndex",
       "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912)."
+    },
+    {
+      "name": "query/updates/positional-all/updateArraysSpecifiedUsingANegationQueryOperator",
+      "reason": "The page prints the whole collection after the update; the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass."
     }
   ],
   "sampleDatasets": {

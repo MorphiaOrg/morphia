@@ -4,12 +4,14 @@ import dev.morphia.audits.api.ApiInventory
 import dev.morphia.audits.api.DeclarationKind
 
 /**
- * Where an MQL operator appears: as a pipeline stage, inside an expression, or in a query filter.
+ * Where an MQL operator appears: as a pipeline stage, inside an expression, in a query filter, or
+ * as an update operator.
  */
 enum class BindingPosition {
     STAGE,
     EXPRESSION,
     FILTER,
+    UPDATE,
 }
 
 /** How an operator's BSON value becomes the factory's arguments. */
@@ -38,8 +40,9 @@ enum class BindingForm {
      */
     FILTERS,
     /**
-     * A query operator on a field, `{field: {$op: v}}`: the factory takes the field name and, when
-     * it has a second parameter, `v`. A one-parameter factory (`$exists`) takes only `true`.
+     * An operator on a field: a query operator, `{field: {$op: v}}`, or an update operator, `{$op:
+     * {field: v}}`. The factory takes the field name and, when it has a second parameter, `v`. A
+     * one-parameter query factory (`$exists`) takes only `true`.
      */
     FIELD,
     /**
@@ -144,12 +147,13 @@ object DslBindings {
                             "$label: a sort stage takes no arguments and binds [ascending, descending]"
                 BindingForm.FIELD ->
                     if (
-                        binding.position != BindingPosition.FILTER ||
+                        binding.position !in
+                            setOf(BindingPosition.FILTER, BindingPosition.UPDATE) ||
                             binding.parameters.firstOrNull() != "java.lang.String" ||
                             binding.parameters.size !in 1..2
                     )
                         problems +=
-                            "$label: a field filter takes the field name and at most a value"
+                            "$label: a field operator takes the field name and at most a value"
             }
             val result = erase(factory.returnType ?: "")
             (binding.options + binding.fields).forEach { (key, call) ->

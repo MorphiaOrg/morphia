@@ -1620,6 +1620,11 @@
     "scenario" : "/dev/morphia/test/query/filters/gte/performAnUpdateBasedOnEmbeddedDocumentFields/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestGte#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
   }, {
+    "kind" : "GENERATED",
+    "name" : "query/filters/in/matchValuesInAnArray",
+    "scenario" : "/dev/morphia/test/generated/fixtures/filters/in/matchValuesInAnArray/scenario.json",
+    "test" : "dev.morphia.test.generated.filters.TestIn#matchValuesInAnArray"
+  }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
     "scenario" : "/dev/morphia/test/query/filters/in/useTheInOperatorToMatchValuesInAnArray/scenario.json",
@@ -1764,6 +1769,11 @@
     "name" : "query/updates/position/useANegativeArrayIndexPositionToAddElementsToTheArray",
     "scenario" : "/dev/morphia/test/query/updates/position/useANegativeArrayIndexPositionToAddElementsToTheArray/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestPosition#testUseANegativeArrayIndexPositionToAddElementsToTheArray"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "query/updates/positional-all/updateAllElementsInAnArray",
+    "scenario" : "/dev/morphia/test/generated/fixtures/updates/positional-all/updateAllElementsInAnArray/scenario.json",
+    "test" : "dev.morphia.test.generated.updates.TestPositionalAll#updateAllElementsInAnArray"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/updates/positional/updateEmbeddedDocumentsUsingMultipleFieldMatches",
@@ -1915,6 +1925,14 @@
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestTopN.java",
     "sha256" : "60d9727f2c4e2891bfed4f4689c7853e9248d56ab24b06ad3ab982ac17d92e9c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/filters/TestIn.java",
+    "sha256" : "4488d2132039c96a001b74dbcd0239737633aa411d805159fbbf5c0f7d5bbaea"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/updates/TestPositionalAll.java",
+    "sha256" : "1f15f53398639623ff92a2275b197f99359ef1fb9c68b12ad2a90d0ad11bb4aa"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/abs/absExpressionOperator/scenario.json",
@@ -3088,6 +3106,10 @@
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
     "sha256" : "c00273bdf10a7ad0ba29a9e4f603963c802b0be41588284f15a273a45343d6ba"
   }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/in/matchValuesInAnArray/scenario.json",
+    "sha256" : "4a83c4febc4e907c0d2cd33830e5ebb27b2c03b1ffac2d742ca106c5102697b6"
+  }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",
     "sha256" : "cbee0e532d5860b826a27bbddda925f621fe69033d0220da7cbdb63acc2aec56"
@@ -3095,6 +3117,10 @@
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/printedMismatch/scenario.json",
     "sha256" : "ccdec466a95e3325eecd8997cb852a14de71a815c6f6c5e4cd5b77332aab5296"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/positional-all/updateAllElementsInAnArray/scenario.json",
+    "sha256" : "1c36e64e5a860d392f99d2a786c8ab8098a51fe441001282f512845d8dfd668a"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/printed.json",

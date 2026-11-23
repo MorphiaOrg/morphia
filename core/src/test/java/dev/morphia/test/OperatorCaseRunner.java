@@ -94,6 +94,13 @@ public class OperatorCaseRunner {
      */
     public void find(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl) {
         options(operatorCase, options);
+        find(operatorCase, dsl);
+    }
+
+    /**
+     * Runs a query case: the documented filter runs through the driver, and Morphia's query as {@code dsl} builds it.
+     */
+    public void find(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl) {
         run(operatorCase, "find", Shape.FIND, (action, collection) -> {
             Query<Document> query = dsl.apply(test.getDs().find(Document.class, new FindOptions().collection(collection))
                     .disableValidation());
@@ -116,6 +123,14 @@ public class OperatorCaseRunner {
     public void update(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl,
             UpdateOperator... operators) {
         options(operatorCase, options);
+        update(operatorCase, dsl, operators);
+    }
+
+    /**
+     * Runs an update case: the results are the documents its filter matches after the update, and every collection is
+     * compared as well.
+     */
+    public void update(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, UpdateOperator... operators) {
         run(operatorCase, "update", Shape.UPDATE, (action, collection) -> {
             Query<Document> query = dsl.apply(test.getDs().find(collection, Document.class).disableValidation());
             Document updates = new Operations(test.getDs(), null, List.of(operators), false).toDocument(test.getDs());

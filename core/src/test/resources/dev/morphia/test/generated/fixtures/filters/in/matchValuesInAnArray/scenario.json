@@ -1,0 +1,92 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/in/matchValuesInAnArray",
+  "title": "Match Values in an Array",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/in.txt",
+    "blob": "bac31808d1910fe9947955e65d193b3035f2e718"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "movies",
+    "filter": {
+      "rated": {
+        "$in": [
+          "G",
+          "TV-G"
+        ]
+      }
+    },
+    "update": {
+      "$set": {
+        "familyFriendly": true
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "acknowledged",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "insertedId",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "matchedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "536"
+              }
+            }
+          },
+          {
+            "name": "modifiedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "536"
+              }
+            }
+          },
+          {
+            "name": "upsertedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

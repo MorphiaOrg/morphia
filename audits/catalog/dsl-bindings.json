@@ -705,6 +705,171 @@
       "arguments": [],
       "options": {},
       "fields": {}
+    },
+    {
+      "operator": "$addToSet",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "addToSet",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$inc",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "inc",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Number"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$max",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "max",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Number"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$min",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "min",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Number"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$mul",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "mul",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Number"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$pull",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "pull",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$pullAll",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "pullAll",
+      "parameters": [
+        "java.lang.String",
+        "java.util.List"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$push",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "push",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$rename",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "rename",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$set",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "set",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$unset",
+      "position": "UPDATE",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.updates.UpdateOperators",
+      "method": "unset",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.String[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     }
   ]
 }

@@ -180,6 +180,100 @@ class GeneratorTest {
         assertEquals(inventory, AuditJson.exampleInventory(AuditJson.write(inventory)))
     }
 
+    /** Query and update pages generate find and update cases with the committed bindings. */
+    @Test
+    fun findsAndUpdatesAreGenerated() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed =
+            block("db.inventory.insertMany( [ { _id: 1, qty: Int32(25), tags: [ \"a\" ] } ] )")
+        page(
+            "gt",
+            "query",
+            """
+            |Examples
+            |--------
+            |
+            |$seed
+            |Match Larger Quantities
+            |~~~~~~~~~~~~~~~~~~~~~~~
+            |
+            |${block("db.inventory.find( { qty: { ${'$'}gt: 20 } } )")}
+            |Project the Quantity
+            |~~~~~~~~~~~~~~~~~~~~
+            |
+            |${block("db.inventory.find( { qty: { ${'$'}gt: 20 } }, { qty: 1 } )")}"""
+                .trimMargin(),
+        )
+        page(
+            "inc",
+            "update",
+            """
+            |Examples
+            |--------
+            |
+            |$seed
+            |Increment and Tag
+            |~~~~~~~~~~~~~~~~~
+            |
+            |${block("db.inventory.updateOne( { _id: 1 }, { ${'$'}inc: { qty: 2 }, ${'$'}set: { tags: [ \"b\" ] } } )")}
+            |Increment in a Pipeline
+            |~~~~~~~~~~~~~~~~~~~~~~~
+            |
+            |${block("db.inventory.updateOne( { _id: 1 }, [ { ${'$'}set: { qty: 2 } } ] )")}"""
+                .trimMargin(),
+        )
+        val inventory =
+            DocumentedExamples.capture(
+                root,
+                directory.resolve("pages"),
+                CurrentPages(
+                    commit = commit,
+                    pages =
+                        listOf("gt", "inc").map {
+                            CurrentPage(FormSource(commit, "$folder/$it.txt"))
+                        },
+                ),
+            )
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("query/filters", "query/updates")),
+                emptySet(),
+            )
+        assertEquals(
+            listOf("query/filters/gt/matchLargerQuantities", "query/updates/inc/incrementAndTag"),
+            generation.cases.map { it.manifest.name },
+        )
+        val find =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/filters/TestGt.java"
+            )
+        assertTrue("(query) -> query.filter(gt(\"qty\", 20)));" in find, find)
+        val update =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/updates/TestInc.java"
+            )
+        val call =
+            "(query) -> query.filter(eq(\"_id\", 1)),\n                inc(\"qty\", 2),\n" +
+                "                set(\"tags\", List.of(\"b\")));"
+        assertTrue("runner.update(" in update && call in update, update)
+        assertEquals(
+            mapOf(
+                "Project the Quantity" to "a documented projection is not generated yet",
+                "Increment in a Pipeline" to "/update: a pipeline update has no binding",
+            ),
+            generation.gaps.associate { it.title to it.detail },
+        )
+    }
+
     /** A reviewed name stands in for a generic title; a stale review is counted, not applied. */
     @Test
     fun reviewedNamesResolveGenericTitles() {
@@ -572,7 +666,10 @@ class GeneratorTest {
         assertTrue(catalog.bindings.isNotEmpty())
         val review =
             AuditJson.generationReview(Files.readString(root.resolve(CaseGenerator.REVIEW)))
-        assertEquals(listOf("aggregation/expressions"), review.families)
+        assertEquals(
+            listOf("aggregation/expressions", "query/filters", "query/updates"),
+            review.families,
+        )
         // The inventory's recorded source text is what generation reads; its digests must hold.
         val inventory =
             AuditJson.exampleInventory(Files.readString(root.resolve(DocumentedExamples.PATH)))

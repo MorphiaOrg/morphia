@@ -80,6 +80,8 @@ object CaseGenerator {
     private const val OBJECT = "java.lang.Object"
     private const val STRING = "java.lang.String"
     private const val ITERABLE = "java.lang.Iterable"
+    private const val LIST = "java.util.List"
+    private const val NUMBER = "java.lang.Number"
     private const val SORTS = "dev.morphia.query.Sort[]"
     /** The binding key of an array literal in an expression. */
     const val ARRAY = "[]"
@@ -105,6 +107,10 @@ object CaseGenerator {
         val filters =
             catalog.bindings
                 .filter { it.position == BindingPosition.FILTER }
+                .associateBy { it.operator }
+        val updates =
+            catalog.bindings
+                .filter { it.position == BindingPosition.UPDATE }
                 .associateBy { it.operator }
         val excluded = review.excluded.associate { it.name to it.reason }
         val cases = mutableListOf<Pair<GeneratedCase, Emitter>>()
@@ -152,17 +158,39 @@ object CaseGenerator {
                                 failure.message!!.removePrefix("$name: "),
                             )
                         }
-                    if (documented.shape != ActionShape.PIPELINE) {
+                    if (documented.shape == ActionShape.FIND && documented.action.size != 1) {
                         return@forEach gap(
                             GapKind.SOURCE_UNSUPPORTED,
-                            "a ${documented.shape} action is not generated yet",
+                            "a documented projection is not generated yet",
                         )
                     }
-                    val emitted = Emitter(stages, expressions, filters)
-                    val pipeline =
+                    val emitted = Emitter(stages, expressions, filters, updates)
+                    val resource =
+                        FixtureMigration.scenarioPath(name, GENERATED).removePrefix(RESOURCES)
+                    val indent = "\n                        "
+                    val call =
                         try {
-                            documented.action.mapIndexed { index, stage ->
-                                emitted.stage(stage, "/pipeline/$index")
+                            when (documented.shape) {
+                                ActionShape.PIPELINE -> {
+                                    val pipeline =
+                                        documented.action.mapIndexed { index, stage ->
+                                            emitted.stage(stage, "/pipeline/$index")
+                                        }
+                                    "runner.aggregate(\n                OperatorCase.of(${literal(resource)}),\n" +
+                                        "                (aggregation) -> aggregation.pipeline($indent" +
+                                        pipeline.joinToString(",$indent") +
+                                        "));"
+                                }
+                                ActionShape.FIND ->
+                                    "runner.find(\n                OperatorCase.of(${literal(resource)}),\n" +
+                                        "                ${query(emitted.filters(documented.action[0], "/filter"))});"
+                                ActionShape.UPDATE -> {
+                                    val operators = emitted.updates(documented.action[1], "/update")
+                                    "runner.update(\n                OperatorCase.of(${literal(resource)}),\n" +
+                                        "                ${query(emitted.filters(documented.action[0], "/filter"))}," +
+                                        operators.joinToString(",") { "\n                $it" } +
+                                        ");"
+                                }
                             }
                         } catch (unbound: Unbound) {
                             return@forEach gap(GapKind.UNBOUND, unbound.message!!)
@@ -173,7 +201,6 @@ object CaseGenerator {
                         review.sampleDatasets[documented.collection].takeIf {
                             example.blocks.none { it.role == BlockRole.DATA }
                         }
-                    val scenario = FixtureMigration.scenarioPath(name, GENERATED)
                     val override =
                         FormOverride(
                             fixture = name,
@@ -190,16 +217,12 @@ object CaseGenerator {
                             retiredLock = null,
                             fixtureFiles = emptyMap(),
                         )
-                    val resource = scenario.removePrefix(RESOURCES)
                     val method =
                         """
                         |    @Test
                         |    @DisplayName(${literal(example.name ?: example.title)})
                         |    public void $stem() {
-                        |        runner.aggregate(
-                        |                OperatorCase.of(${literal(resource)}),
-                        |                (aggregation) -> aggregation.pipeline(
-                        |                        ${pipeline.joinToString(",\n                        ")}));
+                        |        $call
                         |    }
                         |"""
                             .trimMargin()
@@ -230,6 +253,11 @@ object CaseGenerator {
             gaps.sortedWith(compareBy({ it.context }, { it.operator }, { it.title })),
         )
     }
+
+    /** The query function of a find or an update: its filters, or the query itself for none. */
+    private fun query(filters: List<String>): String =
+        if (filters.isEmpty()) "(query) -> query"
+        else "(query) -> query.filter(${filters.joinToString(", ")})"
 
     private fun type(
         qualified: String,
@@ -302,6 +330,7 @@ object CaseGenerator {
         val stages: Map<String, DslBinding>,
         val expressions: Map<String, DslBinding>,
         val filters: Map<String, DslBinding>,
+        val updates: Map<String, DslBinding>,
     ) {
         /** Owner and method of every factory called. */
         val calls = mutableSetOf<Pair<String, String>>()
@@ -396,19 +425,7 @@ object CaseGenerator {
                             ".$method(${literal(field)}, ${value(each, OBJECT, "$path/$field")})"
                         }
                 }
-                BindingForm.FILTERS -> {
-                    if (!argument.isDocument)
-                        throw Unbound("$path: ${binding.operator} takes a query document")
-                    factory.format(
-                        argument
-                            .asDocument()
-                            .entries
-                            .flatMap { (field, predicate) ->
-                                predicates(field, predicate, "$path/$field")
-                            }
-                            .joinToString(", ")
-                    )
-                }
+                BindingForm.FILTERS -> factory.format(filters(argument, path).joinToString(", "))
                 BindingForm.FIELD ->
                     throw Unbound("$path: ${binding.operator} is a query operator, not a value")
                 BindingForm.GROUP -> {
@@ -472,6 +489,37 @@ object CaseGenerator {
             }
         }
 
+        /** The filters of a query document, one per field operator, in order. */
+        fun filters(query: BsonValue, path: String): List<String> {
+            if (!query.isDocument) throw Unbound("$path: not a query document")
+            return query.asDocument().entries.flatMap { (field, predicate) ->
+                predicates(field, predicate, "$path/$field")
+            }
+        }
+
+        /** The update operators of an update document, one call per field, in order. */
+        fun updates(update: BsonValue, path: String): List<String> {
+            if (!update.isDocument) throw Unbound("$path: a pipeline update has no binding")
+            return update.asDocument().entries.flatMap { (operator, fields) ->
+                val binding =
+                    updates[operator]
+                        ?: throw Unbound(
+                            "$path/$operator: update operator $operator has no binding"
+                        )
+                if (!fields.isDocument) throw Unbound("$path/$operator: $operator takes a document")
+                calls += binding.owner to binding.method
+                fields.asDocument().entries.map { (field, value) ->
+                    // A field-only factory (`$unset`'s `unset(String, String...)`) ignores the
+                    // value.
+                    if (binding.parameters.size == 1 || binding.varargs)
+                        "${binding.method}(${literal(field)})"
+                    else
+                        "${binding.method}(${literal(field)}, " +
+                            "${value(value, binding.parameters[1], "$path/$operator/$field", plain = true)})"
+                }
+            }
+        }
+
         /** The filters of one field's predicate: one per operator, or `$eq` for a plain value. */
         private fun predicates(field: String, predicate: BsonValue, path: String): List<String> {
             if (field.startsWith("$")) throw Unbound("$path: query operator $field has no binding")
@@ -504,7 +552,7 @@ object CaseGenerator {
                     throw Unbound("$path: $operator $value has no binding")
                 return "${binding.method}(${literal(field)})"
             }
-            return "${binding.method}(${literal(field)}, ${value(value, binding.parameters[1], path)})"
+            return "${binding.method}(${literal(field)}, ${value(value, binding.parameters[1], path, plain = true)})"
         }
 
         /**
@@ -522,19 +570,28 @@ object CaseGenerator {
                 else -> null
             }
 
-        /** [value] as an argument of [type]; anything its type cannot take is unbound. */
-        private fun value(value: BsonValue, type: String, path: String): String {
+        /**
+         * [value] as an argument of [type]; anything its type cannot take is unbound. A [plain]
+         * value (a query or update operand) is data, so its arrays are lists; elsewhere an array is
+         * an expression.
+         */
+        private fun value(
+            value: BsonValue,
+            type: String,
+            path: String,
+            plain: Boolean = false,
+        ): String {
             operator(value, path)?.let { (operator, argument) ->
                 val binding =
                     expressions[operator] ?: throw Unbound("$path: $operator has no binding")
                 return call(binding, argument, "$path/$operator")
             }
-            if (value.isArray && type == ITERABLE) {
+            if (value.isArray && (type == ITERABLE || type == LIST || plain && type == OBJECT)) {
                 val items = value.asArray().values
                 if (items.any { it.isNull }) throw Unbound("$path: List.of cannot hold null")
                 types += "java.util.List"
                 return items
-                    .mapIndexed { index, item -> value(item, OBJECT, "$path/$index") }
+                    .mapIndexed { index, item -> value(item, OBJECT, "$path/$index", plain) }
                     .joinToString(", ", "List.of(", ")")
             }
             if (value.isDocument && type == SORTS) {
@@ -573,6 +630,13 @@ object CaseGenerator {
                 STRING ->
                     if (value.isString) literal(value.asString().value)
                     else throw Unbound("$path: ${value.bsonType} where $type is required")
+                NUMBER ->
+                    when {
+                        value.isInt32 -> "${value.asInt32().value}"
+                        value.isInt64 -> "${value.asInt64().value}L"
+                        value.isDouble -> double(value.asDouble().value)
+                        else -> throw Unbound("$path: ${value.bsonType} where $type is required")
+                    }
                 else ->
                     // Any other parameter type is an enum whose constants are the upper-cased MQL
                     // values; integration's compile step proves the constant exists.

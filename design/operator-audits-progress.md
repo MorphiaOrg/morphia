@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 12 generated cases.
+- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 14 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
@@ -44,13 +44,14 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **Find and update generation.** Only aggregation pipelines are generated.
 - **The remaining legacy fixtures:** 193 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
   - 23 are legacy-only in `cutover.json`.
   - 69 never-locked fixtures have no pinned reference.
-- **Deferred cutover features:** documented projections (`findOptions`), indexes, alternative
-  commands.
+- **Deferred cutover features:** documented projections (`findOptions`), update options
+  (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
+  the filter's matches), indexes, alternative commands.
+- **The stage pages' family** (41 unowned examples, most on sample datasets).
 
 Step 6, monitoring:
 - **An accepted production baseline for capability discovery.** It is needed before
@@ -2641,3 +2642,18 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `$maxN` as `{input, n}`).
 - One more generated case (`maxN-array-element`, "Find the Top Two Cast Members"); 12 in all.
   Core: 690 tests under each mapper; audits: 457.
+
+## Find and update generation (2026-11-23)
+
+- Branch audits-find-update. The `query/filters` and `query/updates` families are generated: a find
+  becomes `runner.find(case, query -> query.filter(...))`, an update
+  `runner.update(case, query -> query.filter(...), set(...), inc(...))`. The runner gained those
+  option-free overloads; the legacy ones check their options, then delegate.
+- New `UPDATE` binding position (form `FIELD`): `$set`, `$inc`, `$mul`, `$max`, `$min`, `$unset`,
+  `$rename`, `$addToSet`, `$push`, `$pull`, `$pullAll`. `Number` and `List` parameters take literals;
+  query and update operands are data, so their arrays are `List.of`, not `array(...)`.
+- Two cases generated (`$in` "Match Values in an Array", `$[]` "Update All Elements in an Array");
+  14 in all. `$[]`'s negation example is excluded: the page prints the whole collection after the
+  update, while the runner's update results are the filter's matches. Most query and update gaps
+  are documented projections (5) and `arrayFilters` update options (5).
+- Core: 692 tests under each mapper; audits: 458.
