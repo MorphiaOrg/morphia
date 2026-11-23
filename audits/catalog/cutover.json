@@ -57,14 +57,6 @@
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections"
   }, {
-    "check" : "BEHAVIOR",
-    "detail" : "$graphLookup does not order the array it builds, so the reference and Morphia runs list it differently; it needs an unordered-array comparison (with the documented collection name its serialization passes)",
-    "fixture" : "aggregation/stages/graphLookup/withAQueryFilter"
-  }, {
-    "check" : "BEHAVIOR",
-    "detail" : "$graphLookup does not order the array it builds, so the reference and Morphia runs list it differently; it needs an unordered-array comparison (with the documented collection name its serialization passes)",
-    "fixture" : "aggregation/stages/graphLookup/withinASingleCollection"
-  }, {
     "check" : "SOURCE",
     "detail" : "the page documents a projection, which needs the unmapped findOptions",
     "fixture" : "query/filters/in/useTheInOperatorToMatchValues"

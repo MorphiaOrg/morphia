@@ -47,11 +47,17 @@ There are no wildcards, recursive relaxations, or implicit omission rules.
   A zero tolerance explicitly allows equal finite numeric values with different representations
   (for example Decimal128 `1.0`/`1.00` or signed zero). It never permits INT32/INT64/DOUBLE/DECIMAL128
   interchange. Policies on absent or inapplicable paths have no effect.
+- `unorderedArrays` compares exactly the named arrays as multisets: the same items, as often, in
+  any order, matched by perfect bipartite matching. Items keep their own policies, addressed by
+  their expected position; arrays inside them stay ordered unless named too. Core's scenarios
+  declare them as `comparison.unorderedArrays`, for arrays the server builds in no defined order
+  (`$graphLookup`'s `as` field).
 - JavaScript-with-scope uses the synthetic `/$scope` child for its scope document; source text
   always matches exactly.
 
 `compareResults` accepts lists of result documents. ORDERED checks row position. UNORDERED
-compares only the top-level result multiset, preserving duplicates and all nested array order.
+compares only the top-level result multiset, preserving duplicates and nested array order except
+where `unorderedArrays` names an array.
 Policy paths are relative to each row, independent of row position; reported ordered mismatches
 include their row index. Unordered mismatch pointers identify the expected row at which matching fails.
 
@@ -73,7 +79,7 @@ MongoDB instance or the legacy helper's database/codec dependency.
 | INT32 1 vs DOUBLE 1.0 or INT64 1, relaxed JSON | strict accepts | TYPE difference | Preserve BSON type; any intentional compatibility needs explicit future policy. |
 | Reversed compound sort keys | strict accepts | KEY_ORDER difference | Keep order; changing it changes sort priority. |
 | Unexpected result field | lenient accepts | EXTRA_FIELD difference | Reject; expected output must describe the complete intended result. |
-| Reordered nested array | lenient accepts | VALUE difference | Reject; top-level unordered result policy cannot relax nested arrays. |
+| Reordered nested array | lenient accepts | VALUE difference | Reject, unless the scenario names the array in `unorderedArrays` with evidence that the server does not order it; top-level unordered result policy cannot relax nested arrays. |
 | Reordered pipeline stages | lenient accepts | difference | Reject; stage order is semantic. |
 | Reordered result rows | strict rejects; lenient accepts | ORDERED rejects; UNORDERED accepts | Choose result ordering from the scenario's sort/expectation evidence. |
 | Decimal scale; double signed zero | strict rejects decimal scale; accepts double signed zero | difference | Preserve by default; reviewed zero tolerance may permit finite equality. |

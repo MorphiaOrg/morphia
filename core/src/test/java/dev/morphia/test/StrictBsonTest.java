@@ -3,7 +3,10 @@ package dev.morphia.test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Set;
+import java.util.TreeSet;
 
+import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
 import org.bson.BsonValue;
@@ -33,9 +36,16 @@ public class StrictBsonTest {
             BsonDocument vector = value.asDocument();
             assertEquals(vector.getBoolean("equal").getValue(),
                     StrictBson.equal(vector.getArray("left").getValues(), vector.getArray("right").getValues(),
-                            vector.getBoolean("ordered").getValue()),
+                            vector.getBoolean("ordered").getValue(), unorderedArrays(vector)),
                     vector.getString("name").getValue());
         }
+    }
+
+    /** A vector's declared unordered arrays, when it declares any. */
+    static Set<String> unorderedArrays(BsonDocument vector) {
+        Set<String> paths = new TreeSet<>();
+        vector.getArray("unorderedArrays", new BsonArray()).forEach(path -> paths.add(path.asString().getValue()));
+        return paths;
     }
 
     /** Extended JSON cannot spell a NaN payload, so this is not a vector; the audits comparator compares raw bits. */

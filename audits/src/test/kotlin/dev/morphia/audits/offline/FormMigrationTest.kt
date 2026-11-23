@@ -14,6 +14,7 @@ import dev.morphia.audits.repairs.FormUnresolved
 import dev.morphia.audits.repairs.NumericRetype
 import dev.morphia.audits.repairs.NumericType
 import dev.morphia.audits.repairs.RepairDisposition
+import dev.morphia.audits.repairs.UnorderedArray
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
@@ -911,6 +912,37 @@ class FormMigrationTest {
                 )
             }
         assertTrue("a justification is required" in unneeded.message!!, unneeded.message)
+
+        // An unordered array is a reviewed result pointer with its evidence, carried to the case.
+        fun unordered(vararg arrays: UnorderedArray) =
+            justified.copy(
+                declarations =
+                    listOf(justified.declarations.single().copy(unorderedArrays = arrays.toList()))
+            )
+        val declared =
+            FormMigration.capture(
+                repository,
+                "head",
+                pages,
+                unordered(UnorderedArray("/zipCodes", "the server builds it unordered")),
+                facts(),
+            )
+        assertEquals(
+            listOf(UnorderedArray("/zipCodes", "the server builds it unordered")),
+            declared.overrides.single().unorderedArrays,
+        )
+        listOf(
+                unordered(UnorderedArray("zipCodes", "unordered")) to "is not a pointer",
+                unordered(UnorderedArray("/zipCodes", " ")) to "needs a reason",
+                unordered(UnorderedArray("/a", "x"), UnorderedArray("/a", "y")) to "declared twice",
+            )
+            .forEach { (review, problem) ->
+                val rejected =
+                    assertThrows(IllegalArgumentException::class.java) {
+                        FormMigration.capture(repository, "head", pages, review, facts())
+                    }
+                assertTrue(problem in rejected.message!!, rejected.message)
+            }
     }
 
     /**
@@ -957,7 +989,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(6, report.overrides.size)
+        assertEquals(4, report.overrides.size)
         assertEquals(96, report.unresolved.size)
     }
 

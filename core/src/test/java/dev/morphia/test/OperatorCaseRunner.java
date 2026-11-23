@@ -49,7 +49,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * prove ({@link PrintedResults}).</li>
  * </ol>
  * Serialization is compared after the scenario's declared form rules ({@link FormRules}) are applied to both sides.
- * Fields named in {@code comparison.ignore} are removed from both results before the published comparison only, a
+ * Arrays named in {@code comparison.unorderedArrays}, by pointer within each result, are compared as multisets in the
+ * behavior and published checks. Fields named in {@code comparison.ignore} are removed from both results before the
+ * published comparison only, a
  * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
  * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
  * and no tolerances, datasets or indexes; a scenario that needs any of them fails rather than being checked loosely.
@@ -205,6 +207,9 @@ public class OperatorCaseRunner {
         BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
         Set<String> ignore = new TreeSet<>();
         scenario.getDocument("comparison").getArray("ignore").forEach(field -> ignore.add(field.asString().getValue()));
+        Set<String> unordered = new TreeSet<>();
+        scenario.getDocument("comparison").getArray("unorderedArrays", new BsonArray())
+                .forEach(path -> unordered.add(path.asString().getValue()));
 
         MongoDatabase morphia = test.getDatabase();
         MongoDatabase reference = test.getDatabase(morphia.getName() + "_reference");
@@ -235,7 +240,7 @@ public class OperatorCaseRunner {
 
             List<BsonValue> referenceResults = execution.reference().apply(reference);
             List<BsonValue> morphiaResults = execution.morphia().get();
-            if (!StrictBson.equal(referenceResults, morphiaResults, ordered)) {
+            if (!StrictBson.equal(referenceResults, morphiaResults, ordered, unordered)) {
                 fail(operatorCase.resource() + ": behavior differs\nreference: " + json(referenceResults) + "\nmorphia:   "
                         + json(morphiaResults));
             }
@@ -257,11 +262,11 @@ public class OperatorCaseRunner {
             BsonDocument expected = scenario.getDocument("expected");
             if (expected.containsKey("documents")) {
                 List<BsonValue> published = without(ignore, expected.getArray("documents").getValues());
-                if (!StrictBson.equal(published, morphiaResults, ordered)) {
+                if (!StrictBson.equal(published, morphiaResults, ordered, unordered)) {
                     fail(operatorCase.resource() + ": results differ from the documented results\ndocumented: "
                             + json(published) + "\nmorphia:    " + json(morphiaResults));
                 }
-                if (!StrictBson.equal(published, referenceResults, ordered)) {
+                if (!StrictBson.equal(published, referenceResults, ordered, unordered)) {
                     fail(operatorCase.resource() + ": the reference results differ from the documented results\ndocumented: "
                             + json(published) + "\nreference:  " + json(referenceResults));
                 }
@@ -270,12 +275,12 @@ public class OperatorCaseRunner {
                 for (BsonValue constraint : expected.getArray("printed")) {
                     printed.add(PrintedResults.without(ignore, constraint));
                 }
-                String difference = PrintedResults.difference(printed, morphiaResults, ordered);
+                String difference = PrintedResults.difference(printed, morphiaResults, ordered, unordered);
                 if (difference != null) {
                     fail(operatorCase.resource() + ": results differ from the printed results at " + difference
                             + "\nmorphia: " + json(morphiaResults));
                 }
-                difference = PrintedResults.difference(printed, referenceResults, ordered);
+                difference = PrintedResults.difference(printed, referenceResults, ordered, unordered);
                 if (difference != null) {
                     fail(operatorCase.resource() + ": the reference results differ from the printed results at "
                             + difference + "\nreference: " + json(referenceResults));
@@ -304,6 +309,14 @@ public class OperatorCaseRunner {
             if (!field.isString() || field.asString().getValue().contains(".")) {
                 unsupported.add("ignored field " + field);
             }
+        }
+        for (BsonValue path : comparison.getArray("unorderedArrays", new BsonArray())) {
+            if (!path.isString() || !path.asString().getValue().startsWith("/")) {
+                unsupported.add("unordered array " + path);
+            }
+        }
+        if (!Set.of("order", "rules", "ignore", "unorderedArrays", "tolerance").containsAll(comparison.keySet())) {
+            unsupported.add("comparison fields " + comparison.keySet());
         }
         Set<String> keys = Set.of("schemaVersion", "name", "title", "context", "source", "dataset", "collections", "indexes",
                 "action", "expected", "comparison", "requirements", "skipped");

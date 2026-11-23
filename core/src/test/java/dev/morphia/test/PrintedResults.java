@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 import org.bson.BsonArray;
 import org.bson.BsonBoolean;
@@ -40,35 +41,55 @@ public final class PrintedResults {
      * @throws IllegalArgumentException when the constraints are malformed
      */
     public static String difference(List<BsonValue> constraints, List<BsonValue> actual, boolean ordered) {
+        return difference(constraints, actual, ordered, Set.of());
+    }
+
+    /**
+     * @param ordered         whether position matters; if not, each result must match a distinct constraint
+     * @param unorderedArrays the pointers, relative to each result, of the arrays whose printed items each need a
+     *                        distinct matching item, in any order
+     * @return why {@code actual} does not satisfy {@code constraints}, or null when it does
+     * @throws IllegalArgumentException when the constraints are malformed
+     */
+    public static String difference(List<BsonValue> constraints, List<BsonValue> actual, boolean ordered,
+            Set<String> unorderedArrays) {
         constraints.forEach(PrintedResults::validate);
         if (constraints.size() != actual.size()) {
             return "result counts differ";
         }
         if (ordered) {
             for (int i = 0; i < constraints.size(); i++) {
-                String difference = difference(constraints.get(i), actual.get(i), "/" + i);
+                // Paths are relative to the row, as the unordered arrays are, then placed in it.
+                String difference = difference(constraints.get(i), actual.get(i), "", unorderedArrays);
                 if (difference != null) {
-                    return difference;
+                    return "/" + i + difference;
                 }
             }
             return null;
         }
         // Constraints overlap: a constraint matching an Int32 or a Double must not take the only match of an exact
         // Double, so this finds a maximum matching rather than taking the first match.
-        boolean[][] matches = new boolean[constraints.size()][actual.size()];
-        for (int left = 0; left < constraints.size(); left++) {
-            for (int right = 0; right < actual.size(); right++) {
-                matches[left][right] = difference(constraints.get(left), actual.get(right), "") == null;
+        int unmatched = unmatched(constraints.size(), actual.size(),
+                (left, right) -> difference(constraints.get(left), actual.get(right), "", unorderedArrays) == null);
+        return unmatched < 0 ? null : "/" + unmatched + ": no result matches this constraint";
+    }
+
+    /** @return the first left index a maximum bipartite matching leaves unmatched, or -1 when none is */
+    private static int unmatched(int lefts, int rights, BiPredicate<Integer, Integer> candidate) {
+        boolean[][] matches = new boolean[lefts][rights];
+        for (int left = 0; left < lefts; left++) {
+            for (int right = 0; right < rights; right++) {
+                matches[left][right] = candidate.test(left, right);
             }
         }
-        int[] owners = new int[actual.size()];
+        int[] owners = new int[rights];
         Arrays.fill(owners, -1);
-        for (int left = 0; left < constraints.size(); left++) {
-            if (!assign(left, matches, owners, new boolean[actual.size()])) {
-                return "/" + left + ": no result matches this constraint";
+        for (int left = 0; left < lefts; left++) {
+            if (!assign(left, matches, owners, new boolean[rights])) {
+                return left;
             }
         }
-        return null;
+        return -1;
     }
 
     /**
@@ -156,7 +177,7 @@ public final class PrintedResults {
         }
     }
 
-    private static String difference(BsonValue node, BsonValue actual, String path) {
+    private static String difference(BsonValue node, BsonValue actual, String path, Set<String> unordered) {
         BsonDocument constraint = node.asDocument();
         String kind = constraint.getFirstKey();
         BsonValue argument = constraint.get(kind);
@@ -186,7 +207,7 @@ public final class PrintedResults {
                 for (BsonValue value : argument.asArray()) {
                     BsonDocument field = value.asDocument();
                     String name = field.getString("name").getValue();
-                    String difference = difference(field.get("value"), document.get(name), path + "/" + name);
+                    String difference = difference(field.get("value"), document.get(name), child(path, name), unordered);
                     if (difference != null) {
                         return difference;
                     }
@@ -197,8 +218,17 @@ public final class PrintedResults {
                 if (!(actual instanceof BsonArray array) || array.size() != argument.asArray().size()) {
                     return mismatch;
                 }
+                if (unordered.contains(path)) {
+                    List<BsonValue> items = argument.asArray().getValues();
+                    int unmatched = unmatched(items.size(), array.size(),
+                            (left, right) -> difference(items.get(left), array.get(right), child(path, String.valueOf(left)),
+                                    unordered) == null);
+                    return unmatched < 0 ? null
+                            : child(path, String.valueOf(unmatched)) + ": no item of the unordered array satisfies this constraint";
+                }
                 for (int i = 0; i < array.size(); i++) {
-                    String difference = difference(argument.asArray().get(i), array.get(i), path + "/" + i);
+                    String difference = difference(argument.asArray().get(i), array.get(i), child(path, String.valueOf(i)),
+                            unordered);
                     if (difference != null) {
                         return difference;
                     }
@@ -229,6 +259,10 @@ public final class PrintedResults {
                 return StrictBson.equal(argument, actual) ? null : mismatch;
             }
         }
+    }
+
+    private static String child(String path, String segment) {
+        return path + "/" + segment.replace("~", "~0").replace("/", "~1");
     }
 
     /** JavaScript own-property order: array-index keys first, ascending, then the others in insertion order. */

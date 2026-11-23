@@ -40,13 +40,16 @@ data class NumericTolerance(
 }
 
 /**
- * Defaults preserve every document's key order and all BSON types and representations. Rules name
- * exact paths; array order is never relaxed. Result rules are relative to each row, independent of
- * its position in the result set. Callers must not mutate inputs during comparison.
+ * Defaults preserve every document's key order, every array's order and all BSON types and
+ * representations. Rules name exact paths. Result rules are relative to each row, independent of
+ * its position in the result set; a path below an unordered array addresses its items by their
+ * expected position. Callers must not mutate inputs during comparison.
  */
 data class BsonComparisonPolicy(
     val unorderedDocuments: Set<BsonPath> = emptySet(),
     val numericTolerances: Map<BsonPath, NumericTolerance> = emptyMap(),
+    /** Arrays compared as multisets: the same items, as often, in any order. */
+    val unorderedArrays: Set<BsonPath> = emptySet(),
 )
 
 enum class ResultOrder {
@@ -69,6 +72,8 @@ enum class BsonDifferenceKind {
     ARRAY_LENGTH,
     RESULT_COUNT,
     UNMATCHED_RESULT,
+    /** An item of an unordered array has no distinct counterpart. */
+    UNMATCHED_ITEM,
 }
 
 data class BsonDifference(val path: BsonPath, val kind: BsonDifferenceKind, val message: String)

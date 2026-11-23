@@ -22,7 +22,10 @@ object BsonComparison {
             difference(expected!!, actual!!, BsonPath.ROOT)
         }
 
-    /** Unordered means a top-level multiset of rows, never unordered nested arrays. */
+    /**
+     * Unordered means a top-level multiset of rows; nested arrays stay ordered unless the policy
+     * names them.
+     */
     fun compareResults(
         expected: List<BsonDocument>,
         actual: List<BsonDocument>,
@@ -54,52 +57,17 @@ object BsonComparison {
             check(expected.size.toLong() * actual.size <= limits.maximumResultPairs) {
                 "Result pair count exceeds comparison limit"
             }
-            // Tolerance makes equivalence non-transitive. A greedy removal can reject a valid
-            // assignment, so compute a perfect bipartite matching with augmenting paths.
-            val candidates =
-                expected.map { left ->
-                    actual.map { right -> difference(left, right, BsonPath.ROOT) == null }
+            // Tolerance makes equivalence non-transitive, so this is a matching, not a removal.
+            Matching.firstUnmatched(expected.size, actual.size, ::spend) { left, right ->
+                    difference(expected[left], actual[right], BsonPath.ROOT) == null
                 }
-            val owner = IntArray(actual.size) { -1 }
-            val assigned = IntArray(expected.size) { -1 }
-            fun assign(root: Int): Boolean {
-                // Iterative augmentation keeps the call stack independent of result count.
-                val previous = IntArray(actual.size) { -1 }
-                val queue = ArrayDeque<Int>()
-                queue.add(root)
-                while (queue.isNotEmpty()) {
-                    val left = queue.removeFirst()
-                    for (right in actual.indices) {
-                        spend()
-                        if (!candidates[left][right] || previous[right] != -1) continue
-                        previous[right] = left
-                        if (owner[right] != -1) {
-                            queue.add(owner[right])
-                            continue
-                        }
-                        var next = right
-                        while (next != -1) {
-                            spend()
-                            val match = previous[next]
-                            val old = assigned[match]
-                            owner[next] = match
-                            assigned[match] = next
-                            next = old
-                        }
-                        return true
-                    }
-                }
-                return false
-            }
-            expected.indices.forEach { left ->
-                if (!assign(left))
-                    return@run BsonDifference(
-                        BsonPath("/$left"),
+                ?.let {
+                    BsonDifference(
+                        BsonPath("/$it"),
                         BsonDifferenceKind.UNMATCHED_RESULT,
-                        "Multiplicity-preserving matching fails at expected row $left",
+                        "Multiplicity-preserving matching fails at expected row $it",
                     )
-            }
-            null
+                }
         }
 
     private fun run(
@@ -113,6 +81,7 @@ object BsonComparison {
                     policy.copy(
                         unorderedDocuments = policy.unorderedDocuments.toSet(),
                         numericTolerances = policy.numericTolerances.toMap(),
+                        unorderedArrays = policy.unorderedArrays.toSet(),
                     ),
                     limits,
                 )
@@ -222,6 +191,24 @@ object BsonComparison {
                             BsonDifferenceKind.ARRAY_LENGTH,
                             "Expected ${expected.size} array items, observed ${actual.size}",
                         )
+                    if (path in policy.unorderedArrays) {
+                        check(expected.size.toLong() * actual.size <= limits.maximumResultPairs) {
+                            "Unordered array pair count exceeds comparison limit"
+                        }
+                        return Matching.firstUnmatched(expected.size, actual.size, ::spend) {
+                                left,
+                                right ->
+                                difference(expected[left], actual[right], path.child("$left")) ==
+                                    null
+                            }
+                            ?.let {
+                                BsonDifference(
+                                    path.child("$it"),
+                                    BsonDifferenceKind.UNMATCHED_ITEM,
+                                    "No distinct item of the unordered array matches item $it",
+                                )
+                            }
+                    }
                     expected.indices.forEach {
                         difference(expected[it], actual[it], path.child(it.toString()))?.let {
                             return it

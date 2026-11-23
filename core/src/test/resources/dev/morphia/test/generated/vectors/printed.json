@@ -934,6 +934,316 @@
         }
       ],
       "verdict": "INVALID"
+    },
+    {
+      "name": "unordered array reordered",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "document": [
+                      {
+                        "name": "n",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "1"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "document": [
+                      {
+                        "name": "n",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "2"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "n": {
+                "$numberInt": "2"
+              }
+            },
+            {
+              "n": {
+                "$numberInt": "1"
+              }
+            }
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "undeclared printed array reordered",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberInt": "2"
+            },
+            {
+              "$numberInt": "1"
+            }
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array multiplicity",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberInt": "1"
+            },
+            {
+              "$numberInt": "2"
+            },
+            {
+              "$numberInt": "2"
+            }
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array item type",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "x"
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberLong": "2"
+            },
+            "x"
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array matches overlapping constraints",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "4"
+                    }
+                  },
+                  {
+                    "exact": {
+                      "$numberDouble": "4.0"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberDouble": "4.0"
+            },
+            {
+              "$numberInt": "4"
+            }
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "unordered array path is per row",
+      "order": "UNORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "_id",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "x"
+                  },
+                  {
+                    "text": "y"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "document": [
+            {
+              "name": "_id",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "z"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "_id": {
+            "$numberInt": "2"
+          },
+          "a": [
+            "z"
+          ]
+        },
+        {
+          "_id": {
+            "$numberInt": "1"
+          },
+          "a": [
+            "y",
+            "x"
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
     }
   ]
 }

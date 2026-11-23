@@ -75,68 +75,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"people\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/1/$graphLookup/from"
-    } ],
-    "fixture" : "aggregation/stages/graphLookup/withAQueryFilter",
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "update the lookup collection name",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"employees\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/0/$graphLookup/from"
-    } ],
-    "fixture" : "aggregation/stages/graphLookup/withinASingleCollection",
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "updated the collection name in from",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ ],
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
     "includes" : [ {
@@ -2108,6 +2046,76 @@
       "path" : "source/reference/operator/aggregation/fill.txt",
       "relation" : "AT_ORIGIN"
     }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"example_test\"}",
+      "documented" : "{\"v\": \"people\"}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/1/$graphLookup/from"
+    } ],
+    "fixture" : "aggregation/stages/graphLookup/withAQueryFilter",
+    "includes" : [ {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
+      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "update the lookup collection name",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
+      "path" : "source/reference/operator/aggregation/graphLookup.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unorderedArrays" : [ {
+      "path" : "/connections who play golf",
+      "reason" : "connections who play golf is projected from the golfers array that $graphLookup's as field builds. The page says: \"Documents returned in the as field are not guaranteed to be in any order\", and the server lists them in a different order between runs on identical data (#4562)."
+    } ]
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"example_test\"}",
+      "documented" : "{\"v\": \"employees\"}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/0/$graphLookup/from"
+    } ],
+    "fixture" : "aggregation/stages/graphLookup/withinASingleCollection",
+    "includes" : [ {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
+      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "updated the collection name in from",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
+      "path" : "source/reference/operator/aggregation/graphLookup.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unorderedArrays" : [ {
+      "path" : "/reportingHierarchy",
+      "reason" : "reportingHierarchy is built by $graphLookup's as field. The page says: \"Documents returned in the as field are not guaranteed to be in any order\", and the server lists them in a different order between runs on identical data (#4562)."
+    } ]
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/stages/group/pivotData",

@@ -42,8 +42,8 @@ production baseline yet, so nothing runs it on a schedule. See [Capability cover
   the audits module, and never needs it. Core's tests read only committed files. The audits module
   joins the build only with `-Daudits`.
 - **Strict comparison by default.** BSON types, numeric representation, key order and array order
-  all count. Any leniency is declared per case with its reason: a form rule, an ignored field, or
-  an unordered result.
+  all count. Any leniency is declared per case with its reason: a form rule, an ignored field, an
+  unordered result, or an unordered array.
 - **Never loosen a case to make it pass.** When a documented example fails, it is either a Morphia
   bug to fix or an exclusion recorded with evidence (the page is wrong, or the server cannot run
   it). The generator never emits a weaker case.
@@ -112,7 +112,7 @@ A case is one documented example, described entirely by a `scenario.json` (schem
 | `collections`, `indexes`, `dataset` | The seed data, in extended JSON with exact BSON types. |
 | `action` | The documented command: an aggregate pipeline, a find, or an update, with its collection. |
 | `expected` | The documented results, either exact BSON or `printed`: the constraints mongosh's printed output proves (see below). |
-| `comparison` | Result order, declared form rules, ignored fields and tolerance. |
+| `comparison` | Result order, declared form rules, ignored fields, unordered arrays and tolerance. |
 | `requirements` | The minimum server version and topology. |
 | `skipped` | Checks that do not run, each with its reason. |
 
@@ -131,16 +131,21 @@ API: `aggregate`, `find` or `update`. It checks three things separately, against
 3. **Published expectation.** Both results equal the documented results, or satisfy what the
    printed results prove.
 
-Two kinds of leniency exist, and each is a declared, named rule rather than a loose comparison:
+Three kinds of leniency exist, and each is declared per case rather than a loose comparison:
 
 - **Form rules** (`FormRules`) map spellings the server treats identically to one canonical
   spelling, such as `{$eq: x}` and `x`, or the array and document forms of `$cond`. A rule applies
   to both sides and needs a reason recorded in the form review.
 - **Printed results** (`PrintedResults`) cover output the page shows the way mongosh prints it. A
   printed `4` may be an Int32 or a Double, so it is a constraint, not a value.
+- **Unordered arrays** (`comparison.unorderedArrays`) name result arrays, by pointer within each
+  result, that the server builds in no defined order, such as the array `$graphLookup` writes.
+  They must hold the same items, as often, in any order; every other array stays ordered. Each
+  is declared in the form review with its evidence.
 
-Both are Java ports of audits-module code (`FormEquivalence` and `PublishedComparison`). Golden
-vectors under `generated/vectors/` hold the two implementations to the same verdicts.
+These are Java ports of audits-module code (`FormEquivalence`, `PublishedComparison` and
+`BsonComparison`, whose strict checks `StrictBson` ports). Golden vectors under
+`generated/vectors/` hold the two implementations to the same verdicts.
 
 ### Where cases live
 

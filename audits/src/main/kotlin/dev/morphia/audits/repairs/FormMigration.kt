@@ -1,5 +1,6 @@
 package dev.morphia.audits.repairs
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType
 import dev.morphia.audits.published.PublishedComparison
@@ -9,6 +10,7 @@ import dev.morphia.audits.semantics.BsonComparison
 import dev.morphia.audits.semantics.BsonComparisonState
 import dev.morphia.audits.semantics.BsonDifference
 import dev.morphia.audits.semantics.BsonDifferenceKind
+import dev.morphia.audits.semantics.BsonPath
 import dev.morphia.audits.shell.AggregateOperation
 import dev.morphia.audits.shell.FindOperation
 import dev.morphia.audits.shell.InsertOperation
@@ -89,7 +91,16 @@ data class FormDeclaration(
     val corrections: List<FormCorrection> = emptyList(),
     /** File name of the lock marker: `lock`, or `lockd` for the one fixture that spells it so. */
     val marker: String = "lock",
+    /** Result arrays the server builds in no defined order; omitted from the review when empty. */
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
+    val unorderedArrays: List<UnorderedArray> = emptyList(),
 )
+
+/**
+ * A result array compared as a multiset: [path] is its RFC 6901 pointer within each result, and
+ * [reason] is the reviewed evidence that the server does not order it.
+ */
+data class UnorderedArray(val path: String, val reason: String)
 
 /**
  * What the repair inventory knows about a fixture's test: its lock categories, which decide what an
@@ -206,6 +217,8 @@ data class FormOverride(
     val collections: Map<String, String> = emptyMap(),
     val retypes: List<NumericRetype> = emptyList(),
     val corrections: List<FormCorrection> = emptyList(),
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
+    val unorderedArrays: List<UnorderedArray> = emptyList(),
 )
 
 data class FormInclude(val path: String, val blob: String)
@@ -379,6 +392,7 @@ object FormMigration {
                                 "${declaration.fixture}: a justification is required exactly " +
                                     "when ALTERNATIVE_COMMANDS is declared"
                         }
+                        problems += unordered(declaration)
                         if (outcome.rules != declaration.rules) {
                             problems +=
                                 "${declaration.fixture}: needs rules ${outcome.rules}, " +
@@ -422,6 +436,7 @@ object FormMigration {
                             collections = known.collections,
                             retypes = declaration.retypes,
                             corrections = declaration.corrections,
+                            unorderedArrays = declaration.unorderedArrays,
                         )
                     }
                 }
@@ -763,6 +778,28 @@ object FormMigration {
         inventory.examples.associate {
             it.fixture to FixtureFacts(it.categories, it.collections, it.helpers)
         }
+
+    /**
+     * Problems with a declaration's unordered arrays: each a distinct result pointer, with a
+     * reason.
+     */
+    private fun unordered(declaration: FormDeclaration): List<String> {
+        val paths = declaration.unorderedArrays.map { it.path }
+        return declaration.unorderedArrays.flatMap {
+            listOfNotNull(
+                "${declaration.fixture}: ${it.path} is not a pointer into a result"
+                    .takeIf { _ ->
+                        !it.path.startsWith('/') || runCatching { BsonPath(it.path) }.isFailure
+                    },
+                "${declaration.fixture}: unordered array ${it.path} needs a reason"
+                    .takeIf { _ -> it.reason.isBlank() },
+            )
+        } +
+            listOfNotNull(
+                "${declaration.fixture}: an unordered array is declared twice"
+                    .takeIf { paths.distinct().size != paths.size }
+            )
+    }
 
     private fun facts(facts: Map<String, FixtureFacts>, fixture: String): FixtureFacts =
         requireNotNull(facts[fixture]) { "$fixture is not in the repair inventory" }

@@ -1171,6 +1171,16 @@
     "test" : "dev.morphia.test.aggregation.stages.TestFill#testIndicateIfAFieldWasPopulatedUsingFill"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/stages/graphLookup/withAQueryFilter",
+    "scenario" : "/dev/morphia/test/aggregation/stages/graphLookup/withAQueryFilter/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestGraphLookup#testWithAQueryFilter"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/graphLookup/withinASingleCollection",
+    "scenario" : "/dev/morphia/test/aggregation/stages/graphLookup/withinASingleCollection/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestGraphLookup#testWithinASingleCollection"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/stages/group/pivotData",
     "scenario" : "/dev/morphia/test/aggregation/stages/group/pivotData/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestGroup#testPivotData"
@@ -2688,6 +2698,14 @@
     "sha256" : "9fc2340e7a6542e49d906f0db3657c46fb4b65cf627837632b5c69e957eb6f53"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/graphLookup/withAQueryFilter/scenario.json",
+    "sha256" : "386b91b708f76eac8a815bfe7b8742266d28c404d9553fdd0bfe5acca6bfd5e9"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/graphLookup/withinASingleCollection/scenario.json",
+    "sha256" : "b27a28f73a06a6c9fd8f53eacfc6c7e9568056f56594cb72635c5c9e572998f7"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/group/pivotData/scenario.json",
     "sha256" : "8177e027e204fa930bfa766dfae08a9f4ccc2ec09a7ccb1e401af7cc872495c1"
   }, {
@@ -2889,7 +2907,7 @@
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/printed.json",
-    "sha256" : "5bc6d7520534154556af86805d35d1c5b4c1961f92b43b267b70b18f84f986a0"
+    "sha256" : "c885ad7dffa78942841c90f2f99fd885fb13d2799ab329e9f9c59331b5ffb01f"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/rules.json",
@@ -2897,7 +2915,7 @@
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/strict.json",
-    "sha256" : "88907960a183757fef6f2793f6ce64057ce3fa5c28e8c4a65fb44f07f2047db8"
+    "sha256" : "3b16a4c4fb0633e0466290b6a157a2801fddd36019251f844512162a718ea331"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/all/useAllToMatchValues/scenario.json",

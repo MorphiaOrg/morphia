@@ -10,14 +10,19 @@ import org.bson.*
  * BsonComparison.
  */
 object PublishedComparison {
+    /**
+     * [unorderedArrays] names arrays, relative to each row, whose items match as a multiset: each
+     * printed item needs a distinct result item that satisfies it.
+     */
     fun compareResults(
         expected: List<PublishedDocument>,
         actual: List<BsonDocument>,
         order: ResultOrder = ResultOrder.ORDERED,
         limits: BsonComparisonLimits = BsonComparisonLimits(),
+        unorderedArrays: Set<BsonPath> = emptySet(),
     ): BsonComparisonResult =
         try {
-            val mismatch = Engine(limits).compare(expected, actual, order)
+            val mismatch = Engine(limits, unorderedArrays.toSet()).compare(expected, actual, order)
             BsonComparisonResult(
                 if (mismatch == null) BsonComparisonState.EQUAL else BsonComparisonState.DIFFERENT,
                 mismatch,
@@ -28,7 +33,7 @@ object PublishedComparison {
 
     private class Invalid(message: String) : RuntimeException(message)
 
-    private class Engine(val limits: BsonComparisonLimits) {
+    private class Engine(val limits: BsonComparisonLimits, val unorderedArrays: Set<BsonPath>) {
         var work = 0L
         val scalars = IdentityHashMap<PublishedExact, BsonValue>()
 
@@ -204,6 +209,32 @@ object PublishedComparison {
                     if (!actual.isArray) return mismatch(BsonDifferenceKind.TYPE)
                     if (expected.items.size != actual.asArray().size)
                         return mismatch(BsonDifferenceKind.ARRAY_LENGTH)
+                    if (path in unorderedArrays) {
+                        val items = actual.asArray()
+                        check(
+                            expected.items.size.toLong() * items.size <= limits.maximumResultPairs,
+                            "Unordered array pair count exceeds comparison limit",
+                        )
+                        // Constraints overlap, as rows do, so this is a matching too.
+                        return Matching.firstUnmatched(
+                                expected.items.size,
+                                items.size,
+                                { spend() },
+                            ) { left, right ->
+                                difference(
+                                    expected.items[left],
+                                    items[right],
+                                    path.child("$left"),
+                                ) == null
+                            }
+                            ?.let {
+                                BsonDifference(
+                                    path.child("$it"),
+                                    BsonDifferenceKind.UNMATCHED_ITEM,
+                                    "No distinct item of the unordered array satisfies item $it",
+                                )
+                            }
+                    }
                     expected.items.forEachIndexed { index, item ->
                         difference(item, actual.asArray()[index], path.child(index.toString()))
                             ?.let {
@@ -274,9 +305,10 @@ object PublishedComparison {
                     "Result counts differ",
                 )
             if (order == ResultOrder.ORDERED) {
+                // Paths are relative to the row, as the unordered arrays are, then placed in it.
                 expected.indices.forEach { index ->
-                    difference(expected[index], actual[index], BsonPath("/$index"))?.let {
-                        return it
+                    difference(expected[index], actual[index], BsonPath.ROOT)?.let {
+                        return it.copy(path = BsonPath("/$index" + it.path.pointer))
                     }
                 }
                 return null
@@ -285,48 +317,18 @@ object PublishedComparison {
                 expected.size.toLong() * actual.size <= limits.maximumResultPairs,
                 "Result pair count exceeds comparison limit",
             )
-            val candidates =
-                expected.map { left ->
-                    actual.map { right -> difference(left, right, BsonPath.ROOT) == null }
-                }
             // Constraints overlap: an Int32-or-Double row must not consume the sole match of an
             // exact Double row.
-            val owners = IntArray(actual.size) { -1 }
-            val assigned = IntArray(expected.size) { -1 }
-            for (root in expected.indices) {
-                val previous = IntArray(actual.size) { -1 }
-                val queue = ArrayDeque<Int>()
-                queue.add(root)
-                var free = -1
-                search@ while (queue.isNotEmpty()) {
-                    val left = queue.removeFirst()
-                    for (right in actual.indices) {
-                        spend()
-                        if (!candidates[left][right] || previous[right] != -1) continue
-                        previous[right] = left
-                        if (owners[right] == -1) {
-                            free = right
-                            break@search
-                        }
-                        queue.add(owners[right])
-                    }
+            return Matching.firstUnmatched(expected.size, actual.size, { spend() }) { left, right ->
+                    difference(expected[left], actual[right], BsonPath.ROOT) == null
                 }
-                if (free == -1)
-                    return BsonDifference(
-                        BsonPath("/$root"),
+                ?.let {
+                    BsonDifference(
+                        BsonPath("/$it"),
                         BsonDifferenceKind.UNMATCHED_RESULT,
                         "No multiplicity-preserving assignment",
                     )
-                while (free != -1) {
-                    spend()
-                    val left = previous[free]
-                    val old = assigned[left]
-                    owners[free] = left
-                    assigned[left] = free
-                    free = old
                 }
-            }
-            return null
         }
     }
 }

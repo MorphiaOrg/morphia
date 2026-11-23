@@ -20,7 +20,7 @@ public class TestGraphLookup extends TemplatedTestBase {
     @DisplayName("Within a Single Collection")
     public void testWithinASingleCollection() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(graphLookup(EXAMPLE_TEST_COLLECTION).startWith("$reportsTo")
+                (aggregation) -> aggregation.pipeline(graphLookup("employees").startWith("$reportsTo")
                         .connectFromField("reportsTo").connectToField("name").as("reportingHierarchy")));
     }
 
@@ -48,7 +48,7 @@ public class TestGraphLookup extends TemplatedTestBase {
     public void testWithAQueryFilter() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(eq("name", "Tanya Jordan")),
-                graphLookup(EXAMPLE_TEST_COLLECTION).startWith("$friends").connectFromField("friends")
+                graphLookup("people").startWith("$friends").connectFromField("friends")
                         .connectToField("name").as("golfers").restrict(eq("hobbies", "golf")),
                 project().include("name").include("friends").include("connections who play golf", "$golfers.name")
 

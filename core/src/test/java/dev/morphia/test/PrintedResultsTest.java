@@ -24,7 +24,9 @@ public class PrintedResultsTest {
             try {
                 verdict = PrintedResults.difference(vector.getArray("constraints").getValues(),
                         vector.getArray("actual").getValues(),
-                        vector.getString("order").getValue().equals("ORDERED")) == null ? "EQUAL" : "DIFFERENT";
+                        vector.getString("order").getValue().equals("ORDERED"), StrictBsonTest.unorderedArrays(vector)) == null
+                                ? "EQUAL"
+                                : "DIFFERENT";
             } catch (IllegalArgumentException | ClassCastException | org.bson.BsonInvalidOperationException e) {
                 verdict = "INVALID";
             }

@@ -159,118 +159,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "e487b229fb6a3135eba8776386efa1ce404cfa7bac8f164cc44aa948771f5755",
-      "text" : "db.people.aggregate( [\n  { $match: { \"name\": \"Tanya Jordan\" } },\n  { $graphLookup: {\n      from: \"people\",\n      startWith: \"$friends\",\n      connectFromField: \"friends\",\n      connectToField: \"name\",\n      as: \"golfers\",\n      restrictSearchWithMatch: { \"hobbies\" : \"golf\" }\n    }\n  },\n  { $project: {\n      \"name\": 1,\n      \"friends\": 1,\n      \"connections who play golf\": \"$golfers.name\"\n    }\n  }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "d4eefac25e853e8412b4d493387752448c3658ce37b18f165d2dd7ea25a3bb14",
-      "text" : "{\n  \"_id\" : 1,\n  \"name\" : \"Tanya Jordan\",\n  \"friends\" : [ \"Shirley Soto\", \"Terry Hawkins\", \"Carole Hale\" ],\n  \"hobbies\" : [ \"tennis\", \"unicycling\", \"golf\" ]\n}\n{\n  \"_id\" : 2,\n  \"name\" : \"Carole Hale\",\n  \"friends\" : [ \"Joseph Dennis\", \"Tanya Jordan\", \"Terry Hawkins\" ],\n  \"hobbies\" : [ \"archery\", \"golf\", \"woodworking\" ]\n}\n{\n  \"_id\" : 3,\n  \"name\" : \"Terry Hawkins\",\n  \"friends\" : [ \"Tanya Jordan\", \"Carole Hale\", \"Angelo Ward\" ],\n  \"hobbies\" : [ \"knitting\", \"frisbee\" ]\n}\n{\n  \"_id\" : 4,\n  \"name\" : \"Joseph Dennis\",\n  \"friends\" : [ \"Angelo Ward\", \"Carole Hale\" ],\n  \"hobbies\" : [ \"tennis\", \"golf\", \"topiary\" ]\n}\n{\n  \"_id\" : 5,\n  \"name\" : \"Angelo Ward\",\n  \"friends\" : [ \"Terry Hawkins\", \"Shirley Soto\", \"Joseph Dennis\" ],\n  \"hobbies\" : [ \"travel\", \"ceramics\", \"golf\" ]\n}\n{\n   \"_id\" : 6,\n   \"name\" : \"Shirley Soto\",\n   \"friends\" : [ \"Angelo Ward\", \"Tanya Jordan\", \"Carole Hale\" ],\n   \"hobbies\" : [ \"frisbee\", \"set theory\" ]\n }"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "413b53f4f00b391c62a173a293358d0f2b48ce6dba539c1f0c016c656cfe30b7",
-      "text" : "{\n   \"_id\" : 1,\n   \"name\" : \"Tanya Jordan\",\n   \"friends\" : [\n      \"Shirley Soto\",\n      \"Terry Hawkins\",\n      \"Carole Hale\"\n   ],\n   \"connections who play golf\" : [\n      \"Joseph Dennis\",\n      \"Tanya Jordan\",\n      \"Angelo Ward\",\n      \"Carole Hale\"\n   ]\n}"
-    } ],
-    "collections" : { },
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"people\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/1/$graphLookup/from"
-    } ],
-    "example" : "With a Query Filter",
-    "fixture" : "aggregation/stages/graphLookup/withAQueryFilter",
-    "fixtureFiles" : {
-      "action.json" : "17dbed0c71ec223106f9884c01fd811518d18faa80a550128c1981dba4a5d76a",
-      "data.json" : "474ba791ce2047fac6f9a4d94242fd57fba8a3b8ae59d03bf5ada45ef9455940",
-      "expected.json" : "b774f0279452d94bbad0b9c29ffa1cb4efe8ec00941f572372e39384e237d849",
-      "name" : "6efdea19495038d85b762221880d7a4f066591e872668fde590631db219480a8"
-    },
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "d9c4a31198b52fba50dfc279422c563f8ef5afe9a1d43934de8b5ff2049ea4a9",
-      "text" : "update the lookup collection name"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
-      "sha256" : "bdfbfa1a97b4b0b8899a202580ff4f9bb82aab5a769e59a69b42d658cdd1fd68",
-      "text" : "db.employees.aggregate( [\n   {\n      $graphLookup: {\n         from: \"employees\",\n         startWith: \"$reportsTo\",\n         connectFromField: \"reportsTo\",\n         connectToField: \"name\",\n         as: \"reportingHierarchy\"\n      }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "3579008d10ee3ed3fa240f0561659a294a558e8cb36d7e208d5f2da075e8d1dc",
-      "text" : "{ \"_id\" : 1, \"name\" : \"Dev\" }\n{ \"_id\" : 2, \"name\" : \"Eliot\", \"reportsTo\" : \"Dev\" }\n{ \"_id\" : 3, \"name\" : \"Ron\", \"reportsTo\" : \"Eliot\" }\n{ \"_id\" : 4, \"name\" : \"Andrew\", \"reportsTo\" : \"Eliot\" }\n{ \"_id\" : 5, \"name\" : \"Asya\", \"reportsTo\" : \"Ron\" }\n{ \"_id\" : 6, \"name\" : \"Dan\", \"reportsTo\" : \"Andrew\" }"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "dd29acb0907de88e965e45617260f200f641d97affab0df9b3888fbcdf011497",
-      "text" : "{\n   \"_id\" : 1,\n   \"name\" : \"Dev\",\n   \"reportingHierarchy\" : [ ]\n}\n{\n   \"_id\" : 2,\n   \"name\" : \"Eliot\",\n   \"reportsTo\" : \"Dev\",\n   \"reportingHierarchy\" : [\n      { \"_id\" : 1, \"name\" : \"Dev\" }\n   ]\n}\n{\n   \"_id\" : 3,\n   \"name\" : \"Ron\",\n   \"reportsTo\" : \"Eliot\",\n   \"reportingHierarchy\" : [\n      { \"_id\" : 1, \"name\" : \"Dev\" },\n      { \"_id\" : 2, \"name\" : \"Eliot\", \"reportsTo\" : \"Dev\" }\n   ]\n}\n{\n   \"_id\" : 4,\n   \"name\" : \"Andrew\",\n   \"reportsTo\" : \"Eliot\",\n   \"reportingHierarchy\" : [\n      { \"_id\" : 1, \"name\" : \"Dev\" },\n      { \"_id\" : 2, \"name\" : \"Eliot\", \"reportsTo\" : \"Dev\" }\n   ]\n}\n{\n   \"_id\" : 5,\n   \"name\" : \"Asya\",\n   \"reportsTo\" : \"Ron\",\n   \"reportingHierarchy\" : [\n      { \"_id\" : 1, \"name\" : \"Dev\" },\n      { \"_id\" : 2, \"name\" : \"Eliot\", \"reportsTo\" : \"Dev\" },\n      { \"_id\" : 3, \"name\" : \"Ron\", \"reportsTo\" : \"Eliot\" }\n   ]\n}\n{\n   \"_id\" : 6,\n   \"name\" : \"Dan\",\n   \"reportsTo\" : \"Andrew\",\n   \"reportingHierarchy\" : [\n      { \"_id\" : 1, \"name\" : \"Dev\" },\n      { \"_id\" : 2, \"name\" : \"Eliot\", \"reportsTo\" : \"Dev\" },\n      { \"_id\" : 4, \"name\" : \"Andrew\", \"reportsTo\" : \"Eliot\" }\n   ]\n}"
-    } ],
-    "collections" : { },
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"employees\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/0/$graphLookup/from"
-    } ],
-    "example" : "Within a Single Collection",
-    "fixture" : "aggregation/stages/graphLookup/withinASingleCollection",
-    "fixtureFiles" : {
-      "action.json" : "4f0cd2bf7cea6692e78ce284021e86b302a96c86c98703a3f29dc16ca30ce03d",
-      "data.json" : "aab822acc12c8f949d7229e5bb4f6bef9e6d08c1bb8aad35e0805a1bc67eaaa5",
-      "expected.json" : "95f921747af351d01ef6de1c6b808c7f73aef420cfddb3403fac92e06b4ee04b",
-      "name" : "c0efb517f283d52fc34a387110a1961760da0075b1c6a53ee935eb9776b2705a"
-    },
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "95ddbc5b5eb802ffd82bb3fce30da8cce5a58186090c4d6c09def91fb006a333",
-      "text" : "updated the collection name in from"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "abed3ccbe9e0eece268657d70d2682c3fbbad8cac7bba06f6884a1667f7cceab",
       "text" : "db.grades.find( { classAverage : { $type : [ 2 , 1 ] } } );\ndb.grades.find( { classAverage : { $type : [ \"string\" , \"double\" ] } } );"
     }, {
@@ -369,8 +257,8 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 6,
-    "overrides.corrected" : 2,
+    "overrides" : 4,
+    "overrides.corrected" : 0,
     "overrides.exact" : 1,
     "overrides.retyped" : 0,
     "rule.ALTERNATIVE_COMMANDS" : 1,

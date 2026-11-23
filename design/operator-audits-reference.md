@@ -437,7 +437,10 @@ source dispositions and complete pinned external resources follow in subsequent 
 `BsonValue` trees and lists of result documents. Defaults preserve BSON types, numeric
 representations, document keys, arrays, pipelines and duplicate results. Explicit RFC 6901
 paths can relax document key order or finite numeric values of the same BSON type.
-`ResultOrder.UNORDERED` relaxes only the top-level result multiset; nested arrays remain ordered.
+`ResultOrder.UNORDERED` relaxes only the top-level result multiset; nested arrays remain ordered
+unless the policy's `unorderedArrays` names them, by pointer within each row. Those match as
+multisets, by bipartite matching, and so do the printed items of a named array in
+`PublishedComparison`.
 Invalid/cyclic inputs or resource limits return `INVALID`, never a passing comparison.
 
 The [comparison contract](operator-audits-bson-comparison.md) documents the policies,

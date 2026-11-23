@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 349 legacy cases (348 converted, 1 migrated), plus 1 generated case.
+- **On the runner:** 351 legacy cases (350 converted, 1 migrated), plus 1 generated case.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (197 pages read; 300 examples owned,
   32 unowned, 11 unnamed), reviewed DSL bindings checked against core's API, and the
@@ -47,10 +47,9 @@ Step 5, generation and cutover:
   `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
 - **Reviewed names** for the 11 examples with generic titles.
-- **The remaining legacy fixtures:** 207 directories.
+- **The remaining legacy fixtures:** 205 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
-  - 25 are legacy-only in `cutover.json`, the `$graphLookup` pair among them (#4562, an
-    unordered-array comparison).
+  - 23 are legacy-only in `cutover.json`.
   - 81 never-locked fixtures have no pinned reference.
 - **Deferred cutover features:** documented projections (`findOptions`), indexes, alternative
   commands.
@@ -2556,3 +2555,22 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   pass under both mappers; removing the rule from the `$topN` scenario makes it fail with
   "serialization differs", so the check is live.
 - Totals: ledger 349 cases; 25 legacy-only; form report 6 overrides; 207 legacy directories.
+
+## Unordered result arrays (2026-11-23)
+
+- Branch audits-unordered-arrays, for #4562 (from #4554). A scenario's
+  `comparison.unorderedArrays` names result arrays, by RFC 6901 pointer within each result, that
+  match as multisets. `BsonComparisonPolicy.unorderedArrays` and `PublishedComparison` do it in
+  Kotlin, by bipartite matching shared through `Matching`; `StrictBson` and `PrintedResults` port
+  it, and 14 new golden vectors (reordered match, multiplicity and item-type mismatches, overlapping
+  printed constraints, per-row and escaped paths, ordered inner arrays) hold the two to the same
+  verdicts.
+- A form-review declaration lists them as `unorderedArrays: [{path, reason}]`; capture rejects a
+  path that is not a result pointer, a blank reason or a repeat, and carries them to the override
+  and the scenario. Only a scenario that declares one carries the key.
+- Both `$graphLookup` cases convert: `withinASingleCollection` (`/reportingHierarchy`) and
+  `withAQueryFilter` (`/connections who play golf`), citing the page's "Documents returned in the
+  as field are not guaranteed to be in any order". Their bodies look up `employees` and `people`,
+  recorded as reviewed body edits.
+- Totals: ledger 351 cases; 23 legacy-only; form report 4 overrides; 205 legacy directories. Core
+  operator tests: 678 under each mapper; audits: 452.

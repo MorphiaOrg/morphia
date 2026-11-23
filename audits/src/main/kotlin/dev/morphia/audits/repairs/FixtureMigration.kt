@@ -331,6 +331,14 @@ object FixtureMigration {
                                 )
                             ),
                         )
+                        .also { comparison ->
+                            // Only a case that declares one carries the key.
+                            if (override.unorderedArrays.isNotEmpty())
+                                comparison.append(
+                                    "unorderedArrays",
+                                    BsonArray(override.unorderedArrays.map { BsonString(it.path) }),
+                                )
+                        }
                         .append("tolerance", BsonNull.VALUE),
                 )
                 .append(

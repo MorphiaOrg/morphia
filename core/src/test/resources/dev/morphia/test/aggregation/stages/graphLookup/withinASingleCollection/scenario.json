@@ -1,0 +1,508 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/graphLookup/withinASingleCollection",
+  "title": "Within a Single Collection",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "fbff8bd22e055259d67b394c854f128340571b1f",
+    "path": "source/reference/operator/aggregation/graphLookup.txt",
+    "blob": "d00d3c58699ec5ad0505fdcab3026e35f522ce87"
+  },
+  "dataset": null,
+  "collections": {
+    "employees": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Dev"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Eliot",
+        "reportsTo": "Dev"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Ron",
+        "reportsTo": "Eliot"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Andrew",
+        "reportsTo": "Eliot"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "Asya",
+        "reportsTo": "Ron"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "Dan",
+        "reportsTo": "Andrew"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "employees",
+    "pipeline": [
+      {
+        "$graphLookup": {
+          "from": "employees",
+          "startWith": "$reportsTo",
+          "connectFromField": "reportsTo",
+          "connectToField": "name",
+          "as": "reportingHierarchy"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Dev"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Eliot"
+            }
+          },
+          {
+            "name": "reportsTo",
+            "value": {
+              "text": "Dev"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Ron"
+            }
+          },
+          {
+            "name": "reportsTo",
+            "value": {
+              "text": "Eliot"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Andrew"
+            }
+          },
+          {
+            "name": "reportsTo",
+            "value": {
+              "text": "Eliot"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Asya"
+            }
+          },
+          {
+            "name": "reportsTo",
+            "value": {
+              "text": "Ron"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Ron"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Dan"
+            }
+          },
+          {
+            "name": "reportsTo",
+            "value": {
+              "text": "Andrew"
+            }
+          },
+          {
+            "name": "reportingHierarchy",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Dev"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Andrew"
+                      }
+                    },
+                    {
+                      "name": "reportsTo",
+                      "value": {
+                        "text": "Eliot"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "unorderedArrays": [
+      "/reportingHierarchy"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

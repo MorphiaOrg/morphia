@@ -1,16 +1,28 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.semantics.BsonComparison
+import dev.morphia.audits.semantics.BsonComparisonPolicy
 import dev.morphia.audits.semantics.BsonComparisonState
+import dev.morphia.audits.semantics.BsonPath
 import dev.morphia.audits.semantics.ResultOrder
 import java.nio.file.Files
 import java.nio.file.Path
+import org.bson.BsonArray
 import org.bson.BsonDocument
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 /** Core's `StrictBson` runs the same vectors, so the two strict comparators agree. */
 class StrictVectorsTest {
+    companion object {
+        /** A vector's declared unordered arrays, when it declares any. */
+        fun unorderedArrays(vector: BsonDocument): Set<BsonPath> =
+            vector
+                .getArray("unorderedArrays", BsonArray())
+                .map { BsonPath(it.asString().value) }
+                .toSet()
+    }
+
     @Test
     fun goldenVectorsMatchTheStrictComparator() {
         val root =
@@ -48,6 +60,7 @@ class StrictVectorsTest {
                             it.getArray("left").map { row -> row.asDocument() },
                             it.getArray("right").map { row -> row.asDocument() },
                             order,
+                            BsonComparisonPolicy(unorderedArrays = unorderedArrays(it)),
                         )
                         .state == BsonComparisonState.EQUAL,
                     it.getString("name").value,

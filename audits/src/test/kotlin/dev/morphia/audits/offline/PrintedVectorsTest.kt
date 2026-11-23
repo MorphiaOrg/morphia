@@ -52,6 +52,7 @@ class PrintedVectorsTest {
                                 constraints,
                                 vector.getArray("actual").map { it.asDocument() },
                                 ResultOrder.valueOf(vector.getString("order").value),
+                                unorderedArrays = StrictVectorsTest.unorderedArrays(vector),
                             )
                             .state
                             .name
