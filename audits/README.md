@@ -169,9 +169,9 @@ These remain because coverage has not fully moved off them yet. Each one goes wh
 its users does.
 
 - **Core's legacy fixture loader** (`data.json`, `action.json`, `expected.json` through
-  `TemplatedTestBase`). It runs 16 legacy fixture directories, each with a documented source:
-  15 tracked as legacy-only in `cutover.json` with the strict check they fail, and one declaration
-  that needs alternative commands. 373 cases have moved to the runner; the 167 legacy tests whose
+  `TemplatedTestBase`). It runs 5 legacy fixture directories, each with a documented source: 4
+  tracked as legacy-only in `cutover.json` with the strict check they fail, and one declaration
+  that needs alternative commands. 384 cases have moved to the runner; the 167 legacy tests whose
   fixtures no documented source reproduced were deleted and are recorded in
   `audits/catalog/deleted-fixtures.json`.
 - **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory

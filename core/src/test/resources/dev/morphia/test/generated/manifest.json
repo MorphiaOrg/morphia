@@ -41,6 +41,11 @@
     "test" : "dev.morphia.test.generated.expressions.TestAddToSet#collectTheGenresOfEachDirector"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/addToSet/useInGroupStage",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/addToSet/useInGroupStage/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAddToSet#testUseInGroupStage"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/and/andExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/and/andExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestAnd#testAndExpressionOperator"
@@ -219,6 +224,16 @@
     "name" : "aggregation/expressions/cond/condExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestCond#testCondExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/cos/cosineOfValueInDegrees",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInDegrees/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCos#testCosineOfValueInDegrees"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/cos/cosineOfValueInRadians",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInRadians/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCos#testCosineOfValueInRadians"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
@@ -426,6 +441,16 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryAFieldInASubDocument"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/getField/queryFieldsThatContainPeriods",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatContainPeriods/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryFieldsThatContainPeriods"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatStartWithADollarSign/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryFieldsThatStartWithADollarSign"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/gt/gtExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/gt/gtExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestGt#testGtExpressionOperator"
@@ -479,6 +504,11 @@
     "name" : "aggregation/expressions/isoWeek/isoWeekExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/isoWeek/isoWeekExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsoWeek#testIsoWeekExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIsoWeekYear#testIsoWeekYearExpressionOperator"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/last/useInGroupStage",
@@ -911,6 +941,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestSetIsSubset#testSetIsSubsetExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/setUnion/setUnionAccumulatorOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSetUnion#testSetUnionAccumulatorOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/shift/shiftUsingANegativeInteger",
     "scenario" : "/dev/morphia/test/aggregation/expressions/shift/shiftUsingANegativeInteger/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingANegativeInteger"
@@ -919,6 +954,16 @@
     "name" : "aggregation/expressions/shift/shiftUsingAPositiveInteger",
     "scenario" : "/dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingAPositiveInteger"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/sin/sineOfValueInDegrees",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/sin/sineOfValueInDegrees/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSin#testSineOfValueInDegrees"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/sin/sineOfValueInRadians",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/sin/sineOfValueInRadians/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSin#testSineOfValueInRadians"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees",
@@ -1224,6 +1269,16 @@
     "name" : "aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields",
     "scenario" : "/dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestBucket#testUseBucketWithFacetToBucketByMultipleFields"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/bucketAuto/multiFacetedAggregation",
+    "scenario" : "/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregation/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testMultiFacetedAggregation"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline",
+    "scenario" : "/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testMultiFacetedAggregationAsPipeline"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/bucketAuto/singleFacetAggregation",
@@ -2185,6 +2240,10 @@
     "sha256" : "1a7c2c3e8e6ad1f9ccbe6d55847da58dfe4604d7afeb47cfe8cc99c359f4f340"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/addToSet/useInGroupStage/scenario.json",
+    "sha256" : "56903351e0d1dc2c8346a6e2bee4cbbd6861f189ccd597a37fdca95de360316e"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/and/andExpressionOperator/scenario.json",
     "sha256" : "6ec156682f3787a6b49844b62168b60522fe7250339c5045719bfb95bfc91056"
   }, {
@@ -2307,6 +2366,14 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
     "sha256" : "db6dfe2a12f2a75851d0c6e3ccf4f4d137adb5daca4e6f182caf2f0a9cf39dca"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInDegrees/scenario.json",
+    "sha256" : "4a989c56ad10af1e05c469e24af37a9805a1dac319d5ea750cf82254f1f75d0b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInRadians/scenario.json",
+    "sha256" : "0456d40920e835632f5e721daae74e3f70440bb73a99e124a59df0abfacf2768"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cosh/hyperbolicCosineInDegrees/scenario.json",
@@ -2461,6 +2528,14 @@
     "sha256" : "4e4f13cc79539a1ddc3017b0e2c91dff1e1cf957611aa15afef1386b722d85d9"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatContainPeriods/scenario.json",
+    "sha256" : "22c7c116b72d0256245f63016d59740d3be0366b3e94a7f27e8ee2a96f592b35"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatStartWithADollarSign/scenario.json",
+    "sha256" : "81af7013819861d875108a8370dcb305faa23e81146ed7e5d0b3cac09bbb2c70"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/gt/gtExpressionOperator/scenario.json",
     "sha256" : "ff867d7d071cce07af7334d16542ab92bd82da509ddc2fb7c54ba1d6744842e8"
   }, {
@@ -2503,6 +2578,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/isoWeek/isoWeekExpressionOperator/scenario.json",
     "sha256" : "321c11e7e6ff0827f0bdf124c01f3db4c075efa5b9c5f45447c3758e06d0def6"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator/scenario.json",
+    "sha256" : "d327648b3917ff83c74271a7ea36b5f132e12d169d9bbfd8cfadf7d049f9027a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/last/useInGroupStage/scenario.json",
@@ -2821,12 +2900,24 @@
     "sha256" : "28249d4a3cb6fa2a39597236da8cc74a984c8e875db5f04c45a69fc3764d8480"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/setUnion/setUnionAccumulatorOperator/scenario.json",
+    "sha256" : "4b3a9060e0676e65686562eac67186e9e0462cd1dd1eac814f09259b41766da7"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/shift/shiftUsingANegativeInteger/scenario.json",
     "sha256" : "75c44f30abcc7bb654a42d42817254e98b87e49d5f6d38dffcabc7ff1df30ebd"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger/scenario.json",
     "sha256" : "9119adbfb5daaf4a12e0202158d6f961b333cc21349eda1b3f8a89f469a1c47c"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sin/sineOfValueInDegrees/scenario.json",
+    "sha256" : "caa8945bbabdde910c4b33185ee7bd1762883bab6ed3133f45080c2cdb8015da"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sin/sineOfValueInRadians/scenario.json",
+    "sha256" : "f2268619e9df8203b5b73a928192c5dc0548aba6862b0e6afe0eb4cd89d7161d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees/scenario.json",
@@ -3055,6 +3146,14 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields/scenario.json",
     "sha256" : "fc5a9f5fc92db2f058f71d57416a0c162b9148d5bc58da42e305f3efffa0475b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregation/scenario.json",
+    "sha256" : "a3f6db877bf3b9af4d5efa5ed755e23ef3d0f9c78a7621e736c33ca73ddd2778"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline/scenario.json",
+    "sha256" : "9cec8d232c53f0b4122c277f8b12d87d43316adef05dce727267ba913a441af8"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/singleFacetAggregation/scenario.json",

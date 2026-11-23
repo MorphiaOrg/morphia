@@ -93,8 +93,7 @@ object Candidates {
         val ledger = AuditJson.fixtureMigration(Files.readString(root.resolve(LEDGER)))
         val contents = sortedMapOf<String, ByteArray>()
         ledger.migrations.forEach {
-            contents[it.scenario] =
-                FixtureMigration.scenario(it.override, it.ordered, it.options).toByteArray()
+            contents[it.scenario] = FixtureMigration.scenario(it).toByteArray()
         }
         val current = currentManifest(root)
         val generation = generation(root, current)

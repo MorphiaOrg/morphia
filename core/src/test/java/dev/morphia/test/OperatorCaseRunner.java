@@ -299,6 +299,10 @@ public class OperatorCaseRunner {
             referenceResults = without(ignore, referenceResults);
             morphiaResults = without(ignore, morphiaResults);
             BsonDocument expected = scenario.getDocument("expected");
+            // A reviewed page error: the page prints results the server does not return.
+            if (skipped.containsKey("published")) {
+                return;
+            }
             if (expected.containsKey("documents")) {
                 List<BsonValue> published = without(ignore, expected.getArray("documents").getValues());
                 if (!StrictBson.equal(published, morphiaResults, ordered, unordered)) {
@@ -367,7 +371,7 @@ public class OperatorCaseRunner {
             unsupported.add("scenario fields " + scenario.keySet());
         }
         BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
-        if (!Set.of("serialization", "results").containsAll(skipped.keySet())
+        if (!Set.of("serialization", "results", "published").containsAll(skipped.keySet())
                 || skipped.values().stream().anyMatch(reason -> !reason.isString() || reason.asString().getValue().isBlank())) {
             unsupported.add("skipped " + skipped);
         }

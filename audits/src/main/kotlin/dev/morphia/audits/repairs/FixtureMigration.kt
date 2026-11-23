@@ -57,6 +57,11 @@ data class MigratedFixture(
      */
     @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
     val fileEdits: Map<String, FileEdit> = emptyMap(),
+    /**
+     * A reviewed reason the published check does not run: the page prints results the server does
+     * not return (a page error), or that cannot be read. Serialization and behavior stay strict.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val publishedSkip: String? = null,
 )
 
 /**
@@ -259,6 +264,15 @@ object FixtureMigration {
 
     private val unordered = Regex("""\.orderMatters\s*\(\s*false\s*\)""")
 
+    /** The scenario of a ledger entry: its override's, with its options and reviewed skip. */
+    fun scenario(migrated: MigratedFixture): String =
+        scenario(
+            migrated.override,
+            migrated.ordered,
+            migrated.options,
+            publishedSkip = migrated.publishedSkip,
+        )
+
     /**
      * The scenario a runner executes for [override]: its documented data, action and results.
      * [ordered] is whether the legacy test compared results in order, and [options] are its other
@@ -271,6 +285,7 @@ object FixtureMigration {
         ordered: Boolean,
         options: List<OptionCall> = emptyList(),
         dataset: String? = null,
+        publishedSkip: String? = null,
     ): String {
         require(options.all { it.name in mappedOptions && it.name != "orderMatters" }) {
             "${override.fixture}: options ${options.map { it.name }} are not mapped"
@@ -285,6 +300,7 @@ object FixtureMigration {
             skipped["results"] =
                 BsonString("the legacy test skipped its data check (skipDataCheck)")
         }
+        publishedSkip?.let { skipped["published"] = BsonString(it) }
         if (dataset != null) {
             skipped["results"] =
                 BsonString(
@@ -600,7 +616,13 @@ object FixtureMigration {
         return ledger.copy(
             migrations =
                 ledger.migrations.map { migrated ->
-                    val text = scenario(migrated.override, migrated.ordered, migrated.options)
+                    val text =
+                        scenario(
+                            migrated.override,
+                            migrated.ordered,
+                            migrated.options,
+                            publishedSkip = migrated.publishedSkip,
+                        )
                     Files.writeString(root.resolve(migrated.scenario), text)
                     migrated.copy(scenarioSha256 = sha256(text.toByteArray()))
                 }
@@ -847,7 +869,15 @@ object FixtureMigration {
                 if (sha256(text.toByteArray()) != migrated.scenarioSha256) {
                     problems += "${migrated.fixture}: scenario changed since the migration"
                 }
-                if (text != scenario(migrated.override, migrated.ordered, migrated.options)) {
+                if (
+                    text !=
+                        scenario(
+                            migrated.override,
+                            migrated.ordered,
+                            migrated.options,
+                            publishedSkip = migrated.publishedSkip,
+                        )
+                ) {
                     problems +=
                         "${migrated.fixture}: scenario is not its override's documented source"
                 }

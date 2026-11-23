@@ -1,31 +1,6 @@
 {
   "declarations" : [ {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
-    "includes" : [ {
-      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
-      "path" : "source/includes/important-set-operator-semantics.rst"
-    }, {
-      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
-      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
-      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange suppress id\n",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
-      "path" : "source/reference/operator/aggregation/setUnion.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
     "includes" : [ {
       "blob" : "324ff3f0609ab2cf2413bbb59ea90d6a5299bdae",
@@ -1594,6 +1569,35 @@
       "path" : "source/reference/operator/aggregation/setIsSubset.txt",
       "relation" : "AT_ORIGIN"
     }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange suppress id\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setUnion.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unorderedArrays" : [ {
+      "path" : "/allValues",
+      "reason" : "$setUnion does not order the array it returns: the page prints one order, and the server returns another"
+    } ]
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/size/sizeExpressionOperator",

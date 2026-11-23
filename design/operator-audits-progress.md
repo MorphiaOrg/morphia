@@ -44,8 +44,13 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The remaining legacy fixtures:** 16 directories, all with a documented source: 15 legacy-only
-  in `cutover.json`, and `type/queryingByMultipleDataTypes`, which needs alternative commands.
+- **The remaining legacy fixtures:** 5 directories, all with a documented source, and the last users
+  of the legacy loader:
+  - `tan/tangentOfValueInRadians`, `densify/densifyTimeSeriesData` and
+    `graphLookup/acrossMultipleCollections`: the page's printed results do not parse (page typos);
+  - `rand/selectRandomItemsFromACollection`: the page projects `_id` first, which a reference cannot
+    declare (`PROJECT_ID_FIRST`) and Morphia writes last;
+  - `type/queryingByMultipleDataTypes`: alternative commands, which conversion does not support.
 - **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
@@ -2708,3 +2713,18 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - 12 of the exposed examples are generated now (38 generated cases); `$bitOr`'s long-and-integer
   example is excluded again (the page error in #4563).
 - Remaining legacy: 16 directories, none locked. Core: 551 operator tests under each mapper.
+
+## Reviewed page errors and set results (2026-11-23)
+
+- Branch audits-published-skips. A ledger entry may carry `publishedSkip`: a reviewed page error,
+  with its evidence, that skips only the published check (`skipped.published`); serialization and
+  behavior stay strict. `FixtureMigration.scenario(migrated)` is the one way to write a ledger
+  case's scenario, so every caller includes it.
+- Nine cases convert with a reviewed page error: `$cos` and `$sin` ×4 (the page prints the added
+  field before an existing one), `$getField` ×2 (field order the page's own insert does not store),
+  `$isoWeekYear` (a Long printed as a plain number) and `$bucketAuto` ×2 (facets printed out of the
+  pipeline's order).
+- `$addToSet`'s `useInGroupStage` and `$setUnion`'s accumulator case declare their set arrays
+  unordered instead (#4568): their behavior check could differ between runs too, and every check
+  stays strict.
+- 384 cases on the runner; 5 legacy directories. Core: 551 under each mapper.

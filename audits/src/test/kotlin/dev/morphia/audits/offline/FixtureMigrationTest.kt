@@ -25,12 +25,7 @@ class FixtureMigrationTest {
 
     @Test
     fun scenariosAreTheirOverridesDocumentedSource() {
-        ledger.migrations.forEach {
-            assertEquals(
-                FixtureMigration.scenario(it.override, it.ordered, it.options),
-                read(it.scenario),
-            )
-        }
+        ledger.migrations.forEach { assertEquals(FixtureMigration.scenario(it), read(it.scenario)) }
     }
 
     @Test

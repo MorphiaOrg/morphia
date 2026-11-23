@@ -1,0 +1,96 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/cos/cosineOfValueInRadians",
+  "title": "main :: Cosine of Value in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8562c94b38de3e8c83552bcd41558548e5220eef",
+    "path": "source/reference/operator/aggregation/cos.txt",
+    "blob": "fea873bacbd276ce279f34a83646e17aa7a28a5e"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "angle_a": {
+          "$numberDecimal": "0.9272952180016122324285124629224288"
+        },
+        "hypotenuse": {
+          "$numberDecimal": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "side_b": {
+            "$multiply": [
+              {
+                "$cos": "$angle_a"
+              },
+              "$hypotenuse"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "angle_a",
+            "value": {
+              "decimal": "0.9272952180016122324285124629224288"
+            }
+          },
+          {
+            "name": "side_b",
+            "value": {
+              "decimal": "3.000000000000000000000000000000000"
+            }
+          },
+          {
+            "name": "hypotenuse",
+            "value": {
+              "decimal": "5"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "a page error: the page prints the field $addFields adds before an existing one; $addFields writes a new field after the document's existing fields, which is what the server returns; serialization and behavior pass"
+  }
+}

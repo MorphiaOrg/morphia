@@ -114,7 +114,7 @@ A case is one documented example, described entirely by a `scenario.json` (schem
 | `expected` | The documented results, either exact BSON or `printed`: the constraints mongosh's printed output proves (see below). |
 | `comparison` | Result order, declared form rules, ignored fields, unordered arrays and tolerance. |
 | `requirements` | The minimum server version and topology. |
-| `skipped` | Checks that do not run, each with its reason. |
+| `skipped` | Checks that do not run, each with its reason: `serialization`, `results` (behavior and published), or only `published`, for a reviewed page error. |
 
 The name, not the test method's name, decides where the scenario lives. The runner never finds
 fixtures by method name, ordinal or stack trace.

@@ -1,0 +1,260 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/addToSet/useInGroupStage",
+  "title": "Use in ``$group`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/addToSet.txt",
+    "blob": "3eab8a0f74fa1ac382290e0d2b593ef2c2c0dbef"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388563200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418000000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418300000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392451200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392455520000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": {
+            "day": {
+              "$dayOfYear": "$date"
+            },
+            "year": {
+              "$year": "$date"
+            }
+          },
+          "itemsSold": {
+            "$addToSet": "$item"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "day",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "46"
+                    }
+                  }
+                },
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2014"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "itemsSold",
+            "value": {
+              "array": [
+                {
+                  "text": "xyz"
+                },
+                {
+                  "text": "abc"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "day",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "34"
+                    }
+                  }
+                },
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2014"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "itemsSold",
+            "value": {
+              "array": [
+                {
+                  "text": "xyz"
+                },
+                {
+                  "text": "jkl"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "day",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                },
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2014"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "itemsSold",
+            "value": {
+              "array": [
+                {
+                  "text": "abc"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "unorderedArrays": [
+      "/itemsSold"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

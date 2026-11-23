@@ -355,6 +355,79 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "0fb2423a313345faeebf6b7a0a46a169fc1a4e3cb13e5a760b3d6bfa7b1112e4",
+      "data.json" : "c19398725980cdd99aabf629d09644b8e953313e79555e0a795c333dceccc327",
+      "expected.json" : "9929e0280aa20f0339d883545880d68df60ebc2c191b2820ba486994fead111e",
+      "name" : "13f25f9e86f0b9e61fadd6bf4b7abfb86a1c10d3a115219d3922ae7660f13653"
+    },
+    "fixture" : "aggregation/expressions/addToSet/useInGroupStage",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                aggregation -> aggregation\n                        .pipeline(group(Group.id().field(\"day\", dayOfYear(\"$date\")).field(\"year\", year(\"$date\")))\n                                .field(\"itemsSold\", addToSet(\"$item\")))\n\n        );\n\n    }",
+    "legacyBodySha256" : "531e3d7ac0eaa526aeb333f512cfecaeb1dec13a7556574242222f87e1b981ce",
+    "legacyMethod" : "testUseInGroupStage",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestAddToSet",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "a1fcd8e461b05a7f59d09ca1943f6e781fd57e0a50253baeaa352a011ecfca54",
+        "text" : "db.sales.aggregate(\n   [\n     {\n       $group:\n         {\n           _id: { day: { $dayOfYear: \"$date\"}, year: { $year: \"$date\" } },\n           itemsSold: { $addToSet: \"$item\" }\n         }\n     }\n   ]\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "7614839fbd529c06670e8e40d19c6d9256ca6ad01eba4426869a8ad4c8bf3930",
+        "text" : "{ \"_id\" : 1, \"item\" : \"abc\", \"price\" : 10, \"quantity\" : 2, \"date\" : ISODate(\"2014-01-01T08:00:00Z\") }\n{ \"_id\" : 2, \"item\" : \"jkl\", \"price\" : 20, \"quantity\" : 1, \"date\" : ISODate(\"2014-02-03T09:00:00Z\") }\n{ \"_id\" : 3, \"item\" : \"xyz\", \"price\" : 5, \"quantity\" : 5, \"date\" : ISODate(\"2014-02-03T09:05:00Z\") }\n{ \"_id\" : 4, \"item\" : \"abc\", \"price\" : 10, \"quantity\" : 10, \"date\" : ISODate(\"2014-02-15T08:00:00Z\") }\n{ \"_id\" : 5, \"item\" : \"xyz\", \"price\" : 5, \"quantity\" : 10, \"date\" : ISODate(\"2014-02-15T09:12:00Z\") }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9929e0280aa20f0339d883545880d68df60ebc2c191b2820ba486994fead111e",
+        "text" : "{ \"_id\" : { \"day\" : 46, \"year\" : 2014 }, \"itemsSold\" : [ \"xyz\", \"abc\" ] }\n{ \"_id\" : { \"day\" : 34, \"year\" : 2014 }, \"itemsSold\" : [ \"xyz\", \"jkl\" ] }\n{ \"_id\" : { \"day\" : 1, \"year\" : 2014 }, \"itemsSold\" : [ \"abc\" ] }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Use in ``$group`` Stage",
+      "fixture" : "aggregation/expressions/addToSet/useInGroupStage",
+      "fixtureFiles" : {
+        "action.json" : "0fb2423a313345faeebf6b7a0a46a169fc1a4e3cb13e5a760b3d6bfa7b1112e4",
+        "data.json" : "c19398725980cdd99aabf629d09644b8e953313e79555e0a795c333dceccc327",
+        "expected.json" : "9929e0280aa20f0339d883545880d68df60ebc2c191b2820ba486994fead111e",
+        "name" : "13f25f9e86f0b9e61fadd6bf4b7abfb86a1c10d3a115219d3922ae7660f13653"
+      },
+      "includes" : [ {
+        "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+        "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+      }, {
+        "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+        "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+      }, {
+        "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+        "path" : "source/includes/setWindowFields-example-collection.rst"
+      }, {
+        "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+        "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+      } ],
+      "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+      "pageBlob" : "3eab8a0f74fa1ac382290e0d2b593ef2c2c0dbef",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+        "path" : "source/reference/operator/aggregation/addToSet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ],
+      "unorderedArrays" : [ {
+        "path" : "/itemsSold",
+        "reason" : "$addToSet does not order the array it builds: the server lists the set's members in a different order between runs on identical data, and the page prints one order"
+      } ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/addToSet/useInGroupStage/scenario.json",
+    "scenarioSha256" : "56903351e0d1dc2c8346a6e2bee4cbbd6861f189ccd597a37fdca95de360316e",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAddToSet#testUseInGroupStage"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "a4042ccc3c4350fb18fc7451cde7cd47cd8e3b51b843be576117a4c3966797f1",
       "data.json" : "59080617e06f71cfc2a60584cdf8a932c3cade3c10c3c042084f68e1d7bdf69d",
       "expected.json" : "2d2b71f0ca09812bcdd286c137ab7a18b8eebe54b46ecd34bcc47a811965c566",
@@ -2310,6 +2383,122 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
     "scenarioSha256" : "db6dfe2a12f2a75851d0c6e3ccf4f4d137adb5daca4e6f182caf2f0a9cf39dca",
     "test" : "dev.morphia.test.aggregation.expressions.TestCond#testCondExpressionOperator"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "ab5f365b29a1254d0efbf5614f4c977aaf1760221c4618d9b82cc8c91568a799",
+      "data.json" : "d18629229503cd4d4bb17a530d96977314da5532ed8b817c84dc20c220d1b4f5",
+      "expected.json" : "28e338d19a80b5c69b4835aabc9cc25db4a53a636cd6a61aee3bd7e2c088aafa",
+      "name" : "e05a8bf1ab70db982ae5ae4f04f6c889c3e1798184b8df27399971e1781e0487"
+    },
+    "fixture" : "aggregation/expressions/cos/cosineOfValueInDegrees",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation\n                .pipeline(addFields().field(\"side_a\", multiply(cos(degreesToRadians(\"$angle_a\")), \"$hypotenuse\"))));\n    }",
+    "legacyBodySha256" : "66fe7ee13a479ad6a7a4f8731ad2cef57a2ec665f9436f3d96fb9146d58b72ee",
+    "legacyMethod" : "testCosineOfValueInDegrees",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestCos",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "db06080419614dcb6e1f12209a210387ad34f477fc0cac625fe8a68bb12c1b30",
+        "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_a\" : {\n        $multiply : [\n          { $cos : {$degreesToRadians : \"$angle_a\"} },\n          \"$hypotenuse\"\n        ]\n      }\n    }\n  }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "773c20efb8ac7f22d9fe63669ff0a97a9612012db10916e18028913ad0e4f776",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"53.13010235415597870314438744090659\"),\n  \"hypotenuse\" : NumberDecimal(\"5\")\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "3657c57fc88c7654eabf41069a623dfdd6dd9857fb0d4ddbf72753788b5c187f",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"53.13010235415597870314438744090659\"),\n  \"side_a\" : NumberDecimal(\"2.999999999999999999999999999999999\"),\n  \"hypotenuse\" : NumberDecimal(\"5\"),\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main :: Cosine of Value in Degrees",
+      "fixture" : "aggregation/expressions/cos/cosineOfValueInDegrees",
+      "fixtureFiles" : {
+        "action.json" : "ab5f365b29a1254d0efbf5614f4c977aaf1760221c4618d9b82cc8c91568a799",
+        "data.json" : "d18629229503cd4d4bb17a530d96977314da5532ed8b817c84dc20c220d1b4f5",
+        "expected.json" : "28e338d19a80b5c69b4835aabc9cc25db4a53a636cd6a61aee3bd7e2c088aafa",
+        "name" : "e05a8bf1ab70db982ae5ae4f04f6c889c3e1798184b8df27399971e1781e0487"
+      },
+      "includes" : [ ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "fea873bacbd276ce279f34a83646e17aa7a28a5e",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+        "path" : "source/reference/operator/aggregation/cos.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the field $addFields adds before an existing one; $addFields writes a new field after the document's existing fields, which is what the server returns; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInDegrees/scenario.json",
+    "scenarioSha256" : "4a989c56ad10af1e05c469e24af37a9805a1dac319d5ea750cf82254f1f75d0b",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCos#testCosineOfValueInDegrees"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "542d1ef04ff4b96b8dd4d6fe56cc431d3ca0bf4a065af9dacf5d49b6b7a10747",
+      "data.json" : "6f563aefefe5aa801f68cd9b63f15dcb642d097b3c464591ead97d15e2ec92c4",
+      "expected.json" : "ede8927437868fb2020467af8f4c18c626c08b2e30d614ed162eaab57f77ed61",
+      "name" : "da9237a4a6aa2a0a0d3fd5e4ed90d189ba07bc740834b29c85035a3e0d303cb1"
+    },
+    "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation\n                .pipeline(addFields().field(\"side_b\", multiply(cos(\"$angle_a\"), \"$hypotenuse\"))));\n    }",
+    "legacyBodySha256" : "f64cb59ff9cd5e7e6005f45ae68ea8cbc7dee19a2ba67a5eb1d61af6cf47c3f8",
+    "legacyMethod" : "testCosineOfValueInRadians",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestCos",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "45ffefddde672984544b6e9bf59d81f0ed00c7f5c9395fcbfd2675b3a82431d3",
+        "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $cos : \"$angle_a\" },\n          \"$hypotenuse\"\n        ]\n      }\n    }\n  }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "3617967fbf8dd3294f1ef06f3a93369c25d15f7136bab6f29f1773244f0981cf",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"hypotenuse\" : NumberDecimal(\"5\")\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "f087d524c5ffc180e48d4380751a56c097e33032397dcb390855b83242295a9e",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"side_b\" : NumberDecimal(\"3.000000000000000000000000000000000\"),\n  \"hypotenuse\" : NumberDecimal(\"5\"),\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main :: Cosine of Value in Radians",
+      "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians",
+      "fixtureFiles" : {
+        "action.json" : "542d1ef04ff4b96b8dd4d6fe56cc431d3ca0bf4a065af9dacf5d49b6b7a10747",
+        "data.json" : "6f563aefefe5aa801f68cd9b63f15dcb642d097b3c464591ead97d15e2ec92c4",
+        "expected.json" : "ede8927437868fb2020467af8f4c18c626c08b2e30d614ed162eaab57f77ed61",
+        "name" : "da9237a4a6aa2a0a0d3fd5e4ed90d189ba07bc740834b29c85035a3e0d303cb1"
+      },
+      "includes" : [ ],
+      "origin" : "3ed9dc5c1fb30de5717e0d52d8b63a1f7a17bf8d",
+      "pageBlob" : "fea873bacbd276ce279f34a83646e17aa7a28a5e",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+        "path" : "source/reference/operator/aggregation/cos.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the field $addFields adds before an existing one; $addFields writes a new field after the document's existing fields, which is what the server returns; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/cos/cosineOfValueInRadians/scenario.json",
+    "scenarioSha256" : "0456d40920e835632f5e721daae74e3f70440bb73a99e124a59df0abfacf2768",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCos#testCosineOfValueInRadians"
   }, {
     "bodyEdit" : null,
     "files" : {
@@ -4849,6 +5038,122 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "d3ccd632b34ba8890fa1fb522616bacc6f87af53ab8a60244d35e45b091b663e",
+      "data.json" : "49f80fa8d558ba3b208a4cc6e8ef4fa9b24aca9c9fbf6259a12f10a449a874f7",
+      "expected.json" : "3dbf65cc94f2e60d099fa0c3c0bd744eb654a71509d1180cba8cbef600eb8477",
+      "name" : "8fc0f79074054bd9852e9a8cfe6e2ff4c69d2828cf0b1b4358611127bc4442e0"
+    },
+    "fixture" : "aggregation/expressions/getField/queryFieldsThatContainPeriods",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(match(expr(gt(getField(\"price.usd\"), 200)))));\n    }",
+    "legacyBodySha256" : "cd1b9c48f4a821fffc7bf1776623d97ace35730838f2ff4fb29283615babbf78",
+    "legacyMethod" : "testQueryFieldsThatContainPeriods",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestGetField",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "ed39af0db62e1b58c0aeee80ac735f333fc8f83a19199220c5c5e7c57aadf491",
+        "text" : "db.inventory.aggregate( [\n  {\n    $match: \n      { $expr: \n        { $gt: [ { $getField: \"price.usd\" }, 200 ] }\n      }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "c1fb6a8c39dd362bc5dca28f3de2ee2f6f0af106642aab37b5610c95fb7becd1",
+        "text" : "{ \"_id\" : 1, \"item\" : \"sweatshirt\", \"price.usd\": 45.99, qty: 300 }\n{ \"_id\" : 2, \"item\" : \"winter coat\", \"price.usd\": 499.99, qty: 200 }\n{ \"_id\" : 3, \"item\" : \"sun dress\", \"price.usd\": 199.99, qty: 250 }\n{ \"_id\" : 4, \"item\" : \"leather boots\", \"price.usd\": 249.99, qty: 300 }\n{ \"_id\" : 5, \"item\" : \"bow tie\", \"price.usd\": 9.99, qty: 180 }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "759bba96e9bcdc434d9021c8c2ef6dc040e4d7c62e28155cf823854b5ee38e70",
+        "text" : "[\n  { _id: 2, item: 'winter coat', qty: 200, 'price.usd': 499.99 },\n  { _id: 4, item: 'leather boots', qty: 300, 'price.usd': 249.99 }\n]"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Query Fields that Contain Periods (``.``)",
+      "fixture" : "aggregation/expressions/getField/queryFieldsThatContainPeriods",
+      "fixtureFiles" : {
+        "action.json" : "d3ccd632b34ba8890fa1fb522616bacc6f87af53ab8a60244d35e45b091b663e",
+        "data.json" : "49f80fa8d558ba3b208a4cc6e8ef4fa9b24aca9c9fbf6259a12f10a449a874f7",
+        "expected.json" : "3dbf65cc94f2e60d099fa0c3c0bd744eb654a71509d1180cba8cbef600eb8477",
+        "name" : "8fc0f79074054bd9852e9a8cfe6e2ff4c69d2828cf0b1b4358611127bc4442e0"
+      },
+      "includes" : [ ],
+      "origin" : "69a77e75d9e3c922bdfa45ecfa59dac3f98ac7c7",
+      "pageBlob" : "899c62457ce159b0bf99eecaef4b51ca30ab7d24",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
+        "path" : "source/reference/operator/aggregation/getField.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints qty before price.usd; the server returns the fields in the order the page's own insert stores them; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatContainPeriods/scenario.json",
+    "scenarioSha256" : "22c7c116b72d0256245f63016d59740d3be0366b3e94a7f27e8ee2a96f592b35",
+    "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryFieldsThatContainPeriods"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "a153316785de3b31d4236ab6d63a78d9e4c69ffdd270a2f18d922cfe22708796",
+      "data.json" : "1aef2ddf0809a3b16a6a9028ca9f30385d5d2e5e7cb6abfd4804633e1c95d829",
+      "expected.json" : "e5b336f97f3a03cac65dd8ab49f91913b4c59693ac45bc731eb7189872d9d024",
+      "name" : "37c029e4e2f53583e4a100aeb6e45a1500655504b17a782dbfe56a01e6d427f3"
+    },
+    "fixture" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(match(expr(gt(getField(literal(\"$price\")), 200)))));\n    }",
+    "legacyBodySha256" : "2b73f77a9bd70e675c948b23b5909ccb71771441b7708da157eee649c964aa6a",
+    "legacyMethod" : "testQueryFieldsThatStartWithADollarSign",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestGetField",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "926293f8f6e7bf0937fd479be7e8e498da075dbeb38dfa162a3e810a7ef12990",
+        "text" : "db.inventory.aggregate( [\n  {\n    $match: \n      { $expr: \n        { $gt: [ { $getField: {$literal: \"$price\" } }, 200 ] }\n      }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "8d4efdde9f4a8349d09674f34906394284ec75aa10ea497c68cdb36e5b0928ad",
+        "text" : "{ \"_id\" : 1, \"item\" : \"sweatshirt\", \"$price\": 45.99, qty: 300 }\n{ \"_id\" : 2, \"item\" : \"winter coat\", \"$price\": 499.99, qty: 200 }\n{ \"_id\" : 3, \"item\" : \"sun dress\", \"$price\": 199.99, qty: 250 }\n{ \"_id\" : 4, \"item\" : \"leather boots\", \"$price\": 249.99, qty: 300 }\n{ \"_id\" : 5, \"item\" : \"bow tie\", \"$price\": 9.99, qty: 180 }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "43659b6742fd31da4d83cf0c8acc93987188d98f9ced3b3106817c1f0960a5b5",
+        "text" : "[\n  { _id: 2, item: 'winter coat', qty: 200, '$price': 499.99 },\n  { _id: 4, item: 'leather boots', qty: 300, '$price': 249.99 }\n]"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Query Fields that Start with a Dollar Sign (``$``)",
+      "fixture" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign",
+      "fixtureFiles" : {
+        "action.json" : "a153316785de3b31d4236ab6d63a78d9e4c69ffdd270a2f18d922cfe22708796",
+        "data.json" : "1aef2ddf0809a3b16a6a9028ca9f30385d5d2e5e7cb6abfd4804633e1c95d829",
+        "expected.json" : "e5b336f97f3a03cac65dd8ab49f91913b4c59693ac45bc731eb7189872d9d024",
+        "name" : "37c029e4e2f53583e4a100aeb6e45a1500655504b17a782dbfe56a01e6d427f3"
+      },
+      "includes" : [ ],
+      "origin" : "69a77e75d9e3c922bdfa45ecfa59dac3f98ac7c7",
+      "pageBlob" : "899c62457ce159b0bf99eecaef4b51ca30ab7d24",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
+        "path" : "source/reference/operator/aggregation/getField.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the fields in an order other than the one its own insert stores them in, which the server returns; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/getField/queryFieldsThatStartWithADollarSign/scenario.json",
+    "scenarioSha256" : "81af7013819861d875108a8370dcb305faa23e81146ed7e5d0b3cac09bbb2c70",
+    "test" : "dev.morphia.test.aggregation.expressions.TestGetField#testQueryFieldsThatStartWithADollarSign"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "97274b9ac59c6875c4c9900a191f56f2dcab29d91765f214d4d7ac365e97d97f",
       "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
       "expected.json" : "84e6ceed470d7021814f1318ba5d9be88f4a99fc80916c0b5524a7424f3aef8e",
@@ -5556,6 +5861,67 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/isoWeek/isoWeekExpressionOperator/scenario.json",
     "scenarioSha256" : "321c11e7e6ff0827f0bdf124c01f3db4c075efa5b9c5f45447c3758e06d0def6",
     "test" : "dev.morphia.test.aggregation.expressions.TestIsoWeek#testIsoWeekExpressionOperator"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "5ffb82eb5174660e4978d51731bec650ec2729b22f2863c2db589d3e6e3eb20e",
+      "data.json" : "a3854ddcaea5741367b2977d939c20840a0f809d91f2a4ae8dcd464215e7f032",
+      "expected.json" : "cb3715f532467bc73b42db920feedf1023f2ffe09d148616bae831595553670d",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(project().include(\"yearNumber\", isoWeekYear(\"$date\"))));\n    }",
+    "legacyBodySha256" : "5e6c1e289985604c0cf0400f84c782514a2bd3b653590b8a1e65a2c5259508e3",
+    "legacyMethod" : "testIsoWeekYearExpressionOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestIsoWeekYear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "3e6a59b1ab1a7314bc03f53ab5185b6ef0028c74e1c1677fe1ebd0a75d39a71f",
+        "text" : "db.anniversaries.aggregate( [\n  {\n    $project: {\n      yearNumber: { $isoWeekYear: \"$date\" }\n    }\n  }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "a3854ddcaea5741367b2977d939c20840a0f809d91f2a4ae8dcd464215e7f032",
+        "text" : "{ \"_id\" : 1, \"date\" : ISODate(\"2016-01-01T00:00:00Z\") }\n{ \"_id\" : 2, \"date\" : ISODate(\"2016-01-04T00:00:00Z\") }\n{ \"_id\" : 3, \"date\" : ISODate(\"2015-01-01T00:00:00Z\") }\n{ \"_id\" : 4, \"date\" : ISODate(\"2014-04-21T00:00:00Z\") }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "cb3715f532467bc73b42db920feedf1023f2ffe09d148616bae831595553670d",
+        "text" : "{ \"_id\" : 1, \"yearNumber\" : 2015 }\n{ \"_id\" : 2, \"yearNumber\" : 2016 }\n{ \"_id\" : 3, \"yearNumber\" : 2015 }\n{ \"_id\" : 4, \"yearNumber\" : 2014 }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator",
+      "fixtureFiles" : {
+        "action.json" : "5ffb82eb5174660e4978d51731bec650ec2729b22f2863c2db589d3e6e3eb20e",
+        "data.json" : "a3854ddcaea5741367b2977d939c20840a0f809d91f2a4ae8dcd464215e7f032",
+        "expected.json" : "cb3715f532467bc73b42db920feedf1023f2ffe09d148616bae831595553670d",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ {
+        "blob" : "3a74fe28048991c6f514db876929e8939534d8ee",
+        "path" : "source/includes/fact-iso-date-objects.rst"
+      } ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "1382e4dfb1f694eaad63993cfe3d19ab9b0a52b5",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+        "path" : "source/reference/operator/aggregation/isoWeekYear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: $isoWeekYear returns a Long, which mongosh prints as Long('2015'); the page prints 2015, which only an Int32 or a Double prints as; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator/scenario.json",
+    "scenarioSha256" : "d327648b3917ff83c74271a7ea36b5f132e12d169d9bbfd8cfadf7d049f9027a",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIsoWeekYear#testIsoWeekYearExpressionOperator"
   }, {
     "bodyEdit" : null,
     "files" : {
@@ -10888,6 +11254,81 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "58a773e31fc06aca6ece771f62acaa30b338a6c3a2e6a99c060c1bd7cc7833dd",
+      "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
+      "expected.json" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
+      "lock" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                (aggregation) -> aggregation.pipeline(project().suppressId().include(\"flowerFieldA\")\n                        .include(\"flowerFieldB\").include(\"allValues\", setUnion(\"$flowerFieldA\", \"$flowerFieldB\"))));\n    }",
+    "legacyBodySha256" : "48a48dc3c43eb3a4171d8178a85ec01bafff4f959888b3f0490f1b90ccbf6e31",
+    "legacyMethod" : "testSetUnionAccumulatorOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestSetUnion",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "505edb1e4bde2908694f17718f020da56a9df0140f79eab66f2d9f3d76ee0318",
+        "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA:1, flowerFieldB: 1, allValues: { $setUnion: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "6443ea787dad4fdfbd05b758c7838ea1b3cd69c19b2e0fe36fad50c454f6eeed",
+        "text" : "db.flowers.insertMany( [\n   { \"_id\" : 1, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ] },\n   { \"_id\" : 2, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ] },\n   { \"_id\" : 3, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ] },\n   { \"_id\" : 4, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ] },\n   { \"_id\" : 5, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 6, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ] },\n   { \"_id\" : 7, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ] },\n   { \"_id\" : 8, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 9, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ] }\n] ) "
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
+        "text" : "{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"orchid\", \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\", \"jasmine\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"jasmine\", \"rose\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\" ], [ \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\", \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ ], \"allValues\": [ ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ \"rose\" ], \"allValues\": [ \"rose\" ] }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
+      "fixtureFiles" : {
+        "action.json" : "58a773e31fc06aca6ece771f62acaa30b338a6c3a2e6a99c060c1bd7cc7833dd",
+        "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
+        "expected.json" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ {
+        "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+        "path" : "source/includes/important-set-operator-semantics.rst"
+      }, {
+        "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+        "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+      }, {
+        "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+        "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+      } ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
+        "text" : "rearrange suppress id\n"
+      },
+      "retypes" : [ ],
+      "rules" : [ "PROJECT_ID_FIRST" ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+        "path" : "source/reference/operator/aggregation/setUnion.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ],
+      "unorderedArrays" : [ {
+        "path" : "/allValues",
+        "reason" : "$setUnion does not order the array it returns: the page prints one order, and the server returns another"
+      } ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/setUnion/setUnionAccumulatorOperator/scenario.json",
+    "scenarioSha256" : "4b3a9060e0676e65686562eac67186e9e0462cd1dd1eac814f09259b41766da7",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSetUnion#testSetUnionAccumulatorOperator"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "5ed4cf4e10b723c1ee8ee4690af49ad85af1bf5631e7b8e5ffdcdf7fca05aea5",
       "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
       "expected.json" : "c05fe3147c3c324604cc41c6d59114b76066f2ae3da154cd3b0c9c95db941c3f",
@@ -11011,6 +11452,122 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger/scenario.json",
     "scenarioSha256" : "9119adbfb5daaf4a12e0202158d6f961b333cc21349eda1b3f8a89f469a1c47c",
     "test" : "dev.morphia.test.aggregation.expressions.TestShift#testShiftUsingAPositiveInteger"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "685a6c7967879161625f7c7a3ad184c607fef36bc76c440e3cda38eb3204ddd3",
+      "data.json" : "d18629229503cd4d4bb17a530d96977314da5532ed8b817c84dc20c220d1b4f5",
+      "expected.json" : "dabcd1694bcdf3673dd46d6e4f4f36cb9b3b25f288f66d3a54be5a40e27e2de6",
+      "name" : "b96c6263085a96f243ee59a62db8712d994e734a16a6212223be91e06a6c6621"
+    },
+    "fixture" : "aggregation/expressions/sin/sineOfValueInDegrees",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation\n                .pipeline(addFields().field(\"side_b\", multiply(sin(degreesToRadians(\"$angle_a\")), \"$hypotenuse\"))));\n    }",
+    "legacyBodySha256" : "ad02b8cd42166cf3d32219c7626b7c961644b60f71774713c24947fff6b1fef5",
+    "legacyMethod" : "testSineOfValueInDegrees",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestSin",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "fa648e6f7ae2353a28b056af94ed8f0ebcc0d7aa09c9a084d60dd9696e05524e",
+        "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $sin : {$degreesToRadians : \"$angle_a\"} },\n          \"$hypotenuse\"\n        ]\n      }\n    }\n  }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "773c20efb8ac7f22d9fe63669ff0a97a9612012db10916e18028913ad0e4f776",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"53.13010235415597870314438744090659\"),\n  \"hypotenuse\" : NumberDecimal(\"5\")\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "41f5b9e8279bbaf36557fed71b151c17ead1f1e46637b168ac90c17c76afdb22",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"53.13010235415597870314438744090659\"),\n  \"side_b\" : NumberDecimal(\"4.000000000000000000000000000000000\"),\n  \"hypotenuse\" : NumberDecimal(\"5\"),\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main :: Sine of Value in Degrees",
+      "fixture" : "aggregation/expressions/sin/sineOfValueInDegrees",
+      "fixtureFiles" : {
+        "action.json" : "685a6c7967879161625f7c7a3ad184c607fef36bc76c440e3cda38eb3204ddd3",
+        "data.json" : "d18629229503cd4d4bb17a530d96977314da5532ed8b817c84dc20c220d1b4f5",
+        "expected.json" : "dabcd1694bcdf3673dd46d6e4f4f36cb9b3b25f288f66d3a54be5a40e27e2de6",
+        "name" : "b96c6263085a96f243ee59a62db8712d994e734a16a6212223be91e06a6c6621"
+      },
+      "includes" : [ ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "2bea14aa7ebe97bf5e22cb59839ed118a3fc32fd",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+        "path" : "source/reference/operator/aggregation/sin.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the field $addFields adds before an existing one; $addFields writes a new field after the document's existing fields, which is what the server returns; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/sin/sineOfValueInDegrees/scenario.json",
+    "scenarioSha256" : "caa8945bbabdde910c4b33185ee7bd1762883bab6ed3133f45080c2cdb8015da",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSin#testSineOfValueInDegrees"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "f8447a898f3dbec40d2e790f72b4de48ce793f1723b9bf8171be321faea41b9d",
+      "data.json" : "6f563aefefe5aa801f68cd9b63f15dcb642d097b3c464591ead97d15e2ec92c4",
+      "expected.json" : "b452f99e86df8d75cbc56a92e115ceaf5504818ef572b4d59b0ce15a4cc2cb07",
+      "name" : "c178da78dfa09e1789ca83af994f515667c1ca95f7d248688f7c3da9721a792c"
+    },
+    "fixture" : "aggregation/expressions/sin/sineOfValueInRadians",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation\n                .pipeline(addFields().field(\"side_b\", multiply(sin(\"$angle_a\"), \"$hypotenuse\"))));\n    }",
+    "legacyBodySha256" : "6d9eef3c37da8d9c06fc4c6534d54938ceeb95e1ad2f4ad96b089c23607545b2",
+    "legacyMethod" : "testSineOfValueInRadians",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestSin",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "dd1067bc89e28b1689ef13b0a9cd6cb51c0728edc800ee94fdcbb11685c89d0d",
+        "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $sin : \"$angle_a\" },\n          \"$hypotenuse\"\n        ]\n      }\n    }\n  }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "3617967fbf8dd3294f1ef06f3a93369c25d15f7136bab6f29f1773244f0981cf",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"hypotenuse\" : NumberDecimal(\"5\")\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "db5c58717fcd7dab67885e06fe40e56e6449f814fedafce330ed29db10cbc54b",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"side_b\" : NumberDecimal(\"4.000000000000000000000000000000000\"),\n  \"hypotenuse\" : NumberDecimal(\"5\"),\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main :: Sine of Value in Radians",
+      "fixture" : "aggregation/expressions/sin/sineOfValueInRadians",
+      "fixtureFiles" : {
+        "action.json" : "f8447a898f3dbec40d2e790f72b4de48ce793f1723b9bf8171be321faea41b9d",
+        "data.json" : "6f563aefefe5aa801f68cd9b63f15dcb642d097b3c464591ead97d15e2ec92c4",
+        "expected.json" : "b452f99e86df8d75cbc56a92e115ceaf5504818ef572b4d59b0ce15a4cc2cb07",
+        "name" : "c178da78dfa09e1789ca83af994f515667c1ca95f7d248688f7c3da9721a792c"
+      },
+      "includes" : [ ],
+      "origin" : "3ed9dc5c1fb30de5717e0d52d8b63a1f7a17bf8d",
+      "pageBlob" : "2bea14aa7ebe97bf5e22cb59839ed118a3fc32fd",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+        "path" : "source/reference/operator/aggregation/sin.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the field $addFields adds before an existing one; $addFields writes a new field after the document's existing fields, which is what the server returns; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/sin/sineOfValueInRadians/scenario.json",
+    "scenarioSha256" : "f2268619e9df8203b5b73a928192c5dc0548aba6862b0e6afe0eb4cd89d7161d",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSin#testSineOfValueInRadians"
   }, {
     "bodyEdit" : null,
     "files" : {
@@ -14677,6 +15234,122 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields/scenario.json",
     "scenarioSha256" : "fc5a9f5fc92db2f058f71d57416a0c162b9148d5bc58da42e305f3efffa0475b",
     "test" : "dev.morphia.test.aggregation.stages.TestBucket#testUseBucketWithFacetToBucketByMultipleFields"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "519b78ca7c0cdd3a146623ce64d78f3234c554b6684aa236567651ab6362a76f",
+      "data.json" : "fe47cc7fe7daf092dbbd29a2a308f7737714df927a2e8ebf5d72198c65a9dcfa",
+      "expected.json" : "710a75be96e8cbce742d2545f07a4166af94999cf3c4edb32a475a05fc0971c9",
+      "name" : "bccad21647fb77b47baa65e307f5c359afdfb3530879a45e312aad98759af7cf"
+    },
+    "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregation",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                (aggregation) -> aggregation.pipeline(facet().field(\"price\", autoBucket().groupBy(\"$price\").buckets(4))\n                        .field(\"year\",\n                                autoBucket().groupBy(\"$year\").buckets(3).outputField(\"count\", sum(1))\n                                        .outputField(\"years\", push(\"$year\")))\n                        .field(\"area\", autoBucket().groupBy(multiply(\"$dimensions.height\", \"$dimensions.width\"))\n                                .buckets(4).outputField(\"count\", sum(1)).outputField(\"titles\", push(\"$title\")))));\n    }",
+    "legacyBodySha256" : "ea1a840973beea8b5fd974f2bc8ce2df606dd66d17858a5635dd8cc1bad318af",
+    "legacyMethod" : "testMultiFacetedAggregation",
+    "legacyType" : "dev.morphia.test.aggregation.stages.TestBucketAuto",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "499914eb60ae9b825f8a8c26d2d9199cc95fe72163a0d6a7f91be98411197e6f",
+        "text" : "db.artwork.aggregate( [\n  {\n    $facet: {\n      \"price\": [\n        {\n          $bucketAuto: {\n            groupBy: \"$price\",\n            buckets: 4\n          }\n        }\n      ],\n      \"year\": [\n        { \n          $bucketAuto: {\n            groupBy: \"$year\",\n            buckets: 3,\n            output: {\n              \"count\": { $sum: 1 },\n              \"years\": { $push: \"$year\" }\n            }\n          }\n        }\n      ],\n      \"area\": [\n        {\n          $bucketAuto: {\n            groupBy: {\n              $multiply: [ \"$dimensions.height\", \"$dimensions.width\" ] \n            },\n            buckets: 4,\n            output: {\n              \"count\": { $sum: 1 },\n              \"titles\": { $push: \"$title\" }\n            }\n          }\n        }\n      ]\n    }\n  }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d33285b29f03ca2b998f2342e97921c4dbeb54127a115233eba40cb49896f92d",
+        "text" : "{ \"_id\" : 1, \"title\" : \"The Pillars of Society\", \"artist\" : \"Grosz\", \"year\" : 1926,\n    \"price\" : NumberDecimal(\"199.99\"),\n    \"dimensions\" : { \"height\" : 39, \"width\" : 21, \"units\" : \"in\" } }\n{ \"_id\" : 2, \"title\" : \"Melancholy III\", \"artist\" : \"Munch\", \"year\" : 1902,\n    \"price\" : NumberDecimal(\"280.00\"),\n    \"dimensions\" : { \"height\" : 49, \"width\" : 32, \"units\" : \"in\" } }\n{ \"_id\" : 3, \"title\" : \"Dancer\", \"artist\" : \"Miro\", \"year\" : 1925,\n    \"price\" : NumberDecimal(\"76.04\"),\n    \"dimensions\" : { \"height\" : 25, \"width\" : 20, \"units\" : \"in\" } }\n{ \"_id\" : 4, \"title\" : \"The Great Wave off Kanagawa\", \"artist\" : \"Hokusai\",\n    \"price\" : NumberDecimal(\"167.30\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 36, \"units\" : \"in\" } }\n{ \"_id\" : 5, \"title\" : \"The Persistence of Memory\", \"artist\" : \"Dali\", \"year\" : 1931,\n    \"price\" : NumberDecimal(\"483.00\"),\n    \"dimensions\" : { \"height\" : 20, \"width\" : 24, \"units\" : \"in\" } }\n{ \"_id\" : 6, \"title\" : \"Composition VII\", \"artist\" : \"Kandinsky\", \"year\" : 1913,\n    \"price\" : NumberDecimal(\"385.00\"),\n    \"dimensions\" : { \"height\" : 30, \"width\" : 46, \"units\" : \"in\" } }\n{ \"_id\" : 7, \"title\" : \"The Scream\", \"artist\" : \"Munch\",\n    \"price\" : NumberDecimal(\"159.00\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 18, \"units\" : \"in\" } }\n{ \"_id\" : 8, \"title\" : \"Blue Flower\", \"artist\" : \"O'Keefe\", \"year\" : 1918,\n    \"price\" : NumberDecimal(\"118.42\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 20, \"units\" : \"in\" } }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "b94feaa20f3b9ecf9eb7a65c27842076d2efb39589b5e4691b88ae860f866a58",
+        "text" : "{\n  \"area\" : [\n    {\n      \"_id\" : { \"min\" : 432, \"max\" : 500 },\n      \"count\" : 3,\n      \"titles\" : [\n        \"The Scream\",\n        \"The Persistence of Memory\",\n        \"Blue Flower\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 500,\t\"max\" : 864 },\n      \"count\" : 2,\n      \"titles\" : [\n        \"Dancer\",\n        \"The Pillars of Society\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 864, \"max\" : 1568 },\n      \"count\" : 2,\n      \"titles\" : [\n        \"The Great Wave off Kanagawa\",\n        \"Composition VII\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 1568, \"max\" : 1568 },\n      \"count\" : 1,\n      \"titles\" : [\n        \"Melancholy III\"\n      ]\n    }\n  ],\n  \"price\" : [\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"76.04\"), \"max\" : NumberDecimal(\"159.00\") },\n      \"count\" : 2\n    },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"159.00\"), \"max\" : NumberDecimal(\"199.99\") },\n      \"count\" : 2\n    },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"199.99\"), \"max\" : NumberDecimal(\"385.00\") },\n      \"count\" : 2 },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"385.00\"), \"max\" : NumberDecimal(\"483.00\") },\n      \"count\" : 2\n    }\n  ],\n  \"year\" : [\n    { \"_id\" : { \"min\" : null, \"max\" : 1913 }, \"count\" : 3, \"years\" : [ 1902 ] },\n    { \"_id\" : { \"min\" : 1913, \"max\" : 1926 }, \"count\" : 3, \"years\" : [ 1913, 1918, 1925 ] },\n    { \"_id\" : { \"min\" : 1926, \"max\" : 1931 }, \"count\" : 2, \"years\" : [ 1926, 1931 ] }\n  ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Multi-Faceted Aggregation",
+      "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregation",
+      "fixtureFiles" : {
+        "action.json" : "519b78ca7c0cdd3a146623ce64d78f3234c554b6684aa236567651ab6362a76f",
+        "data.json" : "fe47cc7fe7daf092dbbd29a2a308f7737714df927a2e8ebf5d72198c65a9dcfa",
+        "expected.json" : "710a75be96e8cbce742d2545f07a4166af94999cf3c4edb32a475a05fc0971c9",
+        "name" : "bccad21647fb77b47baa65e307f5c359afdfb3530879a45e312aad98759af7cf"
+      },
+      "includes" : [ ],
+      "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+      "pageBlob" : "3b07c7071063998d64970ee0626c4e334f7a7091",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
+        "path" : "source/reference/operator/aggregation/bucketAuto.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the facets as area, price, year; $facet returns them in the pipeline's order, price, year, area; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregation/scenario.json",
+    "scenarioSha256" : "a3f6db877bf3b9af4d5efa5ed755e23ef3d0f9c78a7621e736c33ca73ddd2778",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testMultiFacetedAggregation"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "1377bf8c0fb76e3c12b0b61f4cf214d24843a4a058a7677840094cdbd5e92d2e",
+      "data.json" : "4011f64b19c10fb380e1d12362ba80a9ab2da8ca36ce821b1a6e7386cd301ef0",
+      "expected.json" : "6f9fa081a2fe1d7321e377587db3f1fc5b3768f8fd871656dd81f08c30bd7f56",
+      "name" : "bccad21647fb77b47baa65e307f5c359afdfb3530879a45e312aad98759af7cf"
+    },
+    "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                (aggregation) -> aggregation.pipeline(facet().field(\"price\", autoBucket().groupBy(\"$price\").buckets(4))\n                        .field(\"year\",\n                                autoBucket().groupBy(\"$year\").buckets(3).outputField(\"count\", sum(1))\n                                        .outputField(\"years\", push(\"$year\")))\n                        .field(\"area\", autoBucket().groupBy(multiply(\"$dimensions.height\", \"$dimensions.width\"))\n                                .buckets(4).outputField(\"count\", sum(1)).outputField(\"titles\", push(\"$title\")))));\n    }",
+    "legacyBodySha256" : "ea1a840973beea8b5fd974f2bc8ce2df606dd66d17858a5635dd8cc1bad318af",
+    "legacyMethod" : "testMultiFacetedAggregationAsPipeline",
+    "legacyType" : "dev.morphia.test.aggregation.stages.TestBucketAuto",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "499914eb60ae9b825f8a8c26d2d9199cc95fe72163a0d6a7f91be98411197e6f",
+        "text" : "db.artwork.aggregate( [\n  {\n    $facet: {\n      \"price\": [\n        {\n          $bucketAuto: {\n            groupBy: \"$price\",\n            buckets: 4\n          }\n        }\n      ],\n      \"year\": [\n        { \n          $bucketAuto: {\n            groupBy: \"$year\",\n            buckets: 3,\n            output: {\n              \"count\": { $sum: 1 },\n              \"years\": { $push: \"$year\" }\n            }\n          }\n        }\n      ],\n      \"area\": [\n        {\n          $bucketAuto: {\n            groupBy: {\n              $multiply: [ \"$dimensions.height\", \"$dimensions.width\" ] \n            },\n            buckets: 4,\n            output: {\n              \"count\": { $sum: 1 },\n              \"titles\": { $push: \"$title\" }\n            }\n          }\n        }\n      ]\n    }\n  }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d33285b29f03ca2b998f2342e97921c4dbeb54127a115233eba40cb49896f92d",
+        "text" : "{ \"_id\" : 1, \"title\" : \"The Pillars of Society\", \"artist\" : \"Grosz\", \"year\" : 1926,\n    \"price\" : NumberDecimal(\"199.99\"),\n    \"dimensions\" : { \"height\" : 39, \"width\" : 21, \"units\" : \"in\" } }\n{ \"_id\" : 2, \"title\" : \"Melancholy III\", \"artist\" : \"Munch\", \"year\" : 1902,\n    \"price\" : NumberDecimal(\"280.00\"),\n    \"dimensions\" : { \"height\" : 49, \"width\" : 32, \"units\" : \"in\" } }\n{ \"_id\" : 3, \"title\" : \"Dancer\", \"artist\" : \"Miro\", \"year\" : 1925,\n    \"price\" : NumberDecimal(\"76.04\"),\n    \"dimensions\" : { \"height\" : 25, \"width\" : 20, \"units\" : \"in\" } }\n{ \"_id\" : 4, \"title\" : \"The Great Wave off Kanagawa\", \"artist\" : \"Hokusai\",\n    \"price\" : NumberDecimal(\"167.30\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 36, \"units\" : \"in\" } }\n{ \"_id\" : 5, \"title\" : \"The Persistence of Memory\", \"artist\" : \"Dali\", \"year\" : 1931,\n    \"price\" : NumberDecimal(\"483.00\"),\n    \"dimensions\" : { \"height\" : 20, \"width\" : 24, \"units\" : \"in\" } }\n{ \"_id\" : 6, \"title\" : \"Composition VII\", \"artist\" : \"Kandinsky\", \"year\" : 1913,\n    \"price\" : NumberDecimal(\"385.00\"),\n    \"dimensions\" : { \"height\" : 30, \"width\" : 46, \"units\" : \"in\" } }\n{ \"_id\" : 7, \"title\" : \"The Scream\", \"artist\" : \"Munch\",\n    \"price\" : NumberDecimal(\"159.00\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 18, \"units\" : \"in\" } }\n{ \"_id\" : 8, \"title\" : \"Blue Flower\", \"artist\" : \"O'Keefe\", \"year\" : 1918,\n    \"price\" : NumberDecimal(\"118.42\"),\n    \"dimensions\" : { \"height\" : 24, \"width\" : 20, \"units\" : \"in\" } }"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "b94feaa20f3b9ecf9eb7a65c27842076d2efb39589b5e4691b88ae860f866a58",
+        "text" : "{\n  \"area\" : [\n    {\n      \"_id\" : { \"min\" : 432, \"max\" : 500 },\n      \"count\" : 3,\n      \"titles\" : [\n        \"The Scream\",\n        \"The Persistence of Memory\",\n        \"Blue Flower\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 500,\t\"max\" : 864 },\n      \"count\" : 2,\n      \"titles\" : [\n        \"Dancer\",\n        \"The Pillars of Society\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 864, \"max\" : 1568 },\n      \"count\" : 2,\n      \"titles\" : [\n        \"The Great Wave off Kanagawa\",\n        \"Composition VII\"\n      ]\n    },\n    {\n      \"_id\" : { \"min\" : 1568, \"max\" : 1568 },\n      \"count\" : 1,\n      \"titles\" : [\n        \"Melancholy III\"\n      ]\n    }\n  ],\n  \"price\" : [\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"76.04\"), \"max\" : NumberDecimal(\"159.00\") },\n      \"count\" : 2\n    },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"159.00\"), \"max\" : NumberDecimal(\"199.99\") },\n      \"count\" : 2\n    },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"199.99\"), \"max\" : NumberDecimal(\"385.00\") },\n      \"count\" : 2 },\n    {\n      \"_id\" : { \"min\" : NumberDecimal(\"385.00\"), \"max\" : NumberDecimal(\"483.00\") },\n      \"count\" : 2\n    }\n  ],\n  \"year\" : [\n    { \"_id\" : { \"min\" : null, \"max\" : 1913 }, \"count\" : 3, \"years\" : [ 1902 ] },\n    { \"_id\" : { \"min\" : 1913, \"max\" : 1926 }, \"count\" : 3, \"years\" : [ 1913, 1918, 1925 ] },\n    { \"_id\" : { \"min\" : 1926, \"max\" : 1931 }, \"count\" : 2, \"years\" : [ 1926, 1931 ] }\n  ]\n}"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Multi-Faceted Aggregation",
+      "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline",
+      "fixtureFiles" : {
+        "action.json" : "1377bf8c0fb76e3c12b0b61f4cf214d24843a4a058a7677840094cdbd5e92d2e",
+        "data.json" : "4011f64b19c10fb380e1d12362ba80a9ab2da8ca36ce821b1a6e7386cd301ef0",
+        "expected.json" : "6f9fa081a2fe1d7321e377587db3f1fc5b3768f8fd871656dd81f08c30bd7f56",
+        "name" : "bccad21647fb77b47baa65e307f5c359afdfb3530879a45e312aad98759af7cf"
+      },
+      "includes" : [ ],
+      "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+      "pageBlob" : "3b07c7071063998d64970ee0626c4e334f7a7091",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
+        "path" : "source/reference/operator/aggregation/bucketAuto.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "publishedSkip" : "a page error: the page prints the facets as area, price, year; $facet returns them in the pipeline's order, price, year, area; serialization and behavior pass",
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline/scenario.json",
+    "scenarioSha256" : "9cec8d232c53f0b4122c277f8b12d87d43316adef05dce727267ba913a441af8",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucketAuto#testMultiFacetedAggregationAsPipeline"
   }, {
     "bodyEdit" : null,
     "files" : {

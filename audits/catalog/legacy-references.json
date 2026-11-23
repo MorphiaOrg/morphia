@@ -238,7 +238,11 @@
       "path" : "source/reference/operator/aggregation/addToSet.txt",
       "relation" : "AT_ORIGIN"
     },
-    "unexpandedIncludes" : [ ]
+    "unexpandedIncludes" : [ ],
+    "unorderedArrays" : [ {
+      "path" : "/itemsSold",
+      "reason" : "$addToSet does not order the array it builds: the server lists the set's members in a different order between runs on identical data, and the page prints one order"
+    } ]
   }, {
     "blocks" : [ {
       "role" : "ACTION",

@@ -1,53 +1,9 @@
 {
   "contexts" : [ "aggregation/expressions", "aggregation/stages", "query" ],
   "legacyOnly" : [ {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /1: no result matches this constraint",
-    "fixture" : "aggregation/expressions/addToSet/useInGroupStage"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/cos/cosineOfValueInDegrees"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/getField/queryFieldsThatContainPeriods"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0/yearNumber: printed whole 2015 is an Int64 2015",
-    "fixture" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /2: no result matches this constraint",
-    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/sin/sineOfValueInDegrees"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: key order differs",
-    "fixture" : "aggregation/expressions/sin/sineOfValueInRadians"
-  }, {
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: no result matches this constraint",
-    "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregation"
-  }, {
-    "check" : "PUBLISHED",
-    "detail" : "results differ from the printed results at /0: no result matches this constraint",
-    "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline"
   }, {
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",

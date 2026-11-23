@@ -2,56 +2,6 @@
   "overrides" : [ {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "505edb1e4bde2908694f17718f020da56a9df0140f79eab66f2d9f3d76ee0318",
-      "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA:1, flowerFieldB: 1, allValues: { $setUnion: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
-    }, {
-      "role" : "DATA",
-      "sha256" : "6443ea787dad4fdfbd05b758c7838ea1b3cd69c19b2e0fe36fad50c454f6eeed",
-      "text" : "db.flowers.insertMany( [\n   { \"_id\" : 1, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ] },\n   { \"_id\" : 2, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ] },\n   { \"_id\" : 3, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ] },\n   { \"_id\" : 4, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ] },\n   { \"_id\" : 5, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 6, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ] },\n   { \"_id\" : 7, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ] },\n   { \"_id\" : 8, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 9, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ] }\n] ) "
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
-      "text" : "{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"orchid\", \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\", \"jasmine\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"jasmine\", \"rose\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\" ], [ \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\", \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ ], \"allValues\": [ ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ \"rose\" ], \"allValues\": [ \"rose\" ] }"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "main",
-    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
-    "fixtureFiles" : {
-      "action.json" : "58a773e31fc06aca6ece771f62acaa30b338a6c3a2e6a99c060c1bd7cc7833dd",
-      "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
-      "expected.json" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
-      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
-    },
-    "includes" : [ {
-      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
-      "path" : "source/includes/important-set-operator-semantics.rst"
-    }, {
-      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
-      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
-      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
-    } ],
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
-      "text" : "rearrange suppress id\n"
-    },
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
-      "path" : "source/reference/operator/aggregation/setUnion.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "f4d68dd8cdbf77d323571973710fe8085111e5956b009ddb032e4a3f44ac8488",
       "text" : "db.weather.aggregate( [\n   {\n      $densify: {\n         field: \"timestamp\",\n         range: {\n            step: 1, \n            unit: \"hour\",\n            bounds:[ ISODate(\"2021-05-18T00:00:00.000Z\"), ISODate(\"2021-05-18T08:00:00.000Z\") ]\n         }\n      }\n   }\n] )"
     }, {
@@ -257,7 +207,7 @@
     "gap.REJECTED" : 0,
     "gap.RESIDUAL_DIFFERENCE" : 0,
     "gap.SOURCE_UNSUPPORTED" : 0,
-    "overrides" : 4,
+    "overrides" : 3,
     "overrides.corrected" : 0,
     "overrides.exact" : 1,
     "overrides.retyped" : 0,
@@ -267,7 +217,7 @@
     "rule.FIELD_OPERATORS_AND" : 0,
     "rule.NAMED_ARGUMENTS" : 1,
     "rule.PROJECTION_FLAGS" : 0,
-    "rule.PROJECT_ID_FIRST" : 1,
+    "rule.PROJECT_ID_FIRST" : 0,
     "rule.REGEX_FORM" : 0,
     "rule.SINGLE_ARGUMENT_ARRAY" : 0,
     "rule.UNWIND_PATH" : 0,
