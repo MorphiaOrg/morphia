@@ -322,7 +322,7 @@ class CuratedRepairsTest {
 
         assertEquals(read("audits/catalog/curated-repairs.json"), AuditJson.write(report))
         assertEquals(0, report.summary["examples.locked"])
-        assertEquals(137, report.summary["disposition.OVERRIDDEN"])
+        assertEquals(135, report.summary["disposition.OVERRIDDEN"])
         assertEquals(17, report.exclusions.size)
         assertEquals(
             0,

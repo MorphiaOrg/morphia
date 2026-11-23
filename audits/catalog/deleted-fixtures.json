@@ -745,6 +745,17 @@
     "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
     "test" : "dev.morphia.test.aggregation.expressions.TestTan#testTangentOfValueInDegrees"
   }, {
+    "bodySha256" : "5b1267ed95c62fdab6cc54f6f8ac4e9463b5c513fb3cb4684f32bb13aaa9ac9d",
+    "files" : {
+      "action.json" : "996a16cd8f0fc500f6c70207c16c5fe5394bc3417543d3457e47d18d6369395e",
+      "data.json" : "fd1f3c01af034e96548f5056994d7debe99c6ce7a330aea1e56e6caf09a423ba",
+      "expected.json" : "e45e98a10aad1cd7060ca3fa3d3566d774330eec741f74d7c5c134428b36372e",
+      "name" : "85550610332a687515dc5c999ff1738f22eb8164fdabad152f2c32cc31ca1a88"
+    },
+    "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians",
+    "reason" : "the page's printed results do not parse (a typo in the page, such as a missing comma or quote), so no documented result backs the fixture",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTan#testTangentOfValueInRadians"
+  }, {
     "bodySha256" : "a41457eb765f883b58f66f5df3048ef78b356728b743279ac1c7a7702cb7318a",
     "files" : {
       "action.json" : "d1583805f7b8e8922a3baec6e1e071333f0531473693bcfc8d1c059623bb179c",
@@ -903,6 +914,18 @@
     "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action KEY_ORDER at /0/$densify/range",
     "test" : "dev.morphia.test.aggregation.stages.TestDensify#testDensifictionWithPartitions"
   }, {
+    "bodySha256" : "a30db196605d546a69f0d17e0b0a646ca48fbed4ebae721b2795c8d08168aff6",
+    "files" : {
+      "action.json" : "2348c50766595c53d3d646d242869d3d5c23b9c41283814f87ecb4068cc052fb",
+      "data.json" : "18db83af8ad8ec5f3a608e49643b0dba82ef9a13dcd319571e8b8cb7829dae99",
+      "expected.json" : "cc772d102dd3d52323c98e7ea2885cee9b495a73bad284c32d96df908df7ae5c",
+      "lock" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
+      "name" : "02802cbee4a01571e39dc003c5c2d17b7d17e1353a1c745e4077c2bdc66ad77c"
+    },
+    "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
+    "reason" : "the page's printed results do not parse (a typo in the page, such as a missing comma or quote), so no documented result backs the fixture",
+    "test" : "dev.morphia.test.aggregation.stages.TestDensify#testDensifyTimeSeriesData"
+  }, {
     "bodySha256" : "bf20a2a13bae62691f781828e8d7199b76d92ce7a9c798dd56d36ff9e79c94f6",
     "files" : {
       "action.json" : "b81af636aa582181e0f159e301da607948104e3f70e70eb867cf9491be538e3b",
@@ -1005,6 +1028,19 @@
     "fixture" : "aggregation/stages/geoNear/specifyWhichGeospatialIndexToUse",
     "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE index.json has no documented source",
     "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testSpecifyWhichGeospatialIndexToUse"
+  }, {
+    "bodySha256" : "703c2dcb40ba995d98829a527eb99cc0e1c4650c115a522d170481b7940bb193",
+    "files" : {
+      "action.json" : "605bde048bff6db6a77944897b2df3024bd5c19158386dbfedf765486f47c1ee",
+      "data.json" : "00061634b23aeb5b13f358628171b20dd87ace338afa8b215a93425424ba9ea1",
+      "data2.json" : "c31732455fc49cd4428e47822663db4ee0c9116e7031a2e1da8f0f1ffa850205",
+      "expected.json" : "4d8f3e5295b46da09ca3cad0636c361668e6dbbe153419f294674219a9623ff5",
+      "lock" : "837a91236817cbc098b8d616cb3ef2e055d7ba25a14e79ec7a9e509765c910b1",
+      "name" : "068903a39c63f8c83b724e2fa3024427b5554c7ceb0d05c972c48097cefb5777"
+    },
+    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
+    "reason" : "the page's printed results do not parse (a typo in the page, such as a missing comma or quote), so no documented result backs the fixture",
+    "test" : "dev.morphia.test.aggregation.stages.TestGraphLookup#testAcrossMultipleCollections"
   }, {
     "bodySha256" : "fc228272ac5563a6d012197015d746c9cf56d833a2c5305c7f86b2560f116db8",
     "files" : {

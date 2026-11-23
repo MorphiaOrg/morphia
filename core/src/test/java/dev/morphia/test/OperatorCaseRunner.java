@@ -266,11 +266,26 @@ public class OperatorCaseRunner {
             Set<Rule> rules = EnumSet.noneOf(Rule.class);
             scenario.getDocument("comparison").getArray("rules")
                     .forEach(rule -> rules.add(Rule.valueOf(rule.asString().getValue())));
-            if (!skipped.containsKey("serialization")
-                    && !StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), shape, rules)),
-                            new BsonArray(FormRules.canonical(execution.emitted().getValues(), shape, rules)))) {
+            // A page may document equivalent spellings of the action; Morphia's must equal one of them, and the reference
+            // then runs that one.
+            List<BsonDocument> spellings = new ArrayList<>(List.of(action));
+            action.getArray("alternatives", new BsonArray()).forEach(alternative -> {
+                BsonDocument spelling = action.clone();
+                spelling.remove("alternatives");
+                spelling.putAll(alternative.asDocument());
+                spellings.add(spelling);
+            });
+            BsonArray emitted = execution.emitted();
+            BsonDocument matched = spellings.stream()
+                    .filter(spelling -> StrictBson.equal(new BsonArray(FormRules.canonical(documented(spelling).getValues(), shape, rules)),
+                            new BsonArray(FormRules.canonical(emitted.getValues(), shape, rules))))
+                    .findFirst().orElse(null);
+            if (!skipped.containsKey("serialization") && matched == null) {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
                         + json(execution.emitted()));
+            }
+            if (matched != null && matched != action) {
+                execution = plan.apply(matched, collection);
             }
             // The legacy test did not run the action, so neither does its case; the scenario names why.
             if (skipped.containsKey("results")) {
@@ -401,7 +416,9 @@ public class OperatorCaseRunner {
             case "update" -> Set.of("kind", "collection", "filter", "update", "multi");
             default -> Set.of();
         };
-        if (!action.keySet().equals(fields)) {
+        Set<String> present = new TreeSet<>(action.keySet());
+        present.remove("alternatives");
+        if (!present.equals(fields)) {
             unsupported.add("action fields " + action.keySet());
         } else if (action.getString("kind").getValue().equals("aggregate")) {
             for (BsonValue stage : action.getArray("pipeline")) {

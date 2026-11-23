@@ -21,7 +21,7 @@ public class TestRand extends TemplatedTestBase {
     @DisplayName("Select Random Items From a Collection")
     public void testSelectRandomItemsFromACollection() {
         ActionTestOptions options = new ActionTestOptions().orderMatters(false).removeIds(true).skipDataCheck(true)
-                .findOptions(new FindOptions().projection().include("name", "registered"));
+                .findOptions(new FindOptions().projection().include("name", "registered").projection().exclude("_id"));
         testQuery(options, (query) -> query.filter(eq("district", 3), expr(lt(0.5, rand()))));
     }
 }

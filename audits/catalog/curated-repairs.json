@@ -2707,18 +2707,6 @@
     "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
-    "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians",
-    "helpers" : [ "testPipeline" ],
-    "markers" : [ ],
-    "method" : "testTangentOfValueInRadians",
-    "options" : [ ],
-    "type" : "dev.morphia.test.aggregation.expressions.TestTan"
-  }, {
-    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
-    "categories" : [ ],
-    "collections" : { },
-    "disabled" : false,
-    "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/tanh/hyperbolicTangentInDegrees",
     "helpers" : [ "testPipeline" ],
     "markers" : [ ],
@@ -3183,21 +3171,6 @@
     "type" : "dev.morphia.test.aggregation.stages.TestCount"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
-    "categories" : [ "EXTRACTION" ],
-    "collections" : { },
-    "disabled" : false,
-    "disposition" : "OVERRIDDEN",
-    "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
-    "helpers" : [ "testPipeline" ],
-    "markers" : [ ],
-    "method" : "testDensifyTimeSeriesData",
-    "options" : [ {
-      "argument" : "true",
-      "name" : "removeIds"
-    } ],
-    "type" : "dev.morphia.test.aggregation.stages.TestDensify"
-  }, {
-    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
     "collections" : { },
     "disabled" : false,
@@ -3286,23 +3259,6 @@
       "name" : "removeIds"
     } ],
     "type" : "dev.morphia.test.aggregation.stages.TestFill"
-  }, {
-    "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
-    "categories" : [ "MORPHIA_FORM" ],
-    "collections" : {
-      "data2.json" : "airports"
-    },
-    "disabled" : false,
-    "disposition" : "OVERRIDDEN",
-    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-    "helpers" : [ "testPipeline" ],
-    "markers" : [ ],
-    "method" : "testAcrossMultipleCollections",
-    "options" : [ {
-      "argument" : "false",
-      "name" : "orderMatters"
-    } ],
-    "type" : "dev.morphia.test.aggregation.stages.TestGraphLookup"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
@@ -4615,7 +4571,7 @@
     "markers" : [ ],
     "method" : "testSelectRandomItemsFromACollection",
     "options" : [ {
-      "argument" : "new FindOptions().projection().include(\"name\", \"registered\")",
+      "argument" : "new FindOptions().projection().include(\"name\", \"registered\").projection().exclude(\"_id\")",
       "name" : "findOptions"
     }, {
       "argument" : "false",
@@ -5289,23 +5245,23 @@
   "repositoryRevision" : "70fde7825fcaa6f09efde4cab59b09318dfe6ee6",
   "schemaVersion" : 1,
   "summary" : {
-    "assertion.BEHAVIOR" : 360,
+    "assertion.BEHAVIOR" : 357,
     "assertion.CUSTOM" : 0,
     "assertion.DISABLED" : 1,
     "assertion.NONE" : 0,
-    "assertion.SERIALIZATION" : 386,
+    "assertion.SERIALIZATION" : 383,
     "category.DOCS_ERROR" : 26,
-    "category.EXTRACTION" : 28,
+    "category.EXTRACTION" : 27,
     "category.FIXTURE_CURATION" : 10,
-    "category.MORPHIA_FORM" : 52,
+    "category.MORPHIA_FORM" : 51,
     "category.NUMERIC_TYPE" : 17,
     "category.SHELL_SYNTAX" : 10,
     "category.UNTESTABLE" : 0,
     "disposition.NOT_EXECUTED" : 0,
-    "disposition.OVERRIDDEN" : 137,
+    "disposition.OVERRIDDEN" : 135,
     "disposition.PRESERVED_CURATED" : 0,
-    "disposition.UNCORRECTED" : 251,
-    "examples" : 388,
+    "disposition.UNCORRECTED" : 250,
+    "examples" : 385,
     "examples.locked" : 0,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
@@ -5315,8 +5271,8 @@
     "markers.lock" : 0,
     "markers.lockd" : 0,
     "option.findOptions" : 4,
-    "option.orderMatters" : 78,
-    "option.removeIds" : 41,
+    "option.orderMatters" : 77,
+    "option.removeIds" : 40,
     "option.serverVersion" : 12,
     "option.skipActionCheck" : 1,
     "option.skipDataCheck" : 27

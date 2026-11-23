@@ -6207,11 +6207,23 @@
       "stem" : "mainTangentOfValueInDegrees",
       "title" : "main :: Tangent of Value in Degrees"
     }, {
-      "blocks" : [ ],
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "77142b787e783ee8c05ae6136926b5f5739eb5b9c584cd0977285b1e6333d795",
+        "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $tan : \"$angle_a\" },\n          \"$side_a\"\n        ]\n      }\n    }\n  }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "32aea62bc2358b846c116d8494678e6c3c179959a768c6fd85113aaf6ea52b83",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : Decimal128(\"0.9272952180016122324285124629224288\"),\n  \"side_a\" : Decimal128(\"3\")\n}"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "b1cec4c24b23c8ddfd3de82a2ddabd511a8959d8e49c491793911b6597c5e78b",
+        "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : Decimal128(\"0.9272952180016122324285124629224288\"),\n  \"side_a\" : Decimal128(\"3\")\n  \"side_b\" : Decimal128(\"3.999999999999999999999999999999999\")\n}"
+      } ],
       "detail" : null,
-      "owner" : "aggregation/expressions/tan/tangentOfValueInRadians",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "mainTangentOfValueInRadians",
       "title" : "main :: Tangent of Value in Radians"
     } ],
     "includes" : [ ],
@@ -7574,11 +7586,23 @@
   }, {
     "context" : "aggregation/stages",
     "examples" : [ {
-      "blocks" : [ ],
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "f04db7a01a8e97bf6b450b0c3940bdcbcb7d7c31f839149369613c311b3fa6f6",
+        "text" : "db.weather.aggregate( [\n   {\n     $densify: {\n         field: \"timestamp\",\n         range: {\n           step: 1,\n           unit: \"hour\",\n           bounds:[ ISODate(\"2021-05-18T00:00:00.000Z\"), ISODate(\"2021-05-18T08:00:00.000Z\") ]\n         }\n     }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "b3415be8c72026acf1cf50ca163d7f39ee479da9656ea12e68de9d9c9953d1a9",
+        "text" : "db.weather.insertMany( [\n   {\n      \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n      \"timestamp\": ISODate(\"2021-05-18T00:00:00.000Z\"),\n      \"temp\": 12\n   },\n   {\n      \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n      \"timestamp\": ISODate(\"2021-05-18T04:00:00.000Z\"),\n      \"temp\": 11\n   },\n   {\n      \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n      \"timestamp\": ISODate(\"2021-05-18T08:00:00.000Z\"),\n      \"temp\": 11\n   },\n   {\n      \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n      \"timestamp\": ISODate(\"2021-05-18T12:00:00.000Z\"),\n      \"temp\": 12\n   }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "876e2bcb09f785c573f004c5f99ca084eb86c69b594b1a492d3feff8986b2a9a",
+        "text" : "[\n {\n   _id: ObjectId(\"618c207c63056cfad0ca4309\"),\n   metadata: { sensorId: 5578, type: 'temperature' },\n   timestamp: ISODate(\"2021-05-18T00:00:00.000Z\"),\n   temp: 12\n },\n { timestamp: ISODate(\"2021-05-18T01:00:00.000Z\") },\n { timestamp: ISODate(\"2021-05-18T02:00:00.000Z\") },\n { timestamp: ISODate(\"2021-05-18T03:00:00.000Z\") },\n {\n   _id: ObjectId(\"618c207c63056cfad0ca430a\"),\n   metadata: { sensorId: 5578, type: 'temperature' },\n   timestamp: ISODate(\"2021-05-18T04:00:00.000Z\"),\n   temp: 11\n },\n { timestamp: ISODate(\"2021-05-18T05:00:00.000Z\") },\n { timestamp: ISODate(\"2021-05-18T06:00:00.000Z\") },\n { timestamp: ISODate(\"2021-05-18T07:00:00.000Z\") },\n {\n   _id: ObjectId(\"618c207c63056cfad0ca430b\"),\n   metadata: { sensorId: 5578, type: 'temperature' },\n   timestamp: ISODate(\"2021-05-18T08:00:00.000Z\"),\n   temp: 11\n }\n {\n   _id: ObjectId(\"618c207c63056cfad0ca430c\"),\n   metadata: { sensorId: 5578, type: 'temperature' },\n   timestamp: ISODate(\"2021-05-18T12:00:00.000Z\"),\n   temp: 12\n }\n]"
+      } ],
       "detail" : null,
-      "owner" : "aggregation/stages/densify/densifyTimeSeriesData",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "densifyTimeSeriesData",
       "title" : "Densify Time Series Data"
     }, {
       "blocks" : [ {
@@ -7920,11 +7944,27 @@
       "stem" : null,
       "title" : "Within a Single Collection"
     }, {
-      "blocks" : [ ],
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "2307d7043a9abff0bcb4efcb4efe26c89801cbfab9d54f1d483d0fe04ad826cc",
+        "text" : "db.travelers.aggregate( [\n   {\n      $graphLookup: {\n         from: \"airports\",\n         startWith: \"$nearestAirport\",\n         connectFromField: \"connects\",\n         connectToField: \"airport\",\n         maxDepth: 2,\n         depthField: \"numConnections\",\n         as: \"destinations\"\n      }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "515ac57d4c6bc472d31aca191bdefc9796ec1db572bcd3eb90213e63ba3682f3",
+        "text" : "db.airports.insertMany( [\n   { _id: 0, airport: \"JFK\", connects: [ \"BOS\", \"ORD\" ] },\n   { _id: 1, airport: \"BOS\", connects: [ \"JFK\", \"PWM\" ] },\n   { _id: 2, airport: \"ORD\", connects: [ \"JFK\" ] },\n   { _id: 3, airport: \"PWM\", connects: [ \"BOS\", \"LHR\" ] },\n   { _id: 4, airport: \"LHR\", connects: [ \"PWM\" ] }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "315799a351d0730be7d528103983e43515d196c72d7538eb718c52b568870af4",
+        "text" : "db.travelers.insertMany( [\n   { _id: 1, name: \"Dev\", nearestAirport: \"JFK\" },\n   { _id: 2, name: \"Eliot\", nearestAirport: \"JFK\" },\n   { _id: 3, name: \"Jeff\", nearestAirport: \"BOS\" }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "bba1f4e6a15396c2fabc96ecbf4159bba529360957a0513d002e4dd62750cac7",
+        "text" : "[\n  {\n    _id: 1,\n    name: 'Dev',\n    nearestAirport: 'JFK',\n    destinations: [\n      {\n        _id: 0,\n        airport: 'JFK',\n        connects: [ 'BOS', 'ORD' ],\n        numConnections: Long('0')\n      },\n      {\n        _id: 1,\n        airport: 'BOS',\n        connects: [ 'JFK', 'PWM' ],\n        numConnections: Long('1')\n      },\n      {\n        _id: 3,\n        airport: 'PWM',\n        connects: [ 'BOS', 'LHR' ],\n        numConnections: Long('2')\n      },\n      {\n        _id: 2,\n        airport: 'ORD',\n        connects: [ 'JFK' ],\n        numConnections: Long('1')\n      }\n    ]\n  },\n  {\n    _id: 2,\n    name: 'Eliot',\n    nearestAirport: 'JFK',\n    destinations: [\n      {\n        _id: 0,\n        airport: 'JFK',\n        connects: [ 'BOS', 'ORD' ],\n        numConnections: Long('0')\n      },\n      {\n        _id: 1,\n        airport: 'BOS',\n        connects: [ 'JFK', 'PWM' ],\n        numConnections: Long('1')\n      },\n      {\n        _id: 3,\n        airport: 'PWM',\n        connects: [ 'BOS', 'LHR' ],\n        numConnections: Long('2')\n      },\n      {\n        _id: 2,\n        airport: 'ORD',\n        connects: [ 'JFK' ],\n        numConnections: Long('1')\n      }\n    ]\n  },\n  {\n    _id: 3,\n    name: 'Jeff',\n    nearestAirport: 'BOS',\n    destinations: [\n      {\n        _id: 0,\n        airport: 'JFK',\n        connects: [ 'BOS', 'ORD' ],\n        numConnections: Long('1')\n      },\n      {\n        _id: 1,\n        airport: 'BOS',\n        connects: [ 'JFK', 'PWM' ],\n        numConnections: Long('0')\n      },\n      {\n        _id: 4,\n        airport: 'LHR',\n        connects: [ 'PWM' ],\n        numConnections: Long('2')\n      },\n      {\n        _id: 3,\n        airport: 'PWM',\n        connects: [ 'BOS', 'LHR' ],\n        numConnections: Long('1')\n      },\n      {\n        _id: 2,\n        airport: 'ORD',\n        connects: [ 'JFK' ],\n        numConnections: Long('2')\n      }\n    ]\n  }\n]"
+      } ],
       "detail" : null,
-      "owner" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "acrossMultipleCollections",
       "title" : "Across Multiple Collections"
     }, {
       "blocks" : [ ],
@@ -13918,9 +13958,9 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 323,
+    "examples.owned" : 320,
     "examples.unnamed" : 0,
-    "examples.unowned" : 259,
+    "examples.unowned" : 262,
     "pages" : 297,
     "pages.skipped" : 3,
     "reviews.stale" : 0

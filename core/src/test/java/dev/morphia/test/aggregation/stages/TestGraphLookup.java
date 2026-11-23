@@ -25,21 +25,6 @@ public class TestGraphLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/graphLookup/acrossMultipleCollections
-     * 
-     */
-    @Test
-    @DisplayName("Across Multiple Collections")
-    public void testAcrossMultipleCollections() {
-        loadData("airports", 2);
-
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(graphLookup("airports").startWith("$nearestAirport")
-                        .connectFromField("connects").connectToField("airport").maxDepth(2).depthField("numConnections")
-                        .as("destinations")));
-    }
-
-    /**
      * test data: dev/morphia/test/aggregation/stages/graphLookup/withAQueryFilter
      * 
      */

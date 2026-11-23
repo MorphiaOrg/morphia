@@ -2,9 +2,13 @@ package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.generate.Candidates
+import dev.morphia.audits.repairs.CONVERTED
 import dev.morphia.audits.repairs.CaseManifests
+import dev.morphia.audits.repairs.CutoverCheck
 import dev.morphia.audits.repairs.FixtureMigration
 import dev.morphia.audits.repairs.FormRule
+import dev.morphia.audits.repairs.GENERATED
+import dev.morphia.audits.repairs.LegacyOnly
 import dev.morphia.audits.repairs.MIGRATED
 import java.nio.file.Files
 import java.nio.file.Path
@@ -165,28 +169,23 @@ class FixtureMigrationTest {
             AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
             AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
         )
+        // Every documented case has moved; a legacy-only record of a moved case is refused.
+        assertEquals(emptyList<LegacyOnly>(), cutover.legacyOnly)
         val moved =
             cutover.copy(
                 legacyOnly =
-                    cutover.legacyOnly +
-                        cutover.legacyOnly.first().copy(fixture = ledger.migrations.first().fixture)
+                    listOf(
+                        LegacyOnly(
+                            ledger.migrations.first().fixture,
+                            CutoverCheck.PUBLISHED,
+                            "a moved case",
+                        )
+                    )
             )
         assertThrows(IllegalArgumentException::class.java) {
             FixtureMigration.verifyCutover(
                 root,
                 moved,
-                ledger,
-                AuditJson.formMigration(read("audits/catalog/form-migration.json")),
-                AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
-                AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
-            )
-        }
-        // A convertible case the batch skipped is caught: drop one legacy-only record.
-        val skipped = cutover.copy(legacyOnly = cutover.legacyOnly.drop(1))
-        assertThrows(IllegalArgumentException::class.java) {
-            FixtureMigration.verifyCutover(
-                root,
-                skipped,
                 ledger,
                 AuditJson.formMigration(read("audits/catalog/form-migration.json")),
                 AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
@@ -204,18 +203,14 @@ class FixtureMigrationTest {
                 read("core/src/test/resources/dev/morphia/test/example-bindings.json")
             )
         CaseManifests.owners(descriptor, manifest)
-        // An example the manifest does not already own; a converted case names its legacy test.
-        val owned = manifest.cases.map { it.name }.toSet()
-        val unowned =
-            descriptor.classes
-                .flatMap { type ->
-                    type.bindings.map {
-                        "${type.resources.removePrefix("dev/morphia/test/")}/${it.resource}"
-                    }
-                }
-                .first { it !in owned }
+        // A converted case's example claimed again by a generated case has two owners.
+        val converted = manifest.cases.first { it.kind == CONVERTED }
         val claimed =
-            manifest.copy(cases = manifest.cases + manifest.cases.first().copy(name = unowned))
+            manifest.copy(
+                cases =
+                    manifest.cases +
+                        manifest.cases.first { it.kind == GENERATED }.copy(name = converted.name)
+            )
         val failure =
             assertThrows(IllegalArgumentException::class.java) {
                 CaseManifests.owners(descriptor, claimed)

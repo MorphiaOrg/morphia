@@ -1,171 +1,5 @@
 {
-  "overrides" : [ {
-    "blocks" : [ {
-      "role" : "ACTION",
-      "sha256" : "f4d68dd8cdbf77d323571973710fe8085111e5956b009ddb032e4a3f44ac8488",
-      "text" : "db.weather.aggregate( [\n   {\n      $densify: {\n         field: \"timestamp\",\n         range: {\n            step: 1, \n            unit: \"hour\",\n            bounds:[ ISODate(\"2021-05-18T00:00:00.000Z\"), ISODate(\"2021-05-18T08:00:00.000Z\") ]\n         }\n      }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "de44c24ba863ff1e699eea81f99327a6f06ff7940a0d58848900e0ca3e05a959",
-      "text" : "db.weather.insertMany( [\n   {\n       \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n       \"timestamp\": ISODate(\"2021-05-18T00:00:00.000Z\"),\n       \"temp\": 12\n   }, \n   {\n       \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n       \"timestamp\": ISODate(\"2021-05-18T04:00:00.000Z\"),\n       \"temp\": 11\n   }, \n   {\n       \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n       \"timestamp\": ISODate(\"2021-05-18T08:00:00.000Z\"),\n       \"temp\": 11\n   }, \n   {\n       \"metadata\": { \"sensorId\": 5578, \"type\": \"temperature\" },\n       \"timestamp\": ISODate(\"2021-05-18T12:00:00.000Z\"),\n       \"temp\": 12\n   }\n] )"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "3455cd890c72f1eece8ea9b885af515fe8e5ee12ba60ece55135210724424d33",
-      "text" : "[\n  {\n    _id: ObjectId(\"618c207c63056cfad0ca4309\"),\n    metadata: { sensorId: 5578, type: 'temperature' },\n    timestamp: ISODate(\"2021-05-18T00:00:00.000Z\"),\n    temp: 12\n  },\n  { timestamp: ISODate(\"2021-05-18T01:00:00.000Z\") },\n  { timestamp: ISODate(\"2021-05-18T02:00:00.000Z\") },\n  { timestamp: ISODate(\"2021-05-18T03:00:00.000Z\") },\n  {\n    _id: ObjectId(\"618c207c63056cfad0ca430a\"),\n    metadata: { sensorId: 5578, type: 'temperature' },\n    timestamp: ISODate(\"2021-05-18T04:00:00.000Z\"),\n    temp: 11\n  },\n  { timestamp: ISODate(\"2021-05-18T05:00:00.000Z\") },\n  { timestamp: ISODate(\"2021-05-18T06:00:00.000Z\") },\n  { timestamp: ISODate(\"2021-05-18T07:00:00.000Z\") },\n  {\n    _id: ObjectId(\"618c207c63056cfad0ca430b\"),\n    metadata: { sensorId: 5578, type: 'temperature' },\n    timestamp: ISODate(\"2021-05-18T08:00:00.000Z\"),\n    temp: 11\n  }\n  {\n    _id: ObjectId(\"618c207c63056cfad0ca430c\"),\n    metadata: { sensorId: 5578, type: 'temperature' },\n    timestamp: ISODate(\"2021-05-18T12:00:00.000Z\"),\n    temp: 12\n  }\n]"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "Densify Time Series Data",
-    "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
-    "fixtureFiles" : {
-      "action.json" : "2348c50766595c53d3d646d242869d3d5c23b9c41283814f87ecb4068cc052fb",
-      "data.json" : "18db83af8ad8ec5f3a608e49643b0dba82ef9a13dcd319571e8b8cb7829dae99",
-      "expected.json" : "cc772d102dd3d52323c98e7ea2885cee9b495a73bad284c32d96df908df7ae5c",
-      "name" : "02802cbee4a01571e39dc003c5c2d17b7d17e1353a1c745e4077c2bdc66ad77c"
-    },
-    "includes" : [ {
-      "blob" : "324ff3f0609ab2cf2413bbb59ea90d6a5299bdae",
-      "path" : "source/includes/fact-densify-description.rst"
-    }, {
-      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
-      "path" : "source/includes/use-dot-notation.rst"
-    }, {
-      "blob" : "a5cfb5928c49a16fe608858a55943bd0a9495e67",
-      "path" : "source/includes/fact-densify-image-explanation.rst"
-    } ],
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "96c46909fd98852afecf4c0591ba8ebeeff49beb",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
-      "path" : "source/reference/operator/aggregation/densify.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
-      "sha256" : "2307d7043a9abff0bcb4efcb4efe26c89801cbfab9d54f1d483d0fe04ad826cc",
-      "text" : "db.travelers.aggregate( [\n   {\n      $graphLookup: {\n         from: \"airports\",\n         startWith: \"$nearestAirport\",\n         connectFromField: \"connects\",\n         connectToField: \"airport\",\n         maxDepth: 2,\n         depthField: \"numConnections\",\n         as: \"destinations\"\n      }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "9e65b5237a8a6b4f089a95db77210ebcd7002a8bdad987aa7a3318cf6286e226",
-      "text" : "db.airports.insertMany( [\n   { \"_id\" : 0, \"airport\" : \"JFK\", \"connects\" : [ \"BOS\", \"ORD\" ] },\n   { \"_id\" : 1, \"airport\" : \"BOS\", \"connects\" : [ \"JFK\", \"PWM\" ] },\n   { \"_id\" : 2, \"airport\" : \"ORD\", \"connects\" : [ \"JFK\" ] },\n   { \"_id\" : 3, \"airport\" : \"PWM\", \"connects\" : [ \"BOS\", \"LHR\" ] },\n   { \"_id\" : 4, \"airport\" : \"LHR\", \"connects\" : [ \"PWM\" ] }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "3aa8e45153559c0739bedc0b185c162c7c6537334e9ae99f3948aad905ac2828",
-      "text" : "db.travelers.insertMany( [\n   { \"_id\" : 1, \"name\" : \"Dev\", \"nearestAirport\" : \"JFK\" },\n   { \"_id\" : 2, \"name\" : \"Eliot\", \"nearestAirport\" : \"JFK\" },\n   { \"_id\" : 3, \"name\" : \"Jeff\", \"nearestAirport\" : \"BOS\" }\n] )"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "8edc5a26ee75d1eca3d8e4ab7d5e6655d9072cd1c3c3120fd6e8a07d1ff1c1ec",
-      "text" : "{\n   \"_id\" : 1,\n   \"name\" : \"Dev\",\n   \"nearestAirport\" : \"JFK\",\n   \"destinations\" : [\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(0) }\n   ]\n}\n{\n   \"_id\" : 2,\n   \"name\" : \"Eliot\",\n   \"nearestAirport\" : \"JFK\",\n   \"destinations\" : [\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(0) } ]\n}\n{\n   \"_id\" : 3,\n   \"name\" : \"Jeff\",\n   \"nearestAirport\" : \"BOS\",\n   \"destinations\" : [\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 4,\n        \"airport\" : \"LHR\",\n        \"connects\" : [ \"PWM\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(0) }\n   ]\n}"
-    } ],
-    "collections" : {
-      "data2.json" : "airports"
-    },
-    "corrections" : [ ],
-    "example" : "Across Multiple Collections",
-    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-    "fixtureFiles" : {
-      "action.json" : "605bde048bff6db6a77944897b2df3024bd5c19158386dbfedf765486f47c1ee",
-      "data.json" : "00061634b23aeb5b13f358628171b20dd87ace338afa8b215a93425424ba9ea1",
-      "data2.json" : "c31732455fc49cd4428e47822663db4ee0c9116e7031a2e1da8f0f1ffa850205",
-      "expected.json" : "4d8f3e5295b46da09ca3cad0636c361668e6dbbe153419f294674219a9623ff5",
-      "name" : "068903a39c63f8c83b724e2fa3024427b5554c7ceb0d05c972c48097cefb5777"
-    },
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "837a91236817cbc098b8d616cb3ef2e055d7ba25a14e79ec7a9e509765c910b1",
-      "text" : "updated pipeline order\n"
-    },
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
-      "sha256" : "abed3ccbe9e0eece268657d70d2682c3fbbad8cac7bba06f6884a1667f7cceab",
-      "text" : "db.grades.find( { classAverage : { $type : [ 2 , 1 ] } } );\ndb.grades.find( { classAverage : { $type : [ \"string\" , \"double\" ] } } );"
-    }, {
-      "role" : "DATA",
-      "sha256" : "d1f159ca42d8939f590ba3bcfc3b202f8cd663b89b3057ca2f058ebe4c00d7a2",
-      "text" : "db.grades.insertMany( [\n      { _id : 1, name : \"Alice King\" , classAverage : 87.333333333333333 },\n      { _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" },\n      { _id : 3, name : \"Cathy Hart\", classAverage: \"94.06\" },\n      { _id : 4, name : \"Drew Williams\" , classAverage : NumberInt(\"93\") }\n] )"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "8ce91c91d210a4003bbdf1dbe35227d561cd5fd80f46d7aee72c6d44ac7ad0fd",
-      "text" : "{ _id : 1, name : \"Alice King\", classAverage : 87.33333333333333 }\n{ _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" }\n{ _id : 3, name : \"Cathy Hart\", classAverage : \"94.06\" } "
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "Querying by Multiple Data Types",
-    "fixture" : "query/filters/type/queryingByMultipleDataTypes",
-    "fixtureFiles" : {
-      "action.json" : "0efc4ec67fb9ce67ef1ad052ac14d884bd742ea14c60c9528b72a54d112a150a",
-      "data.json" : "20b8aea83fa0ddd88b6e760e8a6044e9636433541ba9a1b8f4b1f9874e4c125a",
-      "expected.json" : "d4d816ab10899b6ca1b11c8177ec041c1d8c5e40a63c3e040d9032b62e67b093",
-      "name" : "7504ab1f4910de0a5a3663babc806b05bfbb68e565964ebe9579cf30eb9d44d7"
-    },
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
-      "path" : "source/includes/fact-bson-types.rst"
-    }, {
-      "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
-      "path" : "source/includes/extracts-4.2-changes.yaml"
-    } ],
-    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
-    "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
-      "text" : "the docs had two actions showing the two forms. picked the form morphia uses."
-    },
-    "retypes" : [ ],
-    "rules" : [ "ALTERNATIVE_COMMANDS" ],
-    "shape" : "FIND",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/type.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  } ],
+  "overrides" : [ ],
   "repositoryRevision" : "70fde7825fcaa6f09efde4cab59b09318dfe6ee6",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
@@ -207,15 +41,15 @@
     "gap.REJECTED" : 0,
     "gap.RESIDUAL_DIFFERENCE" : 0,
     "gap.SOURCE_UNSUPPORTED" : 0,
-    "overrides" : 3,
+    "overrides" : 0,
     "overrides.corrected" : 0,
-    "overrides.exact" : 1,
+    "overrides.exact" : 0,
     "overrides.retyped" : 0,
-    "rule.ALTERNATIVE_COMMANDS" : 1,
+    "rule.ALTERNATIVE_COMMANDS" : 0,
     "rule.COND_ARRAY" : 0,
     "rule.EQ_SHORTHAND" : 0,
     "rule.FIELD_OPERATORS_AND" : 0,
-    "rule.NAMED_ARGUMENTS" : 1,
+    "rule.NAMED_ARGUMENTS" : 0,
     "rule.PROJECTION_FLAGS" : 0,
     "rule.PROJECT_ID_FIRST" : 0,
     "rule.REGEX_FORM" : 0,

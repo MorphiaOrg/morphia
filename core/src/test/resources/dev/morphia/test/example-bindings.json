@@ -1369,15 +1369,6 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testTangentOfValueInRadians",
-      "resource" : "tangentOfValueInRadians"
-    } ],
-    "manual" : [ ],
-    "resources" : "dev/morphia/test/aggregation/expressions/tan",
-    "type" : "dev.morphia.test.aggregation.expressions.TestTan",
-    "unbound" : [ ]
-  }, {
-    "bindings" : [ {
       "method" : "testHyperbolicTangentInDegrees",
       "resource" : "hyperbolicTangentInDegrees"
     }, {
@@ -1666,15 +1657,6 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testDensifyTimeSeriesData",
-      "resource" : "densifyTimeSeriesData"
-    } ],
-    "manual" : [ ],
-    "resources" : "dev/morphia/test/aggregation/stages/densify",
-    "type" : "dev.morphia.test.aggregation.stages.TestDensify",
-    "unbound" : [ ]
-  }, {
-    "bindings" : [ {
       "method" : "testUseADocumentsStageInALookupStage",
       "resource" : "useADocumentsStageInALookupStage"
     } ],
@@ -1705,9 +1687,6 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testAcrossMultipleCollections",
-      "resource" : "acrossMultipleCollections"
-    }, {
       "method" : "testWithAQueryFilter",
       "resource" : "withAQueryFilter"
     }, {

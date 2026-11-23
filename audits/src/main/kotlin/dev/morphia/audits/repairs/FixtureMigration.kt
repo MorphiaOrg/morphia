@@ -62,7 +62,15 @@ data class MigratedFixture(
      * not return (a page error), or that cannot be read. Serialization and behavior stay strict.
      */
     @get:JsonInclude(JsonInclude.Include.NON_NULL) val publishedSkip: String? = null,
+    /**
+     * Form rules a reviewer added for a case whose source is a pinned reference, which declares
+     * none: Morphia spells the documented command differently in a way the rule's reason covers.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val addedRules: AddedRules? = null,
 )
+
+/** Reviewed form rules for a referenced case, with the reason they apply. */
+data class AddedRules(val rules: List<FormRule>, val reason: String)
 
 /**
  * A reviewed edit of a legacy fixture file: [fromSha256] is the digest the preserved corpus
@@ -271,6 +279,7 @@ object FixtureMigration {
             migrated.ordered,
             migrated.options,
             publishedSkip = migrated.publishedSkip,
+            addedRules = migrated.addedRules?.rules.orEmpty(),
         )
 
     /**
@@ -286,6 +295,7 @@ object FixtureMigration {
         options: List<OptionCall> = emptyList(),
         dataset: String? = null,
         publishedSkip: String? = null,
+        addedRules: List<FormRule> = emptyList(),
     ): String {
         require(options.all { it.name in mappedOptions && it.name != "orderMatters" }) {
             "${override.fixture}: options ${options.map { it.name }} are not mapped"
@@ -326,6 +336,23 @@ object FixtureMigration {
                 action["update"] = documented.action[1]
                 action["multi"] = BsonBoolean(documented.many)
             }
+        }
+        // The page's other spellings of the action, each in the same shape as the action.
+        if (documented.alternatives.isNotEmpty()) {
+            action["alternatives"] =
+                BsonArray(
+                    documented.alternatives.map { values ->
+                        when (documented.shape) {
+                            ActionShape.PIPELINE -> BsonDocument("pipeline", BsonArray(values))
+                            ActionShape.FIND ->
+                                BsonDocument("filter", values[0]).also { alternative ->
+                                    values.getOrNull(1)?.let { alternative["projection"] = it }
+                                }
+                            ActionShape.UPDATE ->
+                                BsonDocument("filter", values[0]).append("update", values[1])
+                        }
+                    }
+                )
         }
         val collections = BsonDocument()
         documented.data.toSortedMap().forEach { (name, rows) ->
@@ -372,7 +399,16 @@ object FixtureMigration {
                     "comparison",
                     BsonDocument()
                         .append("order", BsonString(if (ordered) "ORDERED" else "UNORDERED"))
-                        .append("rules", BsonArray(override.rules.map { BsonString(it.name) }))
+                        .append(
+                            "rules",
+                            // Alternative commands travel as the action's alternatives, not a rule.
+                            BsonArray(
+                                (override.rules + addedRules)
+                                    .filter { it != FormRule.ALTERNATIVE_COMMANDS }
+                                    .distinct()
+                                    .map { BsonString(it.name) }
+                            ),
+                        )
                         .append(
                             "ignore",
                             BsonArray(
@@ -543,8 +579,7 @@ object FixtureMigration {
 
     /**
      * Why the case of [override] cannot be converted yet, or null when the adapter supports it: a
-     * case run by one of [helpers] with mapped options and a documented source without alternative
-     * commands.
+     * case run by one of [helpers] with mapped options.
      */
     fun convertible(override: FormOverride, example: CuratedExample): String? =
         when {
@@ -552,7 +587,6 @@ object FixtureMigration {
                 "only cases that run one of $helpers can be converted"
             !example.options.all { it.name == "orderMatters" || it.name in mappedOptions } ->
                 "options ${example.options.map { it.name }} are not mapped yet"
-            FormRule.ALTERNATIVE_COMMANDS in override.rules -> "alternative commands"
             else -> null
         }
 
@@ -616,13 +650,7 @@ object FixtureMigration {
         return ledger.copy(
             migrations =
                 ledger.migrations.map { migrated ->
-                    val text =
-                        scenario(
-                            migrated.override,
-                            migrated.ordered,
-                            migrated.options,
-                            publishedSkip = migrated.publishedSkip,
-                        )
+                    val text = scenario(migrated)
                     Files.writeString(root.resolve(migrated.scenario), text)
                     migrated.copy(scenarioSha256 = sha256(text.toByteArray()))
                 }
@@ -869,15 +897,7 @@ object FixtureMigration {
                 if (sha256(text.toByteArray()) != migrated.scenarioSha256) {
                     problems += "${migrated.fixture}: scenario changed since the migration"
                 }
-                if (
-                    text !=
-                        scenario(
-                            migrated.override,
-                            migrated.ordered,
-                            migrated.options,
-                            publishedSkip = migrated.publishedSkip,
-                        )
-                ) {
+                if (text != scenario(migrated)) {
                     problems +=
                         "${migrated.fixture}: scenario is not its override's documented source"
                 }

@@ -113,7 +113,6 @@
     "update the docs version to use the short version morphia generates": "MORPHIA_FORM",
     "update the lookup collection name": "FIXTURE_CURATION",
     "update the name of the target collection for the merge": "FIXTURE_CURATION",
-    "updated pipeline order": "MORPHIA_FORM",
     "updated the collection name in from": "FIXTURE_CURATION",
     "updated the timestamp format": "SHELL_SYNTAX",
     "use 0 instead of false to suppress _id": "MORPHIA_FORM",

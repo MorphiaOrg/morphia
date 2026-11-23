@@ -341,8 +341,11 @@ losing what the locks protected:
    corpus snapshot and the frozen binding catalog, as they do the migration ledger. With the
    legacy owner gone, the example's documented form is generated when its bindings allow.
 
-The cases that stay on the legacy loader all have a documented source and fail a strict check;
-the progress file tracks them.
+No case stays on the legacy loader. A page may document equivalent spellings of an action
+(declared `ALTERNATIVE_COMMANDS`): the scenario carries them as `action.alternatives`, Morphia's
+command must equal one of them, and the reference runs that one. A referenced case, which declares
+no rules, may carry reviewed `addedRules` in its ledger entry when Morphia spells the command
+differently in a way a rule covers.
 
 ### Weekly discovery
 

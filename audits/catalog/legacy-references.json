@@ -5796,43 +5796,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "77142b787e783ee8c05ae6136926b5f5739eb5b9c584cd0977285b1e6333d795",
-      "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $tan : \"$angle_a\" },\n          \"$side_a\"\n        ]\n      }\n    }\n  }\n])"
-    }, {
-      "role" : "DATA",
-      "sha256" : "86d99dc80f1634fe9ea1a12556239d3018f989cb4b6f9d615a724f29966f75e9",
-      "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"side_a\" : NumberDecimal(\"3\")\n}"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "5444d2c5b6bce8da1745110d55be58c5c71650880c51beb8e542bae43e494909",
-      "text" : "{\n  \"_id\" : ObjectId(\"5c50782193f833234ba90d85\"),\n  \"angle_a\" : NumberDecimal(\"0.9272952180016122324285124629224288\"),\n  \"side_a\" : NumberDecimal(\"3\")\n  \"side_b\" : NumberDecimal(\"3.999999999999999999999999999999999\")\n}"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "main :: Tangent of Value in Radians",
-    "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians",
-    "fixtureFiles" : {
-      "action.json" : "996a16cd8f0fc500f6c70207c16c5fe5394bc3417543d3457e47d18d6369395e",
-      "data.json" : "fd1f3c01af034e96548f5056994d7debe99c6ce7a330aea1e56e6caf09a423ba",
-      "expected.json" : "e45e98a10aad1cd7060ca3fa3d3566d774330eec741f74d7c5c134428b36372e",
-      "name" : "85550610332a687515dc5c999ff1738f22eb8164fdabad152f2c32cc31ca1a88"
-    },
-    "includes" : [ ],
-    "origin" : "3ed9dc5c1fb30de5717e0d52d8b63a1f7a17bf8d",
-    "pageBlob" : "d1af0fc1680338f19f53ff6357bd368eb498a86b",
-    "retiredLock" : null,
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
-      "path" : "source/reference/operator/aggregation/tan.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "ed3adf52a227dac3ae4ad077c151192cdc6aa082525c2877d5b9b2aa86d98120",
       "text" : "db.trigonometry.aggregate( [\n   {\n      $addFields : {\n         \"tanh_output\" : { $tanh : { $degreesToRadians : \"$angle\" } }\n      }\n   }\n] )"
     }, {
@@ -11137,7 +11100,7 @@
     "gap.REJECTED" : 0,
     "gap.RESIDUAL_DIFFERENCE" : 0,
     "gap.SOURCE_UNSUPPORTED" : 0,
-    "references" : 251,
+    "references" : 250,
     "references.afterOrigin" : 0,
     "references.printed" : 1,
     "unresolved" : 0

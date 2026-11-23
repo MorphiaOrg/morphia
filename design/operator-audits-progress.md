@@ -44,13 +44,7 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The remaining legacy fixtures:** 5 directories, all with a documented source, and the last users
-  of the legacy loader:
-  - `tan/tangentOfValueInRadians`, `densify/densifyTimeSeriesData` and
-    `graphLookup/acrossMultipleCollections`: the page's printed results do not parse (page typos);
-  - `rand/selectRandomItemsFromACollection`: the page projects `_id` first, which a reference cannot
-    declare (`PROJECT_ID_FIRST`) and Morphia writes last;
-  - `type/queryingByMultipleDataTypes`: alternative commands, which conversion does not support.
+- **The legacy fixture loader's code:** no legacy fixture directory remains; retire the loader.
 - **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
@@ -2728,3 +2722,17 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   unordered instead (#4568): their behavior check could differ between runs too, and every check
   stays strict.
 - 384 cases on the runner; 5 legacy directories. Core: 551 under each mapper.
+
+## The last legacy cases (2026-11-23)
+
+- Branch audits-last-legacy, as the user decided.
+- `$type`'s "Querying by Multiple Data Types": declared alternative commands now convert. The
+  scenario carries the page's other spellings as `action.alternatives`; Morphia's command must equal
+  one, and the reference runs that one.
+- `$rand`'s "Select Random Items From a Collection": its body gains the page's `_id` exclusion
+  (a reviewed body edit), and its ledger entry carries reviewed `addedRules` (`PROJECT_ID_FIRST`):
+  Morphia writes inclusions before exclusions, and a pinned reference declares no rules.
+- `$tan` (radians), `$densify` (time series) and `$graphLookup` (across collections) are deleted:
+  their pages' printed results do not parse. The two declared ones record their already-retired
+  locks' digests too.
+- No legacy fixture directory remains; 386 cases on the runner. Core: 548 under each mapper.

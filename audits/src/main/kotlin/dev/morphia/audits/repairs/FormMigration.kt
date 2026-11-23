@@ -203,6 +203,8 @@ data class DocumentedScenario(
     val documents: List<BsonValue>? = null,
     /** The indexes the page creates before the action, in order. */
     val indexes: List<DocumentedIndex> = emptyList(),
+    /** The page's other spellings of the action, when it declares alternative commands. */
+    val alternatives: List<List<BsonValue>> = emptyList(),
 )
 
 data class FormOverride(
@@ -999,13 +1001,16 @@ object FormMigration {
         label: String,
         shape: ActionShape?,
         blocks: List<SourceBlock>,
+        alternatives: Boolean = false,
     ): DocumentedScenario {
         val documented =
             when (val parsed = documented(blocks)) {
                 is Examined.Gap -> throw IllegalArgumentException("$label: ${parsed.detail}")
                 else -> parsed as Documented
             }
-        val action = documented.alternatives.single()
+        // Alternative commands, when declared, are the page's equivalent spellings of one action.
+        val action =
+            if (alternatives) documented.alternatives.first() else documented.alternatives.single()
         require(shape == null || action.shape == shape) { "$label: action is ${action.shape}" }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
         val printed =
@@ -1025,26 +1030,30 @@ object FormMigration {
             action.many,
             listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
             indexes = documented.indexes,
+            alternatives =
+                if (alternatives) documented.alternatives.drop(1).map { it.values } else emptyList(),
         )
     }
 
     /**
      * The documented operation an override was proven against, read from its recorded source text.
      * Its declared rules travel with it to the runner, and its retypes and corrections are applied
-     * by `FixtureMigration`; alternative commands are not supported.
+     * by `FixtureMigration`; declared alternative commands travel as the action's alternatives.
      */
     fun documented(override: FormOverride): DocumentedScenario {
         // The documented data names every collection, so a test's extra collections need nothing
         // more; their legacy data files were loaded under those same names.
-        require(FormRule.ALTERNATIVE_COMMANDS !in override.rules) {
-            "${override.fixture}: alternative commands are not supported"
-        }
         override.blocks.forEach {
             require(sha256(it.text.toByteArray()) == it.sha256) {
                 "${override.fixture}: ${it.role} source text digest mismatch"
             }
         }
-        return documented(override.fixture, override.shape, override.blocks)
+        return documented(
+            override.fixture,
+            override.shape,
+            override.blocks,
+            FormRule.ALTERNATIVE_COMMANDS in override.rules,
+        )
     }
 
     private data class Action(

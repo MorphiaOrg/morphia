@@ -22761,6 +22761,79 @@
     "scenarioSha256" : "bfd3628c1fe644cb1a33c89f2fa73bceca2fcb64d4792c3c04fe8a4fb94aef75",
     "test" : "dev.morphia.test.query.filters.TestPolygon#testPolygonQueryPredicateOperator"
   }, {
+    "addedRules" : {
+      "reason" : "Morphia writes a projection's inclusions before its exclusions, so _id comes last; its position does not change the output",
+      "rules" : [ "PROJECT_ID_FIRST" ]
+    },
+    "bodyEdit" : {
+      "fromSha256" : "e7ac647ead7238ce925e406268440a1abba4e361d58d4873f88bf218c230b294",
+      "reason" : "projects _id away as the page does ({ _id: 0, name: 1, registered: 1 }), so the runner compares Morphia's projection with the page's"
+    },
+    "files" : {
+      "action.json" : "51ff919175dbfc7b25f4a0f62bcc734ec6c740b6c735eb81ffbdfd36062737a7",
+      "data.json" : "d2d21026bcbe7ad8640307c52a6ce69f2d3c8c73e49b1520e3617c613c55258b",
+      "expected.json" : "bab7cae25ff4b8329665a7ba6ca92323bcaa3b0f9e95b127ac47cd0ec13bf705",
+      "name" : "6f4c54ab1ba31afac42df1ced6bdd572f9cb33575a5beacd1a0acddecd265312"
+    },
+    "fixture" : "query/filters/rand/selectRandomItemsFromACollection",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        ActionTestOptions options = new ActionTestOptions().orderMatters(false).removeIds(true).skipDataCheck(true)\n                .findOptions(new FindOptions().projection().include(\"name\", \"registered\").projection().exclude(\"_id\"));\n        testQuery(options, (query) -> query.filter(eq(\"district\", 3), expr(lt(0.5, rand()))));\n    }",
+    "legacyBodySha256" : "310ddadaac7f63d274f5a936b2875b86b70e8019024929cedee5e943ff634f25",
+    "legacyMethod" : "testSelectRandomItemsFromACollection",
+    "legacyType" : "dev.morphia.test.query.filters.TestRand",
+    "options" : [ {
+      "argument" : "new FindOptions().projection().include(\"name\", \"registered\").projection().exclude(\"_id\")",
+      "name" : "findOptions"
+    }, {
+      "argument" : "true",
+      "name" : "removeIds"
+    }, {
+      "argument" : "true",
+      "name" : "skipDataCheck"
+    } ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "51ff919175dbfc7b25f4a0f62bcc734ec6c740b6c735eb81ffbdfd36062737a7",
+        "text" : "db.voters.find(\n   {  district: 3,\n      $expr: { $lt: [0.5, {$rand: {} } ] }\n   },\n   { _id: 0, name: 1, registered: 1 }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "1c9da9ed37f454d85f9c08bddd91049ff8f370ef2d5d2bcd08a432054fdc55d6",
+        "text" : "db.voters.insertMany(\n   [\n     { name: \"Archibald\", voterId: 4321, district: 3, registered: true },\n     { name: \"Beckham\", voterId: 4331, district: 3, registered: true },\n     { name: \"Carolin\", voterId: 5321, district: 4, registered: true },\n     { name: \"Debarge\", voterId: 4343, district: 3, registered: false },\n     { name: \"Eckhard\", voterId: 4161, district: 3, registered: false },\n     { name: \"Faberge\", voterId: 4300, district: 1, registered: true },\n     { name: \"Grimwald\", voterId: 4111, district: 3, registered: true },\n     { name: \"Humphrey\", voterId: 2021, district: 3, registered: true },\n     { name: \"Idelfon\", voterId: 1021, district: 4, registered: true },\n     { name: \"Justo\", voterId: 9891, district: 3, registered: false }\n   ]\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "bab7cae25ff4b8329665a7ba6ca92323bcaa3b0f9e95b127ac47cd0ec13bf705",
+        "text" : "{ \"name\" : \"Beckham\", \"registered\" : true }\n{ \"name\" : \"Eckhard\", \"registered\" : false }\n{ \"name\" : \"Grimwald\", \"registered\" : true }\n{ \"name\" : \"Humphrey\", \"registered\" : true }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Select Random Items From a Collection",
+      "fixture" : "query/filters/rand/selectRandomItemsFromACollection",
+      "fixtureFiles" : {
+        "action.json" : "51ff919175dbfc7b25f4a0f62bcc734ec6c740b6c735eb81ffbdfd36062737a7",
+        "data.json" : "d2d21026bcbe7ad8640307c52a6ce69f2d3c8c73e49b1520e3617c613c55258b",
+        "expected.json" : "bab7cae25ff4b8329665a7ba6ca92323bcaa3b0f9e95b127ac47cd0ec13bf705",
+        "name" : "6f4c54ab1ba31afac42df1ced6bdd572f9cb33575a5beacd1a0acddecd265312"
+      },
+      "includes" : [ ],
+      "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+      "pageBlob" : "536ca45ea56b6ae5c998d9a4e7d2b452d9f10e0b",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "65d54987f7f4008507de4346d3c4c5ca37b8ec21",
+        "path" : "source/reference/operator/query/rand.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/rand/selectRandomItemsFromACollection/scenario.json",
+    "scenarioSha256" : "5a272c76a0edc50fe27e476ae3420fc19b391c103fa5d5f2907a04443570657b",
+    "test" : "dev.morphia.test.query.filters.TestRand#testSelectRandomItemsFromACollection"
+  }, {
     "bodyEdit" : null,
     "files" : {
       "action.json" : "5bf9d97cf5b4f98444de09d07ae48e56235c919c9c362ed47a11f9d7280b58f1",
@@ -23608,6 +23681,86 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
     "scenarioSha256" : "eb71dbdc9a7918a19a15f805128266ed7383946a1a18134634a8dee607563b60",
     "test" : "dev.morphia.test.query.filters.TestText#testTextWithAnExactString"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "0efc4ec67fb9ce67ef1ad052ac14d884bd742ea14c60c9528b72a54d112a150a",
+      "data.json" : "20b8aea83fa0ddd88b6e760e8a6044e9636433541ba9a1b8f4b1f9874e4c125a",
+      "expected.json" : "d4d816ab10899b6ca1b11c8177ec041c1d8c5e40a63c3e040d9032b62e67b093",
+      "lock" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
+      "name" : "7504ab1f4910de0a5a3663babc806b05bfbb68e565964ebe9579cf30eb9d44d7"
+    },
+    "fixture" : "query/filters/type/queryingByMultipleDataTypes",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(type(\"classAverage\", Type.STRING, Type.DOUBLE)));\n    }",
+    "legacyBodySha256" : "be413874537511bba7c01a40e7b5bcb41246a031d52bd194566f657e853fbcf9",
+    "legacyMethod" : "testQueryingByMultipleDataTypes",
+    "legacyType" : "dev.morphia.test.query.filters.TestType",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "abed3ccbe9e0eece268657d70d2682c3fbbad8cac7bba06f6884a1667f7cceab",
+        "text" : "db.grades.find( { classAverage : { $type : [ 2 , 1 ] } } );\ndb.grades.find( { classAverage : { $type : [ \"string\" , \"double\" ] } } );"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d1f159ca42d8939f590ba3bcfc3b202f8cd663b89b3057ca2f058ebe4c00d7a2",
+        "text" : "db.grades.insertMany( [\n      { _id : 1, name : \"Alice King\" , classAverage : 87.333333333333333 },\n      { _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" },\n      { _id : 3, name : \"Cathy Hart\", classAverage: \"94.06\" },\n      { _id : 4, name : \"Drew Williams\" , classAverage : NumberInt(\"93\") }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "8ce91c91d210a4003bbdf1dbe35227d561cd5fd80f46d7aee72c6d44ac7ad0fd",
+        "text" : "{ _id : 1, name : \"Alice King\", classAverage : 87.33333333333333 }\n{ _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" }\n{ _id : 3, name : \"Cathy Hart\", classAverage : \"94.06\" } "
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Querying by Multiple Data Types",
+      "fixture" : "query/filters/type/queryingByMultipleDataTypes",
+      "fixtureFiles" : {
+        "action.json" : "0efc4ec67fb9ce67ef1ad052ac14d884bd742ea14c60c9528b72a54d112a150a",
+        "data.json" : "20b8aea83fa0ddd88b6e760e8a6044e9636433541ba9a1b8f4b1f9874e4c125a",
+        "expected.json" : "d4d816ab10899b6ca1b11c8177ec041c1d8c5e40a63c3e040d9032b62e67b093",
+        "name" : "7504ab1f4910de0a5a3663babc806b05bfbb68e565964ebe9579cf30eb9d44d7"
+      },
+      "includes" : [ {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
+        "path" : "source/includes/fact-bson-types.rst"
+      }, {
+        "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
+        "path" : "source/includes/extracts-4.2-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
+        "text" : "the docs had two actions showing the two forms. picked the form morphia uses."
+      },
+      "retypes" : [ ],
+      "rules" : [ "ALTERNATIVE_COMMANDS" ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+        "path" : "source/reference/operator/query/type.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/type/queryingByMultipleDataTypes/scenario.json",
+    "scenarioSha256" : "79b96d4085bf99c0cb17ba929fe8b772d939d521a4666604e3af9d113275f6da",
+    "test" : "dev.morphia.test.query.filters.TestType#testQueryingByMultipleDataTypes"
   }, {
     "bodyEdit" : null,
     "files" : {

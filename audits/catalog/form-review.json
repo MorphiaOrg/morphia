@@ -1,89 +1,5 @@
 {
-  "declarations" : [ {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
-    "includes" : [ {
-      "blob" : "324ff3f0609ab2cf2413bbb59ea90d6a5299bdae",
-      "path" : "source/includes/fact-densify-description.rst"
-    }, {
-      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
-      "path" : "source/includes/use-dot-notation.rst"
-    }, {
-      "blob" : "a5cfb5928c49a16fe608858a55943bd0a9495e67",
-      "path" : "source/includes/fact-densify-image-explanation.rst"
-    } ],
-    "justification" : null,
-    "lock" : "wrong name from parser",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "96c46909fd98852afecf4c0591ba8ebeeff49beb",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
-      "path" : "source/reference/operator/aggregation/densify.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-    "includes" : [ {
-      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
-      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
-    }, {
-      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
-      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
-    }, {
-      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
-      "path" : "source/includes/extracts-views.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "updated pipeline order\n",
-    "marker" : "lock",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "query/filters/type/queryingByMultipleDataTypes",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
-      "path" : "source/includes/fact-bson-types.rst"
-    }, {
-      "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
-      "path" : "source/includes/extracts-4.2-changes.yaml"
-    } ],
-    "justification" : "The page runs db.grades.find({classAverage: {$type: [2, 1]}}) and db.grades.find({classAverage: {$type: [\"string\", \"double\"]}}) with one shared result; BSON type numbers 2 and 1 are the aliases \"string\" and \"double\".",
-    "lock" : "the docs had two actions showing the two forms. picked the form morphia uses.",
-    "marker" : "lock",
-    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
-    "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
-    "retypes" : [ ],
-    "rules" : [ "ALTERNATIVE_COMMANDS" ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/type.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  } ],
+  "declarations" : [ ],
   "migrated" : [ {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees",
@@ -3524,6 +3440,40 @@
     "source" : {
       "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
       "path" : "source/reference/operator/query/regex.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/type/queryingByMultipleDataTypes",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
+      "path" : "source/includes/fact-bson-types.rst"
+    }, {
+      "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
+      "path" : "source/includes/extracts-4.2-changes.yaml"
+    } ],
+    "justification" : "The page runs db.grades.find({classAverage: {$type: [2, 1]}}) and db.grades.find({classAverage: {$type: [\"string\", \"double\"]}}) with one shared result; BSON type numbers 2 and 1 are the aliases \"string\" and \"double\".",
+    "lock" : "the docs had two actions showing the two forms. picked the form morphia uses.",
+    "marker" : "lock",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
+    "retypes" : [ ],
+    "rules" : [ "ALTERNATIVE_COMMANDS" ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/type.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

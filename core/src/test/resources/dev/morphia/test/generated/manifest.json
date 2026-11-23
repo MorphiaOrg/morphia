@@ -1861,6 +1861,11 @@
     "test" : "dev.morphia.test.query.filters.TestPolygon#testPolygonQueryPredicateOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/rand/selectRandomItemsFromACollection",
+    "scenario" : "/dev/morphia/test/query/filters/rand/selectRandomItemsFromACollection/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestRand#testSelectRandomItemsFromACollection"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
     "scenario" : "/dev/morphia/test/query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestRegex#testExtendRegexOptionsToMatchCharactersOutsideOfAscii"
@@ -1904,6 +1909,11 @@
     "name" : "query/filters/text/textWithAnExactString",
     "scenario" : "/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestText#testTextWithAnExactString"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/type/queryingByMultipleDataTypes",
+    "scenario" : "/dev/morphia/test/query/filters/type/queryingByMultipleDataTypes/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestType#testQueryingByMultipleDataTypes"
   }, {
     "kind" : "GENERATED",
     "name" : "query/updates/addToSet/addToArray",
@@ -3748,6 +3758,10 @@
     "sha256" : "bfd3628c1fe644cb1a33c89f2fa73bceca2fcb64d4792c3c04fe8a4fb94aef75"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/rand/selectRandomItemsFromACollection/scenario.json",
+    "sha256" : "5a272c76a0edc50fe27e476ae3420fc19b391c103fa5d5f2907a04443570657b"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii/scenario.json",
     "sha256" : "4f628b36f14ba15d1ad3003a1a79889e4db218c46bb2bd861f52a91986155fb9"
   }, {
@@ -3782,6 +3796,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
     "sha256" : "eb71dbdc9a7918a19a15f805128266ed7383946a1a18134634a8dee607563b60"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/type/queryingByMultipleDataTypes/scenario.json",
+    "sha256" : "79b96d4085bf99c0cb17ba929fe8b772d939d521a4666604e3af9d113275f6da"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/addToSet/eachModifier/scenario.json",
