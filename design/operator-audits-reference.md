@@ -601,7 +601,10 @@ declared form rules travel with the scenario, and results the page prints as mon
 travel as the constraints they prove, written by `PublishedEncoding`; retypes, corrections and alternative commands are not
 supported yet) in place: its legacy fixture files are replaced by the scenario, its unchanged test runs through the
 runner's compatibility adapter, and the ledger records the move (kind `CONVERTED`, with the legacy
-body text). Move its declaration to `migrated` as for `migrate`.
+body text). Move its declaration to `migrated` as for `migrate`. A converted case whose legacy body
+or fixture file had to change first records the change as a reviewed edit: `bodyEdit` or
+`fileEdits` (by file name), each with the digest it started from and the reason. The checks hold
+the frozen binding catalog and the preserved corpus to those starting digests.
 
 `references <root> <revision> <pages> <source-repository> <out> <candidates.json>...` pins the
 documented reference of every never-locked fixture into `audits/catalog/legacy-references.json`.

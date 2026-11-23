@@ -19033,6 +19033,834 @@
     "test" : "dev.morphia.test.query.filters.TestAnd#testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator"
   }, {
     "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "7e2d6102d1df3fcc72d33d06bbea97b79f00bd207fbcf7ec0d0df149464aa718",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+      "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+    },
+    "fixture" : "query/filters/bitsAllClear/binDataBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllClear(\"a\", new byte[] { 32 })));\n    }",
+    "legacyBodySha256" : "88592d7870f1bd9e1995e96fd1f5468f41c20937370524470fcbb5d034f44751",
+    "legacyMethod" : "testBinDataBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "7e2d6102d1df3fcc72d33d06bbea97b79f00bd207fbcf7ec0d0df149464aa718",
+        "text" : "db.collection.find( { a: { $bitsAllClear: BinData(0, \"IA==\") } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "text" : "{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "BinData Bitmask",
+      "fixture" : "query/filters/bitsAllClear/binDataBitmask",
+      "fixtureFiles" : {
+        "action.json" : "7e2d6102d1df3fcc72d33d06bbea97b79f00bd207fbcf7ec0d0df149464aa718",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0f2800205eb2f4bc77951cd5873bfd569753f142",
+      "pageBlob" : "effe7d1f201aee463d171fa7038824f2a865ed04",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllClear/binDataBitmask/scenario.json",
+    "scenarioSha256" : "987233f6aecea1b0032daab89a8c30e4b27a133e6b643daf7bb294d108482400",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testBinDataBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "bf72e0da79277e115bb4b4bb4bf5d4633177e183c4f0e6569239e7ea1e92b3bd",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+      "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+    },
+    "fixture" : "query/filters/bitsAllClear/bitPositionArray",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllClear(\"a\", new int[] { 1, 5 })));\n    }",
+    "legacyBodySha256" : "4a5e1dc9ba71ab15a5d59ae0b4326739e88345d16ceb759f7566af9e49f2cfb5",
+    "legacyMethod" : "testBitPositionArray",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "bf72e0da79277e115bb4b4bb4bf5d4633177e183c4f0e6569239e7ea1e92b3bd",
+        "text" : "db.collection.find( { a: { $bitsAllClear: [ 1, 5 ] } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "text" : "{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Bit Position Array",
+      "fixture" : "query/filters/bitsAllClear/bitPositionArray",
+      "fixtureFiles" : {
+        "action.json" : "bf72e0da79277e115bb4b4bb4bf5d4633177e183c4f0e6569239e7ea1e92b3bd",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0f2800205eb2f4bc77951cd5873bfd569753f142",
+      "pageBlob" : "effe7d1f201aee463d171fa7038824f2a865ed04",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllClear/bitPositionArray/scenario.json",
+    "scenarioSha256" : "3bb3b70262f6b39dfae7aa99abeeb614751b57ae34502242f16d89d4d23a0bf5",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testBitPositionArray"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "46f83d59ffc3c7566bfb01b0445595a5f3159c30ebe41a6e2ddca951dc650307",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+      "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+    },
+    "fixture" : "query/filters/bitsAllClear/integerBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllClear(\"a\", 35)));\n    }",
+    "legacyBodySha256" : "73e18ea64f016d0b4722fb72dade9f4782a5282871edd31fca48c0a9b8377c1c",
+    "legacyMethod" : "testIntegerBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "46f83d59ffc3c7566bfb01b0445595a5f3159c30ebe41a6e2ddca951dc650307",
+        "text" : "db.collection.find( { a: { $bitsAllClear: 35 } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "text" : "{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Integer Bitmask",
+      "fixture" : "query/filters/bitsAllClear/integerBitmask",
+      "fixtureFiles" : {
+        "action.json" : "46f83d59ffc3c7566bfb01b0445595a5f3159c30ebe41a6e2ddca951dc650307",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "a4ba71678c15d5264670811305a39a97fea2c59e6ec1eaf33964e06ef7858f6f",
+        "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0f2800205eb2f4bc77951cd5873bfd569753f142",
+      "pageBlob" : "effe7d1f201aee463d171fa7038824f2a865ed04",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllClear/integerBitmask/scenario.json",
+    "scenarioSha256" : "36200eac51e74286ead2c4d97fb1372b636601ac0dd582e16347b44f685d4fa9",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testIntegerBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "295cac61b1445cb5a8c36670298fce8298549b0174b22c77fbef6a260f012ad2",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "b4a20a1fc7a5a94b754d03d47aa4c0162e2944086483e5297f0dd15cf278ff28",
+      "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+    },
+    "fixture" : "query/filters/bitsAllSet/binDataBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllSet(\"a\", new byte[] { 48 })));\n    }",
+    "legacyBodySha256" : "df4d7f79ffef909e3fd0632bbecea3e7d295c6fe9f61855a182b5546546b7a18",
+    "legacyMethod" : "testBinDataBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllSet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "295cac61b1445cb5a8c36670298fce8298549b0174b22c77fbef6a260f012ad2",
+        "text" : "db.collection.find( { a: { $bitsAllSet: BinData(0, \"MA==\") } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "b4a20a1fc7a5a94b754d03d47aa4c0162e2944086483e5297f0dd15cf278ff28",
+        "text" : "{ _id: 1, a: 54, binaryValueofA: \"00110110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "BinData Bitmask",
+      "fixture" : "query/filters/bitsAllSet/binDataBitmask",
+      "fixtureFiles" : {
+        "action.json" : "295cac61b1445cb5a8c36670298fce8298549b0174b22c77fbef6a260f012ad2",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "b4a20a1fc7a5a94b754d03d47aa4c0162e2944086483e5297f0dd15cf278ff28",
+        "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0d6bb0d38d13759baa9571fd1cf6c82d4fda74c1",
+      "pageBlob" : "a42e9ed0cc32e891ca6377ca8e517560c2e1739d",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllSet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllSet/binDataBitmask/scenario.json",
+    "scenarioSha256" : "262a36aacd368982263b577b85ae85b250106e8c2b230fa888c8384b6ee3f1c8",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testBinDataBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "89e31d49a9ea63d724b97e97587109903a8539c3a7573b4a0dc60b8760df334f",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+      "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+    },
+    "fixture" : "query/filters/bitsAllSet/bitPositionArray",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllSet(\"a\", new int[] { 1, 5 })));\n    }",
+    "legacyBodySha256" : "de56403dd2f50f381bb28ad37eff31a02c624a540d20ff602a6bcc8c5b51d3f6",
+    "legacyMethod" : "testBitPositionArray",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllSet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "89e31d49a9ea63d724b97e97587109903a8539c3a7573b4a0dc60b8760df334f",
+        "text" : "db.collection.find( { a: { $bitsAllSet: [ 1, 5 ] } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Bit Position Array",
+      "fixture" : "query/filters/bitsAllSet/bitPositionArray",
+      "fixtureFiles" : {
+        "action.json" : "89e31d49a9ea63d724b97e97587109903a8539c3a7573b4a0dc60b8760df334f",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0d6bb0d38d13759baa9571fd1cf6c82d4fda74c1",
+      "pageBlob" : "a42e9ed0cc32e891ca6377ca8e517560c2e1739d",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllSet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllSet/bitPositionArray/scenario.json",
+    "scenarioSha256" : "b026bae3c0203949fc87a2d9e6e12345a05ea5a98de39309d795d078f6a56567",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testBitPositionArray"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "c427e083469c6b9410b03b51f966b044340839784b9ff30c34eef1bef7cda9c2",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "ffd8dd0c29eaa7fed1d36bd6cf87804799b2f3775d17e2268c2e12720c36156e",
+      "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+    },
+    "fixture" : "query/filters/bitsAllSet/integerBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAllSet(\"a\", 50)));\n    }",
+    "legacyBodySha256" : "931c16ceec3549d19fe2290027e2fe64a8241a5c54ac7ac366c952ab5e9fd000",
+    "legacyMethod" : "testIntegerBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAllSet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "c427e083469c6b9410b03b51f966b044340839784b9ff30c34eef1bef7cda9c2",
+        "text" : "db.collection.find( { a: { $bitsAllSet: 50 } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "ffd8dd0c29eaa7fed1d36bd6cf87804799b2f3775d17e2268c2e12720c36156e",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Integer Bitmask",
+      "fixture" : "query/filters/bitsAllSet/integerBitmask",
+      "fixtureFiles" : {
+        "action.json" : "c427e083469c6b9410b03b51f966b044340839784b9ff30c34eef1bef7cda9c2",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "ffd8dd0c29eaa7fed1d36bd6cf87804799b2f3775d17e2268c2e12720c36156e",
+        "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "0d6bb0d38d13759baa9571fd1cf6c82d4fda74c1",
+      "pageBlob" : "a42e9ed0cc32e891ca6377ca8e517560c2e1739d",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAllSet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAllSet/integerBitmask/scenario.json",
+    "scenarioSha256" : "80a2bc067de5207ee7b77f4aa764fc300e3fab9310486bbfd8dfc254bf70a9ee",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testIntegerBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "ad9bf044a12d2a5c90c5cdf4977f2c130bdfceeff84ad704f1d3316e5e4d7b5b",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "be438998c43b5be0fca519f7977b02c4867cc105080b05b2bdd562c10031066a",
+      "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+    },
+    "fixture" : "query/filters/bitsAnyClear/binDataBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnyClear(\"a\", new byte[] { 48 })));\n    }",
+    "legacyBodySha256" : "9f2edffc3a9f3b427d6f0e81dbf43b4345394293c56e01c5f205d552c9ff90b4",
+    "legacyMethod" : "testBinDataBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnyClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "ad9bf044a12d2a5c90c5cdf4977f2c130bdfceeff84ad704f1d3316e5e4d7b5b",
+        "text" : "db.collection.find( { a: { $bitsAnyClear: BinData(0, \"MA==\") } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "be438998c43b5be0fca519f7977b02c4867cc105080b05b2bdd562c10031066a",
+        "text" : "{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20.0, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "BinData Bitmask",
+      "fixture" : "query/filters/bitsAnyClear/binDataBitmask",
+      "fixtureFiles" : {
+        "action.json" : "ad9bf044a12d2a5c90c5cdf4977f2c130bdfceeff84ad704f1d3316e5e4d7b5b",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "be438998c43b5be0fca519f7977b02c4867cc105080b05b2bdd562c10031066a",
+        "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "5bf0e04dd403bd1ef21eda74577dd97365819bce",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnyClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/binDataBitmask/scenario.json",
+    "scenarioSha256" : "458fa543a69e6fc6fec6d8b4db807a802d09a1992e79aef7fb61eb5cd20d6233",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testBinDataBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "15c571d095dd0f6cf27fe8fe9644188d3a00e8569cc3da49266d9368c2377452",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "0d88a02cc24602bf771cc40e75a5c630b87c1487b3e700a9ad873799be5d1d0e",
+      "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+    },
+    "fixture" : "query/filters/bitsAnyClear/bitPositionArray",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnyClear(\"a\", new int[] { 1, 5 })));\n    }",
+    "legacyBodySha256" : "a753f949b2191f9e31637d1d90eebfe74a5426c133cd8ea03e72070aeda23227",
+    "legacyMethod" : "testBitPositionArray",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnyClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "15c571d095dd0f6cf27fe8fe9644188d3a00e8569cc3da49266d9368c2377452",
+        "text" : "db.collection.find( { a: { $bitsAnyClear: [ 1, 5 ] } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "0d88a02cc24602bf771cc40e75a5c630b87c1487b3e700a9ad873799be5d1d0e",
+        "text" : "{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20.0, \"binaryValueofA\" : \"00010100\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Bit Position Array",
+      "fixture" : "query/filters/bitsAnyClear/bitPositionArray",
+      "fixtureFiles" : {
+        "action.json" : "15c571d095dd0f6cf27fe8fe9644188d3a00e8569cc3da49266d9368c2377452",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "0d88a02cc24602bf771cc40e75a5c630b87c1487b3e700a9ad873799be5d1d0e",
+        "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "5bf0e04dd403bd1ef21eda74577dd97365819bce",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnyClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/bitPositionArray/scenario.json",
+    "scenarioSha256" : "91badfca0b2a0c2ed6f260bb7475b354597a7d218f975eb13b37d4113af4a405",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testBitPositionArray"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "60c07f0a3a856349962f97281674230ac317211544706009a6d4b46e5a871d09",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+      "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+    },
+    "fixture" : "query/filters/bitsAnyClear/integerBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnyClear(\"a\", 35)));\n    }",
+    "legacyBodySha256" : "bc81a7e94941b56aeb265e93369053202457a4b20ff3a9c1bfd4a49332614428",
+    "legacyMethod" : "testIntegerBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnyClear",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "60c07f0a3a856349962f97281674230ac317211544706009a6d4b46e5a871d09",
+        "text" : "db.collection.find( { a: { $bitsAnyClear: 35 } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }\n{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20.0, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Integer Bitmask",
+      "fixture" : "query/filters/bitsAnyClear/integerBitmask",
+      "fixtureFiles" : {
+        "action.json" : "60c07f0a3a856349962f97281674230ac317211544706009a6d4b46e5a871d09",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+        "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "5bf0e04dd403bd1ef21eda74577dd97365819bce",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnyClear.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/integerBitmask/scenario.json",
+    "scenarioSha256" : "fe57afdb32dd002fe2c2986bc1827219cb1e52098810ab8edc492e5e4ed14daa",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testIntegerBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "b532e69337963de6331f51913caf8041decc126e76a628c839dd3cfb83e3104e",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+      "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+    },
+    "fixture" : "query/filters/bitsAnySet/binDataBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnySet(\"a\", new byte[] { 48 })));\n    }",
+    "legacyBodySha256" : "ca3e56692cf58c16dacd2ba5960ffa331a395acf497adae280695f778cc773a7",
+    "legacyMethod" : "testBinDataBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnySet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "b532e69337963de6331f51913caf8041decc126e76a628c839dd3cfb83e3104e",
+        "text" : "db.collection.find( { a: { $bitsAnySet: BinData(0, \"MA==\") } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }\n{ \"_id\" : 2, \"a\" : 20, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 3, \"a\" : 20.0, \"binaryValueofA\" : \"00010100\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "BinData Bitmask",
+      "fixture" : "query/filters/bitsAnySet/binDataBitmask",
+      "fixtureFiles" : {
+        "action.json" : "b532e69337963de6331f51913caf8041decc126e76a628c839dd3cfb83e3104e",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "e6d431b08e059905512fab17afa5658d4116d6d015cbcf2754810aaf76ac9b65",
+        "name" : "50333ed01b0270ec629fe2c3f0520495e0fb39de114fe8e0c243e72a2ba06164"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "d520b515dec6566e81ed71559966fde21a97539f",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnySet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnySet/binDataBitmask/scenario.json",
+    "scenarioSha256" : "e999e63ec7435c4206fa42890fac3924337ca308964a97e5b3230b0b71a77544",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testBinDataBitmask"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "ad13984b4dcb507dca9002bf6a74d5ade85fad589e95dd0f485bc995edd3a60c",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+      "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+    },
+    "fixture" : "query/filters/bitsAnySet/bitPositionArray",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnySet(\"a\", new int[] { 1, 5 })));\n    }",
+    "legacyBodySha256" : "1378246f4cdbdf1c09256d53e5526eaad51b8941cb19f948ee1416201b435016",
+    "legacyMethod" : "testBitPositionArray",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnySet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "ad13984b4dcb507dca9002bf6a74d5ade85fad589e95dd0f485bc995edd3a60c",
+        "text" : "db.collection.find( { a: { $bitsAnySet: [ 1, 5 ] } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Bit Position Array",
+      "fixture" : "query/filters/bitsAnySet/bitPositionArray",
+      "fixtureFiles" : {
+        "action.json" : "ad13984b4dcb507dca9002bf6a74d5ade85fad589e95dd0f485bc995edd3a60c",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "name" : "aa08f2e6d8e1623ed20dc2af71a8f01a7daf8d5d7cf84d321ba6e1ec6ac34fae"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "d520b515dec6566e81ed71559966fde21a97539f",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnySet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnySet/bitPositionArray/scenario.json",
+    "scenarioSha256" : "66728f9cb4f525fb3e8644770d0dde277459f645d2d859d4d5db565c134ee7ba",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testBitPositionArray"
+  }, {
+    "bodyEdit" : null,
+    "fileEdits" : {
+      "data.json" : {
+        "fromSha256" : "3413e8ba8893122ee55df1ca8af435f233b396a991ca9b5515e02dad3db702c5",
+        "reason" : "The third document's a is 20, as the page's mongosh insert stores it (an Int32); the fixture had 20.0, a Double, with no lock recording why."
+      }
+    },
+    "files" : {
+      "action.json" : "02b964a72f8323c7d1536465ddab78f7122ca51ecf97e0e43f8e05d8365b5622",
+      "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+      "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+      "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+    },
+    "fixture" : "query/filters/bitsAnySet/integerBitmask",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(bitsAnySet(\"a\", 35)));\n    }",
+    "legacyBodySha256" : "1ab018fcadac225c4191405eeb3eb1b7290d8a7673e7738c14831395b8e98842",
+    "legacyMethod" : "testIntegerBitmask",
+    "legacyType" : "dev.morphia.test.query.filters.TestBitsAnySet",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "02b964a72f8323c7d1536465ddab78f7122ca51ecf97e0e43f8e05d8365b5622",
+        "text" : "db.collection.find( { a: { $bitsAnySet: 35 } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "396e48ff38b3c46971f463feb6b190a4e6361088fbfaecd9d69c507cc92c8633",
+        "text" : "db.collection.insertMany([\n  { _id: 1, a: 54, binaryValueofA: \"00110110\" },\n  { _id: 2, a: 20, binaryValueofA: \"00010100\" },\n  { _id: 3, a: 20.0, binaryValueofA: \"00010100\" },\n  { _id: 4, a: BinData(0, \"Zg==\"), binaryValueofA: \"01100110\" }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "text" : "{ \"_id\" : 1, \"a\" : 54, \"binaryValueofA\" : \"00110110\" }\n{ \"_id\" : 4, \"a\" : BinData(0,\"Zg==\"), \"binaryValueofA\" : \"01100110\" }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Integer Bitmask",
+      "fixture" : "query/filters/bitsAnySet/integerBitmask",
+      "fixtureFiles" : {
+        "action.json" : "02b964a72f8323c7d1536465ddab78f7122ca51ecf97e0e43f8e05d8365b5622",
+        "data.json" : "9e73e8772cf2a4556ce9913a5c52836d94fa285cd9695c0333e78286c6757088",
+        "expected.json" : "9bd47bb152c462f59d780aa2880d4563d40a79e84abe33c0381cac6329a34b83",
+        "name" : "0a80eb47e534935e3d7ec0571cc9d43d19ee7717d1164c03261ee0c0a8728370"
+      },
+      "includes" : [ {
+        "blob" : "afbd145c74b39307f276191e848f7b1fd3d4abfc",
+        "path" : "source/includes/extracts-fact-query-bitwise.yaml"
+      }, {
+        "blob" : "8c0e5bd69b54bae71656f0530221d81ecc617c2e",
+        "path" : "source/includes/fact-bindata-endian.rst"
+      } ],
+      "origin" : "74483d2d9c9a6a475ee0531f55b365f7b18bd8af",
+      "pageBlob" : "d520b515dec6566e81ed71559966fde21a97539f",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "1cf4196013fa93644ac656e716874c8f6d9248b6",
+        "path" : "source/reference/operator/query/bitsAnySet.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/bitsAnySet/integerBitmask/scenario.json",
+    "scenarioSha256" : "b95bcc316ae12aba658884bafec3b4a88903d8331115c4dcd730a6f993014a55",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testIntegerBitmask"
+  }, {
+    "bodyEdit" : null,
     "files" : {
       "action.json" : "8701a8532da8f23eeec49d42078bd9cf58ac0057f8beb1216118171d38bcbea5",
       "lock" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",

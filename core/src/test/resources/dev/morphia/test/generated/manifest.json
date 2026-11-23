@@ -1431,6 +1431,66 @@
     "test" : "dev.morphia.test.query.filters.TestAnd#testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllClear/binDataBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllClear/binDataBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testBinDataBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllClear/bitPositionArray",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllClear/bitPositionArray/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testBitPositionArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllClear/integerBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllClear/integerBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllClear#testIntegerBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllSet/binDataBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllSet/binDataBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testBinDataBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllSet/bitPositionArray",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllSet/bitPositionArray/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testBitPositionArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAllSet/integerBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAllSet/integerBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAllSet#testIntegerBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnyClear/binDataBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnyClear/binDataBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testBinDataBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnyClear/bitPositionArray",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnyClear/bitPositionArray/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testBitPositionArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnyClear/integerBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnyClear/integerBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnyClear#testIntegerBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnySet/binDataBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnySet/binDataBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testBinDataBitmask"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnySet/bitPositionArray",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnySet/bitPositionArray/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testBitPositionArray"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/bitsAnySet/integerBitmask",
+    "scenario" : "/dev/morphia/test/query/filters/bitsAnySet/integerBitmask/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestBitsAnySet#testIntegerBitmask"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/box/boxQueryPredicateOperator",
     "scenario" : "/dev/morphia/test/query/filters/box/boxQueryPredicateOperator/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestBox#testBoxQueryPredicateOperator"
@@ -2932,6 +2992,54 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/and/andQueriesWithMultipleExpressionsSpecifyingTheSameOperator/scenario.json",
     "sha256" : "81cfdb08330b35253eaed197446465985aab7b32b73851cea29a2d2e68644aba"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllClear/binDataBitmask/scenario.json",
+    "sha256" : "987233f6aecea1b0032daab89a8c30e4b27a133e6b643daf7bb294d108482400"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllClear/bitPositionArray/scenario.json",
+    "sha256" : "3bb3b70262f6b39dfae7aa99abeeb614751b57ae34502242f16d89d4d23a0bf5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllClear/integerBitmask/scenario.json",
+    "sha256" : "36200eac51e74286ead2c4d97fb1372b636601ac0dd582e16347b44f685d4fa9"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllSet/binDataBitmask/scenario.json",
+    "sha256" : "262a36aacd368982263b577b85ae85b250106e8c2b230fa888c8384b6ee3f1c8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllSet/bitPositionArray/scenario.json",
+    "sha256" : "b026bae3c0203949fc87a2d9e6e12345a05ea5a98de39309d795d078f6a56567"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAllSet/integerBitmask/scenario.json",
+    "sha256" : "80a2bc067de5207ee7b77f4aa764fc300e3fab9310486bbfd8dfc254bf70a9ee"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/binDataBitmask/scenario.json",
+    "sha256" : "458fa543a69e6fc6fec6d8b4db807a802d09a1992e79aef7fb61eb5cd20d6233"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/bitPositionArray/scenario.json",
+    "sha256" : "91badfca0b2a0c2ed6f260bb7475b354597a7d218f975eb13b37d4113af4a405"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnyClear/integerBitmask/scenario.json",
+    "sha256" : "fe57afdb32dd002fe2c2986bc1827219cb1e52098810ab8edc492e5e4ed14daa"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnySet/binDataBitmask/scenario.json",
+    "sha256" : "e999e63ec7435c4206fa42890fac3924337ca308964a97e5b3230b0b71a77544"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnySet/bitPositionArray/scenario.json",
+    "sha256" : "66728f9cb4f525fb3e8644770d0dde277459f645d2d859d4d5db565c134ee7ba"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/bitsAnySet/integerBitmask/scenario.json",
+    "sha256" : "b95bcc316ae12aba658884bafec3b4a88903d8331115c4dcd730a6f993014a55"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/box/boxQueryPredicateOperator/scenario.json",

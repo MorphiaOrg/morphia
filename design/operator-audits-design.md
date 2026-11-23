@@ -297,6 +297,8 @@ losing what the locks protected:
 5. **Convert.** `FormMainKt convert` replaces a fixture's files with a scenario built from its
    documented source, and records the move in `fixture-migration.json`. A case that converts but
    fails a strict check is reverted and recorded in `cutover.json` as legacy-only, with the failing
+   check. When a legacy test body or fixture file had to change first, the ledger records the
+   change as a reviewed edit with the digest it started from, so the preserved originals still
    check.
 
 Fixtures that no documented source reproduces stay on the legacy loader. The progress file tracks

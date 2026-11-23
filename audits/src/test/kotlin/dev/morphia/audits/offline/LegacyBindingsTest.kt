@@ -305,7 +305,7 @@ class LegacyBindingsTest {
             forms.overrides.associate {
                 val lock = requireNotNull(it.retiredLock)
                 "core/src/test/resources/dev/morphia/test/${it.fixture}/${lock.name}" to lock.sha256
-            } + FixtureMigration.retired(migration),
+            } + FixtureMigration.preserved(migration),
         )
         FixtureMigration.verify(
             root,

@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 351 legacy cases (350 converted, 1 migrated), plus 1 generated case.
+- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 1 generated case.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (197 pages read; 300 examples owned,
   32 unowned, 11 unnamed), reviewed DSL bindings checked against core's API, and the
@@ -47,10 +47,10 @@ Step 5, generation and cutover:
   `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
 - **Reviewed names** for the 11 examples with generic titles.
-- **The remaining legacy fixtures:** 205 directories.
+- **The remaining legacy fixtures:** 193 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
   - 23 are legacy-only in `cutover.json`.
-  - 81 never-locked fixtures have no pinned reference.
+  - 69 never-locked fixtures have no pinned reference.
 - **Deferred cutover features:** documented projections (`findOptions`), indexes, alternative
   commands.
 
@@ -2574,3 +2574,19 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   recorded as reviewed body edits.
 - Totals: ledger 351 cases; 23 legacy-only; form report 4 overrides; 205 legacy directories. Core
   operator tests: 678 under each mapper; audits: 452.
+
+## $bits* seed data (2026-11-23)
+
+- Branch audits-bits-seed, from the #4547 finding. The 12 `$bitsAllClear`/`$bitsAllSet`/
+  `$bitsAnyClear`/`$bitsAnySet` fixtures share seed data whose third document had `a: 20.0`, a
+  Double. The page seeds it through mongosh, which stores the whole-number literal as an Int32, so
+  no reference reproduced them (RESIDUAL_DIFFERENCE, TYPE at `/2/a`). The seed now has `a: 20`.
+- `legacy-references.json` gains the 12 references, spliced in with the sources the unresolved
+  entries had pinned (a fresh `references` run would re-derive every pin against today's tree,
+  where most fixtures have already converted). All 12 convert and pass under both mappers.
+- The ledger records each changed `data.json` as a reviewed `fileEdits` entry (the preserved
+  digest it started from, and why), so the preservation check still holds every retired file to
+  the corpus snapshot. `FixtureMigration.verify` rejects an edit of a file the move did not remove,
+  one that changes nothing, or one without a reason.
+- Totals: ledger 363 cases; references 251, unresolved 69; 193 legacy directories. Core operator
+  tests: 678 under each mapper; audits: 453.

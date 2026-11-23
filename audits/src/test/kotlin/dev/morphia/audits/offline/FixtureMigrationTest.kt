@@ -97,6 +97,42 @@ class FixtureMigrationTest {
         assertTrue("does not start from the recorded body" in edit.message!!, edit.message)
     }
 
+    /**
+     * A fixture file may change before it retires only through a reviewed edit of a removed file.
+     */
+    @Test
+    fun aFileEditMustChangeARemovedFileForAReason() {
+        val review = AuditJson.formReview(read("audits/catalog/form-review.json"))
+        val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
+        val references = AuditJson.legacyReferences(read("audits/catalog/legacy-references.json"))
+        val edited = ledger.migrations.first { it.fileEdits.isNotEmpty() }
+        val (name, edit) = edited.fileEdits.entries.first()
+        assertEquals(
+            edit.fromSha256,
+            FixtureMigration.preserved(ledger)[edited.scenario.substringBeforeLast('/') + "/$name"],
+        )
+        listOf(
+                mapOf(name to edit.copy(fromSha256 = edited.files.getValue(name))) to
+                    "changes nothing",
+                mapOf(name to edit.copy(reason = " ")) to "has no reason",
+                mapOf("other.json" to edit) to "was not removed",
+            )
+            .forEach { (edits, problem) ->
+                val tampered =
+                    ledger.copy(
+                        migrations =
+                            ledger.migrations.map {
+                                if (it == edited) it.copy(fileEdits = edits) else it
+                            }
+                    )
+                val failure =
+                    assertThrows(IllegalArgumentException::class.java) {
+                        FixtureMigration.verify(root, tampered, inventory, review, references)
+                    }
+                assertTrue(problem in failure.message!!, failure.message)
+            }
+    }
+
     @Test
     fun theLedgersOverrideMustMatchItsReviewedDeclaration() {
         val review = AuditJson.formReview(read("audits/catalog/form-review.json"))

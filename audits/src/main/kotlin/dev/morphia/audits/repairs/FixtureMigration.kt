@@ -1,5 +1,6 @@
 package dev.morphia.audits.repairs
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.bindings.LegacyBindingCatalog
 import dev.morphia.audits.bindings.LegacyBindings
 import dev.morphia.audits.published.PublishedDocument
@@ -50,7 +51,19 @@ data class MigratedFixture(
     val options: List<OptionCall> = emptyList(),
     /** A reviewed edit of a converted case's legacy body, made so that its strict checks hold. */
     val bodyEdit: BodyEdit? = null,
+    /**
+     * Reviewed edits of legacy fixture files made before the move, by file name; [files] holds the
+     * edited digest. Omitted from the ledger when empty.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
+    val fileEdits: Map<String, FileEdit> = emptyMap(),
 )
+
+/**
+ * A reviewed edit of a legacy fixture file: [fromSha256] is the digest the preserved corpus
+ * records, and [reason] says why the file changed before it retired.
+ */
+data class FileEdit(val fromSha256: String, val reason: String)
 
 /**
  * A reviewed edit of a legacy test body: [fromSha256] is the body digest the frozen binding catalog
@@ -605,6 +618,20 @@ object FixtureMigration {
             .toMap()
 
     /**
+     * [retired] as the preserved corpus knows it: a file with a reviewed [FileEdit] has the digest
+     * the edit started from.
+     */
+    fun preserved(ledger: FixtureMigrationLedger): Map<String, String> =
+        ledger.migrations
+            .flatMap { migrated ->
+                migrated.files.map { (name, digest) ->
+                    "$resources${migrated.fixture}/$name" to
+                        (migrated.fileEdits[name]?.fromSha256 ?: digest)
+                }
+            }
+            .toMap()
+
+    /**
      * [catalog] without the legacy methods the migration moved, each exactly as recorded, and with
      * each converted method's reviewed [BodyEdit] applied: the catalog must record the body the
      * edit starts from, and then records the edited one.
@@ -777,6 +804,16 @@ object FixtureMigration {
                     listOfNotNull(migrated.override.retiredLock?.let { it.name to it.sha256 })
             if (migrated.files != expectedFiles) {
                 problems += "${migrated.fixture}: removed files differ from the override"
+            }
+            migrated.fileEdits.forEach { (name, edit) ->
+                when {
+                    name !in migrated.files ->
+                        problems += "${migrated.fixture}: edited file $name was not removed"
+                    edit.fromSha256 == migrated.files[name] ->
+                        problems += "${migrated.fixture}: edit of $name changes nothing"
+                    edit.reason.isBlank() ->
+                        problems += "${migrated.fixture}: edit of $name has no reason"
+                }
             }
             val scenario = root.resolve(migrated.scenario)
             if (
