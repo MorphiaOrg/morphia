@@ -13,6 +13,7 @@ import dev.morphia.audits.semantics.BsonDifferenceKind
 import dev.morphia.audits.semantics.BsonPath
 import dev.morphia.audits.shell.AggregateOperation
 import dev.morphia.audits.shell.FindOperation
+import dev.morphia.audits.shell.IndexOperation
 import dev.morphia.audits.shell.InsertOperation
 import dev.morphia.audits.shell.LegacyDocuments
 import dev.morphia.audits.shell.ProgramBlock
@@ -175,6 +176,13 @@ enum class BlockRole {
 data class SourceBlock(val role: BlockRole, val text: String, val sha256: String)
 
 /** A documented operation in BSON: seed data by collection, the action, and its printed result. */
+/** An index the page creates: its collection, key document and `createIndex` options. */
+data class DocumentedIndex(
+    val collection: String,
+    val keys: BsonDocument,
+    val options: BsonDocument?,
+)
+
 data class DocumentedScenario(
     val collection: String,
     val data: Map<String, List<BsonDocument>>,
@@ -193,6 +201,8 @@ data class DocumentedScenario(
      * addresses. The scenario never carries them; see [printed].
      */
     val documents: List<BsonValue>? = null,
+    /** The indexes the page creates before the action, in order. */
+    val indexes: List<DocumentedIndex> = emptyList(),
 )
 
 data class FormOverride(
@@ -998,7 +1008,6 @@ object FormMigration {
         val action = documented.alternatives.single()
         require(shape == null || action.shape == shape) { "$label: action is ${action.shape}" }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
-        require(blocks.none { it.role == BlockRole.INDEX }) { "$label: indexes are not supported" }
         val printed =
             if (expected.isEmpty()) null
             else
@@ -1015,6 +1024,7 @@ object FormMigration {
             printed,
             action.many,
             listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
+            indexes = documented.indexes,
         )
     }
 
@@ -1051,6 +1061,7 @@ object FormMigration {
         val alternatives: List<Action>,
         val collection: String,
         val data: Map<String, List<BsonValue>>,
+        val indexes: List<DocumentedIndex> = emptyList(),
     )
 
     private fun documented(blocks: List<SourceBlock>): Any {
@@ -1070,18 +1081,39 @@ object FormMigration {
                     blocks =
                         programs.mapIndexed { index, block ->
                             ProgramBlock("data$index", block.text, ProgramRole.SETUP)
-                        } + ProgramBlock("action", action.text, ProgramRole.ACTION),
+                        } +
+                            blocks
+                                .filter { it.role == BlockRole.INDEX }
+                                .mapIndexed { index, block ->
+                                    ProgramBlock("index$index", block.text, ProgramRole.SETUP)
+                                } +
+                            ProgramBlock("action", action.text, ProgramRole.ACTION),
                 )
             )
         if (program.state != ShellLiteralState.NORMALIZED) {
             return gap(FormGap.SOURCE_UNSUPPORTED, program.problems.joinToString { it.code })
         }
-        val inserts =
-            program.commands
-                .filter { it.role == ProgramRole.SETUP }
+        val setup = program.commands.filter { it.role == ProgramRole.SETUP }
+        setup
+            .firstOrNull { it.operation !is InsertOperation && it.operation !is IndexOperation }
+            ?.let {
+                return gap(FormGap.SOURCE_UNSUPPORTED, "setup ${it.operation.kind}")
+            }
+        val inserts = setup.filter { it.operation is InsertOperation }
+        val indexes =
+            setup
+                .filter { it.operation is IndexOperation }
                 .map {
-                    it.operation as? InsertOperation
-                        ?: return gap(FormGap.SOURCE_UNSUPPORTED, "setup ${it.operation.kind}")
+                    val index = it.operation as IndexOperation
+                    DocumentedIndex(
+                        it.namespace?.collection
+                            ?: return gap(
+                                FormGap.SOURCE_UNSUPPORTED,
+                                "an index without a collection",
+                            ),
+                        index.keys.value().asDocument(),
+                        index.options?.value()?.asDocument(),
+                    )
                 }
         val commands = program.commands.filter { it.role == ProgramRole.ACTION }
         if (commands.isEmpty() || commands.map { it.namespace }.toSet().size != 1) {
@@ -1096,11 +1128,9 @@ object FormMigration {
         }
         val collection = commands.first().namespace!!.collection
         val inserted =
-            program.commands
-                .filter { it.role == ProgramRole.SETUP }
-                .zip(inserts)
-                .groupBy({ it.first.namespace!!.collection }) { (_, insert) ->
-                    insert.documents.map { it.value() }
+            inserts
+                .groupBy({ it.namespace!!.collection }) { command ->
+                    (command.operation as InsertOperation).documents.map { it.value() }
                 }
                 .mapValues { (_, documents) -> documents.flatten() }
         // A listing names no collection; it is the action's only when nothing else is documented.
@@ -1153,7 +1183,7 @@ object FormMigration {
         if (alternatives.map { it.shape to it.many }.toSet().size != 1) {
             return gap(FormGap.SOURCE_UNSUPPORTED, "action commands of different kinds")
         }
-        return Documented(alternatives, collection, data)
+        return Documented(alternatives, collection, data, indexes)
     }
 
     private fun reproduce(

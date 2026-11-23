@@ -1706,6 +1706,41 @@
     "test" : "dev.morphia.test.query.filters.TestRegex#testExtendRegexOptionsToMatchCharactersOutsideOfAscii"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/text/caseAndDiacriticInsensitivity",
+    "scenario" : "/dev/morphia/test/query/filters/text/caseAndDiacriticInsensitivity/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testCaseAndDiacriticInsensitivity"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/caseSensitivity",
+    "scenario" : "/dev/morphia/test/query/filters/text/caseSensitivity/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testCaseSensitivity"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/excludeDocumentsThatContainATerm",
+    "scenario" : "/dev/morphia/test/query/filters/text/excludeDocumentsThatContainATerm/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testExcludeDocumentsThatContainATerm"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/matchAnyOfTheSearchTerms",
+    "scenario" : "/dev/morphia/test/query/filters/text/matchAnyOfTheSearchTerms/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testMatchAnyOfTheSearchTerms"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/queryADifferentLanguage",
+    "scenario" : "/dev/morphia/test/query/filters/text/queryADifferentLanguage/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testQueryADifferentLanguage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/textWithASingleWord",
+    "scenario" : "/dev/morphia/test/query/filters/text/textWithASingleWord/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testTextWithASingleWord"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/textWithAnExactString",
+    "scenario" : "/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testTextWithAnExactString"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/updates/addToSet/eachModifier",
     "scenario" : "/dev/morphia/test/query/updates/addToSet/eachModifier/scenario.json",
     "test" : "dev.morphia.test.query.updates.TestAddToSet#testEachModifier"
@@ -3321,6 +3356,34 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii/scenario.json",
     "sha256" : "4f628b36f14ba15d1ad3003a1a79889e4db218c46bb2bd861f52a91986155fb9"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/caseAndDiacriticInsensitivity/scenario.json",
+    "sha256" : "23a6ed77264099ff60097e58840384f08ba1d4e7ea951530cc7effd614a57aa5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/caseSensitivity/scenario.json",
+    "sha256" : "ab0dbfb8650d82cf58f4c8c0c3be0b04fb175e1b286e166ee3d3555fc5f09509"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/excludeDocumentsThatContainATerm/scenario.json",
+    "sha256" : "c733276cfe0aef91ad6305d9c68fea17d686c2d51d7682045517d8dbc5cb279a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/matchAnyOfTheSearchTerms/scenario.json",
+    "sha256" : "c57491c7d383c8f957cc749980aaecdc30cbe5c0fcdcb99c7dab6f8acf6072fd"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/queryADifferentLanguage/scenario.json",
+    "sha256" : "f96a5fc66dd8a48fa6ffcaa220857295d31e777347cf7c8f0d3adadffa7506e5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/textWithASingleWord/scenario.json",
+    "sha256" : "ba224a69fbd007e2e2be7cccee3e9cea001198df133b119ed7edb5dae00da5b3"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
+    "sha256" : "eb71dbdc9a7918a19a15f805128266ed7383946a1a18134634a8dee607563b60"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/updates/addToSet/eachModifier/scenario.json",

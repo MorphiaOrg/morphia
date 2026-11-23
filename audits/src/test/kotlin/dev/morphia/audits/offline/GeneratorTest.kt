@@ -201,6 +201,7 @@ class GeneratorTest {
             |Match Larger Quantities
             |~~~~~~~~~~~~~~~~~~~~~~~
             |
+            |${block("db.inventory.createIndex( { qty: 1 }, { name: \"byQty\" } )")}
             |${block("db.inventory.find( { qty: { ${'$'}gt: 20 } } )")}
             |Project the Quantity
             |~~~~~~~~~~~~~~~~~~~~
@@ -257,6 +258,18 @@ class GeneratorTest {
                 "core/src/test/java/dev/morphia/test/generated/filters/TestGt.java"
             )
         assertTrue("(query) -> query.filter(gt(\"qty\", 20)));" in find, find)
+        // The page's index travels with the case; the runner creates it before the action.
+        val found = generation.cases.first().manifest
+        assertEquals(
+            BsonDocument.parse(
+                "{collection: 'inventory', keys: {qty: 1}, options: {name: 'byQty'}}"
+            ),
+            BsonDocument.parse(
+                    generation.files.getValue("core/src/test/resources${found.scenario}")
+                )
+                .getArray("indexes")
+                .single(),
+        )
         val update =
             generation.files.getValue(
                 "core/src/test/java/dev/morphia/test/generated/updates/TestInc.java"

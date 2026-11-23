@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 14 generated cases.
+- **On the runner:** 370 legacy cases (369 converted, 1 migrated), plus 14 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
@@ -44,13 +44,13 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The remaining legacy fixtures:** 193 directories.
+- **The remaining legacy fixtures:** 186 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
-  - 23 are legacy-only in `cutover.json`.
+  - 16 are legacy-only in `cutover.json`.
   - 69 never-locked fixtures have no pinned reference.
 - **Deferred cutover features:** documented projections (`findOptions`), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
-  the filter's matches), indexes, alternative commands.
+  the filter's matches), alternative commands.
 - **The stage pages' family** (41 unowned examples, most on sample datasets).
 
 Step 6, monitoring:
@@ -2656,4 +2656,14 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   14 in all. `$[]`'s negation example is excluded: the page prints the whole collection after the
   update, while the runner's update results are the filter's matches. Most query and update gaps
   are documented projections (5) and `arrayFilters` update options (5).
+- Core: 692 tests under each mapper; audits: 458.
+
+## Documented indexes (2026-11-23)
+
+- Branch audits-indexes. `FormMigration.documented` lowers a page's `createIndex` blocks as setup
+  (`ShellPrograms` already parsed them as `IndexOperation`); the scenario's `indexes` lists each
+  with its collection, keys and options. The runner creates them on both databases after seeding,
+  through `createIndexes`, naming an unnamed index as the shell does.
+- The seven `$text` cases that were legacy-only because "the page creates an index" convert and
+  pass under both mappers. Legacy-only: 16; 186 legacy directories; 370 cases on the runner.
 - Core: 692 tests under each mapper; audits: 458.

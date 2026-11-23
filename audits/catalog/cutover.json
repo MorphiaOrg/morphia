@@ -64,34 +64,6 @@
     "check" : "SOURCE",
     "detail" : "the page documents a projection, which needs the unmapped findOptions",
     "fixture" : "query/filters/nin/selectOnUnmatchingDocuments"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/caseAndDiacriticInsensitivity"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/caseSensitivity"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/excludeDocumentsThatContainATerm"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/matchAnyOfTheSearchTerms"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/queryADifferentLanguage"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/textWithASingleWord"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page creates an index, which the runner does not seed yet",
-    "fixture" : "query/filters/text/textWithAnExactString"
   } ],
   "schemaVersion" : 1
 }

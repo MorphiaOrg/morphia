@@ -21999,6 +21999,675 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "64ce876f0a2d0abcbfb062ede7d8cde5315a3e02bf095003d5be54740906e9a8",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "718343e8c49f48031ab03311a58dc720f7e23080a9cb1b561c1caed8e5f3a9ad",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "5bdd682a6d39e9aabc4758c0bee928a1a20274d47d04b0f2e612893b4940364f"
+    },
+    "fixture" : "query/filters/text/caseAndDiacriticInsensitivity",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text(\"сы́рники CAFÉS\")));\n    }",
+    "legacyBodySha256" : "53387f665a2ef1cb2ad7acf62a4dacb232bd7442cb4336a439fc55d1f74484a4",
+    "legacyMethod" : "testCaseAndDiacriticInsensitivity",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "64ce876f0a2d0abcbfb062ede7d8cde5315a3e02bf095003d5be54740906e9a8",
+        "text" : "db.articles.find( { $text: { $search: \"сы́рники CAFÉS\" } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "718343e8c49f48031ab03311a58dc720f7e23080a9cb1b561c1caed8e5f3a9ad",
+        "text" : "{ \"_id\" : 6, \"subject\" : \"Сырники\", \"author\" : \"jkl\", \"views\" : 80 }\n{ \"_id\" : 5, \"subject\" : \"Café Con Leche\", \"author\" : \"abc\", \"views\" : 200 }\n{ \"_id\" : 8, \"subject\" : \"Cafe con Leche\", \"author\" : \"xyz\", \"views\" : 10 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Case and Diacritic Insensitivity",
+      "fixture" : "query/filters/text/caseAndDiacriticInsensitivity",
+      "fixtureFiles" : {
+        "action.json" : "64ce876f0a2d0abcbfb062ede7d8cde5315a3e02bf095003d5be54740906e9a8",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "718343e8c49f48031ab03311a58dc720f7e23080a9cb1b561c1caed8e5f3a9ad",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "5bdd682a6d39e9aabc4758c0bee928a1a20274d47d04b0f2e612893b4940364f"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/caseAndDiacriticInsensitivity/scenario.json",
+    "scenarioSha256" : "23a6ed77264099ff60097e58840384f08ba1d4e7ea951530cc7effd614a57aa5",
+    "test" : "dev.morphia.test.query.filters.TestText#testCaseAndDiacriticInsensitivity"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "81875123377e8448b50c704360892d86ae025cc159ce43e4f045d5c167ec8892",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "aef80b17cc741ef65940378945b5c7a3615400b379cbc62b0ba13a1c1d49aea3"
+    },
+    "fixture" : "query/filters/text/caseSensitivity",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(text(\"Coffee\").caseSensitive(true)));\n    }",
+    "legacyBodySha256" : "d78054fed195f67986e6352cc4322a03fbaba97be45499a2fc370204daa95e61",
+    "legacyMethod" : "testCaseSensitivity",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "81875123377e8448b50c704360892d86ae025cc159ce43e4f045d5c167ec8892",
+        "text" : "db.articles.find( { $text: { $search: \"Coffee\", $caseSensitive: true } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+        "text" : "{ \"_id\" : 2, \"subject\" : \"Coffee Shopping\", \"author\" : \"efg\", \"views\" : 5 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Case Sensitivity",
+      "fixture" : "query/filters/text/caseSensitivity",
+      "fixtureFiles" : {
+        "action.json" : "81875123377e8448b50c704360892d86ae025cc159ce43e4f045d5c167ec8892",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "aef80b17cc741ef65940378945b5c7a3615400b379cbc62b0ba13a1c1d49aea3"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/caseSensitivity/scenario.json",
+    "scenarioSha256" : "ab0dbfb8650d82cf58f4c8c0c3be0b04fb175e1b286e166ee3d3555fc5f09509",
+    "test" : "dev.morphia.test.query.filters.TestText#testCaseSensitivity"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "f63c6366a8c1f31f0df7664200dfab26d13237401f64232be0639d7af23cb24e",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "c338efdcf5b52e249a211150d8351e9a958c82d0622ef15e8518dd3b0c825107",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "a610c041c20b6b8db55e24d60e18de91fada2cb8089568fe6c45dccd21305833"
+    },
+    "fixture" : "query/filters/text/excludeDocumentsThatContainATerm",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text(\"coffee -shop\")\n\n        ));\n    }",
+    "legacyBodySha256" : "788a1e957f4b85412fb278ded4432217b9aecbb79605372ed8dd7d06b84ee40f",
+    "legacyMethod" : "testExcludeDocumentsThatContainATerm",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "f63c6366a8c1f31f0df7664200dfab26d13237401f64232be0639d7af23cb24e",
+        "text" : "db.articles.find( { $text: { $search: \"coffee -shop\" } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "c338efdcf5b52e249a211150d8351e9a958c82d0622ef15e8518dd3b0c825107",
+        "text" : "{ \"_id\" : 7, \"subject\" : \"coffee and cream\", \"author\" : \"efg\", \"views\" : 10 }\n{ \"_id\" : 1, \"subject\" : \"coffee\", \"author\" : \"xyz\", \"views\" : 50 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Exclude Documents That Contain a Term",
+      "fixture" : "query/filters/text/excludeDocumentsThatContainATerm",
+      "fixtureFiles" : {
+        "action.json" : "f63c6366a8c1f31f0df7664200dfab26d13237401f64232be0639d7af23cb24e",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "c338efdcf5b52e249a211150d8351e9a958c82d0622ef15e8518dd3b0c825107",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "a610c041c20b6b8db55e24d60e18de91fada2cb8089568fe6c45dccd21305833"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/excludeDocumentsThatContainATerm/scenario.json",
+    "scenarioSha256" : "c733276cfe0aef91ad6305d9c68fea17d686c2d51d7682045517d8dbc5cb279a",
+    "test" : "dev.morphia.test.query.filters.TestText#testExcludeDocumentsThatContainATerm"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "e31c3f035272e9f8ebfd65b067fdc4416c396b6032771bfaf98c26cc28e21317",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "408afa7415502ad24afc54b4e7731c15c3f82522a26efe36a2a79e18d80bb435",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "b33b5e757e1e52df03c65f3fc079370ace038897994f030e69cf1e7b71afae27"
+    },
+    "fixture" : "query/filters/text/matchAnyOfTheSearchTerms",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text(\"bake coffee cake\")\n\n        ));\n    }",
+    "legacyBodySha256" : "d1c111eb147c368044d4715b3795034d7bf43545f2b6eb971732f786dc9cba1e",
+    "legacyMethod" : "testMatchAnyOfTheSearchTerms",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "e31c3f035272e9f8ebfd65b067fdc4416c396b6032771bfaf98c26cc28e21317",
+        "text" : "db.articles.find( { $text: { $search: \"bake coffee cake\" } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "408afa7415502ad24afc54b4e7731c15c3f82522a26efe36a2a79e18d80bb435",
+        "text" : "{ \"_id\" : 2, \"subject\" : \"Coffee Shopping\", \"author\" : \"efg\", \"views\" : 5 }\n{ \"_id\" : 7, \"subject\" : \"coffee and cream\", \"author\" : \"efg\", \"views\" : 10 }\n{ \"_id\" : 1, \"subject\" : \"coffee\", \"author\" : \"xyz\", \"views\" : 50 }\n{ \"_id\" : 3, \"subject\" : \"Baking a cake\", \"author\" : \"abc\", \"views\" : 90 }\n{ \"_id\" : 4, \"subject\" : \"baking\", \"author\" : \"xyz\", \"views\" : 100 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Match Any of the ``$search`` Terms",
+      "fixture" : "query/filters/text/matchAnyOfTheSearchTerms",
+      "fixtureFiles" : {
+        "action.json" : "e31c3f035272e9f8ebfd65b067fdc4416c396b6032771bfaf98c26cc28e21317",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "408afa7415502ad24afc54b4e7731c15c3f82522a26efe36a2a79e18d80bb435",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "b33b5e757e1e52df03c65f3fc079370ace038897994f030e69cf1e7b71afae27"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/matchAnyOfTheSearchTerms/scenario.json",
+    "scenarioSha256" : "c57491c7d383c8f957cc749980aaecdc30cbe5c0fcdcb99c7dab6f8acf6072fd",
+    "test" : "dev.morphia.test.query.filters.TestText#testMatchAnyOfTheSearchTerms"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "b9fa3bb02ae56a01124621a33abb033306af366975ab1a2d7ffc98ea1e1b317b",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "67bee3face0b1f9582831ea3d3e2f4b19201a703cf0cfd91c56407f21d503785",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "1b8f71f920c4d7eaedf806b1d42866a730fc23727fdd5bb2fb8c99f9e91a71e4"
+    },
+    "fixture" : "query/filters/text/queryADifferentLanguage",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text(\"leche\").language(\"es\")));\n    }",
+    "legacyBodySha256" : "4bba74f04084a7c2abf143270482831efae7188094ff243a52e8b92b8246b6b6",
+    "legacyMethod" : "testQueryADifferentLanguage",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "b9fa3bb02ae56a01124621a33abb033306af366975ab1a2d7ffc98ea1e1b317b",
+        "text" : "db.articles.find(\n   { $text: { $search: \"leche\", $language: \"es\" } }\n)"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "67bee3face0b1f9582831ea3d3e2f4b19201a703cf0cfd91c56407f21d503785",
+        "text" : "{ \"_id\" : 5, \"subject\" : \"Café Con Leche\", \"author\" : \"abc\", \"views\" : 200 }\n{ \"_id\" : 8, \"subject\" : \"Cafe con Leche\", \"author\" : \"xyz\", \"views\" : 10 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Query a Different Language",
+      "fixture" : "query/filters/text/queryADifferentLanguage",
+      "fixtureFiles" : {
+        "action.json" : "b9fa3bb02ae56a01124621a33abb033306af366975ab1a2d7ffc98ea1e1b317b",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "67bee3face0b1f9582831ea3d3e2f4b19201a703cf0cfd91c56407f21d503785",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "1b8f71f920c4d7eaedf806b1d42866a730fc23727fdd5bb2fb8c99f9e91a71e4"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/queryADifferentLanguage/scenario.json",
+    "scenarioSha256" : "f96a5fc66dd8a48fa6ffcaa220857295d31e777347cf7c8f0d3adadffa7506e5",
+    "test" : "dev.morphia.test.query.filters.TestText#testQueryADifferentLanguage"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "4096e690343505113ac79cba32d028a8b1bef4d79e573161c6b1fd8b35852c52",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "1b2f58f67b6e2f3e810d1d89443973e036e603097e2ed1a0a6c891fa2c1e4efc",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "50330365b7bc2bdaef5c0d269cf698a727b1ac860f4683eeea194c255d43f74b"
+    },
+    "fixture" : "query/filters/text/textWithASingleWord",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery((query) -> query.filter(text(\"coffee\")));\n    }",
+    "legacyBodySha256" : "b1b04177420b391a214a1b0cdc17d693cebaebd35466fe389505535708d5579f",
+    "legacyMethod" : "testTextWithASingleWord",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "4096e690343505113ac79cba32d028a8b1bef4d79e573161c6b1fd8b35852c52",
+        "text" : "db.articles.find( { $text: { $search: \"coffee\" } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "1b2f58f67b6e2f3e810d1d89443973e036e603097e2ed1a0a6c891fa2c1e4efc",
+        "text" : "{ _id: 1, subject: 'coffee', author: 'xyz', views: 50 },\n{ _id: 7, subject: 'coffee and cream', author: 'efg', views: 10 },\n{ _id: 2, subject: 'Coffee Shopping', author: 'efg', views: 5 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "``$text`` with a Single Word",
+      "fixture" : "query/filters/text/textWithASingleWord",
+      "fixtureFiles" : {
+        "action.json" : "4096e690343505113ac79cba32d028a8b1bef4d79e573161c6b1fd8b35852c52",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "1b2f58f67b6e2f3e810d1d89443973e036e603097e2ed1a0a6c891fa2c1e4efc",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "50330365b7bc2bdaef5c0d269cf698a727b1ac860f4683eeea194c255d43f74b"
+      },
+      "includes" : [ {
+        "blob" : "e360d3a4c226e0d9c595ed610e494dce21b2cb47",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "e78d7ffbce773cfbca1385235582b09d9cc9a733",
+        "path" : "source/includes/fact-text-search-phrase-and-term.rst"
+      }, {
+        "blob" : "2eedcd0e0a4bc58be17eafd3d0856add713d5733",
+        "path" : "source/includes/fact-text-search-multiple-phrases.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "4e4d5dbac144984c134f2224a091f715855df525",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+      "pageBlob" : "fe7d97c80ffc0dde4edc0b15bfa1b30c8715409a",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/textWithASingleWord/scenario.json",
+    "scenarioSha256" : "ba224a69fbd007e2e2be7cccee3e9cea001198df133b119ed7edb5dae00da5b3",
+    "test" : "dev.morphia.test.query.filters.TestText#testTextWithASingleWord"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "b2c9a135d54d6206b41422cfe71237eb74afecccf351ba108f9f667122b69ed2",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "name" : "2fef2a4112caaa6502845d43475b9c2d572f722468653f93b84852c09e8d4ee6"
+    },
+    "fixture" : "query/filters/text/textWithAnExactString",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text(\"\\\"coffee shop\\\"\")\n\n        ));\n    }",
+    "legacyBodySha256" : "9b1ecd940f1bf31ce7bccb3e76e8b31a330381878966828817eb340e15096c7c",
+    "legacyMethod" : "testTextWithAnExactString",
+    "legacyType" : "dev.morphia.test.query.filters.TestText",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "b2c9a135d54d6206b41422cfe71237eb74afecccf351ba108f9f667122b69ed2",
+        "text" : "db.articles.find( { $text: { $search: \"\\\"coffee shop\\\"\" } } )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "d939a0bdb49ef917cb388d75c95a0167985d64fa7a689b44aa187d49495b4690",
+        "text" : "db.articles.insertMany( [\n     { _id: 1, subject: \"coffee\", author: \"xyz\", views: 50 },\n     { _id: 2, subject: \"Coffee Shopping\", author: \"efg\", views: 5 },\n     { _id: 3, subject: \"Baking a cake\", author: \"abc\", views: 90  },\n     { _id: 4, subject: \"baking\", author: \"xyz\", views: 100 },\n     { _id: 5, subject: \"Café Con Leche\", author: \"abc\", views: 200 },\n     { _id: 6, subject: \"Сырники\", author: \"jkl\", views: 80 },\n     { _id: 7, subject: \"coffee and cream\", author: \"efg\", views: 10 },\n     { _id: 8, subject: \"Cafe con Leche\", author: \"xyz\", views: 10 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+        "text" : "{ \"_id\" : 2, \"subject\" : \"Coffee Shopping\", \"author\" : \"efg\", \"views\" : 5 }"
+      }, {
+        "role" : "INDEX",
+        "sha256" : "17d16d38e69065181aa8c466ba2318f512838a0ab738a0290d0dd6a7cb3c4735",
+        "text" : "db.articles.createIndex( { subject: \"text\" } )"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "``$text`` with an Exact String",
+      "fixture" : "query/filters/text/textWithAnExactString",
+      "fixtureFiles" : {
+        "action.json" : "b2c9a135d54d6206b41422cfe71237eb74afecccf351ba108f9f667122b69ed2",
+        "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+        "expected.json" : "29affe37b0cb096e63b63451fd47501201873d8c93861c4f26ac841586fef34e",
+        "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+        "name" : "2fef2a4112caaa6502845d43475b9c2d572f722468653f93b84852c09e8d4ee6"
+      },
+      "includes" : [ {
+        "blob" : "e3ce5a3bd4ba114d753bdd9fe3ce91c3c8ce473d",
+        "path" : "source/includes/extracts-atlas-search-facts.yaml"
+      }, {
+        "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+        "path" : "source/includes/fact-compatibility.rst"
+      }, {
+        "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+        "path" : "source/includes/fact-environments.rst"
+      }, {
+        "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+        "path" : "source/includes/fact-environments-atlas-only.rst"
+      }, {
+        "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+        "path" : "source/includes/fact-environments-onprem-only.rst"
+      }, {
+        "blob" : "99ffff8b9dbf77ce27ea92414cf76853a348752d",
+        "path" : "source/includes/fact-text-search-language-none.rst"
+      }, {
+        "blob" : "8c95dbe444efb517395c376736ee2216096b9dfa",
+        "path" : "source/includes/list-text-search-restrictions-in-agg.rst"
+      }, {
+        "blob" : "a891f76e4032268b63849ceba85f3724e57dc430",
+        "path" : "source/includes/fact-text-search-multiword-and-term.rst"
+      }, {
+        "blob" : "50afb761bede2976f652398ce19d3338b2e21947",
+        "path" : "source/includes/fact-text-search-score.rst"
+      }, {
+        "blob" : "ce0ad62c0fd4fb744814d4c4f664366c8244e240",
+        "path" : "source/includes/extracts-4.4-changes.yaml"
+      } ],
+      "origin" : "1eadd328c067b852f4a8bed438f78bf30c52b183",
+      "pageBlob" : "505c57dcb2997450154e0fe4433a193cfe35ac9d",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "FIND",
+      "source" : {
+        "commit" : "dabbeba3f7126b90d5a32ea66ca9b59c8a105a25",
+        "path" : "source/reference/operator/query/text.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/query/filters/text/textWithAnExactString/scenario.json",
+    "scenarioSha256" : "eb71dbdc9a7918a19a15f805128266ed7383946a1a18134634a8dee607563b60",
+    "test" : "dev.morphia.test.query.filters.TestText#testTextWithAnExactString"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "745740405d9e99d1588cefbd142d35129496b53ce273519162355708abfecbdd",
       "data.json" : "8e1421a9db77213d4a205160660be2a1e901cbf617aad59e52b005af9c700edc",
       "expected.json" : "b38e82f243c70e2be12d4a7991d917b128838819b8cf2e1097efec0422431857",

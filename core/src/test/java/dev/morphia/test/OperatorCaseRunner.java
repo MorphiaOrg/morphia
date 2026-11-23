@@ -54,8 +54,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * published comparison only, a
  * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
  * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
- * and no tolerances or indexes, and a dataset only when the scenario skips its results; a scenario that needs any
- * of them fails rather than being checked loosely.
+ * and no tolerances, and a dataset only when the scenario skips its results; a scenario that needs either fails rather
+ * than being checked loosely. Documented indexes are created on both databases after they are seeded.
  */
 public class OperatorCaseRunner {
     // Canonical extended JSON, so a failure shows BSON types: relaxed JSON prints an Int64 like an Int32.
@@ -236,6 +236,8 @@ public class OperatorCaseRunner {
             BsonDocument seeded = withIds(scenario.getDocument("collections"));
             seed(morphia, seeded);
             seed(reference, seeded);
+            index(morphia, scenario.getArray("indexes"));
+            index(reference, scenario.getArray("indexes"));
 
             Execution execution = plan.apply(action, collection);
             BsonArray documented = documented(action);
@@ -314,8 +316,11 @@ public class OperatorCaseRunner {
         if (!scenario.get("dataset").isNull() && !scenario.getDocument("skipped", new BsonDocument()).containsKey("results")) {
             unsupported.add("dataset");
         }
-        if (!scenario.getArray("indexes").isEmpty()) {
-            unsupported.add("indexes");
+        for (BsonValue index : scenario.getArray("indexes")) {
+            if (!index.isDocument() || !index.asDocument().isString("collection") || !index.asDocument().isDocument("keys")
+                    || !Set.of("collection", "keys", "options").containsAll(index.asDocument().keySet())) {
+                unsupported.add("index " + index);
+            }
         }
         for (BsonValue rule : comparison.getArray("rules")) {
             if (Arrays.stream(Rule.values()).noneMatch(known -> known.name().equals(rule.asString().getValue()))) {
@@ -410,6 +415,30 @@ public class OperatorCaseRunner {
                 target.insertMany(rows.asArray().getValues().stream().map(BsonValue::asDocument).toList());
             }
         });
+    }
+
+    /**
+     * Creates the documented indexes through {@code createIndexes}, so every option the page passes reaches the server
+     * as written. An index without a name gets the shell's default, its keys and values joined by underscores.
+     */
+    private static void index(MongoDatabase database, BsonArray indexes) {
+        for (BsonValue value : indexes) {
+            BsonDocument index = value.asDocument();
+            BsonDocument keys = index.getDocument("keys");
+            BsonDocument spec = new BsonDocument("key", keys);
+            BsonDocument options = index.getDocument("options", new BsonDocument());
+            if (!options.containsKey("name")) {
+                List<String> parts = new ArrayList<>();
+                keys.forEach((field, order) -> {
+                    parts.add(field);
+                    parts.add(order.isString() ? order.asString().getValue() : String.valueOf(order.asNumber().intValue()));
+                });
+                spec.put("name", new BsonString(String.join("_", parts)));
+            }
+            spec.putAll(options);
+            database.runCommand(new BsonDocument("createIndexes", index.getString("collection"))
+                    .append("indexes", new BsonArray(List.of(spec))));
+        }
     }
 
     /** {@code collections} with an {@code _id} given to each document that has none. */

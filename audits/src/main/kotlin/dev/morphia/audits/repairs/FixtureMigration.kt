@@ -329,7 +329,16 @@ object FixtureMigration {
                 )
                 .append("dataset", dataset?.let { BsonString(it) } ?: BsonNull.VALUE)
                 .append("collections", collections)
-                .append("indexes", BsonArray())
+                .append(
+                    "indexes",
+                    BsonArray(
+                        documented.indexes.map { index ->
+                            BsonDocument("collection", BsonString(index.collection))
+                                .append("keys", index.keys)
+                                .also { spec -> index.options?.let { spec["options"] = it } }
+                        }
+                    ),
+                )
                 .append("action", action)
                 .append(
                     "expected",

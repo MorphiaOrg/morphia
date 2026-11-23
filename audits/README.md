@@ -168,11 +168,11 @@ These remain because coverage has not fully moved off them yet. Each one goes wh
 its users does.
 
 - **Core's legacy fixture loader** (`data.json`, `action.json`, `expected.json` through
-  `TemplatedTestBase`). It runs 193 legacy fixture directories; 363 cases have moved to the runner.
-  Of the 193:
+  `TemplatedTestBase`). It runs 186 legacy fixture directories; 370 cases have moved to the runner.
+  Of the 186:
   - 98 are still locked: 96 have no documented source that reproduces them, and are listed under
     `unresolved` in `form-review.json`;
-  - 23 are tracked as legacy-only in `cutover.json`;
+  - 16 are tracked as legacy-only in `cutover.json`;
   - 69 never-locked fixtures have no pinned reference.
 - **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory
   read pages through it, with tested snippets spliced in and only the mongosh content of each
