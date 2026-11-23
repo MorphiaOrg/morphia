@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 373 legacy cases (372 converted, 1 migrated), plus 26 generated cases.
+- **On the runner:** 373 legacy cases (372 converted, 1 migrated), plus 38 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
@@ -44,10 +44,8 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The remaining legacy fixtures:** 183 directories.
-  - 98 are locked; 96 are unresolved in `form-review.json`.
-  - 15 are legacy-only in `cutover.json`.
-  - 69 never-locked fixtures have no pinned reference.
+- **The remaining legacy fixtures:** 16 directories, all with a documented source: 15 legacy-only
+  in `cutover.json`, and `type/queryingByMultipleDataTypes`, which needs alternative commands.
 - **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
@@ -2693,3 +2691,20 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   generator exclusion went away (the page error stays in #4563).
 - 12 more generated cases (26 in all), integrated under both mappers and promoted. Inventory: 444
   owned, 138 unowned. Core: 704 tests under each mapper; audits: 459.
+
+## Unbacked legacy tests deleted (2026-11-23)
+
+- Branch audits-delete-unbacked, as the user decided. The 167 legacy tests whose fixtures no
+  documented source reproduces were deleted with their fixtures: 96 locked fixtures listed as
+  `unresolved`, 69 never-locked fixtures with no reference, and the two `tsIncrement`/`tsSecond`
+  directories that held only a name and a lock. 40 test classes were left without tests and removed.
+- `audits/catalog/deleted-fixtures.json` records each: the test and its body digest (null for the
+  two unowned directories), every fixture file's digest, and the gap that left it without a source.
+  `FixtureDeletions.remove` and `.retired` feed the frozen-catalog and preservation checks;
+  `FixtureDeletions.verify` requires each to be gone, recorded once, with a reason.
+- The stale `unresolved` entries, 93 repair-review reasons and the two binding-policy entries went
+  with them; the inventory gave 20 newly exposed generic examples reviewed names and dropped two
+  owner reviews whose fixture was deleted.
+- 12 of the exposed examples are generated now (38 generated cases); `$bitOr`'s long-and-integer
+  example is excluded again (the page error in #4563).
+- Remaining legacy: 16 directories, none locked. Core: 551 operator tests under each mapper.

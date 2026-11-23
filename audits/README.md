@@ -38,6 +38,7 @@ Every command below runs through the exec plugin from the repository root, after
 | `audits/catalog/generation-review.json` | The generated families, the reviewed exclusions with their evidence, and the sample-dataset collections. |
 | `audits/catalog/fixture-migration.json` | The ledger of legacy cases moved onto the case runner, with their documented sources. |
 | `audits/catalog/cutover.json` | Legacy cases that stay on the legacy path, with the check that fails and its first difference. |
+| `audits/catalog/deleted-fixtures.json` | Legacy tests deleted because no documented source reproduces their fixture: each test's body digest, its fixture files' digests and the reason. |
 | `audits/catalog/form-review.json`, `form-migration.json` | Reviewed equivalences that retired MORPHIA_FORM locks, and the gaps left. |
 | `audits/catalog/legacy-references.json` | The documented page behind each never-locked legacy fixture. |
 | `audits/catalog/curated-repairs.json`, `repair-review.json` | Every lock and exclusion in the legacy corpus, categorized. |
@@ -168,12 +169,11 @@ These remain because coverage has not fully moved off them yet. Each one goes wh
 its users does.
 
 - **Core's legacy fixture loader** (`data.json`, `action.json`, `expected.json` through
-  `TemplatedTestBase`). It runs 183 legacy fixture directories; 373 cases have moved to the runner.
-  Of the 183:
-  - 98 are still locked: 96 have no documented source that reproduces them, and are listed under
-    `unresolved` in `form-review.json`;
-  - 15 are tracked as legacy-only in `cutover.json`;
-  - 69 never-locked fixtures have no pinned reference.
+  `TemplatedTestBase`). It runs 16 legacy fixture directories, each with a documented source:
+  15 tracked as legacy-only in `cutover.json` with the strict check they fail, and one declaration
+  that needs alternative commands. 373 cases have moved to the runner; the 167 legacy tests whose
+  fixtures no documented source reproduced were deleted and are recorded in
+  `audits/catalog/deleted-fixtures.json`.
 - **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory
   read pages through it, with tested snippets spliced in and only the mongosh content of each
   language choice kept. It goes once the structured parser (`scenarios/`) owns example extraction,

@@ -1,2 +1,0 @@
-{ $group: { _id: "$quarter", purchased: { $sum: "$qty" } } },  
-   { $merge : { into: "quarterlyreport", on: "_id",  whenMatched: "merge", whenNotMatched: "insert" } }

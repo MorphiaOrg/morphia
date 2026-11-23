@@ -83,16 +83,4 @@ public class TestFill extends TemplatedTestBase {
                                 fill().sortBy(ascending("date")).field("score", Method.LOCF)));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions
-     * 
-     */
-    @Test
-    @DisplayName("Interpolate Identical Values in Different Partitions")
-    public void testInterpolateIdenticalValuesInDifferentPartitions() {
-        testPipeline(new ActionTestOptions().removeIds(true),
-                aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
-                        .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LINEAR)));
-    }
-
 }

@@ -37,23 +37,4 @@ public class TestFirst extends TemplatedTestBase {
                 ));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/first/useInSetWindowFieldsStage
-     * 
-     */
-    @Test
-    @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testUseInSetWindowFieldsStage() {
-        // this example starts importing a bunch of stuff and gets more complicated than
-        // I care
-        // to make the parser support. we have working examples already.
-        /*
-         * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),
-         * (aggregation) -> aggregation.pipeline( setWindowFields()
-         * .partitionBy("$state") .sortBy(Sort.ascending("orderDate"))
-         * .output(Output.output("firstOrderTypeForState") .operator(first("$type"))
-         * .window() .documents("unbounded", "current"))));
-         */
-    }
-
 }

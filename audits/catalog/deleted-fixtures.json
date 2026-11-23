@@ -1,0 +1,1945 @@
+{
+  "deletions" : [ {
+    "bodySha256" : "48c0b80e9c6b1621fbf5b4be4df4d88f6063be565e90952df596b18627a7d508",
+    "files" : {
+      "action.json" : "5ba869e299094f185ec47e6186aaf5f9a151c431740f5fe2d8491570ebd0af99",
+      "data.json" : "0dd4342e00c0aba8b4dfbd0a7fb39e9ff2feb63534e1a5132997a9bf69e74678",
+      "expected.json" : "715fd1e74041aacfbfbb2ec27d925ab00d865cb97dd417fe71ee64113df58393",
+      "name" : "a8421794e6907a9f73e9db2595d0aa4596274ca2dc3afa75499df155670cab35"
+    },
+    "fixture" : "aggregation/expressions/accumulator/useAccumulatorToImplementTheAvgOperator",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAccumulator#testUseAccumulatorToImplementTheAvgOperator"
+  }, {
+    "bodySha256" : "25ab016a36a58323bcf4c23cb28211db5f03b5f77aba6f878080847a001b31d8",
+    "files" : {
+      "action.json" : "96302d5e1495ba60312a6999feae25525f4384a30c6e44d482c0e51f1bf3de7f",
+      "data.json" : "e1667b6c40568205d8ae528b1fb527a4773969d9acdb6bf46efd56af01424fd4",
+      "expected.json" : "300eee17c7c9b77c96d92d4017f20faa4d0bf0f504b87573057294b18f1cfb5d",
+      "lock" : "34ef3a48b381d9077bea2525b33696508c279d2d948ac94ca6190d402b05e19c",
+      "name" : "e31b5e630fab7da0ca92703484bec5b6a97d1d5e5cb9cfdf639d8ba797830216"
+    },
+    "fixture" : "aggregation/expressions/accumulator/useInitArgsToVaryTheInitialStateByGroup",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAccumulator#testUseInitArgsToVaryTheInitialStateByGroup"
+  }, {
+    "bodySha256" : "11170e1817bda43b80008e94627b854ea03c088941be091f2d0d58d4c178e5eb",
+    "files" : {
+      "action.json" : "420b632e726c68d184abd2afccf12b4b2f9c863330c9a0c54f5655dd99eab716",
+      "data.json" : "d34d624c6e3e12e7f7b5df69f4e17d229893c27a2844635dd9f50f36834b45aa",
+      "expected.json" : "38b5204711d16a240819942ebaf275d27fa237346309d034979499d27ce22267",
+      "lock" : "807b19f3183f017c76cf26f971fbc564d1f58990c1c959bb0df23fb28e8bd0c3",
+      "name" : "9cc1af073a26313a41d91e99f680828b01e3b4d5d987cbd8d0bdbbf428debccc"
+    },
+    "fixture" : "aggregation/expressions/add/performAdditionOnADate",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAdd#testPerformAdditionOnADate"
+  }, {
+    "bodySha256" : "4e56d4696330349f1eb0d6ef836ecb8757d8e6485f4e2b4c8f5575abc333b747",
+    "files" : {
+      "action.json" : "63f35aa4617ab78d37ca79fb8a3cb98c7bf47b26ebd2bfcb089842063951b57f",
+      "data.json" : "7614839fbd529c06670e8e40d19c6d9256ca6ad01eba4426869a8ad4c8bf3930",
+      "expected.json" : "e20366f686e931764c882fa063fdb326013367dc757294b9069fae4e50a5b9d1",
+      "lock" : "4ba05e3949ba903f61828da57a68408b13dd37827e21b9feb68a5cd24a71f4b0",
+      "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
+    },
+    "fixture" : "aggregation/expressions/addToSet/useInSetWindowFieldsStage",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAddToSet#testUseInSetWindowFieldsStage"
+  }, {
+    "bodySha256" : "1ede87cb9607f066e876b3c3c851f74645391f5670bfd4fa6b719a5205130e3c",
+    "files" : {
+      "action.json" : "8f24df7d7f3c079aba4857baa7744b33e9deb62978caa46ceb1fe204046205f2",
+      "data.json" : "6f5cb4e7b6e50b5fad1f13ef0b748cf7094b9f696327fb3277b6fcbe748fc3c6",
+      "expected.json" : "88c7046fe5ec3120f3c771099f5b7653ad1de0c32f7b72d7499ea562ff0d2e21",
+      "lock" : "426ba196c5012cfb101a72192b2d4ea4d2af653b65c21c9c2a742a75ee17559d",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/allElementsTrue/allElementsTrueExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json TYPE at /9/responses/0",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAllElementsTrue#testAllElementsTrueExpressionOperator"
+  }, {
+    "bodySha256" : "81ff16c31f4429aad00c8bef58bb8a3486936175458ce2ddd863de72414def57",
+    "files" : {
+      "action.json" : "8589ff7fb4f0f25e2af8ece0cfce29f989367dc42525d93ed4ff300d778fe21a",
+      "data.json" : "6f5cb4e7b6e50b5fad1f13ef0b748cf7094b9f696327fb3277b6fcbe748fc3c6",
+      "expected.json" : "c15872065db7db1511ee45750cd735c54fe96d51626a0c74884315929b2484c0",
+      "lock" : "8129ae0c420f1377cac4f0b906505b6727a403d6b3c24ca6961e3f7cbad17a8d",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/anyElementTrue/anyElementTrueExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json TYPE at /9/responses/0",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAnyElementTrue#testAnyElementTrueExpressionOperator"
+  }, {
+    "bodySha256" : "f5c6e826111ac5fcde0885a4f48ba11d7adadd89b1049dd1450e305392011b76",
+    "files" : {
+      "action.json" : "f819696fa3db5d99d9f802530ea3814a6ebe5d66712fe5edcaa5814d3bc0016a",
+      "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
+      "expected.json" : "c623659f5aa9b8e4a410d508937fd602ef24264166a5485acafac12940b470e9",
+      "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
+    },
+    "fixture" : "aggregation/expressions/avg/useInSetWindowFieldsStage",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAvg#testUseInSetWindowFieldsStage"
+  }, {
+    "bodySha256" : "75d062726f75a459528656659e6592a8e85f0915675e65b3acaa00ddd4ff099d",
+    "files" : {
+      "action.json" : "760ff8185d489fff56b74aeac743c812830959100adccfcce3fa79868a6a7316",
+      "data.json" : "e2553eae295f43c472ba5680ba06a1dea76727094a99abb98f021aa492e32f5e",
+      "expected.json" : "e535799693f356081e4bec3cd3e27c9bc522dd76b9658f423157a95532add32e",
+      "lock" : "12249d027b748a6ff2ced1723dc2ad8f74bfc52031078086ba76b635a35e05d0",
+      "name" : "98df974ec1cc7992413de365d6ef7a1d35aea2c6b56a225df2c27b83380e176f"
+    },
+    "fixture" : "aggregation/expressions/binarySize/findLargestBinaryData",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBinarySize#testFindLargestBinaryData"
+  }, {
+    "bodySha256" : "f8449f7cad868f9e6946d415fb567b5bb2b5a40df3fe27c94536832c5eeb7f84",
+    "files" : {
+      "action.json" : "5f1195085024b89bfa82aacac57649ac4fd4de4b39509bc40a83816e76706585",
+      "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
+      "expected.json" : "5df186e519101bc236bbf08859ac9b4670bfe4a35e182bfd767876315d0f4588",
+      "name" : "5a46e407b4fb8d52d0c8a4ed9ebcc1e34fc0adc712c99d59091c4b951e481822"
+    },
+    "fixture" : "aggregation/expressions/bitAnd/bitwiseAndWithALongAndInteger",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Bitwise ``AND`` with a Long and Integer",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBitAnd#testBitwiseAndWithALongAndInteger"
+  }, {
+    "bodySha256" : "686337ebbc9ed62a94b98fc9dac6e09b2bd84467c20db2f864fd3070d497ffa3",
+    "files" : {
+      "action.json" : "93548eba32ca592ae6e415c7a3c6481e4842be3b0b1c67339a8a3dbbbf064115",
+      "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
+      "expected.json" : "71559f7498ed3e586099d1569a0ef8473b2d150b1aefe77308c633aaca39721f",
+      "name" : "55c60283503ce4c57eef4a02a3b0344a277677ef4d7e8b6de74be7e817ed19c8"
+    },
+    "fixture" : "aggregation/expressions/bitAnd/bitwiseAndWithTwoIntegers",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Bitwise ``AND`` with Two Integers",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBitAnd#testBitwiseAndWithTwoIntegers"
+  }, {
+    "bodySha256" : "5f40fd7ba12731cb9293194f5b2d55334f249651dd21cad5f91bfefbf60994d2",
+    "files" : {
+      "action.json" : "d69b322f751989263605e3ef95d6bf2e733227917b18a082c0907c3295b9cd1a",
+      "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
+      "expected.json" : "fc0ad0be68e273aa2fb19e6a47a7172dddb7ce3f02dec29ad67784e954acee19",
+      "name" : "931339a658c07b250b4e0d228a1be0de66f280053163e44a8ea5d6b2d7013809"
+    },
+    "fixture" : "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Bitwise ``OR`` with a Long and Integer",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBitOr#testBitwiseOrWithALongAndInteger"
+  }, {
+    "bodySha256" : "eb8234cbb0383b781cd5172be0b7db04b9517a06076e67fcefc9e6323e1a9043",
+    "files" : {
+      "action.json" : "614e5c69fa0426d85d62e12cb089a80c5472e127a8923ff94946dad98afed6a2",
+      "data.json" : "42ee2dd79d31b2d48dfb39afca5f15ea763e6dfc9a1dd1894c33eff3e0def79a",
+      "expected.json" : "298cdcd7146213940b60894dcc863312a4c5d8506dbe5b8150371d7d51f54fcb",
+      "name" : "254c9356ed7ecef8e6c9b574bc93150c2813ea814c1ee4e0ac46540b3ab1f7cb"
+    },
+    "fixture" : "aggregation/expressions/bitOr/bitwiseOrWithTwoIntegers",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Bitwise ``OR`` with Two Integers",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBitOr#testBitwiseOrWithTwoIntegers"
+  }, {
+    "bodySha256" : "c3a15b5309754c909671057a2df40d0c94cb95b4006b13c8f3a0fa53848d109b",
+    "files" : {
+      "action.json" : "21d5e4071fb0306f94cf0a6677d1388fbf088c2ec70883b6317c8077ba191ba6",
+      "data.json" : "1bd9498f1de855f950424fe6363881898c8c57f5d7a99193eef188fdfa05d0db",
+      "expected.json" : "ace334bed399aa54d27cb311a1c00b50c09c9c511d6f9f6edad9d106eff2a406",
+      "lock" : "d417cb39235625dc5bcac7fad8d371901e21bfc3760a32b4a706783271148807",
+      "name" : "9aa6c8f602d2b65d896c4064f9e98268dc7d7a9b113232a91669609965d86742"
+    },
+    "fixture" : "aggregation/expressions/bsonSize/returnDocumentWithLargestSpecifiedField",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBsonSize#testReturnDocumentWithLargestSpecifiedField"
+  }, {
+    "bodySha256" : "3189f80c903d2fc087463366483d2fba097e8c42806bdc977c30df0f49e1a660",
+    "files" : {
+      "action.json" : "04583b603588cc590edd52035f69ce442e179907cf14e5a4772b52c8792df4ff",
+      "data.json" : "d4b54252818921ad0309928a6d465510a20ccac50b09f2ea928f21bd0808f07b",
+      "expected.json" : "d58b63df7249e9e62924294d3c11a190a8caa2957cb6c3d196bda18f50c1b292",
+      "lock" : "f23d36a640091fe60131834daac0695cfd7558bc8bee8e3d36bc00088b26e21e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/convert/convertExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE printed expected VALUE at /3/totalPrice",
+    "test" : "dev.morphia.test.aggregation.expressions.TestConvert#testConvertExpressionOperator"
+  }, {
+    "bodySha256" : "e1ac9c63a3a93174aaf253f08422a59bf1cde5e54eb9048e940f61d7978574da",
+    "files" : {
+      "action.json" : "f00c0126ec2f281ca4a3e01183902a473392fb6afa4f9a2a30c10c7845f98ae2",
+      "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
+      "expected.json" : "cdb19164494f0908cbf864b10c4f8afd3c797f3db1c8c1c1adaca2ad375f2172",
+      "name" : "13f25f9e86f0b9e61fadd6bf4b7abfb86a1c10d3a115219d3922ae7660f13653"
+    },
+    "fixture" : "aggregation/expressions/count/useInGroupStage",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Use in ``$group`` Stage",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCount#testUseInGroupStage"
+  }, {
+    "bodySha256" : "e422e3b0379c6d5a85ec192619148cfc54e3a22dadacbed75d03e30abfe39e6c",
+    "files" : {
+      "action.json" : "51db19ff2577417a8e02e041abecb4de3d04ee00a4f3e9ee5e180b15135986da",
+      "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
+      "expected.json" : "4ebe1d624f9e6fd9b6a633e5ad95858e0ce001acfb1420a14aa84afff52913cc",
+      "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
+    },
+    "fixture" : "aggregation/expressions/count/useInSetWindowFieldsStage",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Use in ``$setWindowFields`` Stage",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCount#testUseInSetWindowFieldsStage"
+  }, {
+    "bodySha256" : "fc0b57d1bc223a7ba4118803f3b4ca5fde2a7cfc8bcbf950816a7c21ad02601a",
+    "files" : {
+      "action.json" : "7118b968989403ca8116433734f25614955c0b1e510032e2ee2d1a96ae78a3a8",
+      "data.json" : "34aaf4ea840d982b6a804748dcec0ab1cb617250f43ed3551723dd986a82f173",
+      "expected.json" : "1cc95c9448728e29f1b0be3ad312166225ff375183cf82b2d68630e1c4b4f8b5",
+      "lock" : "117da6d6e291b162355e84490d1faca07b7469ad761c7e8ed6589e975a2964b0",
+      "name" : "88a541dbf68f3cba7837be3daa0595add4c34660bf91cb7fb2fb8e65cf50f578"
+    },
+    "fixture" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateAdd#testAdjustForDaylightSavingsTime"
+  }, {
+    "bodySha256" : "192603f5f4994148f5bba799f5078e0f3158a4184be0a14f7a7d499a12d9e601",
+    "files" : {
+      "action.json" : "5875ccc1789b02ab58c234f9a80d093820152b489a0a75f51175d4ae74ef29b4",
+      "data.json" : "35991c22862444daf5292d1b8017f9fe9451c44929dc8a763f9a984aedd27964",
+      "expected.json" : "f266724a8b3a3cb38297839772f3f6441aacd9d058a5b4be06ddea9a86c77d72",
+      "lock" : "3ef83bf543563941fa0022e247501e3116b74aa8b084b26f8cbff85279d7780f",
+      "name" : "9f7af646de9d1acbb90265f30f23ac3025548c5b9b92d9d42f0b09afea15bc99"
+    },
+    "fixture" : "aggregation/expressions/dateAdd/filterOnADateRange",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action is UPDATE, the test runs PIPELINE",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateAdd#testFilterOnADateRange"
+  }, {
+    "bodySha256" : "0dd85e87d2b1118aa2a6a2f88fa769ecb6bae87cb4e75557ec971a9159be35a0",
+    "files" : {
+      "action.json" : "6f06724181b7454dc5f71f2e59f2d2f4a2ca822ed752d24071047d0bb722741a",
+      "data.json" : "041eeb0ce3d9111b10bf020b44867f05bb3a634558349758fc89560379e85535",
+      "expected.json" : "abbe20fb4c3ff7d443a380bf5aac8e3df59c4bae94e97ce199913a1286be456d",
+      "lock" : "631ae5c2af6bbfc0b495cf332aeec9804f44b0d8818094b181a8b2b2fcf8ecb8",
+      "name" : "ce8e61d55c2b2f48242209919ecc5df8eddca6c6972c420d78009bf2e4ca9b92"
+    },
+    "fixture" : "aggregation/expressions/dateDiff/resultPrecision",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED CONSTRUCTOR_FORMAT",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testResultPrecision"
+  }, {
+    "bodySha256" : "fbb01302ff72c15a6ba6ad16a0d16f288bd40a0953c14dee7b5207aea2d19baa",
+    "files" : {
+      "action.json" : "9a51f81d0531e38b0122071ecf4d37b9ff5d0cd3cf0ab8296a8c5ca1c9746540",
+      "data.json" : "815e2f071b960fd100dc4efe3a95c5db91f7324da16ed70313692f06a9985570",
+      "expected.json" : "c6af42a97d786e3d7b485d1e554164b7a57ab4f2443af164f42f9891fc2a527d",
+      "lock" : "93c2751fff35968eb0410f8f83239a93b52bf9ad689359eea60fb9781561534d",
+      "name" : "a4ca2d3b7dc27291518fceea7f918db3140d7b11e0b4a5da4a437c0f3a9ffc6f"
+    },
+    "fixture" : "aggregation/expressions/dateDiff/weeksPerMonth",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testWeeksPerMonth"
+  }, {
+    "bodySha256" : "cc09935cda7b09a86ef098a6858f7abd6bccc69f8c620c4d57a36c701d5c27f3",
+    "files" : {
+      "action.json" : "6b09281b756dad43629886902b8d614a52c4647ee29cfdda9e05dc9b0efbfd35",
+      "data.json" : "f78f7bec4ef2e100fc7245caf8808cbadb087f69d8f07880e7ec64042b6c73bd",
+      "expected.json" : "a93efcbccf47bca989751d7c89443385e4c5e4908799f71a210b17ecf2d76cdf",
+      "lock" : "92412748a3a8496b6577df63cc2df568a0182287f421a2bac51f5d760b96d2f1",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/dateFromParts/dateFromPartsExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateFromParts#testDateFromPartsExpressionOperator"
+  }, {
+    "bodySha256" : "bd5a010349f33b039ac3f62ca6d1d9ba6c3ce629fc5703956c710541bfd909d2",
+    "files" : {
+      "action.json" : "0a59dbdc2efc4bdfe41e45cf4c635e482ef76597d63f45557af6b1b16d1a5dd0",
+      "data.json" : "31903b0f13d6d9f113f50a5a3512458de59baaa8ece5b857441ba11959e76304",
+      "expected.json" : "19309157403cba5dd2296fb9e462a14b27f03e83377fb7c1fe3d87d7065a795a",
+      "lock" : "c0f18825e34507dc5de8e6f8300dfc110dcfde1c2ecdee5e83f635367bb3acb0",
+      "name" : "88a541dbf68f3cba7837be3daa0595add4c34660bf91cb7fb2fb8e65cf50f578"
+    },
+    "fixture" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateSubtract#testAdjustForDaylightSavingsTime"
+  }, {
+    "bodySha256" : "e05f0f9314dcac03a30f4ff7021f342776226e9915e420b9506f1a32d333f29c",
+    "files" : {
+      "action.json" : "b735c24c31a840b63ab524c8bb321ee088c94dfc7481714c22a277197be04a04",
+      "data.json" : "84391fbe467dc5ac694c5bb9a32d1ed0a02b2164d56e806a39db070aeef037d0",
+      "expected.json" : "db1f1f3972cf0845c018de79b39dae330d52de106e9f449a2439811b8aa3b3fd",
+      "name" : "dd55dcfdd3d42c4f52caf413b2e4115d420047e662e59ce3f7ae932d36371c82"
+    },
+    "fixture" : "aggregation/expressions/dateSubtract/filterByRelativeDates",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateSubtract#testFilterByRelativeDates"
+  }, {
+    "bodySha256" : "cee99d59a1cebd02f948615f88d063cd8ed6fecad832f7da77f02e5c09085973",
+    "files" : {
+      "action.json" : "1e3c66630f5630221b59385a4eef30534faf20d584977455c3af87275d648626",
+      "data.json" : "d192908b311ec0c941e38c8c0c9b916287d005f67519637c6c4c1f12247a5252",
+      "expected.json" : "9e580e9f0ba9ba312e168e52598cf9feeb42ebb941c4c7988460a69635e4802d",
+      "lock" : "d2d67999cc5308563491a3141f947d9eba27d64be53c28cb6e0a68c3542d09de",
+      "name" : "7dcd7c3fa6ed309221759c6b1f22b1f4fb831aeec3c07ae2bcea078e9f28f879"
+    },
+    "fixture" : "aggregation/expressions/dateSubtract/subtractAFixedAmount",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED DUPLICATE_KEY",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateSubtract#testSubtractAFixedAmount"
+  }, {
+    "bodySha256" : "daf8f173402302acc6d75987b05dea94d1dcac79f9e9bc2b2e2c49859e5ddbec",
+    "files" : {
+      "action.json" : "2416f1872ef13bb2ad5bb0fa40964a9caa6c489208949c108af328d3ae749cac",
+      "data.json" : "7abdb7b2377903b6ec5c967458fae775e5e0741daa23413803f4365e1f57ba6b",
+      "expected.json" : "af9cb5d7ba372ae6c4b514a9910dffb0a228b99bdc651ae11bf232ee31141368",
+      "lock" : "b3db9b43890886bbb102ad8dea7cec6755994e68a2fa0674f1e340f4938ff1a0",
+      "name" : "f32e07764464a734821dd440cdbcecc05504c466a7b3ca83a77171c9334a9ec5"
+    },
+    "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action VALUE at /0/$project/truncatedOrderDate/$dateTrunc/startOfWeek",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateTrunc#testTruncateOrderDatesInAProjectPipelineStage"
+  }, {
+    "bodySha256" : "ef75f0dc6aa87906bb220317929bc1559de20430778c647414e51d51f5f549ce",
+    "files" : {
+      "action.json" : "9dcd08850b4fd422724fb4444890705f7dc0a67b948e85a78b73855673c9934c",
+      "data.json" : "bff449866dca378b68dfc806b1a2ad84e42e39ad900134750e56568dc2c6b4cc",
+      "expected.json" : "21c8828429ebfdb740d1c1891fd5ca2a2a7d27430648c26235008bce882483fa",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/divide/divideExpressionOperator",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED no data file for collection conferencePlanning",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDivide#testDivideExpressionOperator"
+  }, {
+    "bodySha256" : "e42a6c8f4ed31422c0cacfa4f7c22b629f45a2c7aa2deb6641639f488c4bbf24",
+    "files" : {
+      "action.json" : "6222b990845e548c02824360cc61db7169a5b8f06410c2da3af2254431957568",
+      "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
+      "expected.json" : "730ccf9ce1139ec6004b849305cc651f529502dc1c5cac6a127bcedb7863cc50",
+      "name" : "07447e73997d7e2ffbf867f5c49291a9d45509e49845c525b3ead70fc188d8e2"
+    },
+    "fixture" : "aggregation/expressions/filter/limitGreaterThanPossibleMatches",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE limit Greater than Possible Matches",
+    "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testLimitGreaterThanPossibleMatches"
+  }, {
+    "bodySha256" : "5a0581ace7edf4fcc782de4ee00452f887e070a4f606fd9ff6a6479c328e5a62",
+    "files" : {
+      "action.json" : "37432c6a083b637ebad824e9ccb8b4501d83b66eaf0b0d4135bc465f17204ee8",
+      "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
+      "expected.json" : "b15e4787c12f62aef4a8aaee6fff69d5e2c0e530705ee954ccaff34f6356c34b",
+      "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
+    },
+    "fixture" : "aggregation/expressions/first/useInSetWindowFieldsStage",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.aggregation.expressions.TestFirst#testUseInSetWindowFieldsStage"
+  }, {
+    "bodySha256" : "add0be2c6a08e4bd05be9ab7972ee809391d4d92c742cb43698bb65f7fafb01c",
+    "files" : {
+      "action.json" : "da4d9682599f29b24efb580ddd10637a4b2012e712a1477f697fc21d5ddf6dc4",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "51c2091c2b7a8b3bc7ecd4bac1fa186579eb41ac804c811184e1af50475b0b59",
+      "name" : "99a83155e01f8a65b80723165db12b27b842833b6d313e5ad0e2fdacc5fe5700"
+    },
+    "fixture" : "aggregation/expressions/firstN/usingFirstNAsAnAggregationExpression",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testUsingFirstNAsAnAggregationExpression"
+  }, {
+    "bodySha256" : "2028924e3de0e50bcc525a65de4da52dc55b450a2c5601bb97f83c1508f81070",
+    "files" : {
+      "action.json" : "cafdc49d43661ece13e3603e1357d8547e650b3b1299842ff5ac18fbf6f459ee",
+      "data.json" : "c9f96c9be812783cb2c4ab764e071370657a5d6111a323d609a53a14c88ce2be",
+      "expected.json" : "f2f34f37f8c7468a569d77a62ddefe35854d0b9c5115f1ada01c9ca219470a2c",
+      "name" : "98ebee29a8c779a00a903d7a4715a83e07e0715ed913eb2221029d74741f4301"
+    },
+    "fixture" : "aggregation/expressions/function/alternativeToWhere",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestFunction#testAlternativeToWhere"
+  }, {
+    "bodySha256" : "f23db5c4ba795ed9cdaafb913ac63671757bfaa24558dee1761eef07d3fcabf5",
+    "files" : {
+      "action.json" : "49e4ffe7672922e155d9b7c40ae5d8fc66782cad544facef3273a8b9cd576217",
+      "data.json" : "279c84f6c891280bd62684fe6bd221eeb3c875d62e92f651a3064f71f0d0e219",
+      "expected.json" : "9bffe694ed9d8ac47800b029a6044353c1dff89c99fb37e18287e6776ba4c50d",
+      "lock" : "3399c50daa2606f40f0bd06be748acbf7b91928098f0f9fb6ae04e12f05ab407",
+      "name" : "083fc98c8742bf4299fc9d192fd7e124a27963f6ae1ba3890502990dc129565e"
+    },
+    "fixture" : "aggregation/expressions/function/usageExample",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestFunction#testUsageExample"
+  }, {
+    "bodySha256" : "4f0af9543e4dc004214b9484f353554778ac80f4e45d8e8f8cc9c34f890cd011",
+    "files" : {
+      "action.json" : "ed090759805913407bb7b003643fcdb3f4392987a58f86acd904f0c9eec06e79",
+      "data.json" : "77feb93e9024fcbd5bb47e54039b4eeabbea73c8c52073c6bda26b3d4c0845e3",
+      "expected.json" : "9e8d6eb6bea92d40f12ae24dd0e1cde47238db6db3f9de362e5c508537b75559",
+      "lock" : "b4eecfce502b9fec6f616d4d59c2cc116d6c5faaad691586c55f3e2db677746e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/indexOfBytes/indexOfBytesExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json TYPE at /0/byteLocation",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIndexOfBytes#testIndexOfBytesExpressionOperator"
+  }, {
+    "bodySha256" : "f4046cba89ebc8bd02ec898feb590bb2b12252893dfb11b81a0ddf8ac34b79d1",
+    "files" : {
+      "action.json" : "a720dfc1288d3dd5072c8911b27c20423800272eba856ec89a7d8e8c34c73875",
+      "data.json" : "77feb93e9024fcbd5bb47e54039b4eeabbea73c8c52073c6bda26b3d4c0845e3",
+      "expected.json" : "8c6243c4db91ef7c0492429f7460c7582f439b3494430164b21e281006443414",
+      "lock" : "b4eecfce502b9fec6f616d4d59c2cc116d6c5faaad691586c55f3e2db677746e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/indexOfCP/indexOfCpExpressionOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json TYPE at /0/cpLocation",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIndexOfCP#testIndexOfCpExpressionOperator"
+  }, {
+    "bodySha256" : "98c1871ff01618bee0476bc60fc0ea139bce3a4f91c0e272d3be4dac17a37c89",
+    "files" : {
+      "action.json" : "8b8b834028e44076cd153d8e89db1ef014d16a5c9623d92448f5010843fd695a",
+      "data.json" : "4d55978a193a8277e9d61d0bd0cc4a04434059f8111f8ba33a86d56fd452259a",
+      "expected.json" : "4962d76eb60e82f28d0ebd42a239928b2ddd1d71ddbe6ed78b89282711efe260",
+      "lock" : "1e41d847ae98c2b37f8b297f6fcd83ac78d06a4e764a4da1fa9f9af606e5563c",
+      "name" : "7f35f1ed11793641634686f9c9b7921dfb45715845c06f20a1c6a6a05e2f0c25"
+    },
+    "fixture" : "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIsNumber#testConditionallyModifyFieldsUsingIsNumber"
+  }, {
+    "bodySha256" : "b1d836a72b8cd6d8ce4b354c8249e41cab43b1c0f888e0572ab4876394cc752d",
+    "files" : {
+      "action.json" : "321b45dc919377fb5b705665d649567fa52a8ce4ff6a0888913373630f67dcd3",
+      "data.json" : "092036d77be6ab21e1478f0649edb977dadfc41671b3b24ffa49358720d9a459",
+      "expected.json" : "12bcf049df17d770d80e62ff71638cd9090968739ff80a41cfe61de517afae3a",
+      "lock" : "a9abb2c78a1ca795b6de51f7c54a97bbb306bed6b5f581ba2749679a526b061b",
+      "name" : "26d5c31fe713f622504528dceea4d3a40390b3c5965eae9c43920112ed4e5c85"
+    },
+    "fixture" : "aggregation/expressions/isNumber/useIsNumberToCheckIfAFieldIsNumeric",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED CONSTRUCTOR_TYPE",
+    "test" : "dev.morphia.test.aggregation.expressions.TestIsNumber#testUseIsNumberToCheckIfAFieldIsNumeric"
+  }, {
+    "bodySha256" : "d5470ce9d51911a1a21493a87d93d26261ebbf1bb4889fe3b7deed3a17056b7f",
+    "files" : {
+      "action.json" : "38de2b2a3913e02a472c7aabb2354b33ab92e5c193eecff6c10227b2fa8645c4",
+      "data.json" : "34686f5c246cf66183d3c7b280589e8c4ea93035ad502fad68d315611d17e790",
+      "expected.json" : "7ab57e33b5cd2632759181ca98049042eaf333a0a0a40e486d9377883d931781",
+      "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
+    },
+    "fixture" : "aggregation/expressions/last/useInSetWindowFieldsStage",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLast#testUseInSetWindowFieldsStage"
+  }, {
+    "bodySha256" : "85aaed3ba9585640914446a4d7e5b6fa5366299f2c9d989df4c578f4866f93ae",
+    "files" : {
+      "action.json" : "1ea25c4f35a5cc5dce3fc5f50208d35aff51a1cf8e411454473a7df4264d7f74",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "942a0e38eb68d5274f658cbf0ef31a62e5f45e629fbe61cfa6e58e5e072eb244",
+      "lock" : "70b1304f9cf97fdacc681464ab7651b4a5c7ccd41ade55688a5bedc5e32d9091",
+      "name" : "70da589829040556b43330a0e1325d14609a8c5f04639267ef57a9e692738e8b"
+    },
+    "fixture" : "aggregation/expressions/lastN/usingLastNAsAnAggregationExpression",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testUsingLastNAsAnAggregationExpression"
+  }, {
+    "bodySha256" : "a345476f62ac7b556a7b41cc06eb03e2e9a7e684be3364acd09262477acf3e81",
+    "files" : {
+      "action.json" : "fa6592b6810a331829957665524a5cf5d453b814de3fc86b79ed4b473cbf64ef",
+      "data.json" : "afecf9af3a6a938bf672b0e869719fc03022acd684fe4dfe52b232582e55d555",
+      "expected.json" : "ae136452ceae0aa8244e183e0eee27085f21bcb71970259f3ce149498bccb012",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/ltrim/ltrimExpressionOperator",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /1/description",
+    "test" : "dev.morphia.test.aggregation.expressions.TestLtrim#testLtrimExpressionOperator"
+  }, {
+    "bodySha256" : "75665e13e421bf846e72796d6f9ad64907b375bfa300f129efeaeaa3249c4f15",
+    "files" : {
+      "action.json" : "ef877b2a25effde61f412e4387f3f0a17cf2d54ef2e0b5561d9bf500cd98a212",
+      "data.json" : "a2ded4a15ff38f2a1e281fe56ed634c9ff9dbaf16f77160a4b46281c868fe07c",
+      "expected.json" : "354f9ab82a485755117da361a3150757d32df41450e30a1f9abd2c57cb9a9a16",
+      "lock" : "e482a9cef85d9229393921b45e07992a7d54d69937b85c28d5021b8cf82a5251",
+      "name" : "eba7d4c62b7bf426815d59f96c139a19a3a50f3dc562f0ac320dd16486f7a8c3"
+    },
+    "fixture" : "aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMap#testConvertCelsiusTemperaturesToFahrenheit"
+  }, {
+    "bodySha256" : "53608981c432584618d02202160a03646fbd08dedf11a3e4e82256c3bd12db53",
+    "files" : {
+      "action.json" : "9ec2bff7cc21d5a4f02848fbb716cf14db487b43ec87c66416ec3c04fa4cc55a",
+      "data.json" : "7edc3fdf94256b21ad47cb460764289ad8695205a9925fa37b83b8f409e819f6",
+      "data1.json" : "b00a74133ef4ac34d859c966802d91241435c26ffcc7db76db713010d474762f",
+      "data2.json" : "b00a74133ef4ac34d859c966802d91241435c26ffcc7db76db713010d474762f",
+      "expected.json" : "1cacd9a0da8c273c4aff004d079f72f59cc0bb9a07b6b735c1b142164402de5a",
+      "name" : "5fb37e32932bc0274a1b85af1efe5bc1437fc702c71fa6df0bfb7e5d396a92e4"
+    },
+    "fixture" : "aggregation/expressions/mergeObjects/mergeObjects",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED files [data1.json]",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMergeObjects#testMergeObjects"
+  }, {
+    "bodySha256" : "59f1427f4b872a829e46f78608d38a32ea341c330a15a3e85304e8d1016015df",
+    "files" : {
+      "action.json" : "c9456ca5ce5e7e65fc0a458859ec325085aaadb291e8320b8bac192439efcfc5",
+      "data.json" : "a81ac6ebf3360ce7d280377835bb3b30b26e1fe9664a1e4635b32f4c844e71a6",
+      "data1.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "expected.json" : "40026501d4be0cdf8b900661a323443de29f66f20e4787ead1fd1269a8a45dee",
+      "index.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "name" : "e30d079a0faeb22f4e26ba7591b83d44c3b3ccddf819ace26b04300ebea357ff"
+    },
+    "fixture" : "aggregation/expressions/meta/metaIndexKeyAggregation",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaIndexKeyAggregation"
+  }, {
+    "bodySha256" : "05d3e3696dc3796b231fecb337264cfff2017522a56bf0f092a7bd7590e783dd",
+    "files" : {
+      "action.json" : "12a3c4a519f84e414f6612529d821160a0df194886a171e98c06ffe371647b0a",
+      "data.json" : "a81ac6ebf3360ce7d280377835bb3b30b26e1fe9664a1e4635b32f4c844e71a6",
+      "data1.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "expected.json" : "b92d8c06db35cd96473d91d17a46b80b50b36a91062838912e57d0172d09770e",
+      "name" : "543f0b116756097fceae0c1bc111c284f80a2c41db32ff0f3ddc312b36da44a9"
+    },
+    "fixture" : "aggregation/expressions/meta/metaIndexKeyAggregationWithoutSupportingIndex",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaIndexKeyAggregationWithoutSupportingIndex"
+  }, {
+    "bodySha256" : "af275a1e35c14f5a05fc9b03b34d93a76b74ce8e9f707c0723d7c7746754debe",
+    "files" : {
+      "action.json" : "9a03d252106277e10ce8a3ea7f02c5a4a85a3b76b91387124186acc5a1e19738",
+      "data.json" : "a81ac6ebf3360ce7d280377835bb3b30b26e1fe9664a1e4635b32f4c844e71a6",
+      "data1.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "expected.json" : "40026501d4be0cdf8b900661a323443de29f66f20e4787ead1fd1269a8a45dee",
+      "index.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "name" : "050a47ddc70b265a2d6b4eeffce9164acd21dd6f7eca97ec7a2d0747e8597e23"
+    },
+    "fixture" : "aggregation/expressions/meta/metaIndexKeyFindAndProject",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaIndexKeyFindAndProject"
+  }, {
+    "bodySha256" : "9171645ee4b9fdb39c9dd5a3957723bfaa9862187f41a5cc40663e12d5ad57b8",
+    "files" : {
+      "action.json" : "b8069110bc75c548d6202b6db15026ee4bd1da0ecaf705ac5664a83f50428059",
+      "data.json" : "a81ac6ebf3360ce7d280377835bb3b30b26e1fe9664a1e4635b32f4c844e71a6",
+      "data1.json" : "0232fe8ed8df4f1fe1fe75e121ac16899099b9ca9c704ce10963e5dac8e23da9",
+      "expected.json" : "b92d8c06db35cd96473d91d17a46b80b50b36a91062838912e57d0172d09770e",
+      "name" : "c956f0da3aaa8b6db18bcc5ee4f3701b25993df4df249ea62c751d8abbebe21d"
+    },
+    "fixture" : "aggregation/expressions/meta/metaIndexKeyFindAndProjectWithoutSupportingIndex",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaIndexKeyFindAndProjectWithoutSupportingIndex"
+  }, {
+    "bodySha256" : "3908004c8df73ec763a2a035a07268019c0cf94a4f2b05f8d7f7c21282a86e55",
+    "files" : {
+      "action.json" : "edf9e149bc815a337aaa53ad9e9610ca7d14c8043ed3336748a901f33f8ec1c8",
+      "data.json" : "fd2fe87207bb32712ced277e36033bc8c24e7c46a57eafae49c93df33e193b5a",
+      "data1.json" : "4a2e5b65d60f291e086d88f37cfa9d648029fd2f0c113c02bbe6a46a9537d2d6",
+      "expected.json" : "fdb0b89af921c6e0d4ff938543c41f006b075977ddd76a33b5eaf470e09a22df",
+      "index.json" : "4a2e5b65d60f291e086d88f37cfa9d648029fd2f0c113c02bbe6a46a9537d2d6",
+      "lock" : "9c44624d3c380f2f580d9591e8b8e5fc457cd6a9cc6b9dec39d185157bebcd5b",
+      "name" : "ebdfc3a901964410996a60f3aab3408316764efb06ec9034bbb765aaaf08a887"
+    },
+    "fixture" : "aggregation/expressions/meta/metaTextScoreAggregation",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaTextScoreAggregation"
+  }, {
+    "bodySha256" : "bf97e51dff2881ac5c62cd62dfde4d9a34788fde5ef9b4be9e493bec832e8602",
+    "files" : {
+      "action.json" : "cdbc3077f04f77ed9b554f6f8d1f7f668358a12b723f4b2b00ecbf673f33826d",
+      "data.json" : "fd2fe87207bb32712ced277e36033bc8c24e7c46a57eafae49c93df33e193b5a",
+      "expected.json" : "a27b64ad64ff399b03d2438a91527abe67b3b39349791f78f45529303a75cdd9",
+      "index.json" : "4a2e5b65d60f291e086d88f37cfa9d648029fd2f0c113c02bbe6a46a9537d2d6",
+      "lock" : "40b19deb87b36cf3e8af5d1ffe123b8636a042fc99051a4fce1d39a440e484d6",
+      "name" : "a17a303fbb04dc1ab6113cf16e06cb2ca0985038cc213ca027fa6586db16699b"
+    },
+    "fixture" : "aggregation/expressions/meta/metaTextScoreFindAndProject",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMeta#testMetaTextScoreFindAndProject"
+  }, {
+    "bodySha256" : "72092d01e6ea0ae5b8bcccb438024510518cbe4dee84dbd5c246eb927d4f026c",
+    "files" : {
+      "action.json" : "8dd3d7217bb2da6db8b8f6a94272e02c020d0b04e7841e83969d13ebbcc90f82",
+      "data.json" : "1e8e211d3791f0a9861393ce8a7b8404a63bf9c0be3d62673666713ec57edd66",
+      "expected.json" : "1f374fc657787312db336fe6ddc210befc74922c29bf0aae819f7bd899676863",
+      "lock" : "4712c4adb21a6c200713555c54985ffbed7913cb51d19c016727d8241a70216e",
+      "name" : "afc098da510a12cc93c4c011bef0b18fbf2821f558d490b269c2aa5f00820065"
+    },
+    "fixture" : "aggregation/expressions/mod/negativeDividend",
+    "reason" : "locked, and no documented source reproduces it: NO_MATCHING_EXAMPLE Negative Dividend",
+    "test" : "dev.morphia.test.aggregation.expressions.TestMod#testNegativeDividend"
+  }, {
+    "bodySha256" : "cfc35ef68dc7d8d84d0404555cfe942748b809e4a311b909772fbfea3419647f",
+    "files" : {
+      "action.json" : "7403c778c4c34609ac47af37506739f47eb6e939b61d246fe652efba0d84cedf",
+      "data.json" : "333663963961ff2a4bc2693e73dadf0a86c06fe730d6782b1710af4c04a2549f",
+      "expected.json" : "81e5ec02a216c9bbcce3c5afe40c3f739fa861871f89be10309ae6da3c60754f",
+      "lock" : "ac4a21e07e6268d78ffb740fd772039315f2d34f7a2ee24b93f899b95a70d4c8",
+      "name" : "c28965a0410a582592a5e093bce1a9712e2f89722002584429538b48c7da0b38"
+    },
+    "fixture" : "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexFind#testApplyRegexFindToStringElementsOfAnArray"
+  }, {
+    "bodySha256" : "4b373764bb3797bca733548e87693803ffa6486eaa00bbf081586aa704ec327e",
+    "files" : {
+      "action.json" : "ca9cca43dbb8cd15aee42800f844c1058de6651dfa417d4353d6d645a2872ad9",
+      "data.json" : "a14c068b88afefa5c666057fed13ba8b5c1246a5e154811a956c8a25027ac9b4",
+      "expected.json" : "e9e7526150e1d2fb2a252d0f15c4eb132ca3cce7aa417c277c23c9602381d41a",
+      "lock" : "2fd961a830f717e0255f7a3e21ef1aee69c7bf2a7773851f757ddc8d9eca5326",
+      "name" : "2fe32bb93f75e43e487cd2558dcc5dcce5e8aba961e8442ca94f0b3628fc79d7"
+    },
+    "fixture" : "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json TYPE at /0/username",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexFind#testUseCapturedGroupingsToParseUserName"
+  }, {
+    "bodySha256" : "01b53c61b953d9823822eb26928e7020ed21e449c1d5cd974be7a3f0874fe5b5",
+    "files" : {
+      "action.json" : "2071f6c18ec69165ead024cbeb260d56ec67320f281be7a6bfe603ed012137ca",
+      "data.json" : "3c1c6fdf9c5bd72faf8f76ed9abbe3c501b6aa0490157c7c282613ca10acbc59",
+      "expected.json" : "52415d296742babe5e0bd4415e9c06ec552cab3e8d49f904300cbd2daf52b39f",
+      "lock" : "e26f9d6925c31fb66abef797117213d346f3550935fb76a9a87071e801ec2cce",
+      "name" : "5b5819811fc027a7cd14caebbda622fc62e8f8153d5b09b97984185a542131a6"
+    },
+    "fixture" : "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
+    "reason" : "locked, and no documented source reproduces it: REJECTED The page prints the result after $addFields (email as a match document) and again after $set (email as a string); the extractor reads the first, so the drafted corrections rewrite every email, which the lock does not describe.",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexFind#testUseRegexFindToParseEmailFromString"
+  }, {
+    "bodySha256" : "d1bcf08ce3caa928a00bdf101a673cc4e31d401e06b29ecffd0f85f93e0c89b9",
+    "files" : {
+      "action.json" : "b2a60e317a26ea8e7040827eee1adf7518e94b20a8c2624d5adb610c485cd4c1",
+      "data.json" : "367de045dadf438753aaa4a78d5d7c7689acdfce6843de1c281aa41da519a245",
+      "expected.json" : "deef9ee9a345c3a807075a527ca0f8d5488c8d2d9df53b21c0d9c49053590d40",
+      "lock" : "2293d546211563d5105ce5e250fbbff2363e9d882b91bf4b3c22655bd307c896",
+      "name" : "2fe32bb93f75e43e487cd2558dcc5dcce5e8aba961e8442ca94f0b3628fc79d7"
+    },
+    "fixture" : "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json TYPE at /0/names/0",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexFindAll#testUseCapturedGroupingsToParseUserName"
+  }, {
+    "bodySha256" : "385346b5c9786eb60c7c066dcccadcb51b3176350f0e1602f025b7ea6d96cd05",
+    "files" : {
+      "action.json" : "bb92e49a42d9f26f78b32ba83a84ab6696d18cc76302554ba09bf4084c1fe64d",
+      "data.json" : "367de045dadf438753aaa4a78d5d7c7689acdfce6843de1c281aa41da519a245",
+      "expected.json" : "274c34468f534b0573ef2cc145ae71ac2511a7f699816c4d3666f23ebc6a94a4",
+      "lock" : "fbc15cff05ea15bbe36c010dc50abf9256ed198e42e189c1cd4b49503ef4975a",
+      "name" : "dde0178a2250a7756c883b8476a1887f8284ad957c60460134184c4116ee44c3"
+    },
+    "fixture" : "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json TYPE at /0/email/0",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexFindAll#testUseRegexFindAllToParseEmailFromString"
+  }, {
+    "bodySha256" : "20800bd2bb0e4b8a5413a646e2e4b7d357c3673e1643a16013e38707dee078f3",
+    "files" : {
+      "action.json" : "cf1a98bcd8581456a59f24347f67055b09998ed33a34fbda689cd90adb13fa66",
+      "data.json" : "367de045dadf438753aaa4a78d5d7c7689acdfce6843de1c281aa41da519a245",
+      "expected.json" : "5dba59fe1e5f73cfc6c1c4601c8dd135916022aaeb1c658a949dae59e6992910",
+      "lock" : "1b5d2a7790394edf5ace43899604bb5c64a3b94622adf7b44cb9b6305c166dfe",
+      "name" : "3adb8c154fb0a1b019d7f06beb447fe08ad87b2cf377fc738ec86628e249ea1d"
+    },
+    "fixture" : "aggregation/expressions/regexMatch/useRegexMatchToCheckEmailAddress",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRegexMatch#testUseRegexMatchToCheckEmailAddress"
+  }, {
+    "bodySha256" : "cb8087b474664b3790c6b9bdcf080a83100d4f7e57506bf7dc7235a883112db4",
+    "files" : {
+      "action.json" : "5ec60249228bccba5865be55a92ffa9162f8e1be432e05c4e30181cf7fb0be35",
+      "data.json" : "54535a24ea2485764bf85638cfe15a6380d3ca9a9169ae6d4b523dbf9246270c",
+      "expected.json" : "8315f9a9ca9ad68ae7586a3f0890153372b50f5067564927308ff8f18efa918f",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/rtrim/rtrimExpressionOperator",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /1/description",
+    "test" : "dev.morphia.test.aggregation.expressions.TestRtrim#testRtrimExpressionOperator"
+  }, {
+    "bodySha256" : "5f5274dbbd7b517abbacc7d9545b7ada056d1d3bae1958b0cd57cbca5efd8e2d",
+    "files" : {
+      "action.json" : "a7710831741d6261b6a9376c0cc5fd37436d4bab6b43f606610d28856342f6d0",
+      "data.json" : "49e2c2b8a6da0ddd3b66973c14c86ee152e6acbdc5fd6d7682b830cb8c0ae6eb",
+      "expected.json" : "85c1370e91daec71182498fb8b9240c7896fe20b5f824af8abb6467e05a8ab40",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/sampleRate/sampleRateExpressionOperator",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSampleRate#testSampleRateExpressionOperator"
+  }, {
+    "bodySha256" : "5d1313ce04e817fa94246c391255bad4b58d6265383f0c5593f45d44e114fab9",
+    "files" : {
+      "action.json" : "a3a33248135c48a5cef8cca0fc400db24e1cdf1e5dad1146a7a20c08ecaf598a",
+      "data.json" : "c49dfe46213041b46b57aca30070b04629c72666ada926dd6930e656b5a6ad31",
+      "expected.json" : "d06e776de7135f57c17362936a50038e512110677491b01a4602660837dd1e6a",
+      "lock" : "98f71421c2945bd24ac713bec034f2c05c919310cf3f639e25a49ab3713b0078",
+      "name" : "42f720584c14dee62747927cfa3140a97601622713ad500d4b06334c7f2be0ae"
+    },
+    "fixture" : "aggregation/expressions/setField/removeFieldsThatStartWithADollarSign",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testRemoveFieldsThatStartWithADollarSign"
+  }, {
+    "bodySha256" : "9df536255fa022d99cba66f2d6273ffecdee14aa6e83773c56bf6bddae6001e8",
+    "files" : {
+      "action.json" : "5b70bd9ed996229a7cdfc30bdb9c0de91e08beee165bf8a7eb21a776cb46134b",
+      "data.json" : "765bc6a16a96c101c87e9faf8f67383a026e4651c18ba0a60f484d4a44cb65bc",
+      "data1.json" : "f914f234c3299f96ee2324f9b350c2d995dc0704be5aee1f4f21cb2d17a1cdc5",
+      "data2.json" : "e339c0cd5904a49ef54585cf95fe96281f051965079327cffaadc8af2338be3c",
+      "data3.json" : "355761f37275bfc129d77f621cb462bb1200f39ec328b6fa23f5aea185bb83c5",
+      "expected.json" : "dca0033640016ed0be029b55089934d5bbfacc74f99fc2e0f7a1668b99505c51",
+      "name" : "dd5d04957cdce9b380ee472f0fb38a269660d02a7d9fe40410039ef422a86197"
+    },
+    "fixture" : "aggregation/expressions/setIntersection/retrieveDocumentsForRolesGrantedToTheCurrentUser",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSetIntersection#testRetrieveDocumentsForRolesGrantedToTheCurrentUser"
+  }, {
+    "bodySha256" : "75451ad4262e74480caa57a2ba1db7906f7dfa04355cef5fa7d074aed7e8fd35",
+    "files" : {
+      "action.json" : "949676ae546f39cc6a237312cbe3895061a8deb37b70e9f342d15099ab20b3b2",
+      "data.json" : "5b0023c5f86cf03ebff51d5ee10e0935fa8f16e454552e3f244966eccc3230da",
+      "expected.json" : "1780da781bbb8d4f99ec3dbd069fe1fe7d3abdf1c244c9812361dc56aeb239f5",
+      "name" : "448bafdb967d672608ce4b13db8d03d7c375517f6c9ff1a12e4513f6c7c744ba"
+    },
+    "fixture" : "aggregation/expressions/sortArray/sortOnAField",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Sort on a Field",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnAField"
+  }, {
+    "bodySha256" : "0f4aff8f897ca8ca5faa45097a9d05153a105a4c3550af82c88bb89b636f8900",
+    "files" : {
+      "action.json" : "70dd7097769febe4ce079697df2db3d12615e1927fc506f3687e9c0c29c08f97",
+      "data.json" : "9b510177807b6ce3a7fedfca1b3012be49f0281a6fb24225d0475fb87afa7643",
+      "expected.json" : "4d34e2ee3b48199b01df92ece27406339c0aa08f4934bb8ee67982b1c7b69445",
+      "lock" : "e00cdc2cb319629b9d2a5479b8ba73017f16b891929d1bbd56b6859827608f96",
+      "name" : "99054f0f3c3421a7caef1cf319f00506828ccc90c8ca191a7032ebc79bd94b8b"
+    },
+    "fixture" : "aggregation/expressions/sortArray/sortOnMixedTypeFields",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE printed expected VALUE at /0/result/3",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnMixedTypeFields"
+  }, {
+    "bodySha256" : "8d5b44ebd4bc08af1e91b53c3ebedb97da0024ad18c4ebaf3ec651931aaecdd4",
+    "files" : {
+      "action.json" : "ce354b406a87e5f9ae6366e6e957798d7f6056d9854b7ce85c808f6cfb944c87",
+      "data.json" : "9b510177807b6ce3a7fedfca1b3012be49f0281a6fb24225d0475fb87afa7643",
+      "expected.json" : "ad4d001a6a9f58a3cb548ff3e450893c3562b7d5155fec16fb8f8396d9e04656",
+      "lock" : "e20ae931bba2666099d4c2949e5a5715e1bf8cea0b397c1dc32873485d9b5ab9",
+      "name" : "b0bf270cd88affc05953dd0f11da1e8029c2faadc60a0f7f63e47c01325311f0"
+    },
+    "fixture" : "aggregation/expressions/sortArray/sortOnMultipleFields",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnMultipleFields"
+  }, {
+    "bodySha256" : "0a80537724a698b3d8e5f1d899d21aecef8008fda26132f593c9a42101e621be",
+    "files" : {
+      "action.json" : "0ac132c62eb78d3d29b7393a5f06e064438af43d0f48612113e13147bf4a7831",
+      "data.json" : "d0477689ca6869ff8281b107e5bb89a21b5678c8d17ae007663d747cd0992844",
+      "expected.json" : "c62077343459a98f4eb5328213428d93b79d16950485ea08dc2736a50cea2664",
+      "lock" : "bd26a8618328d15037237222b24b6175863fdf1fe36c8e1e2ec49ffef2a6a017",
+      "name" : "13f25f9e86f0b9e61fadd6bf4b7abfb86a1c10d3a115219d3922ae7660f13653"
+    },
+    "fixture" : "aggregation/expressions/stdDevSamp/useInGroupStage",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.aggregation.expressions.TestStdDevSamp#testUseInGroupStage"
+  }, {
+    "bodySha256" : "a7937c1d936bf7947f50a46f288c25ce6637b29095e80903e3283abf1fc44b1b",
+    "files" : {
+      "action.json" : "1a917a93b980d14337391a4de4422dbad71f3a12dc4cce78cb723ca8206a907e",
+      "data.json" : "e7e2963f612be79022cd45be77dd0b95dac6480327212612c5b76f39e247ba2e",
+      "expected.json" : "204f21ba2056ad87736f31d15bfe32b6d7d127b63c38c4f177d6b904ace1a361",
+      "lock" : "892e7df077cc05bbe9bf4947fcc51e9cca9059e2347f7b4bf4b81ad88c3ea110",
+      "name" : "381d5f3591cde3c56edad69f975fae6f0d690edaedfd509aade4447620892b2e"
+    },
+    "fixture" : "aggregation/expressions/subtract/subtractMillisecondsFromADate",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.aggregation.expressions.TestSubtract#testSubtractMillisecondsFromADate"
+  }, {
+    "bodySha256" : "557e6e073fa9cd2a9ac0d06c7cf270d8595d168d43277f163747122ffa285d5b",
+    "files" : {
+      "action.json" : "ed36280bac3388876f2dc863fcf9b29b605039570b80b637e31d610cd5a3eed4",
+      "data.json" : "f5d9e56b8751ba679818fdc8936f89a78682ccbef690b92f93d34f71224d7477",
+      "expected.json" : "f3697a9a5559298ffdfd5824faa728af48db0c228f0227449908c73659b8212a",
+      "lock" : "b47d9c6a4d3422bb0e91e5402221e327de2525371b93e178077c86b42e537985",
+      "name" : "fa5cc5a27f14d49ee1905057e31ba3ae2a2a7e77d9d17cd343981e6fa3f53070"
+    },
+    "fixture" : "aggregation/expressions/tan/tangentOfValueInDegrees",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTan#testTangentOfValueInDegrees"
+  }, {
+    "bodySha256" : "a41457eb765f883b58f66f5df3048ef78b356728b743279ac1c7a7702cb7318a",
+    "files" : {
+      "action.json" : "d1583805f7b8e8922a3baec6e1e071333f0531473693bcfc8d1c059623bb179c",
+      "data.json" : "54535a24ea2485764bf85638cfe15a6380d3ca9a9169ae6d4b523dbf9246270c",
+      "expected.json" : "ec36cdec8f06f794c6579a6af9fecd1e72bd106ccd9fbbdc4f2898a3c688620f",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/trim/trimExpressionOperator",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /1/description",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTrim#testTrimExpressionOperator"
+  }, {
+    "bodySha256" : "51d9f4852bc75d73d002e59dbfc8b61fa918e2ffaf7ef672e9ca9018404aa8cf",
+    "files" : {
+      "action.json" : "bb3f8ef32e444881691fa3f9224803a08ce30a973be6386406fe5e467240d922",
+      "data.json" : "65bfb84d8ad4d3027c90762d7e94c38c69ffdb7d189fba6ba46096fb4fa06e80",
+      "expected.json" : "bd19144a5903e2bfca095ad3714c90f9586ceb24ede3c0f9546e2441adbb0378",
+      "lock" : "d6802e36506db9857e0e99c12f916f5f48948484ee596975b0414f962aec1e87",
+      "name" : "9a1fca1694436c39a9733f4bc77f91ed9ac29e05633ad227b086ebd17d635880"
+    },
+    "fixture" : "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /0/symbol",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTsIncrement#testObtainTheIncrementingOrdinalFromATimestampField"
+  }, {
+    "bodySha256" : null,
+    "files" : {
+      "lock" : "25e7ddf69cd4c88c7ab539b74ecaf3c40b86b3bb0c449c95dd83d41b96db60bb",
+      "name" : "83fb8be659bf7a0ef835020c581d952bcfaa9499c287fbae7b28c376d316ef12"
+    },
+    "fixture" : "aggregation/expressions/tsIncrement/useTsIncrementInAChangeStreamCursorToMonitorCollectionChanges",
+    "reason" : "the fixture holds only a name and a lock: no action, data or expected results",
+    "test" : null
+  }, {
+    "bodySha256" : null,
+    "files" : {
+      "lock" : "25e7ddf69cd4c88c7ab539b74ecaf3c40b86b3bb0c449c95dd83d41b96db60bb",
+      "name" : "9525e9930b30e8172ee2e87668a49169199730fb8cd82089935d568adbe4bac1"
+    },
+    "fixture" : "aggregation/expressions/tsSecond/useTsSecondInAChangeStreamCursorToMonitorCollectionChanges",
+    "reason" : "the fixture holds only a name and a lock: no action, data or expected results",
+    "test" : null
+  }, {
+    "bodySha256" : "c147d52b3c7bc99b939c98d513f285088de163037b77fb11e78c8a28502814ee",
+    "files" : {
+      "action.json" : "7db1e839a547f778b9e8501509544ce3a9774e7958e2f45fe00b3d3cbd04c652",
+      "data.json" : "e0060fa423fcb666746c998dad9a9dc75afc80f1c324fb40b42f1d19af844715",
+      "expected.json" : "3b8d4353c6a33eb49b207c9d00e80a838b9a5caad7aecf0c72f465bb1a770534",
+      "lock" : "7405c1ab224a7feb1f832e92932431979a477c0eb32e14068381a3eeb79647ae",
+      "name" : "2c8080342c96ebb91160746a74e0069cb6b6ebfd5c83bc85b46e288a7021692f"
+    },
+    "fixture" : "aggregation/expressions/zip/filteringAndPreservingIndexes",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED data.json syntax",
+    "test" : "dev.morphia.test.aggregation.expressions.TestZip#testFilteringAndPreservingIndexes"
+  }, {
+    "bodySha256" : "c4b462dc263c435e70fef0d21d68fff2ca67b068e4c8435a718c8c14a2f8d498",
+    "files" : {
+      "action.json" : "72827b7e5c1d421c1faf6184450f0728d291d4805c84c4945ba2a0decd4b8db0",
+      "data.json" : "7eecec387ba748d343273d1ec5a3af4e91704d8261e80c50ac1159bdfca7e051",
+      "expected.json" : "f7cff0badf4a46e02cff67ab7ca44c0bbfed24f73e428f946b14a460d003335e",
+      "name" : "2c4f9865562878fea19e5753f4f36c71dd1b406d223cd60a6374862793653389"
+    },
+    "fixture" : "aggregation/stages/addFields/usingTwoAddFieldsStages",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.aggregation.stages.TestAddFields#testUsingTwoAddFieldsStages"
+  }, {
+    "bodySha256" : "c4ac89e03a0aa07401172a005fce23c5daf8b580c1088e65e10b68620bead47b",
+    "files" : {
+      "action.json" : "c9d33410ded140924bdf3682bc4b76abc9690875392096843ca29590848b0733",
+      "data.json" : "64b26db455c79ae02e9bc2ac6466f21914b397dca32b5f31fbd1a85e4aff9353",
+      "expected.json" : "ac9f5ddfd9fef61d4297b3329e25def896401d12064b76d9caee1b6dacadba48",
+      "lock" : "fb6daf4e9852282d9baf109dc02b149867e5448d0cae99e55c049d0ffd541cd2",
+      "name" : "c773dd08f8a4b7d1996b213c3216e26fbbecc938f459c27072d667421fbd571a"
+    },
+    "fixture" : "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.stages.TestBucket#testBucketByYearAndFilterByBucketResults"
+  }, {
+    "bodySha256" : "287997a3ae1cc2e1f39e01c2e771d45b001abad0d409277ae7cbd4ef0510cecb",
+    "files" : {
+      "data.json" : "bc71dd69f26324d23db51f990138b9c331c9ed3d12aa5d2422e8756871a373d8"
+    },
+    "fixture" : "aggregation/stages/changeStream/changeStream",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED the fixture has no name file",
+    "test" : "dev.morphia.test.aggregation.stages.TestChangeStream#testChangeStream"
+  }, {
+    "bodySha256" : "51256242f0d1a7fdd899c66a9e884cadbbf362baba3215a8a84622e82d805fa8",
+    "files" : {
+      "action.json" : "be4c186e40a7828eea90cd945b98f984b5344be1a52adabb658c2a905127da16",
+      "data.json" : "96393a17fdeece51e62309c09f2d36805c27e405caa29ac3b7cdf7d8a84f8d09",
+      "expected.json" : "f1b3313344089bd894ce06630d077e999b0149d0c3200cabaff15871287f7888",
+      "name" : "6432992c9d70a2a196a5856f457062d0e4ba678d36be64600c72efa70ca8ccbf"
+    },
+    "fixture" : "aggregation/stages/currentOp/inactiveSessionsReplicaSet",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testInactiveSessionsReplicaSet"
+  }, {
+    "bodySha256" : "51256242f0d1a7fdd899c66a9e884cadbbf362baba3215a8a84622e82d805fa8",
+    "files" : {
+      "action.json" : "be4c186e40a7828eea90cd945b98f984b5344be1a52adabb658c2a905127da16",
+      "expected.json" : "07ef323a6a11e0e688ce5418fc983718c94be031340d3b6a1b0c2ae758240061",
+      "name" : "2e80165d3f4b415221b9129a93b431dcd1a7b240d7553a8cce31f34c0911e0b9"
+    },
+    "fixture" : "aggregation/stages/currentOp/inactiveSessionsShardedCluster",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testInactiveSessionsShardedCluster"
+  }, {
+    "bodySha256" : "51256242f0d1a7fdd899c66a9e884cadbbf362baba3215a8a84622e82d805fa8",
+    "files" : {
+      "action.json" : "be4c186e40a7828eea90cd945b98f984b5344be1a52adabb658c2a905127da16",
+      "data.json" : "ac5a4a41738929413ca7a79faf5dfc00ecb04d4b4d0add61ef000af784dcc23d",
+      "expected.json" : "30e12a1a01b17f8981897076be73736f653b1e94e56ccdc75c094b2763bfc807",
+      "name" : "ed0d0e0c765074944b7fb6cda8773576a07310b0cf7c127cf5e3655ff9bb26ec"
+    },
+    "fixture" : "aggregation/stages/currentOp/inactiveSessionsShardedClusterLocalOpsTrue",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testInactiveSessionsShardedClusterLocalOpsTrue"
+  }, {
+    "bodySha256" : "7e0d8a116fddbdcf8c266341d239b924715d1854a484593a59b90410bf9af9b6",
+    "files" : {
+      "action.json" : "36ce0c04a59f7356af25b611a545a981ac7cd0b8f13b08447ae5f2988c21a6c3",
+      "expected.json" : "1000cb48f7fb3dcb872df5f2443a200fb4ee4f6f2861ca34d7b02e245b61a03f",
+      "name" : "e3ddeb64b7eeb0d4de32b12ea956076d630d9e1a74df462fbb313be06d12fd94"
+    },
+    "fixture" : "aggregation/stages/currentOp/sampledQueriesReplicaSet",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testSampledQueriesReplicaSet"
+  }, {
+    "bodySha256" : "7e0d8a116fddbdcf8c266341d239b924715d1854a484593a59b90410bf9af9b6",
+    "files" : {
+      "action.json" : "36ce0c04a59f7356af25b611a545a981ac7cd0b8f13b08447ae5f2988c21a6c3",
+      "expected.json" : "73f5b209c6683931d46cb2693398181be68146e1a02bdcea9c998c28191585f2",
+      "name" : "49ba9fc8a153f7c9f0da674a200244ed2efe88adf4e9a9248b2c6b958be279d1"
+    },
+    "fixture" : "aggregation/stages/currentOp/sampledQueriesShardedClusterMongodShardsvr",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testSampledQueriesShardedClusterMongodShardsvr"
+  }, {
+    "bodySha256" : "7e0d8a116fddbdcf8c266341d239b924715d1854a484593a59b90410bf9af9b6",
+    "files" : {
+      "action.json" : "36ce0c04a59f7356af25b611a545a981ac7cd0b8f13b08447ae5f2988c21a6c3",
+      "expected.json" : "6bb50ea3fe7c5f23b0425927f0f38da76806a82f126c8509c27dfb0c759b7d88",
+      "name" : "b6e17b88fa5a22528b263da7a90b74bbddf8cd57265193f84b226206b9273148"
+    },
+    "fixture" : "aggregation/stages/currentOp/sampledQueriesShardedClusterMongos",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestCurrentOp#testSampledQueriesShardedClusterMongos"
+  }, {
+    "bodySha256" : "ef4b065ef4eeee76ad66c1f26414e2356ef617f1fc16e29232108d2e007f507d",
+    "files" : {
+      "action.json" : "6a4f4b1f1ff0c7e339ab13ee2a76cc501c0a64c972a8641bf61beef0abb812cf",
+      "data.json" : "1aa51d3a1b7f8240cfa45775aa803497c1c981db197495d79b27afb4d4d871f3",
+      "expected.json" : "c695c7be7a0ef1b7a54ff59adfd537ff2ff1940854008e69edccb511a6a9d7dc",
+      "lock" : "682cc1c303041b8c47031748eb81ad9130c42b84ac7b0433054408b274eb9288",
+      "name" : "c1fd733d2bb03c29b8ab81e5febf0b0084ea43381f42dd488d5847762aff751e"
+    },
+    "fixture" : "aggregation/stages/densify/densifictionWithPartitions",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action KEY_ORDER at /0/$densify/range",
+    "test" : "dev.morphia.test.aggregation.stages.TestDensify#testDensifictionWithPartitions"
+  }, {
+    "bodySha256" : "bf20a2a13bae62691f781828e8d7199b76d92ce7a9c798dd56d36ff9e79c94f6",
+    "files" : {
+      "action.json" : "b81af636aa582181e0f159e301da607948104e3f70e70eb867cf9491be538e3b",
+      "data.json" : "1184bb963db28396c74728a12f42ab996dd3fc5133901e40b5150981ca3b5d21",
+      "expected.json" : "584881beab8107389eb780c2d9677e97bebced6bb36e7aa3507f6bc28dd2af84",
+      "lock" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
+      "name" : "b93ddc26a1ff40b6d2d7165fae6a09826a63e5bb0881600b4780951762c37f51"
+    },
+    "fixture" : "aggregation/stages/documents/testAPipelineStage",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testTestAPipelineStage"
+  }, {
+    "bodySha256" : "f37706b5c84feb6dfe97ca7d36d89f90bf5c719cbf27f271bf06b14b3bb193dd",
+    "files" : {
+      "action.json" : "371aa5e260f6386f22f59f7212bd3372ceaa4a58a2920c1b7a9cd01c7739d562",
+      "data.json" : "89db0c049036c93af25068813df85190c5d8023ea4abec3227d603d9dbf26ec1",
+      "expected.json" : "0e299220bf94e5b70d4d0c40d333b3cf8fbce80da56c7089c09a8de4eb757338",
+      "lock" : "5b141c9677f036641a1f3b9bb2c2e045f5a9155ae9a215568e8228acd5d7dd93",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/stages/facet/facetAggregationStage",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action TYPE at /0/$facet/categorizedByPrice/0/$match/price/$exists",
+    "test" : "dev.morphia.test.aggregation.stages.TestFacet#testFacetAggregationStage"
+  }, {
+    "bodySha256" : "ef8f104a6cb9ded61783c227d596a8e357c593d415776a8f7273a208e068103e",
+    "files" : {
+      "action.json" : "955e71ec78ad9690276a43e8e174d78db6b25ad44fa79025bbfcc97e70e88646",
+      "data.json" : "b29585a13be34cdd7e64cf7ae8393215aafa100e51c14c36fa928cdcc1c04fef",
+      "expected.json" : "bfa109e01789538a379929c4eb8a50cce7f8e27c91fa1f2faa3038aec9243510",
+      "lock" : "14e6d2002bec5a4c70d5f323afe3e0d0446c231c28b501830563374c8e4a2a45",
+      "name" : "88d6f732f07ebc241bb53ebbe3c047a0d7646483d7e6b9e40550b3d45b7b4237"
+    },
+    "fixture" : "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action KEY_ORDER at /0/$fill",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testInterpolateIdenticalValuesInDifferentPartitions"
+  }, {
+    "bodySha256" : "9fd4966b2f294610dfc9054f7cbbfc13ccc151c83e3c2c3905776ca83b6c5489",
+    "files" : {
+      "action.json" : "302f34133cb53bbec0f9efa2505c312d8b6a7a7cdcd60150fbb7c79318d3547c",
+      "data.json" : "07ef5754718dfbc113ed8fc2cabdd5d732ed6b3a4f3959c94e2dc4204e21313e",
+      "data1.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "expected.json" : "443ac81ee054c5b3514579ed0c1e2508a44d7f0286a3ce17e816cb7e0837a383",
+      "index.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "lock" : "ed8a496e1dd41083c31251a44247982ef270b2501b633781ec9160581281222f",
+      "name" : "c7fd4f861f716926c200ba7652c983b99bfa39e9794cb7f5629cd5dd611d26ac"
+    },
+    "fixture" : "aggregation/stages/geoNear/geoNearWithBoundLetOption",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED files [data1.json]",
+    "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testGeoNearWithBoundLetOption"
+  }, {
+    "bodySha256" : "3dfd122b2326644ec0d736e9c6ade79c24713db9647f2505b9ed10e809087ae3",
+    "files" : {
+      "action.json" : "37a215b3899080c7316a42e34c5f00067deb375c586ec1bbfbdecea774eedaad",
+      "data.json" : "50f4d485ca2d9cfa4053099bfcc2f78a98754cc018be7ffd6f7b3dfbb79941d2",
+      "data1.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "expected.json" : "44f5a8362db64823c6d491bfb247c121c2cca4f2330e9ff604fe06f842dbb45a",
+      "index.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "lockd" : "ec8aae2831d235ec5cac5f5c6589a4f126471930823d615d763c3c7bcb9f0258",
+      "name" : "c25a72338bb26eb2ce24ae82490c2c02dfa3f8d6823db97d971f9b21b29f9677"
+    },
+    "fixture" : "aggregation/stages/geoNear/geoNearWithTheLetOption",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED aggregate options",
+    "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testGeoNearWithTheLetOption"
+  }, {
+    "bodySha256" : "fa9681d61642ca3413ad370193adeac96956a9a010583e04850fe1620f5fe8c5",
+    "files" : {
+      "action.json" : "08354b56f3318cd317174bba4aecc1f488a8e2d8e0206d12db3c6b55339549d6",
+      "data.json" : "50f4d485ca2d9cfa4053099bfcc2f78a98754cc018be7ffd6f7b3dfbb79941d2",
+      "data1.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "expected.json" : "4f170f2e29b1f512b234dc85e75dca2288fefdbc90b5df7c68e1593fcec0fdc0",
+      "index.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "lock" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "name" : "bb5af11bce6d801dbbb59d525866a694ff7b83104f1256356ad597c47ab463c2"
+    },
+    "fixture" : "aggregation/stages/geoNear/maximumDistance",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED files [data1.json]",
+    "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testMaximumDistance"
+  }, {
+    "bodySha256" : "38e71b2b3c84239af607aa997edd6b1a202fce3c0409718c4a26d8e374b97916",
+    "files" : {
+      "action.json" : "61535f068471e0e45e2e2d7a98d2bf2df0d7f9393f855f5334306563f1a9f8ae",
+      "data.json" : "50f4d485ca2d9cfa4053099bfcc2f78a98754cc018be7ffd6f7b3dfbb79941d2",
+      "data1.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "expected.json" : "44f5a8362db64823c6d491bfb247c121c2cca4f2330e9ff604fe06f842dbb45a",
+      "index.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "name" : "08c181658b9733a1f9dcc8625c9b6f34a752c0d386c2035c27ca5de96d823905"
+    },
+    "fixture" : "aggregation/stages/geoNear/minimumDistance",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED files [data1.json]",
+    "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testMinimumDistance"
+  }, {
+    "bodySha256" : "8f528b8fa3bb95f1ea437d67127b5d0af9d465128b45967114a0bf568162a24c",
+    "files" : {
+      "action.json" : "c270f9276fea5ca9187a4a7fe6314705a988d72f0d8e2f1e7a00534ecf641414",
+      "data.json" : "b26ed891864343b8d5cb9da8571ad41f4a982b60a365645830f0d3263bea3d13",
+      "expected.json" : "3a56d85fcf53e09916fef82e1ccb207f6586f98acbcd4c93c9c2408ed1103259",
+      "index.json" : "e4f979142f1432ea3dbb6b63cc4dada65dd739e540a081c493373caaaeaa08e4",
+      "name" : "dfaa0002dcb6a799878bdb3a6f79b6d35734d6af61f1cbea06612f7cfbf48d42"
+    },
+    "fixture" : "aggregation/stages/geoNear/specifyWhichGeospatialIndexToUse",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE index.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.stages.TestGeoNear#testSpecifyWhichGeospatialIndexToUse"
+  }, {
+    "bodySha256" : "fc228272ac5563a6d012197015d746c9cf56d833a2c5305c7f86b2560f116db8",
+    "files" : {
+      "action.json" : "433657574e6dde5129fa72b16babb7edc1cfda45eca1eea36806c5359ddf862c",
+      "data.json" : "bf2e0b1855a49834e85fbcdd70b2cfc188b232212ecf1e3601598e3e2d87ab40",
+      "expected.json" : "8e55565bb059d28f7433563225f9b214aac0c15fd8b40519bf1749f0e96b73b0",
+      "lock" : "1026a3ee8d9967510261d807a7cea0d14e6abcbde526cbd336675083d6bede0e",
+      "name" : "4e7c158a7f258708694e66a1b39d76cfb4245001f60d57c0b787f1bd803a9acf"
+    },
+    "fixture" : "aggregation/stages/group/calculateCountSumAndAverage",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED DATE_CALL",
+    "test" : "dev.morphia.test.aggregation.stages.TestGroup#testCalculateCountSumAndAverage"
+  }, {
+    "bodySha256" : "1e9ee7bb3f7f5d33ce5e46d4190cfcb4f16e7965df344164f4018b27f5669c89",
+    "files" : {
+      "action.json" : "ddad33b6aac08ee5683e9d5f2cd3d838ead640f514aa185bb55279f3a8f0b90b",
+      "data.json" : "bf2e0b1855a49834e85fbcdd70b2cfc188b232212ecf1e3601598e3e2d87ab40",
+      "expected.json" : "3a40718f88fadcb4ae1372ccfbb21576227beaf50f3590ffd9e5ece9f5bc2395",
+      "lock" : "1026a3ee8d9967510261d807a7cea0d14e6abcbde526cbd336675083d6bede0e",
+      "name" : "0e3170301a4413066b3b45d49655593c94c154d14ca4990dadaa07554c6281bd"
+    },
+    "fixture" : "aggregation/stages/group/countTheNumberOfDocumentsInACollection",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json TYPE at /0/price",
+    "test" : "dev.morphia.test.aggregation.stages.TestGroup#testCountTheNumberOfDocumentsInACollection"
+  }, {
+    "bodySha256" : "efd6f2ddbc01f860ad98216466f614da923646e9080b49cf95b780cfa9bbf353",
+    "files" : {
+      "action.json" : "54853bceb3efd47026ad7da84aa8e484ba01fe10684a754f04142104e740dfc2",
+      "data.json" : "bf2e0b1855a49834e85fbcdd70b2cfc188b232212ecf1e3601598e3e2d87ab40",
+      "expected.json" : "2f755c26e40f761b39419bdb26212c2640e2a0d0618613463917bd3780f8db79",
+      "lock" : "1026a3ee8d9967510261d807a7cea0d14e6abcbde526cbd336675083d6bede0e",
+      "name" : "407dc0e4bd78fa2f46fea8c82355251f14af4542c1d10dd69ff0ee1e849b6c33"
+    },
+    "fixture" : "aggregation/stages/group/groupByItemHaving",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE printed expected VALUE at /0/totalSaleAmount",
+    "test" : "dev.morphia.test.aggregation.stages.TestGroup#testGroupByItemHaving"
+  }, {
+    "bodySha256" : "339c9758a710d0b27474f02753838c87adbb948c576a0a5278bef6ecf58906a1",
+    "files" : {
+      "action.json" : "be5eca521a30ee97a1bc936b36b8e1faaee5eae4253a43c4c8363067770523b0",
+      "data.json" : "bf2e0b1855a49834e85fbcdd70b2cfc188b232212ecf1e3601598e3e2d87ab40",
+      "expected.json" : "1f84b7cfa4fb9def0cdbf6d9bfa66672dd6e673c9a84b25afd111eb62b666e77",
+      "lock" : "1026a3ee8d9967510261d807a7cea0d14e6abcbde526cbd336675083d6bede0e",
+      "name" : "905dfbd859d9f82dd9431d590dded0daf762dcf5e4f07088881ec33ca16cb995"
+    },
+    "fixture" : "aggregation/stages/group/retrieveDistinctValues",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json TYPE at /0/price",
+    "test" : "dev.morphia.test.aggregation.stages.TestGroup#testRetrieveDistinctValues"
+  }, {
+    "bodySha256" : "68253719a23ef57ac943a3335ca994cb6b243afe544a33d4339fc0ff1aeb0413",
+    "files" : {
+      "action.json" : "489873413879f1c273bf76c50f103ae3e0b4336fe3c123f8138dfae36f1470e1",
+      "data.json" : "bc21d0f323689f76848e5183053cccf898db70f74ed6c7bd9c2f6d52053ab1b2",
+      "data1.json" : "3f2ea1ce7fb570ba09fba740adb64fa936b13527278ab376a38cff4f55a0dbb6",
+      "expected.json" : "d71c03f4c5c4cbb8adb7a4fc2927f9837f677970018fdec0e93a7da6217c2236",
+      "lock" : "27b687bc18184d1bda1cba9455a2f55a4e302a86ed50af40a1db9329447f29a6",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/stages/indexStats/indexStatsAggregationStage",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED find modifiers",
+    "test" : "dev.morphia.test.aggregation.stages.TestIndexStats#testIndexStatsAggregationStage"
+  }, {
+    "bodySha256" : "cde7f9d3bd09bf1fcb0f97df93dda49c6a470e2d5ba93a540bfb66d6a3ae89f0",
+    "files" : {
+      "action.json" : "fe831249ac9da8f230f8943d18ac80d61a4ac7d69a56f187bea16c4cce361be4",
+      "data.json" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "expected.json" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/stages/limit/limitAggregationStage",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE data.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.stages.TestLimit#testLimitAggregationStage"
+  }, {
+    "bodySha256" : "9265619237dc049c9efd5c01a5c74a7e99db1a67aa7ef3e2e396e54563e1bc57",
+    "files" : {
+      "action.json" : "1ffb60012b24b039df767a487e021a67c3c73f06c631221cb2d1878537da249f",
+      "expected.json" : "06e54f1392dfc067abf5c26d51a6cce615a4c43ad3ab71d77690bf020b2dca83",
+      "name" : "f23f0b08e56da4de9f728dd47f5bd48d43ba3e27010f7f036b04d9c289e98103"
+    },
+    "fixture" : "aggregation/stages/listClusterCatalog/balancingConfiguration",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.stages.TestListClusterCatalog#testBalancingConfiguration"
+  }, {
+    "bodySha256" : "9265619237dc049c9efd5c01a5c74a7e99db1a67aa7ef3e2e396e54563e1bc57",
+    "files" : {
+      "action.json" : "ee90e38caa85e0f2ff35466fee46c32ec7c265823f987c085afa070bb2bcaf0b",
+      "expected.json" : "173709159a097051a6d0205bc69546b54f3a415904e1ac841fe5193119e40ab8",
+      "name" : "f922422fec984021656ee6f16c545b6f8a886e650fbcf59f9c40835f9aad81b9"
+    },
+    "fixture" : "aggregation/stages/listClusterCatalog/listInformationFromAllCollections",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.aggregation.stages.TestListClusterCatalog#testListInformationFromAllCollections"
+  }, {
+    "bodySha256" : "6de14f78f6fb76c3a9d0923b007d1074b961e564915085d48d61d41b5760aa8b",
+    "files" : {
+      "action.json" : "4cc2a0a39e0197c0c1e66cdad9c66813450396bbba0a7b3cbfec01ccaff70dab",
+      "data.json" : "547bd80b0d20ffaf2c474b92d0cfae091b18dd2a230eeeee3dcfa03b8abb379b",
+      "data1.json" : "83a672f57a1e5cf6b91971929a60044adca06322cdffa2d8e86354f5a86e4799",
+      "name" : "3ffd16642a5ca42f2c1725bd4d3d647e68991f34273e8fffc399e7bb8dae9d47"
+    },
+    "fixture" : "aggregation/stages/lookup/namespacesInSubpipelines",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Namespaces in Subpipelines",
+    "test" : "dev.morphia.test.aggregation.stages.TestLookup#testNamespacesInSubpipelines"
+  }, {
+    "bodySha256" : "abc3b466c841a64c5f0d5f77f430f8349967818c8914a25a785e52907b9c1a9d",
+    "files" : {
+      "action.json" : "ff664fca029f4286b0353a5707255316e9066d5ddff75acda0d93e7d05e210bb",
+      "data.json" : "d418bf6fcbe4c319c9cfa2a4890749376b3318bbdd1ee3bc8f1177ace06e3c14",
+      "data1.json" : "9ad32357c222b09ca386e9b19b5b5b71e413b825446b91a7c34167d7ee9d1935",
+      "data2.json" : "d743165b675bb730f3763dab24960e4de658db954e3ac91a0bf743d97c375315",
+      "expected.json" : "cbeea48bc095abe35adf5187b3537606e8ba1f9af7c664310b677d0b4b919da2",
+      "name" : "7762b6a667ccf49c63f6c58196d3939932728de3908a12f00896e971bc2c479d"
+    },
+    "fixture" : "aggregation/stages/merge/mergeResultsFromMultipleCollections",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED document listing beside several collections",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testMergeResultsFromMultipleCollections"
+  }, {
+    "bodySha256" : "36ca65de6f711cf81e0bddc2741a79465766370eb73829d411c060585e7ffe79",
+    "files" : {
+      "action.json" : "303d1c82f4892011287894105532e1be59194f18141a8e98deea5bed6ed81676",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "expected.json" : "e7ff0940367f2495b419b32ab97ceb6a210bfb68f91dfe09e8f63b94d3a1b95e",
+      "lock" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
+      "name" : "ef932a718813c020a86a61e9313b12a743817cf844d56c921f377fc1ffbd1b9c"
+    },
+    "fixture" : "aggregation/stages/merge/onDemandMaterializedViewInitialCreation",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testOnDemandMaterializedViewInitialCreation"
+  }, {
+    "bodySha256" : "8ce1a843c69e49ef751005723c2cac45ae3722268a3582a8fcd280bb62ce91b1",
+    "files" : {
+      "action.json" : "e7a3b4530588ca33b0ca72ef7704b983507b3446af707a59d0a5246a854f83c5",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "data1.json" : "e7ff0940367f2495b419b32ab97ceb6a210bfb68f91dfe09e8f63b94d3a1b95e",
+      "data2.json" : "a193585713b887a6967172afd71699043fc8fbb4c26e2b12c3da7ba25e499d7c",
+      "expected.json" : "7d43eb47aa856622b5de5972999d5316d2e691cc342b0952fdd7b012d6c0bf16",
+      "name" : "b8c7d2b04ba313ee43c50589a66dd3f6b36829c091a0f5b5ef492a65dcbe4d8c"
+    },
+    "fixture" : "aggregation/stages/merge/onDemandMaterializedViewUpdateReplaceData",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testOnDemandMaterializedViewUpdateReplaceData"
+  }, {
+    "bodySha256" : "98ff70f7e7ec02ffe351bc099ec734bdc5c4c7f4e19f527534f1ae5662ae4002",
+    "files" : {
+      "action.json" : "6cc570087b4da07e0d29f4da7b7aef100a8430f4aad10f8a7340acc2494ba73d",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "data1.json" : "25e136aeb9da0b4bfede14b268b44c41349388486a6d7657a21ad5e4482a72f5",
+      "data2.json" : "8abe73fb257f8dcafefe15d171e0213a0d364f0333d1761b6aed3831970ba0a9",
+      "expected.json" : "5cbc8f7ff270cdf3f260e6def9930fb68670a642093b09d39c63c1e60ea43c78",
+      "index.json" : "ea06da16e7d9a2d362f28c4ba01b6a56be007fd4abbd2c9ea2980718f2b20a96",
+      "lock" : "c1881466e99bcf742676b8acc8b774e667c45ea77103f420457da1df9afdcbd5",
+      "name" : "c69e6ac9b13f1890cbfeef0617774242417dd30b9291de83b166ca128a5d52f4"
+    },
+    "fixture" : "aggregation/stages/merge/onlyInsertNewData",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testOnlyInsertNewData"
+  }, {
+    "bodySha256" : "04e90d0242abbead9185cd56e2623e0584dbfa39600b2d9196f653832f66ac53",
+    "files" : {
+      "action.json" : "9a080df7584d0546da1a294b081cf38eef8bec1c272d82eae9898bdc271032d8",
+      "data.json" : "d2532b90fd1836598a39c3f243403b4a0cd3fa016e52d7a5a90d14950bcd45f3",
+      "expected.json" : "f815f8968f1d42731fee652f967f19e9f03efdb81205251d63200d905c2ac2ef",
+      "lock" : "8ac3e26645fb95410bd38462135a8c4044c98609dda60a2e46963dbfb063a9bd",
+      "name" : "bce6586f836256060d0826add3e4b2d416c6e87c209a6c54420590b86d29a285"
+    },
+    "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED no data file for collection monthlytotals",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testUseThePipelineToCustomizeTheMerge"
+  }, {
+    "bodySha256" : "51aeb61b51e02b870cd69ab83062e0bdc84d518e8b83b641c57759a8d85c5104",
+    "files" : {
+      "action.json" : "5a35df1354a5c70599a6a4f72133e53d5dc0cc91352e75c92ec87db75e72e7c9",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "expected.json" : "7dc56cca98b7699a26f01364c03084c5a95304e7ff7cada500d98332631c26d3",
+      "name" : "dcbd30f83de85a4937200e1c497a5e2b8f1363b218f983412e74adbcd9292ebd"
+    },
+    "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeAggregateCommand",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testUseVariablesToCustomizeTheMergeAggregateCommand"
+  }, {
+    "bodySha256" : "51aeb61b51e02b870cd69ab83062e0bdc84d518e8b83b641c57759a8d85c5104",
+    "files" : {
+      "action.json" : "be9a426e551393137a4e8b3a236cc845edc21a25e5bdd0908e0f41d23edb9379",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "expected.json" : "f9d51589acdd97f5ffe143fdfc8bc2b59a7f0a05a1dca62e0f39345848a25fb1",
+      "name" : "6848e97fd38cb07e1e39042d2ca838374e065e20f183e908c7dfa1fd58a3330a"
+    },
+    "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeAndAggregate",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED COLLECTION_REQUIRED",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testUseVariablesToCustomizeTheMergeMergeAndAggregate"
+  }, {
+    "bodySha256" : "51aeb61b51e02b870cd69ab83062e0bdc84d518e8b83b641c57759a8d85c5104",
+    "files" : {
+      "action.json" : "041c1c8eeafbdcfb8aab4c705158a2dd42f26a0d6aacd3dacddae68dc1e9f351",
+      "data.json" : "cdc7d29c2d1e5eb766aa6e4b101786d67955f4effca4428f4d86e9c1b406cf16",
+      "expected.json" : "7dc56cca98b7699a26f01364c03084c5a95304e7ff7cada500d98332631c26d3",
+      "name" : "c9275ae99eb7e87abbb5e8ddd32b6d662f339378c354743fe29c9a62d9c65e49"
+    },
+    "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeStage",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED INSERT_DOCUMENTS",
+    "test" : "dev.morphia.test.aggregation.stages.TestMerge#testUseVariablesToCustomizeTheMergeMergeStage"
+  }, {
+    "bodySha256" : "c83298f17c25b134e9e54055b3b49fa220660c76f421301ec8f9ee23fbf3be2e",
+    "files" : {
+      "action.json" : "65362f1d7f73f5893206359e5397c5b8677a823a7f4da44086648a6a53b405d8",
+      "data.json" : "ae231898ac59a7b84184e617f440b5435961799c0a24e2f6bdcdc1ea50d456a8",
+      "expected.json" : "069abf74f34fb93238ce363e47aa687982b570e15615ca2fcac4e57e003e2c6e",
+      "name" : "f048346005f2dfac2c8edd48961864b396332e33d61d127d1a25c54ccebf3fa9"
+    },
+    "fixture" : "aggregation/stages/out/outputToADifferentDatabase",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.stages.TestOut#testOutputToADifferentDatabase"
+  }, {
+    "bodySha256" : "23c04a7157ce3412765df9a3289ad2b0cdc7f9b4ebee2a4ead632e58d84d7710",
+    "files" : {
+      "action.json" : "c2ba5fec9e3ebe0785bab141d56427536e549d6e6f216483da3c5a1590b4acfc",
+      "data.json" : "ae231898ac59a7b84184e617f440b5435961799c0a24e2f6bdcdc1ea50d456a8",
+      "expected.json" : "069abf74f34fb93238ce363e47aa687982b570e15615ca2fcac4e57e003e2c6e",
+      "lock" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
+      "name" : "57105cbe57d8a3e0ed60f8aaff0ef2b97359dc485e03828490b1e7ff22510440"
+    },
+    "fixture" : "aggregation/stages/out/outputToSameDatabase",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED command outside the current database",
+    "test" : "dev.morphia.test.aggregation.stages.TestOut#testOutputToSameDatabase"
+  }, {
+    "bodySha256" : "ccae472807c07016936b6db130c6bfabd8ff24b61db14f1c7fb9318a1e91cedd",
+    "files" : {
+      "action.json" : "b2ae717af6afba1cb2817d9e11eb14d7504473e88da90d5420dbe4d6dc029208",
+      "data.json" : "ae930ec4ad55327a9b335e7480911f86bc851a635ec56ca4ad6024437a8dcda3",
+      "data1.json" : "4fb0f96189de826610ce52d2a00e7ed7a3b228381c9675ebfe3b8afa86197c0a",
+      "expected.json" : "5d1cca1019ca1ad1fe10e2ace3b3f6db839e0bed3a01a7b667542df29a87ae98",
+      "name" : "52d629f43815662f81b2cf0d2229b03443a5cb29e029c15a07f1678e0893b2f9"
+    },
+    "fixture" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAPlanCacheShapeHash",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED files [data1.json]",
+    "test" : "dev.morphia.test.aggregation.stages.TestPlanCacheStats#testFindCacheEntryDetailsForAPlanCacheShapeHash"
+  }, {
+    "bodySha256" : "7be2516fe5536cb4ae1eef499ab60d15068f9562680216955bad771447252fec",
+    "files" : {
+      "action.json" : "d3410ee71e96db415988330c5d48f3813ad85ad65ef4daade3c07003d4021c40",
+      "data.json" : "ae930ec4ad55327a9b335e7480911f86bc851a635ec56ca4ad6024437a8dcda3",
+      "expected.json" : "ca24b1a8dbd4555dad395838dca2e043aac4d1fa344d77a6ab01b829539b3f1e",
+      "index.json" : "97eaaa7047f1a3985eed043b89a2be6a1f27366b4cef9aa4871ce4516ddce0a0",
+      "lock" : "8142f1493865d1f0166ef06650d4a4cc7e9b65c17ee0fd4aac31658dc9153707",
+      "name" : "52d629f43815662f81b2cf0d2229b03443a5cb29e029c15a07f1678e0893b2f9"
+    },
+    "fixture" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.aggregation.stages.TestPlanCacheStats#testFindCacheEntryDetailsForAQueryHash"
+  }, {
+    "bodySha256" : "579f83f4140fb5b02a6294dba56d72edcb0fd6eee0c5ed76d36da5d4b6e92dcf",
+    "files" : {
+      "action.json" : "5584e01466979e090aa31cc6f3a67171abb951e74e65c690d1597039c8b3c77d",
+      "data.json" : "ae930ec4ad55327a9b335e7480911f86bc851a635ec56ca4ad6024437a8dcda3",
+      "expected.json" : "2e363598dc5218ae3689216379bc29ef44ccbec1f9d57f6e3fd53b0fb74b5e43",
+      "index.json" : "97eaaa7047f1a3985eed043b89a2be6a1f27366b4cef9aa4871ce4516ddce0a0",
+      "lock" : "8142f1493865d1f0166ef06650d4a4cc7e9b65c17ee0fd4aac31658dc9153707",
+      "name" : "aa61120a1c5a40174fe0bbcdfafccfbb65da8bc236e27c8bbdf04cde883cd161"
+    },
+    "fixture" : "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.aggregation.stages.TestPlanCacheStats#testReturnInformationForAllEntriesInTheQueryCache"
+  }, {
+    "bodySha256" : "6de9224a3c7397366da5ba97c0f1171f2f78161988e4194af92a490be653ed8a",
+    "files" : {
+      "action.json" : "a77fb24cf702a10665dc96312f05b4bbab3a892887860b5aa5338e5455de7f4c",
+      "data.json" : "2dbe302e24a71b0e1f12100ce87a75334dfccd1afbb788b53f7fd9ec8718d222",
+      "expected.json" : "2713e81f9199b9fad7e75ba6e3d850639429b35c47e1d55d8a2a7e0f379236a8",
+      "lock" : "ba932bfcf4c4095e79b750dc5593920a52ef20c5829f2187542c454332b76a43",
+      "name" : "6a4cc54d12a18557f2ddab5a4925260862c58da5e320c3c2f3024932b490439a"
+    },
+    "fixture" : "aggregation/stages/project/arrayIndexesAreUnsupported",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testArrayIndexesAreUnsupported"
+  }, {
+    "bodySha256" : "7f2b41b1cb3e7585484b89aee2c62a39de04019825360fae276e1d8c8bf574aa",
+    "files" : {
+      "action.json" : "49b9d7a19e3f139da41b00a25e8108e770655260d9e47811bbdeaf6cfff007c9",
+      "data.json" : "503475fdf9b9abd22f3bf5de7481efc4bc251c58fe6565cf2b44e2ef0437b43f",
+      "expected.json" : "81e88a9928b39c5769c82bb1b2a239e9323991eeca794f3e34a5273f8c36130f",
+      "name" : "6a4cc54d12a18557f2ddab5a4925260862c58da5e320c3c2f3024932b490439a"
+    },
+    "fixture" : "aggregation/stages/project/arrayIndexesAreUnsupportedFromShellInsert",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testArrayIndexesAreUnsupportedFromShellInsert"
+  }, {
+    "bodySha256" : "1c82013263cb09ee5919d3e68ac1db5da545ea265fa53fe99a47c867ca52ecea",
+    "files" : {
+      "action.json" : "e88aa17a901b29ddb40d79b9c46d7d2b983ed2c54c7fcaf2032cf0ba6dab2c61",
+      "data.json" : "90f01ab2dc3fece74280d251bc7fbdb288e2fb6c3b0e006a064a3a1dd9be9651",
+      "expected.json" : "2b275e22ed3b9e9cc525bee7cac5053866a6571d0de8016c1cef6e54fc10c3ed",
+      "name" : "fb82a45702abd6e7e3cba55e33414894699a0be1e6104717d1a49efac918d57b"
+    },
+    "fixture" : "aggregation/stages/project/excludeFieldsFromOutputDocuments",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testExcludeFieldsFromOutputDocuments"
+  }, {
+    "bodySha256" : "0f64c0c70df4dd707346be1031053e5accf2aef05012f0e4e1bceeb800a112cf",
+    "files" : {
+      "action.json" : "eefd5cc1be4bcb3f9a902cb6d67f2dd66b9626b285363407e7058f69206867ab",
+      "data.json" : "7f770d6c84f0abce820e87b71121d4d772fd8b5829deef2cb8ab5c9385a0387b",
+      "expected.json" : "05279dd2228a494e08e26e72d492a8ebd14a66a43508ce908cceb5edc911e240",
+      "name" : "2b7dfaa17c76aabad9610e8db58919e21d342017c24235befa53138de94c567c"
+    },
+    "fixture" : "aggregation/stages/project/includeComputedFields",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE action MISSING_FIELD at /0/$project/isbn/prefix/$substr",
+    "test" : "dev.morphia.test.aggregation.stages.TestProject#testIncludeComputedFields"
+  }, {
+    "bodySha256" : "055537dd1b86ee0f951d66458f179bd103e1925af7a46855785dd9d38fae1a3e",
+    "files" : {
+      "action.json" : "b9a5a6b256cf8633d0c47fd62b23d94e58b24273848b8bf3b59555a8f57df708",
+      "data.json" : "ef127c67d66a8fb2b40f9bb2c6ff9fa0b5ef6d23472328ffe82dc01ac7feab68",
+      "expected.json" : "1028bace442225e2d32413cb9df1811a58e7fd944550e48bf185b4643a0a7e14",
+      "lock" : "06470d07a6d43010bc94302b997221cb50c454855caefa92fbc300a1a69cf14c",
+      "name" : "b00de6673609137b9e09eefff46a5bb01ba01609e6dfa940d2ae6c82d2871bfb"
+    },
+    "fixture" : "aggregation/stages/set/overwritingAnExistingField",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED data.json syntax",
+    "test" : "dev.morphia.test.aggregation.stages.TestSet#testOverwritingAnExistingField"
+  }, {
+    "bodySha256" : "6de14f78f6fb76c3a9d0923b007d1074b961e564915085d48d61d41b5760aa8b",
+    "files" : {
+      "action.json" : "d250f4176659de9534e7e807fb7e9ebea3600502fc5f49421cb5534b2e09e4d6",
+      "data.json" : "7911941b76b7f64d91ab216227d6a88a5b0999c789a0b55c9ab7dfcd90673ac0",
+      "data1.json" : "040e6d4cf213317204eb317c23bf9da20c8a73b650510fe6abd2acb78a38cd40",
+      "data2.json" : "3149f7902c1069eefe3cdeb68ec3bbe666ddcfb7a14e6cf16a8ce4742bdb39b9",
+      "data3.json" : "d214673849e6156bc3dc599d7184651a812ce9075afa56e642d8ffc368f11450",
+      "name" : "3ffd16642a5ca42f2c1725bd4d3d647e68991f34273e8fffc399e7bb8dae9d47"
+    },
+    "fixture" : "aggregation/stages/unionWith/namespacesInSubpipelines",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Namespaces in Subpipelines",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnionWith#testNamespacesInSubpipelines"
+  }, {
+    "bodySha256" : "9636627447d66c68aa45c96ded264219c90a633b17136b9fa1f546a4c01a4f67",
+    "files" : {
+      "action.json" : "71c78ceabe887514e7454d5e2640f87826fccc52f694fa6a186745ebe20bb360",
+      "data.json" : "8e2d0546fa7e6691038abe1ff2c33516f7094be96e7c0184d85e73e8cdc5f8f6",
+      "expected.json" : "3d1fcc1f4248f7daf7913f425f577ef9cfb9d519d2d4af5b3dfa2ad8aabf789d",
+      "lock" : "267c976319efd5068560f6970f5323899aa64c59e9085b5a03a6a3f4eda24746",
+      "name" : "250edaa2cb24096c565cb00440f22d90969a43ca0f0298a96d0c1ccdc3d9a7d5"
+    },
+    "fixture" : "aggregation/stages/unwind/groupByUnwoundValues",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testGroupByUnwoundValues"
+  }, {
+    "bodySha256" : "3d185779723e61dbd42a3ac91286b64a691067b841a0e7811aa2c581cff564da",
+    "files" : {
+      "action.json" : "ab389432e810b154b61b88632d8c9666908b1c7e8598248d27b9ae780acf3977",
+      "data.json" : "1ed06af2b211490726882276321a5f7a9d18f3071cbadadf4f4e316be1334ac5",
+      "expected.json" : "9df666064b7d1cb5843a3ab5e355000cff2d4b110e733cae5c4324cd8a89d252",
+      "lock" : "dd383b10028838eb850e65d4a1681f063ed1797619f1a03d5762b20361b8a7c4",
+      "name" : "b40a1060f5fe37c0642c8f9ed72d3935b49b094150c0aaeea2c6c544d0e73ca0"
+    },
+    "fixture" : "aggregation/stages/unwind/unwindEmbeddedArrays",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.aggregation.stages.TestUnwind#testUnwindEmbeddedArrays"
+  }, {
+    "bodySha256" : "2f25ce7c2b46d0baee97f58d3f154f66c5a925b4f6483fb73d6150968069d374",
+    "files" : {
+      "action.json" : "49f185623c3f87a2a2eea28b4b40e1310676ce1bf8f06ab567b4329c059d5d8b",
+      "lock" : "e232fbbe6aa7ab497d41ad1a272cfca4b469e53eb6243cf1392298eaec9a2ebc",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "query/filters/centerSphere/centerSphereQueryPredicateOperator",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.query.filters.TestCenterSphere#testCenterSphereQueryPredicateOperator"
+  }, {
+    "bodySha256" : "b59a2a9f14dc9e8d6110a171da63401882727ceb4ae256ce0b9b8b9c2b1d24f5",
+    "files" : {
+      "action.json" : "832016dadef080fae84f07c316a27e8fc8728a9147bfa0509d2e021263f2734f",
+      "name" : "9eca8b74a315e5789d258981101864b01005988d4c7948cdd61d37459d3d3492"
+    },
+    "fixture" : "query/filters/comment/attachACommentToAnAggregationExpression",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestComment#testAttachACommentToAnAggregationExpression"
+  }, {
+    "bodySha256" : "64618a97991d076da2f99d05d354eb3cc43d12339ab3141ecec2ff66018a4fd3",
+    "files" : {
+      "action.json" : "f20b613476582d5e99585bae7f33e326ce3d23d02f5ebd898dd87493ae7f423e",
+      "expected.json" : "10233f64577300165fcf68a2ceb442be8fedc1abed136b25dd8799e0c5da0c41",
+      "name" : "6ede7563e9281fa7ed5057562230788263cbbfe49d6c68ced461d493a1a94690"
+    },
+    "fixture" : "query/filters/comment/attachACommentToFind",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.query.filters.TestComment#testAttachACommentToFind"
+  }, {
+    "bodySha256" : "0e22ba79b72825be06279e2feda89f7e09c6e090a255ea41e32e3477724967ea",
+    "files" : {
+      "action.json" : "b40eaf38890d9f3c8b3e2f425bb8a0a034addeb69019e1f92100e25e63c0f398",
+      "data.json" : "9d97f25050cf8d8b8980a9e3455ea1e112d539bb45766df44a4b97136e4653c6",
+      "expected.json" : "70766d34cdc98aa21bb6499402145b1e7d66283c1d56aeddc3168801d5f2e0f7",
+      "lock" : "39efdacd0eb2999a935ca412230a3e027d544d6cd54ce409ca71ec4dff6e793d",
+      "name" : "ed4179c23077757c1f1d4dfae3f8667891799e97a11b36d59baf159c9acf4cc4"
+    },
+    "fixture" : "query/filters/elemMatch/singleQueryCondition",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.filters.TestElemMatch#testSingleQueryCondition"
+  }, {
+    "bodySha256" : "64167af0cdab39ee03936179cfd78fafc088401e2d355a35a2d8c5055aa5b941",
+    "files" : {
+      "action.json" : "acaa42c0a8a68882b9b95b162fe4ce52889d8ce9ebd0cbbd607c09fa4ea4249c",
+      "data.json" : "03172b3e9075f08476da23df35e38978a8b5be4f6aaba3dc11577e2ae32390d1",
+      "expected.json" : "8e02574f26de57fd13b71dd1e36bec1357efb413c8485ee141737ba920c4791f",
+      "lock" : "971e58bb87d53ad2bea270905dc3ef35b9f2c72bf38f7170646283ca08d2a765",
+      "name" : "73864a44f816de4b5cf446c2a57380f57de7d485031a4f8945ca5225bcd7250f"
+    },
+    "fixture" : "query/filters/eq/regexMatchBehaviour",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED no data file for collection companies",
+    "test" : "dev.morphia.test.query.filters.TestEq#testRegexMatchBehaviour"
+  }, {
+    "bodySha256" : "f73ea1b15b4c9e829e4aa39e648321488cd8352738fb1bcc2b77b935440a171b",
+    "files" : {
+      "action.json" : "2ccb913c9fe447ac2f4139ffad7dcc268c8a1d98d2b862516b8ec19d5e8bbc20",
+      "data.json" : "b7b6cc0f91e49654c1a825aecb6adc786b6651f55122b014965844dbc0c09a33",
+      "expected.json" : "da2317b5f0bc9d0ead063cfe6d3e42c1f89324574a52c7b9756c434a25f0a7b9",
+      "lock" : "8f8662ca7908f9c6d8649486ad1a62945db038afc3c64a130c28db05638fe9de",
+      "name" : "d25422382c6fd5aba79a66eff0511a6746be2b0cc9f8514b5e43b73d495ba175"
+    },
+    "fixture" : "query/filters/exists/existsAndNotEqualTo",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json has no documented source",
+    "test" : "dev.morphia.test.query.filters.TestExists#testExistsAndNotEqualTo"
+  }, {
+    "bodySha256" : "83c20cf09110ff3f93607a83eaff117f2f5b98f0334da4835e3bc8269a60c4d8",
+    "files" : {
+      "action.json" : "5c28a6e6f5db28ddb27f619523e05c41e8232abb58600d2b801c5620120ff5e6",
+      "data.json" : "b7b6cc0f91e49654c1a825aecb6adc786b6651f55122b014965844dbc0c09a33",
+      "expected.json" : "a47472bff66bcf48a0a4e28264a6a3a0a43e1c56508e157f486e9c59792fd452",
+      "lock" : "8f8662ca7908f9c6d8649486ad1a62945db038afc3c64a130c28db05638fe9de",
+      "name" : "2db066dc868e5d658e359539ac06fbcdb8e5328e8a8c44ab160e5d45cc70b3c8"
+    },
+    "fixture" : "query/filters/exists/nullValues",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.filters.TestExists#testNullValues"
+  }, {
+    "bodySha256" : "7a25616e968a670993f031317a39e35d1983aa1a9f3ab6899793e36e7cb94d29",
+    "files" : {
+      "action.json" : "c086f6cc4add4e4f46af98b8f474f2ac417b5c496fc6f166f7db9d83ce5b957b",
+      "data.json" : "9441c003dccdb62bda52b864cfc1d99cf3b4de855df1add89976fca728446d5c",
+      "expected.json" : "b7dc3dc903efc5bbbe2397e91698d696ec05005d49f0cb0816752b5609752790",
+      "lock" : "6ff3b21083051692f6b0cbb50f8dfe6609e1a16194d6358d50f96e6a9f5fba8b",
+      "name" : "6afb14f44c250bed09c606c9dabed6e4718b4b570e7072bae7ee72ba0b5574c5"
+    },
+    "fixture" : "query/filters/expr/compareTwoFieldsFromASingleDocument",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNRESOLVED_NAME",
+    "test" : "dev.morphia.test.query.filters.TestExpr#testCompareTwoFieldsFromASingleDocument"
+  }, {
+    "bodySha256" : "22d7b2a9af6859291ad7034babc405ebfacb892bff35d20a5e40f56a2def9e4d",
+    "files" : {
+      "action.json" : "73736734d9fde4356da099e7e1191c116dcd26fb99b04a92de1dd99bbb14c5e0",
+      "data.json" : "686b5731676099686f467bc35aaedb77d54bf1accfebcf8193ff38b48579eeca",
+      "expected.json" : "2b1e5fc67c5c02aedf6de0d0991beecddf49b830db58fb5aab0802c7d5662195",
+      "name" : "f74f03b0d61f1e2e2f6e45931bec51febc908459ae8df496f07fc9467ac6e9ca"
+    },
+    "fixture" : "query/filters/expr/useExprWithConditionalStatements",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Use $expr With Conditional Statements",
+    "test" : "dev.morphia.test.query.filters.TestExpr#testUseExprWithConditionalStatements"
+  }, {
+    "bodySha256" : "a0119587af88f54802342c253a229b8005a24fbe06bd7d134d4aebbc120864a7",
+    "files" : {
+      "action.json" : "98cc603af44ff35a6f8888aa68066dd1c9efadfd7182fe991d11ccb9629438ed",
+      "data.json" : "6abceeffac86c63551aa519ac7700da26268681340dd6598a408b936b1ccf884",
+      "expected.json" : "99691deed16c89af697125c6fcba4e714d37a0d47fda327f0e625b4c2863ff15",
+      "lock" : "8e7eeb2f6ab0734b16c78ed55d9db2c71af98bc6dc350152fa16cbae4ce22483",
+      "name" : "e14f1d0cc613850f2664c2ad603678a2ae7e4ad48ec28b27d7f4f11645ea08f6"
+    },
+    "fixture" : "query/filters/gt/performAnUpdateBasedOnEmbeddedDocumentFields",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.filters.TestGt#testPerformAnUpdateBasedOnEmbeddedDocumentFields"
+  }, {
+    "bodySha256" : "9c0bba260fb764190ce1fdc67dcc9cce02cd16902467d0360578da74a6ec9f37",
+    "files" : {
+      "action.json" : "5ce77b07e5fe2322686ec061be9367e2a9781d530b4d086c53ec7df603e58b59",
+      "lock" : "cf11e8ed1094cbd5120c2a8fe8eb9966b10d68b401c07f05237d3922f51d5b48",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
+    "reason" : "locked, and no documented source reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestMaxDistance#testMaxDistanceQueryPredicateOperator"
+  }, {
+    "bodySha256" : "625b37ae072c35bd1cc91afaa1837a56aa046d92bfdd02d463edabd49978a969",
+    "files" : {
+      "action.json" : "4a662901371ebfd4a255598c52e9c3b6e9973c0bba1258fb7d4cedea6b8cc9a5",
+      "name" : "fdb15097e538f38b8d3e296043535785e92115f20fa60cd6c4a58ac624823238"
+    },
+    "fixture" : "query/filters/minDistance/useWithNear",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestMinDistance#testUseWithNear"
+  }, {
+    "bodySha256" : "24bfe790bbe1e6ed640634e1eb8841f2f39e5f08503c72fb15e3e9cd08f15590",
+    "files" : {
+      "action.json" : "5c605d98c82b18ecb083b1e93fcf832ba94458f33198babc68fcdfbb52f29ca8",
+      "name" : "b7284b43600e07e7f7649272c58c572936c77237dfa9391a1ebfc64a95d772cb"
+    },
+    "fixture" : "query/filters/minDistance/useWithNearSphere",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestMinDistance#testUseWithNearSphere"
+  }, {
+    "bodySha256" : "fdd59e3b57993eb6922f9f02501c5db13802bdf6bdb0e0179600c4d2921566a4",
+    "files" : {
+      "action.json" : "cbe21e45b002431527e9f11fa9060b5263152a43b812eac5edf418b635fa86a4",
+      "data.json" : "a674b0773da455282a2ddc7e4450cd2f26f813b9f098b99d27215e6a540c3c15",
+      "expected.json" : "5590d021a2241fa69dfe7a34f935cc6e08db7fc85f9932f61fba85d101bfaf33",
+      "name" : "afc098da510a12cc93c4c011bef0b18fbf2821f558d490b269c2aa5f00820065"
+    },
+    "fixture" : "query/filters/mod/negativeDividend",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Negative Dividend",
+    "test" : "dev.morphia.test.query.filters.TestMod#testNegativeDividend"
+  }, {
+    "bodySha256" : "1179be113d99b95fee7f8fc4f0e69157ae0d8bfcb2fad47ebcae91a885b89fab",
+    "files" : {
+      "action.json" : "b2dfe6e444fb329ddd17a8e26f27ec2ecbfb42ce1f6adae71bd1dac6b24a6a8a",
+      "data.json" : "a674b0773da455282a2ddc7e4450cd2f26f813b9f098b99d27215e6a540c3c15",
+      "expected.json" : "27fc04be60c800de41b1dae85e90578fe3935a0e7ef634b1998985089252e4e1",
+      "name" : "937f3433cc7f7dad4d16f024896d3eec039ce2f4dd3c5a4ce9778ac601828a1e"
+    },
+    "fixture" : "query/filters/mod/notEnoughElementsError",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestMod#testNotEnoughElementsError"
+  }, {
+    "bodySha256" : "1179be113d99b95fee7f8fc4f0e69157ae0d8bfcb2fad47ebcae91a885b89fab",
+    "files" : {
+      "action.json" : "bd2e21745ea777fa593acb1098d0071bbf0259e7015fff8b7d514dccbd7d0dd4",
+      "data.json" : "a674b0773da455282a2ddc7e4450cd2f26f813b9f098b99d27215e6a540c3c15",
+      "expected.json" : "c8e7b33ae13dc6bd99de56ab4dc10c643c0a34611525db71f533239ea702b0a0",
+      "name" : "18f3e37df00829fccf269d8e1fc8d7a6db5a405284336032df01de19a6ce6f75"
+    },
+    "fixture" : "query/filters/mod/tooManyElementsError",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestMod#testTooManyElementsError"
+  }, {
+    "bodySha256" : "79f2f354897b8554611e1cb20b90d5dafa6cffc4468d2afea4935a136488b319",
+    "files" : {
+      "action.json" : "6fcb383bb85f610c5b043182f43fa6d071164800ecf8a3539506fe2413443888",
+      "data.json" : "4c51cf4077d70c883863b4a6b86e5be8b2d7eec7043ac5ca5a49b2b69a4c9deb",
+      "expected.json" : "14dcccf6ddce695000324dd2a5b1d5b98d4c1bb50fed3c525e8c03445ff2a6f0",
+      "lock" : "80c37a67c0237e1eacf01ef098cda1753e8abf983fb2d460016a1f4fb8dd30ca",
+      "name" : "b6392a1a9830cb9259c387c3d292c893253c52a3eeefeae12a285da6ec42929f"
+    },
+    "fixture" : "query/filters/ne/arrays",
+    "reason" : "locked, and no documented source reproduces it: NO_MATCHING_EXAMPLE Arrays",
+    "test" : "dev.morphia.test.query.filters.TestNe#testArrays"
+  }, {
+    "bodySha256" : "fbc9774afd2397bbc3a8cef779c9639f357c950aed6329949e49191aa884a026",
+    "files" : {
+      "action.json" : "a518a7fdda8988d4fd41dca81fa26fd0b75a9f48ab43db49f3b8c5ee9343a8e6",
+      "data.json" : "6abceeffac86c63551aa519ac7700da26268681340dd6598a408b936b1ccf884",
+      "expected.json" : "e2fb7406ba84671944b99deb92d9b89367e6c2e466546d50ea2c88b54fd6d041",
+      "lock" : "8e7eeb2f6ab0734b16c78ed55d9db2c71af98bc6dc350152fa16cbae4ce22483",
+      "name" : "28e80a217dc82683930fe5336b880ce920b9b38399eca1f21704fbb53f717761"
+    },
+    "fixture" : "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.filters.TestNe#testUpdateBasedOnNotEqualEmbeddedDocumentFields"
+  }, {
+    "bodySha256" : "cf83eaa9ce2ed27e0a95bb94079649b7e13fca8beefad82ea6d5e8d61b227a0e",
+    "files" : {
+      "action.json" : "fd23c680e06abd475697c39737b5d9c950349a185d67ebb31e5978b57ce6f49d",
+      "name" : "1d4a3ae968dc6c2207aa9ac4b42cf16dc4dbd2326058eb402a368d7d1dd81979"
+    },
+    "fixture" : "query/filters/near/queryOnLegacyCoordinates",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestNear#testQueryOnLegacyCoordinates"
+  }, {
+    "bodySha256" : "8cbc7372fa2b5beaa755827c6515817520606bea7086ebcd4384b10c6f53aea6",
+    "files" : {
+      "action.json" : "f8b74ef10d3f2f81b16ac300ce107111eb54d9f0d935a50464a02d51c5505d6e",
+      "name" : "50b1ed75736f40c14ffd5e55215045400edfdf4f5b62b17c5fe901bc5bca952e"
+    },
+    "fixture" : "query/filters/nearSphere/specifyCenterPointUsingLegacyCoordinates",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.filters.TestNearSphere#testSpecifyCenterPointUsingLegacyCoordinates"
+  }, {
+    "bodySha256" : "4adcdefc902a390e388a3e90685e5ca9ce90e7dd2863ed15b356e4b82c6a28a7",
+    "files" : {
+      "action.json" : "c6b2c7929c4178c3eddcf9fde2c92c35afb6fab1e79faa8641a81d85016673c0",
+      "data.json" : "910d4131c4df803d0c71de3bc9f99ec55e9d48a6d4ed185e0b5cd799c44bd190",
+      "expected.json" : "aea8a7b7cf29ddfe7ff1a995c287a8990a5e2ae078197380e1ce248b37d6a4fd",
+      "lock" : "8e7eeb2f6ab0734b16c78ed55d9db2c71af98bc6dc350152fa16cbae4ce22483",
+      "name" : "23e649ad353533970873cc2861725602b948fbc67fd652ff23cfcb94df716618"
+    },
+    "fixture" : "query/filters/nin/selectOnElementsNotInAnArray",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.query.filters.TestNin#testSelectOnElementsNotInAnArray"
+  }, {
+    "bodySha256" : "468dfe430a64b892ae0e88e820f1453b2bc54e01df3a92e18be0c9307315a7d7",
+    "files" : {
+      "action.json" : "887eccb7d11d0c23f3beaa88e075bac733eb6a5cca318215ffb3c6deaa356b6d",
+      "data.json" : "e7539b65d2ee003260f7821727977ddab948337525906bb5b5f1920317214cb0",
+      "expected.json" : "330b48ed46a5151ce7978910e470567f17021bd6ebcc09a72c8cafd804bb6146",
+      "lock" : "2ef2e9d1684ba396edd5cf1735b5d4fd09c809278d0c920ed8735fea64237de7",
+      "name" : "9be83106d736e3e86e517a3961375023df70a6bee7f24153724ef986234b6232"
+    },
+    "fixture" : "query/filters/rand/generateRandomDataPoints",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action TYPE at /1",
+    "test" : "dev.morphia.test.query.filters.TestRand#testGenerateRandomDataPoints"
+  }, {
+    "bodySha256" : "1174851a9648ab82c984ce3460041b2a1523756eacb726e8e5ee660bbac70e5e",
+    "files" : {
+      "action.json" : "017561cd6ebea69e68b0946f6ceb85f5f75a2da9bcc20fd264e50196fc1af5c0",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "f8c4f482a902004dbc996fdc7bc33842d0f734a478d4f3460ab96cf435a5434a",
+      "lock" : "325089cbcd67f665e409dba7cc4d42b95d111fa080e25715bb1a8ef3dcdbdc3a",
+      "name" : "fa8acb81988ced850a3f6a5da8a8f9d606b0169ba3c3b8c3850f59c7a5aa75d1"
+    },
+    "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /2/description",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testIgnoreWhiteSpacesInPattern"
+  }, {
+    "bodySha256" : "7acf27aa9f43c34c325f639a11f6a632c5ef9dba85ae1c9594661d3da4b240ae",
+    "files" : {
+      "action.json" : "c8e53443a9374e1889dafcb5d9aaaf8b10063e6dcdbd48a7bff1a0a024f369e0",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "1506217e747a9ab1971879d540f217b81c7023199747984460798ac09cf03b05",
+      "lock" : "4e0e5aa559de466c2f8b10c345468e25ef8ae25f9ad2541a5fee37148b971ca0",
+      "name" : "db3495f7b8c5e66480fbaf84a346cc001f9bfdbfba0de12d2172efaecdd543cb"
+    },
+    "fixture" : "query/filters/regex/multilineMatchForLinesStartingWithSpecifiedPattern",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /2/description",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testMultilineMatchForLinesStartingWithSpecifiedPattern"
+  }, {
+    "bodySha256" : "364bacb40b3ba6116837f42195453bd1e0ae2fc374857b147b5d771685be0a80",
+    "files" : {
+      "action.json" : "927d8b4dee6455ade1e8b297fa7b23a97c1e5cc72271798720988f17cf0ecb36",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "b1b17825fbdcfd01133c4708e72f1fe2e98a58e088805d531d3878048d3594b1",
+      "lock" : "285df2e990914ceabf1013e1a1ddedfc58fe8af39771904d5c1c4c298b0f0ead",
+      "name" : "6d702d7f4135179bcc861cbea40750fc335fa61ae6ba0ca19ddd63d03c2ccb6e"
+    },
+    "fixture" : "query/filters/regex/performALikeMatch",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testPerformALikeMatch"
+  }, {
+    "bodySha256" : "b4dbb149ecc498583d07af9adf83cff0587607e941525d639800c4e500e22b09",
+    "files" : {
+      "action.json" : "8cbcc091b707fc909827f782ebaf2b353cb4d3fc40b33b2d43104d3db8454d21",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "1506217e747a9ab1971879d540f217b81c7023199747984460798ac09cf03b05",
+      "name" : "4adc4e4ca22abf534abc465ec1f7f20ee7c769fed864e6bca8738f77db8e660c"
+    },
+    "fixture" : "query/filters/regex/performCaseInsensitiveRegularExpressionMatch",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /2/description",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testPerformCaseInsensitiveRegularExpressionMatch"
+  }, {
+    "bodySha256" : "87537d85ae8ca30c28c3c19e03c0a22b09123d6073fff3007dd7adab0a2dd213",
+    "files" : {
+      "action.json" : "173a1851917014bd09ef84aa6ec2d9c8b663f41a155e2fa0dd4c8a8291dd39a8",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "1506217e747a9ab1971879d540f217b81c7023199747984460798ac09cf03b05",
+      "lock" : "325089cbcd67f665e409dba7cc4d42b95d111fa080e25715bb1a8ef3dcdbdc3a",
+      "name" : "601d228e7c4038732e8853c5252ab488521b23a37ade588bedf29eb805765025"
+    },
+    "fixture" : "query/filters/regex/useARegularExpressionToMatchCaseInStrings",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /2/description",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testUseARegularExpressionToMatchCaseInStrings"
+  }, {
+    "bodySha256" : "6895a34fa6240fdc3e1feaa2c88bc2157815f429b804dafc04c45dc6f726480d",
+    "files" : {
+      "action.json" : "f5182bed0e8c2102e790b56e6207ee80e835e0ef3c37ea6b70c69c0206552916",
+      "data.json" : "a07a54ede68f83cd053ac07802fb46d086406d6aa6c84d7ba55e8440222948f5",
+      "expected.json" : "2e6b9b2f9d9c11357c01ac9c3b5a287d9cb08eb16d73ec9e613092d7ef1cbc69",
+      "lock" : "79eb405e8091a264f62fb98e111a9ac2a00472294e7d2f35c6d78b6f52d2bcfd",
+      "name" : "3c55c6562b1b01dacd7befd9ef7580420baf9639ead6f5833360d236fe8f7091"
+    },
+    "fixture" : "query/filters/regex/useTheDotCharacterToMatchNewLine",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json VALUE at /2/description",
+    "test" : "dev.morphia.test.query.filters.TestRegex#testUseTheDotCharacterToMatchNewLine"
+  }, {
+    "bodySha256" : "839c54f98bf047962b5e0c396b6bea7b1982eba68227f3f3800a10217c069128",
+    "files" : {
+      "action.json" : "6b86cb2c96b99d10e018fe6022a728676eb5868740ddb5063ab04d8bee0d0fde",
+      "data.json" : "574470b15f63be72d8791c0bf646449187875df16393dd1039bb1fab077ee4e8",
+      "expected.json" : "1209dcfe819173aa45f868ec128488dfb91f00a904aea80fc500b0f235bca325",
+      "index.json" : "0d2944690866f2aa8710c6046c8d3593b32c447f1f0b2658f0394bb27fb9f362",
+      "lock" : "62746924c6d6a626e1b5475f18a847a9307d3279ad35a736df76ba7528f71046",
+      "name" : "695df2e5d6ed7a9bd1065d29ca070f701f425ef9f46564ddc106ba911e1dad97"
+    },
+    "fixture" : "query/filters/text/diacriticSensitiveSearch",
+    "reason" : "locked, and no documented source reproduces it: NO_MATCHING_EXAMPLE Diacritic Sensitive Search",
+    "test" : "dev.morphia.test.query.filters.TestText#testDiacriticSensitiveSearch"
+  }, {
+    "bodySha256" : "8745aacdf0416b1288688287b9700644e7ccdc782009fb17640cd2864a295b84",
+    "files" : {
+      "action.json" : "992768fcc9b3cb5a550613a05011e7c73e799dcfe2f717fe498676c968de2f2f",
+      "data.json" : "ff5b24970b29ed1294a4527d8c214d9509ca098f628151a5c09f1a1ad67ba5b2",
+      "expected.json" : "24488b4129fa4b8f978d2257684110dcc77fe2ba0c766ba41aeca69235d533e4",
+      "lock" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
+      "name" : "509741928fd7e1e2d8f39ece2a8314b322e54e364784e91cf080c79357b32ecb"
+    },
+    "fixture" : "query/filters/type/queryingByDataType",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED CONSTRUCTOR_TYPE",
+    "test" : "dev.morphia.test.query.filters.TestType#testQueryingByDataType"
+  }, {
+    "bodySha256" : "a086a715c850dd3d24ec3e19a6846ef7e563d3e9a4df846a908d161e1baea810",
+    "files" : {
+      "action.json" : "25a1ab9b3b38af3168d929f981b7405734a0636f3d6438c4bc48881c89df4c47",
+      "data.json" : "d484d267247264f7ac77036ab8e75e7a673dc62e2285b98e4cf4c97c690c2c49",
+      "expected.json" : "d899a86ad19bd231934c655bbd78ebb0ea488646f0988fdd7265e9e29f8e2336",
+      "lock" : "cb500653ceefcb16f4ec141843ca795253d9223d85246e9cd23b49239cda3a95",
+      "name" : "a4a7d4cc91e5e2b50dae0e0d21a7117f5ded93d1191c31533ba1b2008c7b5edd"
+    },
+    "fixture" : "query/filters/type/queryingByMinKeyAndMaxKey",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED UNKNOWN_CONSTRUCTOR",
+    "test" : "dev.morphia.test.query.filters.TestType#testQueryingByMinKeyAndMaxKey"
+  }, {
+    "bodySha256" : "a80952393cf613336cb8afb9a00adfe50d13cc5c5bfe46ceb0d467689b099619",
+    "files" : {
+      "action.json" : "bd14a71f5012d1de970a184fc45bffe6a34f4f9f2f206a7f305d654a461e56e1",
+      "data.json" : "07f360517966cabd4d5ff725769e1ffbf262de09ae8f4fa3ab09cb592946ce59",
+      "expected.json" : "aa20970563d0bc1a11960ed705219245fc671e35943ce2cac322336fe0480c17",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "query/filters/where/whereQueryPredicateOperator",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED UNSUPPORTED_AST",
+    "test" : "dev.morphia.test.query.filters.TestWhere#testWhereQueryPredicateOperator"
+  }, {
+    "bodySha256" : "2c9537c7945c8eaab9f7ac3039025ac22202db04984d5dd34cd010bb874cc740",
+    "files" : {
+      "action.json" : "9c0c936b7af6fa37b4812fa21ace6217f85be69ac0c4e6df0ae206bc347343fe",
+      "data.json" : "8e7f5c848b81581a7d2c00b82dcb3ae1b95a27edc75d9d8c79c17b51393073f7",
+      "expected.json" : "52fee441fefce67395ace701338ba356e91f9a8ea4d16d6c79bb7960b42c437e",
+      "name" : "5882a43928160ea939c184e8f6c47ecab319843f9dc167bafda90f0287efb792"
+    },
+    "fixture" : "query/updates/addToSet/addToArray",
+    "reason" : "no documented page reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.query.updates.TestAddToSet#testAddToArray"
+  }, {
+    "bodySha256" : "8f4e49fcb44ef38915da4fa463e3c5a784fd0152c527be77695cf8732d75bf49",
+    "files" : {
+      "action.json" : "4397516cf6fb83be37281479bb9f3981c7112eaece10c5ed2c4e1177b4a47da4",
+      "data.json" : "e692da667652f6cb83d5a107a88d5b8513078594b3b26085fa01832c90b26a16",
+      "expected.json" : "8e7f5c848b81581a7d2c00b82dcb3ae1b95a27edc75d9d8c79c17b51393073f7",
+      "lock" : "57b7426d08b42871bd29372c0029a4ba4e8368f766a1e757f3e1537024e97c61",
+      "name" : "ca7327290e3502d1cbde4a907ea887eeb904d00d664098ae25fba8a4c63c4b6a"
+    },
+    "fixture" : "query/updates/addToSet/valueAlreadyExists",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.query.updates.TestAddToSet#testValueAlreadyExists"
+  }, {
+    "bodySha256" : "26e0316c44efa89d9bc4668c64f65dff237023e6a526edd8f884c1990ab85f07",
+    "files" : {
+      "action.json" : "450f7fbf84f388336c42f161a1a721a82f99a062a15ec4e34b21597ed322ae9e",
+      "data.json" : "41727cb7ba9863b0d9d7cbd2f218c025952fba46234ddb1206d1677ad0afb6a9",
+      "expected.json" : "668396a19923dff490a4945609224603a82d1c8acc235e6fd8e2f633637d3bb6",
+      "lock" : "1fc1be3aa846028fb6d7d984d57d6db6b328f3f327fb310e42644a3271528f7a",
+      "name" : "ad25944289e85f80e01c4f078cf7445f396d9e5e270c49268c6c4c269bfef149"
+    },
+    "fixture" : "query/updates/bit/bitwiseAnd",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.query.updates.TestBit#testBitwiseAnd"
+  }, {
+    "bodySha256" : "3d3cbe71499d27300f1fe55855a4bd3265ae5857a3c97d7acdcc2f621b1d9547",
+    "files" : {
+      "action.json" : "7a37738e2334badc0cfa76e8853dabe9ebdb9346d33f3823e7536c602f21a012",
+      "data.json" : "41727cb7ba9863b0d9d7cbd2f218c025952fba46234ddb1206d1677ad0afb6a9",
+      "expected.json" : "b4fa29f6af62b87bff6152617007265a89e1b370b4d97493c13f3b33c998ee1a",
+      "lock" : "1fc1be3aa846028fb6d7d984d57d6db6b328f3f327fb310e42644a3271528f7a",
+      "name" : "3f86ba9a719976958cfccf0032703e20bb451d2cf60a41badff32e1b1207ce85"
+    },
+    "fixture" : "query/updates/bit/bitwiseOr",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.query.updates.TestBit#testBitwiseOr"
+  }, {
+    "bodySha256" : "83e401c2cd077976196396478fb50d30153b54609d6280d2d3df067178fe4b62",
+    "files" : {
+      "action.json" : "63d7f94eb4cc0bc62438bda9868add576f8ffb5b8d7f19ca91ca70c9df75dc17",
+      "data.json" : "41727cb7ba9863b0d9d7cbd2f218c025952fba46234ddb1206d1677ad0afb6a9",
+      "expected.json" : "ec451e29456f123eec4bb142a5106935ebf8ce1d72f0fe9d3eed48905285803b",
+      "lock" : "5fe71c94b763e84cdb9bc7a72df52f69d6dbd0c9347b28e35844b94c3c70d193",
+      "name" : "890a4163d942958f91a21989213a0e5941f48b26e96a28d4943499054b0b6e70"
+    },
+    "fixture" : "query/updates/bit/bitwiseXor",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED expected syntax",
+    "test" : "dev.morphia.test.query.updates.TestBit#testBitwiseXor"
+  }, {
+    "bodySha256" : "95484806e8118f448bf140dd9db91ed3e1532c467198c7250b810ce2e3491d5e",
+    "files" : {
+      "action.json" : "218f2759e7c5ef1b81bfab1836e388a9dfa592278a1db738f18cc4ba431de5fa",
+      "data.json" : "8316ab742d2ec3cdecf5090b7acb86f6f04852ecd20352a40bb9ae9012d1329e",
+      "expected.json" : "73ffc32431d61c13427eecad29a789e84a80e931f95c232a35a54f140c8738a8",
+      "name" : "e16a01dcb9c6873c46930e9d90a8dbe2aefbb34eabca138a8f2b8674a76c84c9"
+    },
+    "fixture" : "query/updates/currentDate/aggregationAlternativeToCurrentDate",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED not one test helper",
+    "test" : "dev.morphia.test.query.updates.TestCurrentDate#testAggregationAlternativeToCurrentDate"
+  }, {
+    "bodySha256" : "308a84b44fad40e8b0acced53e56e91d6da4169dc48a7742f4647603e97709ed",
+    "files" : {
+      "action.json" : "745740405d9e99d1588cefbd142d35129496b53ce273519162355708abfecbdd",
+      "data.json" : "8e1421a9db77213d4a205160660be2a1e901cbf617aad59e52b005af9c700edc",
+      "expected.json" : "b38e82f243c70e2be12d4a7991d917b128838819b8cf2e1097efec0422431857",
+      "name" : "e0b05a14be1b766710cd01758286c519670e27818fd275360e7ffbb79d820b75"
+    },
+    "fixture" : "query/updates/each/useEachWithAddToSetOperator",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Use ``$each``  with ``$addToSet`` Operator",
+    "test" : "dev.morphia.test.query.updates.TestEach#testUseEachWithAddToSetOperator"
+  }, {
+    "bodySha256" : "b1f0ba8185c8b8feb8b502bc99aa2db40b961c6762825afcf2c8a68183e39ea9",
+    "files" : {
+      "action.json" : "62813e9e5490006e7ac53bfbc38f6147a7146377056fb995d4a7dfbc4a039f1a",
+      "data.json" : "d20c186ec0b20da69719c8891dcda4c8c0f67835dd9de84ef0103670ed197738",
+      "expected.json" : "57a25037fcc29e9779ff42796e18785d24814da0d2f38c608c8b8e18a711f953",
+      "lock" : "0eb256cce800d075a48e0fbeedfd7ed1deb4978bfbe9a2fdfbb6bd00acf2cfff",
+      "name" : "e82165efab3212d246f3a4fd27b1e614326e8db5830780d2317a0b650a7829ee"
+    },
+    "fixture" : "query/updates/each/useEachWithPushOperator",
+    "reason" : "locked, and no documented source reproduces it: NO_MATCHING_EXAMPLE Use ``$each``  with ``$push`` Operator",
+    "test" : "dev.morphia.test.query.updates.TestEach#testUseEachWithPushOperator"
+  }, {
+    "bodySha256" : "0b2ed2caba648165745b5ec22ec0702a8560a73747d9d96e28af3de08289f9ae",
+    "files" : {
+      "action.json" : "98c6e3ce6e738047d5a9c6641e78699b55a76ffdde43e1c7b704c55af9e14aba",
+      "data.json" : "b510bfc49423a00397bd3473a3ac6a34668dc69261b542ef7910033e49a9ce32",
+      "expected.json" : "7889f5c32f366b0fe98309aa2b74b6342dcec7d1fed210d49127e01cc8ea23c3",
+      "lock" : "68f5c4ccf35c67359bf3e41f365062815adbd81307d8f257661c2de64c91b02b",
+      "name" : "069a137dd8783a75431d51c6f44eb9ad571522654b61bdc925c7efb31ed59af2"
+    },
+    "fixture" : "query/updates/mul/applyMulOperatorToANonExistingField",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE action TYPE at /1/$mul/price",
+    "test" : "dev.morphia.test.query.updates.TestMul#testApplyMulOperatorToANonExistingField"
+  }, {
+    "bodySha256" : "d96fe894203fe07f9e97aa3e71885ca0e71d40ff97607e6559e11985dc688f9b",
+    "files" : {
+      "action.json" : "5b7c39f32f6a5f24b37eec43d0b3d75f98457a1564789e83cf0812022bc22442",
+      "data.json" : "66ab937f4c03c43068e31141964068115a3c7c2c35b77b67c1f6b828a7e7c56a",
+      "expected.json" : "9dd93eca6fa92619a21c70a657379b21111270703750bc8491100a0fe33317a4",
+      "lock" : "68f5c4ccf35c67359bf3e41f365062815adbd81307d8f257661c2de64c91b02b",
+      "name" : "66c9e33342e06f313f1290f23c89d01a33fd57e3244f154d0ee945a13ab3ade2"
+    },
+    "fixture" : "query/updates/mul/multiplyTheValueOfAField",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE printed expected VALUE at /0/price",
+    "test" : "dev.morphia.test.query.updates.TestMul#testMultiplyTheValueOfAField"
+  }, {
+    "bodySha256" : "5588adcac987ecfe1b55562be23550e09de8d549dea14b6537c7f0ede2a71289",
+    "files" : {
+      "action.json" : "89dcd4cb4f792809054f8ee421ef86c123e344a89d93ab5f5da600ce5dc53f62",
+      "data.json" : "7de1631726ce8bb5219b93df057ca6f26d8339df4637b906a6522f5890eabb7d",
+      "expected.json" : "a4f5d394b27fd575ace4613f124bfd4953a2726f5d0503395066fa7af5fc5acf",
+      "lock" : "3d587187fed105b58a851c5d5a70332a5ffeb531201a1950fc46f9b17f21a5ed",
+      "name" : "088cf3945bc8d11ca65bc4c6dea48f1cb61116b0432c3f69e46e7eff5a6291d4"
+    },
+    "fixture" : "query/updates/positional/updateDocumentsInAnArray",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED SYNTAX",
+    "test" : "dev.morphia.test.query.updates.TestPositional#testUpdateDocumentsInAnArray"
+  }, {
+    "bodySha256" : "1cf5089436acf0af0270ebff45f565385736aa3e82ee9568833078b040bee655",
+    "files" : {
+      "action.json" : "74ab65430f36ec746df361bb9cd283befd489bfdb816612cfc60b18182b3bff2",
+      "data.json" : "b11a060e5d99b34fe465df82b919c1a9553c7d7091f174a6db1908b56bc00074",
+      "expected.json" : "45031999050781ec97e2162d772f67b0c15ad0feb706086cd5626838c1db84ec",
+      "name" : "42b9bc2ac493738dec4f10039d4d13030687a0714746931f2e6a79641e38fcef"
+    },
+    "fixture" : "query/updates/positional/updateNestedArraysInConjunctionWith",
+    "reason" : "no documented page reproduces it: NO_MATCHING_EXAMPLE Update Nested Arrays in Conjunction with ``$[]``",
+    "test" : "dev.morphia.test.query.updates.TestPositional#testUpdateNestedArraysInConjunctionWith"
+  }, {
+    "bodySha256" : "5219b1ed2a1262d21f80b0fe00f54af53be2ac19c6a5fca00bcbe29c975f92d5",
+    "files" : {
+      "action.json" : "281520252e66ce3f674e6fd34ba4104feeef6834ce3a3ce087cd911e6b25b7f2",
+      "data.json" : "5db54f6c87331d7c5f209fa0495b6a7082f961e6e408e754fa5102964e8c90ab",
+      "expected.json" : "cb06fb90eed971d5a0fd6c492bae204503ed602189c3ae657a19e328dac98459",
+      "name" : "954945784ea549d6920dce01a2a56841f3ccf9b48fb6fc2df1841bb99b5c5d26"
+    },
+    "fixture" : "query/updates/pull/removeAllItemsThatMatchASpecifiedPullConditionWithBulkWrite",
+    "reason" : "no documented page reproduces it: SOURCE_UNSUPPORTED data syntax",
+    "test" : "dev.morphia.test.query.updates.TestPull#testRemoveAllItemsThatMatchASpecifiedPullConditionWithBulkWrite"
+  }, {
+    "bodySha256" : "245920eeb5b528a1430f212446be9d17d54f30627b046c4409cea6bd936da3a6",
+    "files" : {
+      "action.json" : "051fc64bb46e93d64f5ede63059167fe4fd1e845a9c14a1881942f2e6a466c62",
+      "data.json" : "648595ad6d16b863ea008598f919bb78a43dbc7635b3ccd6c51dde8a3a3c7384",
+      "expected.json" : "e72eeb782b88bc279d1a95f7c6d7476918ef595bf1b8f53132a40414fc7c088f",
+      "lock" : "94a436fb26fa52ef8beb44b159d3df55921d4d8944e43663ffcaf5c4a259cf75",
+      "name" : "e5e790905fdeb80c3007bf8335602297567ba5f865c2e20d2f1c328f07ac76e4"
+    },
+    "fixture" : "query/updates/pull/removeDocumentsFromNestedArrays",
+    "reason" : "locked, and no documented source reproduces it: SOURCE_UNSUPPORTED COMMAND_METHOD",
+    "test" : "dev.morphia.test.query.updates.TestPull#testRemoveDocumentsFromNestedArrays"
+  }, {
+    "bodySha256" : "11b6b91e91323956fd901c1c5ccf4d57d5aac97a4f5ce4539d261a4e8e844295",
+    "files" : {
+      "action.json" : "8d1d3a41be8a9c25870b836c48c22e4506eab86dd4fc2d4d34642508a093f57b",
+      "data.json" : "d4ea6abdb865e95a9d06dbbf3496f2b2c450845530d9575e992d4865d1fe45eb",
+      "expected.json" : "e6ed8e6b2a8a40d8edc7e43ba622e8b47ff2aba98d1dd37f37a166a697a9e776",
+      "lock" : "45f4fbb120c7e6c311c79131f6a6c644455cb9ef378f1a8c4c81f624cf27d480",
+      "name" : "87b7b46319d7debe8665e3af1e6f68008fb67bc15a634e1ce002a04472cdf9a9"
+    },
+    "fixture" : "query/updates/push/appendAValueToArraysInMultipleDocuments",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE data.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.updates.TestPush#testAppendAValueToArraysInMultipleDocuments"
+  }, {
+    "bodySha256" : "b1f0ba8185c8b8feb8b502bc99aa2db40b961c6762825afcf2c8a68183e39ea9",
+    "files" : {
+      "action.json" : "62813e9e5490006e7ac53bfbc38f6147a7146377056fb995d4a7dfbc4a039f1a",
+      "data.json" : "d20c186ec0b20da69719c8891dcda4c8c0f67835dd9de84ef0103670ed197738",
+      "expected.json" : "57a25037fcc29e9779ff42796e18785d24814da0d2f38c608c8b8e18a711f953",
+      "lock" : "0eb256cce800d075a48e0fbeedfd7ed1deb4978bfbe9a2fdfbb6bd00acf2cfff",
+      "name" : "631aecf7186842c30aedeadc9fd3a6f57e16601c31910cc4b26a246c75bbdbac"
+    },
+    "fixture" : "query/updates/push/appendMultipleValuesToAnArray",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.query.updates.TestPush#testAppendMultipleValuesToAnArray"
+  }, {
+    "bodySha256" : "ecf1da8e8decfb5a1ca32319a8cc560525a97383d0cacd27667f1b02306aa1c6",
+    "files" : {
+      "action.json" : "dfd3d577f0ca90e3b249a0b14668c4a0378281fbcb42ce3bcb5a0a2641f1cfef",
+      "data.json" : "61a5ccfa038faeecb0fc74a9b44bafce760e6f9546580556efc9923d78c4b3ee",
+      "expected.json" : "afcbdb000551b773f105f031f9b01fe37127ac4b3108e4c112d6908d87ddbda3",
+      "lock" : "c4c3a877765c6268226ef7cabfdbacbfc075284ad180cb55af2889e1522f24ec",
+      "name" : "8894babcf2a419a1875db6778bfebffd7e313909c25fbee68ff8b1b82c651c75"
+    },
+    "fixture" : "query/updates/rename/renameAFieldThatDoesNotExist",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json has no documented source",
+    "test" : "dev.morphia.test.query.updates.TestRename#testRenameAFieldThatDoesNotExist"
+  }, {
+    "bodySha256" : "da124ad1eee1237f960902915485f926b0baa08e71f4ee9d1ac05ec2eca61a59",
+    "files" : {
+      "action.json" : "3c1d798a7f89d1ab9cb3560e375bfa2dce8ff409a34e46df2b175920c257b4d0",
+      "expected.json" : "6c3a455a026a34844d044359d7990ab188eda9d7d621a8638a47a2487c3133cd",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "query/updates/setOnInsert/setOnInsertUpdateOperator",
+    "reason" : "no documented page reproduces it: FIXTURE_UNSUPPORTED update options",
+    "test" : "dev.morphia.test.query.updates.TestSetOnInsert#testSetOnInsertUpdateOperator"
+  }, {
+    "bodySha256" : "e11413487b0ce79265f3759ecff55452ab056cd87408e1489f594387ae7e42c9",
+    "files" : {
+      "action.json" : "d455b57e21201c5facf83c00f60854e5ae6222947bf646ef91459b065a6d1add",
+      "data.json" : "de78e73c7862ed366eef16cc6d04a66b2510f27c90883890071a2fc39cf98b1a",
+      "expected.json" : "8ec5a836a3ee6bc0118164719dab5ae602bcffc55343ad92e37ecc080ace3e2d",
+      "lock" : "fda20506290e041c9b3f37bc42dcf7dd1ade63ff1a01d516e691d14580ac7344",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "query/updates/unset/unsetUpdateOperator",
+    "reason" : "locked, and no documented source reproduces it: RESIDUAL_DIFFERENCE expected.json ARRAY_LENGTH at",
+    "test" : "dev.morphia.test.query.updates.TestUnset#testUnsetUpdateOperator"
+  } ],
+  "schemaVersion" : 1
+}

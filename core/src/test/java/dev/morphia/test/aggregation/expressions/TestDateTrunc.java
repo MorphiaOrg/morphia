@@ -12,7 +12,6 @@ import static dev.morphia.aggregation.expressions.DateExpressions.dateTrunc;
 import static dev.morphia.aggregation.expressions.TimeUnit.*;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Projection.project;
 import static java.time.DayOfWeek.*;
 
 public class TestDateTrunc extends TemplatedTestBase {
@@ -20,18 +19,6 @@ public class TestDateTrunc extends TemplatedTestBase {
     @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage
-     * 
-     */
-    @Test
-    @DisplayName("Truncate Order Dates in a ``$project`` Pipeline Stage")
-    public void testTruncateOrderDatesInAProjectPipelineStage() {
-        testPipeline((aggregation) -> aggregation
-                .pipeline(project().include("_id").include("orderDate").include("truncatedOrderDate",
-                        dateTrunc("$orderDate", WEEK).binSize(2).timezone("America/Los_Angeles").startOfWeek(MONDAY))));
     }
 
     /**

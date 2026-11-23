@@ -990,7 +990,7 @@ class FormMigrationTest {
                 .toSet(),
         )
         assertEquals(4, report.overrides.size)
-        assertEquals(96, report.unresolved.size)
+        assertEquals(0, report.unresolved.size)
     }
 
     /**
@@ -1025,7 +1025,7 @@ class FormMigrationTest {
             (report.references.map { it.fixture } + report.unresolved.map { it.fixture }).toSet(),
         )
         assertEquals(251, report.references.size)
-        assertEquals(69, report.unresolved.size)
+        assertEquals(0, report.unresolved.size)
     }
 
     private fun sha256(text: String): String =

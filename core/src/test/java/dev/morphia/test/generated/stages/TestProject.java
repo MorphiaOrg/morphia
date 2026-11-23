@@ -30,6 +30,17 @@ public class TestProject extends TestBase {
     }
 
     @Test
+    @DisplayName("Exclude Fields from Output Documents")
+    public void excludeFieldsFromOutputDocuments() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/excludeFieldsFromOutputDocuments/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("title", "The Great Train Robbery")),
+                        project().exclude("rated"),
+                        limit(1)));
+    }
+
+    @Test
     @DisplayName("Project New Array Fields")
     public void projectNewArrayFields() {
         runner.aggregate(

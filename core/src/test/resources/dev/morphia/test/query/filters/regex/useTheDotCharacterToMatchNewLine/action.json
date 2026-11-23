@@ -1,1 +1,0 @@
-db.products.find( { description: { $regex: /m.*line/is } } )

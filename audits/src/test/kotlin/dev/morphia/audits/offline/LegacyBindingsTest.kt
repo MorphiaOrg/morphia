@@ -7,6 +7,7 @@ import dev.morphia.audits.bindings.ManualMethod
 import dev.morphia.audits.bindings.NameBackport
 import dev.morphia.audits.bindings.UnboundResource
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.repairs.FixtureDeletions
 import dev.morphia.audits.repairs.FixtureMigration
 import java.nio.file.Files
 import java.nio.file.Path
@@ -290,10 +291,16 @@ class LegacyBindingsTest {
         // Legacy cases moved onto the operator case runner leave the binding capture through the
         // migration ledger, with their methods exactly as they were bound.
         val migration = AuditJson.fixtureMigration(read("audits/catalog/fixture-migration.json"))
+        // Legacy cases without a documented source were deleted, through the deletion ledger.
+        val deletions = AuditJson.fixtureDeletions(read(FixtureDeletions.PATH))
+        FixtureDeletions.verify(root, deletions)
         assertEquals(
-            FixtureMigration.remove(
-                NameBackport.project(committed, ledger, committed.repositoryRevision),
-                migration,
+            FixtureDeletions.remove(
+                FixtureMigration.remove(
+                    NameBackport.project(committed, ledger, committed.repositoryRevision),
+                    migration,
+                ),
+                deletions,
             ),
             catalog,
         )
@@ -305,7 +312,7 @@ class LegacyBindingsTest {
             forms.overrides.associate {
                 val lock = requireNotNull(it.retiredLock)
                 "core/src/test/resources/dev/morphia/test/${it.fixture}/${lock.name}" to lock.sha256
-            } + FixtureMigration.preserved(migration),
+            } + FixtureMigration.preserved(migration) + FixtureDeletions.retired(deletions),
         )
         FixtureMigration.verify(
             root,

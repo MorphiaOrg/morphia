@@ -26,23 +26,4 @@ public class TestLast extends TemplatedTestBase {
                         group(id("$item")).field("lastSalesDate", last("$date"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/last/useInSetWindowFieldsStage
-     * 
-     */
-    @Test
-    @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testUseInSetWindowFieldsStage() {
-        // this example starts importing a bunch of stuff and gets more complicated than
-        // I care
-        // to make the parser support. we have working examples already.
-        /*
-         * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),
-         * (aggregation) -> aggregation.pipeline( setWindowFields()
-         * .partitionBy("$state") .sortBy(ascending("orderDate"))
-         * .output(output("lastOrderTypeForState") .operator(last("$type")) .window()
-         * .documents("current", "unbounded"))));
-         */
-    }
-
 }

@@ -31,12 +31,4 @@ public class TestRename extends TemplatedTestBase {
         testUpdate((query) -> query.filter(eq("_id", 1)), rename("name.first", "name.fname"));
     }
 
-    /**
-     * test data: dev/morphia/test/query/updates/rename/renameAFieldThatDoesNotExist
-     */
-    @Test
-    @DisplayName("Rename a Field That Does Not Exist")
-    public void testRenameAFieldThatDoesNotExist() {
-        testUpdate((query) -> query.filter(eq("_id", 1)), rename("wife", "spouse"));
-    }
 }

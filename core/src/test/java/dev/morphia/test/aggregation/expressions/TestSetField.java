@@ -76,14 +76,4 @@ public class TestSetField extends TemplatedTestBase {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/removeFieldsThatStartWithADollarSign
-     * 
-     */
-    @Test
-    @DisplayName("Remove Fields that Start with a Dollar Sign (``$``)")
-    public void testRemoveFieldsThatStartWithADollarSign() {
-        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
-    }
-
 }

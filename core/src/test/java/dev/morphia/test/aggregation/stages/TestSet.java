@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,17 +35,6 @@ public class TestSet extends TemplatedTestBase {
     @DisplayName("Adding Fields to an Embedded Document")
     public void testAddingFieldsToAnEmbeddedDocument() {
         testPipeline((aggregation) -> aggregation.pipeline(set().field("specs.fuel_type", "unleaded")));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/set/overwritingAnExistingField
-     * 
-     */
-    @Test
-    @DisplayName("Overwriting an existing field")
-    public void testOverwritingAnExistingField() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(set().field("cats", 20)));
     }
 
     /**

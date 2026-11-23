@@ -1,3 +1,0 @@
-{ "item" : "abc", "price" : NumberDecimal("12"), "quantity" : 2, "type": "apparel" },
-{ "item" : "jkl", "price" : NumberDecimal("20"), "quantity" : 1, "type": "electronics" },
-{ "item" : "abc", "price" : NumberDecimal("10"), "quantity" : 5, "type": "apparel" }

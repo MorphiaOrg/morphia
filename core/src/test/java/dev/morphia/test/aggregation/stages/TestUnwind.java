@@ -5,19 +5,12 @@ import java.util.Iterator;
 
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
-import static dev.morphia.aggregation.stages.Group.group;
-import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -52,30 +45,6 @@ public class TestUnwind extends TemplatedTestBase {
     @DisplayName("``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
     public void testPreserveNullAndEmptyArraysAndIncludeArrayIndex() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/groupByUnwoundValues
-     * 
-     */
-    @Test
-    @DisplayName("Group by Unwound Values")
-    public void testGroupByUnwoundValues() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
-                        group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/unwindEmbeddedArrays
-     * 
-     */
-    @Test
-    @DisplayName("Unwind Embedded Arrays")
-    public void testUnwindEmbeddedArrays() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(unwind("items"),
-                unwind("items.tags"),
-                group(id("$items.tags")).field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
     }
 
     @Test

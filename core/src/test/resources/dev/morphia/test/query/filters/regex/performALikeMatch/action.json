@@ -1,1 +1,0 @@
-db.products.find( { sku: { $regex: /789$/ } } )

@@ -36,6 +36,7 @@ import dev.morphia.audits.publish.PublicationPolicy
 import dev.morphia.audits.repairs.CaseManifest
 import dev.morphia.audits.repairs.CuratedRepairReport
 import dev.morphia.audits.repairs.CutoverReport
+import dev.morphia.audits.repairs.FixtureDeletionLedger
 import dev.morphia.audits.repairs.FixtureMigrationLedger
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigrationReport
@@ -186,6 +187,9 @@ object AuditJson {
         read(json, FormMigrationReport::class.java)
 
     fun cutover(json: String): CutoverReport = read(json, CutoverReport::class.java)
+
+    fun fixtureDeletions(json: String): FixtureDeletionLedger =
+        read(json, FixtureDeletionLedger::class.java)
 
     fun candidate(json: String): Candidate = read(json, Candidate::class.java)
 

@@ -5,19 +5,15 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.firstN;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
-import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
-import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -78,18 +74,6 @@ public class TestFirstN extends TemplatedTestBase {
                                                 1,
                                                 3),
                                         "$score"))));
-    }
-
-    @Disabled("this needs to run against the db rather than a collection and that requires fixes in the agg code")
-    @Test
-    public void testUsingFirstNAsAnAggregationExpression() {
-        testPipeline(
-                (aggregation) -> aggregation.pipeline(
-                        documents(document().field("array", array(10, 20, 30, 40))),
-                        project()
-                                .include("firstThreeElements", firstN(3, "$array"))
-
-                ));
     }
 
 }

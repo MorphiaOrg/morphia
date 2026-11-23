@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.*;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
-import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.MathExpressions.trunc;
-import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestMap extends TemplatedTestBase {
@@ -37,14 +35,4 @@ public class TestMap extends TemplatedTestBase {
                         map("$distances", trunc("$$decimalValue")).as("decimalValue"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit
-     * 
-     */
-    @Test
-    @DisplayName("Convert Celsius Temperatures to Fahrenheit")
-    public void testConvertCelsiusTemperaturesToFahrenheit() {
-        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation.pipeline(addFields()
-                .field("tempsF", map("$tempsC", add(multiply("$$tempInCelsius", 1.8), 32)).as("tempInCelsius"))));
-    }
 }

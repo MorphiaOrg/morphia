@@ -1,0 +1,91 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/gt/performAnUpdateBasedOnEmbeddedDocumentFields",
+  "title": "Perform an Update Based on Embedded Document Fields",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/gt.txt",
+    "blob": "41c39f6475c4fca72842a85b918a2470d8e7e29f"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$gt": {
+          "$numberDouble": "9.5"
+        }
+      }
+    },
+    "update": {
+      "$set": {
+        "highestRated": true
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "acknowledged",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "insertedId",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "matchedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "modifiedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "upsertedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

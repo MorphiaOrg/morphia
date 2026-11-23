@@ -133,16 +133,4 @@ public class TestLookup extends TemplatedTestBase {
         Assertions.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/namespacesInSubpipelines
-     * 
-     * db.cakeFlavors.aggregate( [ { $lookup: { from: "cakeFlavors", pipeline: [ {
-     * $documents: [ {} ] } ], as: "test" } } ] )
-     */
-    @Test
-    @DisplayName("Namespaces in Subpipelines")
-    public void testNamespacesInSubpipelines() {
-        // this is just an error case in the docs. nothing to test.
-    }
-
 }

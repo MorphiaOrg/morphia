@@ -4,11 +4,9 @@ import java.util.List;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.query.filters.Filters.elemMatch;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.in;
@@ -36,16 +34,6 @@ public class TestPull extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/removeAllItemsThatMatchASpecifiedPullConditionWithBulkWrite
-     */
-    @Disabled("test is irrelevant to Morphia")
-    @Test
-    @DisplayName("Remove All Items That Match a Specified ``$pull`` Condition With :method:`~db.collection.bulkWrite()`")
-    public void testRemoveAllItemsThatMatchASpecifiedPullConditionWithBulkWrite() {
-
-    }
-
-    /**
      * test data: dev/morphia/test/query/updates/pull/removeItemsFromAnArrayOfDocuments
      */
     @Test
@@ -54,12 +42,4 @@ public class TestPull extends TemplatedTestBase {
         testUpdate((query) -> query.filter(), pull("results", eq("score", 8), eq("item", "B")));
     }
 
-    /**
-     * test data: dev/morphia/test/query/updates/pull/removeDocumentsFromNestedArrays
-     */
-    @Test
-    @DisplayName("Remove Documents from Nested Arrays")
-    public void testRemoveDocumentsFromNestedArrays() {
-        testUpdate((query) -> query.filter(), pull("results", elemMatch("answers", eq("q", 2), gte("a", 8))));
-    }
 }

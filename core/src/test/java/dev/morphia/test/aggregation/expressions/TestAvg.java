@@ -38,25 +38,4 @@ public class TestAvg extends TemplatedTestBase {
 
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/avg/useInSetWindowFieldsStage
-     * 
-     */
-    @Test
-    @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testUseInSetWindowFieldsStage() {
-        // this has an include and throws off the parser
-        /*
-         * testPipeline(new dev.morphia.test.util.ActionTestOptions()
-         * .orderMatters(false), aggregation -> aggregation
-         * .setWindowFields(SetWindowFields.setWindowFields() .partitionBy("$state")
-         * .sortBy(ascending("orderDate")) .output(output("averageQuantityForState")
-         * .operator(avg("$quantity")) .window() .documents("unbounded", "current"))
-         * 
-         * )
-         * 
-         * );
-         */
-
-    }
 }

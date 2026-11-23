@@ -31,14 +31,4 @@ public class TestElemMatch extends TemplatedTestBase {
         testQuery((query) -> query.filter(elemMatch("results", eq("product", "xyz"), gte("score", 8))));
     }
 
-    /**
-     * test data: dev/morphia/test/query/filters/elemMatch/singleQueryCondition
-     * 
-     */
-    @Test
-    @DisplayName("Single Query Condition")
-    public void testSingleQueryCondition() {
-        testQuery((query) -> query.filter(elemMatch("results", eq("product", "xyz"))));
-    }
-
 }

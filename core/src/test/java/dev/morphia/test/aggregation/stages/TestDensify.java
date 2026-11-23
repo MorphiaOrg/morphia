@@ -37,15 +37,4 @@ public class TestDensify extends TemplatedTestBase {
                                                         .unit(HOUR))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/densify/densifictionWithPartitions
-     * 
-     */
-    @Test
-    @DisplayName("Densifiction with Partitions")
-    public void testDensifictionWithPartitions() {
-        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation
-                .pipeline(densify("altitude", Range.full(200)).partitionByFields("variety")));
-    }
-
 }

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/push/appendAValueToArraysInMultipleDocuments",
+  "title": "Append a Value to Arrays in Multiple Documents",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/push.txt",
+    "blob": "fdb0910d9434d1a5996a946255b051a314b2be99"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$gt": {
+          "$numberInt": "9"
+        }
+      }
+    },
+    "update": {
+      "$push": {
+        "genres": "Acclaimed"
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "acknowledged",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "insertedId",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "matchedCount",
+            "value": {
+              "text": "..."
+            }
+          },
+          {
+            "name": "modifiedCount",
+            "value": {
+              "text": "..."
+            }
+          },
+          {
+            "name": "upsertedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -19,15 +19,4 @@ public class TestMod extends TemplatedTestBase {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("remainder", mod("$hours", "$tasks"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/mod/negativeDividend
-     * 
-     */
-    @Test
-    @DisplayName("Negative Dividend")
-    public void testNegativeDividend() {
-        testPipeline(
-                (aggregation) -> aggregation.pipeline(project().include("remainder", mod("$dividend", "$divisor"))));
-    }
-
 }

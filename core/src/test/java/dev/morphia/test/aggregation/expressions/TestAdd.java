@@ -20,15 +20,4 @@ public class TestAdd extends TemplatedTestBase {
                 .pipeline(project().include("item").include("total", add("$price", "$fee"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/add/performAdditionOnADate
-     * 
-     */
-    @Test
-    @DisplayName("Perform Addition on a Date")
-    public void testPerformAdditionOnADate() {
-        testPipeline(aggregation -> aggregation
-                .pipeline(project().include("item", 1).include("billing_date", add("$date", 259200000))));
-
-    }
 }

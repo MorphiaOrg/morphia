@@ -335,8 +335,14 @@ losing what the locks protected:
    change as a reviewed edit with the digest it started from, so the preserved originals still
    check.
 
-Fixtures that no documented source reproduces stay on the legacy loader. The progress file tracks
-how many remain.
+6. **Delete the unbacked.** A legacy test whose fixture no documented source reproduces was
+   deleted with its fixture, and `deleted-fixtures.json` records the test's body digest, the
+   fixture files' digests and the reason. The preservation checks hold those records to the
+   corpus snapshot and the frozen binding catalog, as they do the migration ledger. With the
+   legacy owner gone, the example's documented form is generated when its bindings allow.
+
+The cases that stay on the legacy loader all have a documented source and fail a strict check;
+the progress file tracks them.
 
 ### Weekly discovery
 

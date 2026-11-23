@@ -11,9 +11,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.addToSe
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
 import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.stages.Group.group;
-import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
-import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
-import static dev.morphia.query.Sort.ascending;
 
 public class TestAddToSet extends TemplatedTestBase {
     /**
@@ -32,18 +29,4 @@ public class TestAddToSet extends TemplatedTestBase {
 
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/addToSet/useInSetWindowFieldsStage
-     * 
-     */
-    @Test
-    @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testUseInSetWindowFieldsStage() {
-        if (1 == 1)
-            return;
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                        .sortBy(ascending("orderDate")).output(output("cakeTypesForState").operator(addToSet("$type"))
-                                .window().documents("unbounded", "current"))));
-    }
 }

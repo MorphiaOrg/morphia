@@ -33,14 +33,4 @@ public class TestSubtract extends TemplatedTestBase {
                 .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/subtract/subtractMillisecondsFromADate
-     * 
-     */
-    @Test
-    @DisplayName("Subtract Milliseconds from a Date")
-    public void testSubtractMillisecondsFromADate() {
-        testPipeline((aggregation) -> aggregation
-                .pipeline(project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));
-    }
 }

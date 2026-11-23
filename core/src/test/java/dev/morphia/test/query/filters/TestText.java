@@ -82,16 +82,6 @@ public class TestText extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/diacriticSensitiveSearch
-     */
-    @Test
-    @DisplayName("Diacritic Sensitive Search")
-    public void testDiacriticSensitiveSearch() {
-        testQuery(new ActionTestOptions().orderMatters(false),
-                (query) -> query.filter(text("CAFÉ").diacriticSensitive(true)));
-    }
-
-    /**
      * test data: dev/morphia/test/query/filters/text/relevanceScoreExamples
      */
     @Test

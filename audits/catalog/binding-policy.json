@@ -45,11 +45,5 @@
     "type" : "dev.morphia.test.aggregation.stages.TestUnwind"
   } ],
   "schemaVersion" : 1,
-  "unboundResources" : [ {
-    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
-    "resource" : "aggregation/expressions/tsIncrement/useTsIncrementInAChangeStreamCursorToMonitorCollectionChanges"
-  }, {
-    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
-    "resource" : "aggregation/expressions/tsSecond/useTsSecondInAChangeStreamCursorToMonitorCollectionChanges"
-  } ]
+  "unboundResources" : [ ]
 }

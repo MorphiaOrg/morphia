@@ -23,14 +23,4 @@ public class TestSetIntersection extends TemplatedTestBase {
                                 .include("commonToBoth", setIntersection("$flowerFieldA", "$flowerFieldB"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/setIntersection/retrieveDocumentsForRolesGrantedToTheCurrentUser
-     * 
-     */
-    @Test
-    @DisplayName("Retrieve Documents for Roles Granted to the Current User")
-    public void testRetrieveDocumentsForRolesGrantedToTheCurrentUser() {
-        // this requires auth and roles configuration which the tests won't have
-    }
-
 }

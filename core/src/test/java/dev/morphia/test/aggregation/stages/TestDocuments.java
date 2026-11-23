@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
 import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -17,19 +16,6 @@ public class TestDocuments extends TemplatedTestBase {
     @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("6.0.0");
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/documents/testAPipelineStage
-     * 
-     */
-    @Test
-    @DisplayName("Test a Pipeline Stage")
-    public void testTestAPipelineStage() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(
-                        documents(document().field("x", 10), document().field("x", 2), document().field("x", 5)),
-                        autoBucket().groupBy("$x").buckets(4)));
     }
 
     /**

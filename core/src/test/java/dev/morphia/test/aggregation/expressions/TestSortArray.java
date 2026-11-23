@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.sortArray;
-import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.Sort.naturalAscending;
 
@@ -20,18 +18,6 @@ public class TestSortArray extends TemplatedTestBase {
     @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.2.0");
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnAField
-     * 
-     */
-    @Test
-    @DisplayName("Sort on a Field ")
-    public void testSortOnAField() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
-                .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
-
     }
 
     /**
@@ -49,17 +35,6 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnMultipleFields
-     * 
-     */
-    @Test
-    @DisplayName("Sort on Multiple Fields")
-    public void testSortOnMultipleFields() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
-                project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
-    }
-
-    /**
      * test data: dev/morphia/test/aggregation/expressions/sortArray/sortAnArrayOfIntegers
      * 
      */
@@ -70,30 +45,6 @@ public class TestSortArray extends TemplatedTestBase {
             return aggregation.pipeline(
                     project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
         });
-
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnMixedTypeFields
-     * 
-     */
-    @Test
-    @DisplayName("Sort on Mixed Type Fields")
-    public void testSortOnMixedTypeFields() {
-        testPipeline(
-                new ActionTestOptions().orderMatters(false), (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        project().suppressId()
-                                                .include("result",
-                                                        sortArray(
-                                                                array(20, 4, document("a", "Free"), 6, 21, 5, "Gratis",
-                                                                        document("a", null),
-                                                                        document("a",
-                                                                                document("sale", true).field("price",
-                                                                                        19)),
-                                                                        10.23, document("a", "On sale")),
-                                                                naturalAscending()))));
 
     }
 

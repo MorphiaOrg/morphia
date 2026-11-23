@@ -9,11 +9,39 @@
       "reason": "the page gives its only example no title; the name says what the pipeline does"
     },
     {
+      "page": "aggregation/expressions/allElementsTrue",
+      "title": "main",
+      "actionSha256": "d854e31b8c480746f81651ea0db98b83585c1c74bbdf058cf20c45dc33a96d1a",
+      "name": "Check Whether Every Response Is True",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/anyElementTrue",
+      "title": "main",
+      "actionSha256": "ac564cbc13801311506b58471c649960fe7817f376979a21be3a5d2cee52f9fd",
+      "name": "Check Whether Any Response Is True",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
       "page": "aggregation/expressions/count-accumulator",
       "title": "main",
       "actionSha256": "547ca4198a6a6587a9e3c721552fe0d3729d947cf48f022949322edc9b50e709",
       "name": "Count the Movies in Each Genre",
       "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/dateFromParts",
+      "title": "main",
+      "actionSha256": "865b4da61f04423a7735782cdefd35f7d8dce3e2d0826daeb32e0a7120986778",
+      "name": "Build Dates from Their Parts",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/divide",
+      "title": "main",
+      "actionSha256": "802367d4ce0b501d7fa38509c295bd9d34d8849cd82ecf3a3a43d67be37c32a0",
+      "name": "Divide Hours into Workdays",
+      "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
       "page": "aggregation/expressions/encStrContains",
@@ -51,11 +79,32 @@
       "reason": "the page gives its only example no title; the name says what the pipeline does"
     },
     {
+      "page": "aggregation/expressions/indexOfBytes",
+      "title": "main",
+      "actionSha256": "c2e4b37daf4c7037b5b3f3339d23d1c4bc4674d4748b43410953ad629186b1ac",
+      "name": "Find a Substring's Byte Index",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/indexOfCP",
+      "title": "main",
+      "actionSha256": "26abb3b56b8f489bcbc5c690066ffb31daee26b701dd4c5cda812edfac805970",
+      "name": "Find a Substring's Code Point Index",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
       "page": "aggregation/expressions/last",
       "title": "main",
       "actionSha256": "d405687abd3755d309ea59681b98811681fbf01d8bc954e367b83f4c04dc3ec2",
       "name": "Find the Last Movie in Each Genre",
       "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/ltrim",
+      "title": "main",
+      "actionSha256": "461e55ebeebca43925fb687cd5b71690c26bcf8372ae42f1401cef167b4b040b",
+      "name": "Trim Leading Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
       "page": "aggregation/expressions/maxN-array-element",
@@ -79,6 +128,13 @@
       "reason": "the page gives its only example no title; the name says what the pipeline does"
     },
     {
+      "page": "aggregation/expressions/meta",
+      "title": "main",
+      "actionSha256": "58f7d9ff2811de1222d82760f6bd6b8fb1aec513068fb94e9fdad7755a52df79",
+      "name": "Group by Text Score",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
       "page": "aggregation/expressions/minMaxScaler",
       "title": "main",
       "actionSha256": "68cadc2ee23a651e9c95b29ee02069dcc6e06179ee07642c59916ac765840f4a",
@@ -91,6 +147,20 @@
       "actionSha256": "40df131bf80452fa7ae8ae5bbeec3d865ce04bea7d77f5ca1bbe484d81c26e11",
       "name": "Collect the First Genre of Each Director's Movies",
       "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/rtrim",
+      "title": "main",
+      "actionSha256": "1ab8ee6b5ac5c6da2e6f6565971f2ddb539b9a760bbb396ac683a25ec3c54d70",
+      "name": "Trim Trailing Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/sampleRate",
+      "title": "main",
+      "actionSha256": "9eb16fc0d6e747192d63d389b1034d7b803eb3913a9e84b1b88f6414d764dcab",
+      "name": "Count a Random Sample",
+      "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
       "page": "aggregation/expressions/sigmoid",
@@ -156,6 +226,13 @@
       "reason": "the page gives its only example no title; the name says what the pipeline does"
     },
     {
+      "page": "aggregation/expressions/trim",
+      "title": "main",
+      "actionSha256": "2b53649596e636143a08204e97a41eedbd7d57f08b860f013318d74e2ac4b0c7",
+      "name": "Trim Surrounding Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
       "page": "aggregation/stages/bucketAuto",
       "title": "Multi-Faceted Aggregation",
       "actionSha256": "49c497fa22b49783b1df464f3eb1938f1e8ca2f690771b7bb759cf6042ca1313",
@@ -180,8 +257,29 @@
       "page": "aggregation/stages/currentOp",
       "title": "main",
       "actionSha256": "030833abe66b5010e1ad768cb461b4434d7d3289c5a83e2ccd388a7ff74a2964",
-      "owner": "aggregation/stages/currentOp/inactiveSessionsReplicaSet",
-      "reason": "the sharded-cluster fixtures run the same example on other topologies"
+      "name": "Find Inactive Sessions with Open Transactions",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/stages/facet",
+      "title": "main",
+      "actionSha256": "fcee9241e8de20239e50ec66b3b6e6f3750ded612a7b056d338cc482eafd3c28",
+      "name": "Categorize Movies Several Ways",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/stages/indexStats",
+      "title": "main",
+      "actionSha256": "8d21b466c0c58f823addf3ce810309f8b8304b70fa2ef98bc05206ae2d270810",
+      "name": "Return Index Usage Statistics",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/stages/limit",
+      "title": "main",
+      "actionSha256": "71aa6e659a61188b24e2de7b027a3f264ba0eab0f1d75977d049c89e8f474e62",
+      "name": "Return the First Five Movies",
+      "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
       "page": "aggregation/stages/merge",
@@ -189,13 +287,6 @@
       "actionSha256": "0b8c38bc0cb8bfa1dd7d46446a1a31898fb3e717d9b0525158fe3eabd7657b61",
       "name": "Summarize Ratings into Another Collection",
       "reason": "the page gives its only example no title; the name says what the pipeline does"
-    },
-    {
-      "page": "aggregation/stages/planCacheStats",
-      "title": "Find Cache Entry Details for a Query Hash",
-      "actionSha256": "41f810575e2a2f27f90e5db0ca0f282d533759c52329575ed1c53c37f3582475",
-      "owner": "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
-      "reason": "its name is the example's title; the other fixture holds the same example under the page's later title"
     },
     {
       "page": "aggregation/stages/planCacheStats",
@@ -238,6 +329,41 @@
       "actionSha256": "2d6d65f7de803401276c55fbb86f847215ae51a080176a56dcaab7302d331433",
       "name": "Combine Vector and Text Search Scores",
       "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "query/filters/centerSphere",
+      "title": "main",
+      "actionSha256": "963bdeceb39203228430f08c78f97836836db783f61a56b4a82fbef8d8efdbe0",
+      "name": "Find Places Within a Spherical Radius",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/filters/maxDistance",
+      "title": "main",
+      "actionSha256": "e3fb3ac1b0efdb68839ea35fb58eb46bf0c4f3ad8abdb8e4f8cbcc259451e86a",
+      "name": "Find Places Near a Point Within a Distance",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/filters/where",
+      "title": "main",
+      "actionSha256": "1ffbada99df79d71a262d2349b6dbafe8af883829c09db0b5eafe2651a6a1be4",
+      "name": "Match with a JavaScript Function",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/updates/setOnInsert",
+      "title": "main",
+      "actionSha256": "3c1d798a7f89d1ab9cb3560e375bfa2dce8ff409a34e46df2b175920c257b4d0",
+      "name": "Set Fields Only on Insert",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/updates/unset",
+      "title": "main",
+      "actionSha256": "831321a579a72ec49aceedef98d06e413c9c1efa02fd077c61b252977f1fdf1b",
+      "name": "Remove Fields from a Document",
+      "reason": "the page gives its only example no title; the name says what the example does"
     }
   ]
 }

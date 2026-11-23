@@ -24,13 +24,4 @@ public class TestCurrentDate extends TemplatedTestBase {
                 set("cancellation.reason", "user request"), set("status", "D"));
     }
 
-    /**
-     * test data: dev/morphia/test/query/updates/currentDate/aggregationAlternativeToCurrentDate
-     */
-    @Test
-    @DisplayName("Aggregation Alternative to ``$currentDate``")
-    public void testAggregationAlternativeToCurrentDate() {
-        // this one isn't an operator test as such and updates with a pipeline are
-        // tested elsewhere
-    }
 }

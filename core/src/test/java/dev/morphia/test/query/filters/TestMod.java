@@ -19,24 +19,6 @@ public class TestMod extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/notEnoughElementsError
-     */
-    @Test
-    @DisplayName("Not Enough Elements Error")
-    public void testNotEnoughElementsError() {
-        // ignored
-    }
-
-    /**
-     * test data: dev/morphia/test/query/filters/mod/tooManyElementsError
-     */
-    @Test
-    @DisplayName("Too Many Elements Error")
-    public void testTooManyElementsError() {
-        // ignored
-    }
-
-    /**
      * test data: dev/morphia/test/query/filters/mod/floatingPointArguments
      */
     @Test
@@ -45,12 +27,4 @@ public class TestMod extends TemplatedTestBase {
         testQuery((query) -> query.filter(mod("qty", 4.0, 0.0)));
     }
 
-    /**
-     * test data: dev/morphia/test/query/filters/mod/negativeDividend
-     */
-    @Test
-    @DisplayName("Negative Dividend")
-    public void testNegativeDividend() {
-        testQuery((query) -> query.filter(mod("qty", -4, -0)));
-    }
 }

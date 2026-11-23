@@ -1,8 +1,0 @@
-{
-      $group: {
-         _id: "$state",
-         countNumberOfDocumentsForState: {
-            $count: {}
-         }
-      }
-   }

@@ -6,25 +6,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevSamp;
-import static dev.morphia.aggregation.stages.Group.group;
-import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Sample.sample;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.*;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.*;
 
 public class TestStdDevSamp extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/useInGroupStage
-     * 
-     */
-    @Test
-    @DisplayName("Use in ``$group`` Stage")
-    public void testUseInGroupStage() {
-        testPipeline((aggregation) -> aggregation.pipeline(sample(100),
-                group(id(null)).field("ageStdDev", stdDevSamp("$age"))));
-    }
-
     /**
      * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage
      * 

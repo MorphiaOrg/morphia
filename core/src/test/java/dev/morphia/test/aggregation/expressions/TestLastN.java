@@ -75,9 +75,4 @@ public class TestLastN extends TemplatedTestBase {
                                         "$score"))));
     }
 
-    @Test
-    public void testUsingLastNAsAnAggregationExpression() {
-        //  needs db.aggregate() support
-    }
-
 }

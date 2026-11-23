@@ -25,15 +25,6 @@ public class TestPositional extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/updateDocumentsInAnArray
-     */
-    @Test
-    @DisplayName("Update Documents in an Array")
-    public void testUpdateDocumentsInAnArray() {
-        testUpdate((query) -> query.filter(eq("_id", 4), eq("grades.grade", 85)), set("grades.$.std", 6));
-    }
-
-    /**
      * test data: dev/morphia/test/query/updates/positional/updateEmbeddedDocumentsUsingMultipleFieldMatches
      */
     @Test
@@ -53,12 +44,4 @@ public class TestPositional extends TemplatedTestBase {
                 set("deans_list.$", 2022));
     }
 
-    /**
-     * test data: dev/morphia/test/query/updates/positional/updateNestedArraysInConjunctionWith
-     */
-    @Test
-    @DisplayName("Update Nested Arrays in Conjunction with ``$[]``")
-    public void testUpdateNestedArraysInConjunctionWith() {
-        // docs out of date?
-    }
 }

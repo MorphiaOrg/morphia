@@ -1,10 +1,8 @@
 package dev.morphia.test.query.filters;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,17 +50,6 @@ public class TestEq extends TemplatedTestBase {
         testQuery((query) -> query.filter(eq("tags", List.of("A", "B"))
 
         ));
-    }
-
-    /**
-     * test data: dev/morphia/test/query/filters/eq/regexMatchBehaviour
-     * 
-     */
-    @Test
-    @DisplayName("Regex Match Behaviour")
-    public void testRegexMatchBehaviour() {
-        testQuery(new ActionTestOptions().removeIds(true),
-                (query) -> query.filter(eq("company", Pattern.compile("MongoDB"))));
     }
 
 }

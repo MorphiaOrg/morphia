@@ -43,17 +43,6 @@ public class TestFilter extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/filter/limitGreaterThanPossibleMatches
-     * 
-     */
-    @Test
-    @DisplayName("limit Greater than Possible Matches")
-    public void testLimitGreaterThanPossibleMatches() {
-        // this example is API incompatible with morphia since limit can only be an int
-        // and not a floating point number
-    }
-
-    /**
      * test data: dev/morphia/test/aggregation/expressions/filter/filterBasedOnStringEqualityMatch
      * 
      */

@@ -24,17 +24,4 @@ public class TestNearSphere extends TemplatedTestBase {
                         .minDistance(1000.0).maxDistance(5000.0)));
     }
 
-    /**
-     * test data: dev/morphia/test/query/filters/nearSphere/specifyCenterPointUsingLegacyCoordinates
-     */
-    @Test
-    @DisplayName("Specify Center Point Using Legacy Coordinates")
-    public void testSpecifyCenterPointUsingLegacyCoordinates() {
-        // legacy coordinates just won't be supported for now
-        /*
-         * testQuery(new QueryTestOptions().skipDataCheck(true), (query) ->
-         * query.filter( nearSphere("location", new Point(new Position(-73.9667,
-         * 40.78))) .maxDistance(0.10) ));
-         */
-    }
 }

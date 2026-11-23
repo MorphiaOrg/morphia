@@ -8,13 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateAdd;
-import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Merge.merge;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.query.filters.Filters.expr;
 
 public class TestDateAdd extends TemplatedTestBase {
 
@@ -37,47 +33,4 @@ public class TestDateAdd extends TemplatedTestBase {
 
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/dateAdd/filterOnADateRange
-     * 
-     */
-    @Test
-    @DisplayName("Filter on a Date Range")
-    public void testFilterOnADateRange() {
-        testPipeline(aggregation -> aggregation.pipeline(
-                match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
-
-                project().suppressId().include("custId")
-                        .include("purchased", dateToString().date("$purchaseDate").format("%Y-%m-%d"))
-                        .include("delivery", dateToString().date("$deliveryDate").format("%Y-%m-%d"))
-
-        ));
-
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/dateAdd/adjustForDaylightSavingsTime
-     * 
-     */
-    @Test
-    @DisplayName("Adjust for Daylight Savings Time")
-    public void testAdjustForDaylightSavingsTime() {
-        testPipeline(aggregation -> aggregation.pipeline(project().suppressId().include("location")
-                .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
-                .include("days",
-                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
-                                .format("%Y-%m-%d %H:%M"))
-                .include("hours",
-                        dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
-                                .format("%Y-%m-%d %H:%M"))
-                .include("startTZInfo", dateToString().date("$login").format("%Y-%m-%d %H:%M").timeZone("$location"))
-                .include("daysTZInfo",
-                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
-                                .format("%Y-%m-%d %H:%M").timeZone("$location"))
-                .include("hoursTZInfo", dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
-                        .format("%Y-%m-%d %H:%M").timeZone("$location")))
-
-        );
-
-    }
 }

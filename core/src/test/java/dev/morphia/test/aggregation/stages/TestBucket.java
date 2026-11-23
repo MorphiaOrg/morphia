@@ -17,30 +17,13 @@ import org.junit.jupiter.api.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.stages.Bucket.bucket;
 import static dev.morphia.aggregation.stages.Facet.facet;
-import static dev.morphia.aggregation.stages.Match.match;
-import static dev.morphia.query.filters.Filters.gt;
 import static java.lang.Integer.valueOf;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
 
 public class TestBucket extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/stages/bucket/bucketByYearAndFilterByBucketResults
-     * 
-     */
-    @Test
-    @DisplayName("Bucket by Year and Filter by Bucket Results")
-    public void testBucketByYearAndFilterByBucketResults() {
-        testPipeline((aggregation) -> aggregation.pipeline(bucket()
-                .groupBy("$year_born").boundaries(1840, 1850, 1860, 1870, 1880).defaultValue("Other")
-                .outputField("count", sum(1)).outputField("artists", push()
-                        .field("name", concat("$first_name", " ", "$last_name")).field("year_born", "$year_born")),
-                match(gt("count", 3))));
-    }
-
     /**
      * test data: dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields
      * 
