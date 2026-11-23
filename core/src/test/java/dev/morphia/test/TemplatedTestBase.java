@@ -1,51 +1,35 @@
 package dev.morphia.test;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.IndexOptions;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.aggregation.AggregationImpl;
-import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.query.MorphiaQuery;
-import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
-import org.bson.json.JsonParseException;
 import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static java.lang.Character.toLowerCase;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 
+/**
+ * The base of the converted operator example tests. Each test's fixture directory holds only its {@code scenario.json},
+ * found through the example bindings, and {@link OperatorCaseRunner} checks it; the test body supplies Morphia's side
+ * of the action and the legacy options its scenario must agree with.
+ */
 @ExtendWith(TestCoverageExtension.class)
 public abstract class TemplatedTestBase extends TestBase {
     public static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
@@ -54,8 +38,6 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected static final String EXAMPLE_TEST_COLLECTION = "example_test";
 
-    protected final ObjectMapper mapper = new ObjectMapper();
-
     public TemplatedTestBase() {
     }
 
@@ -63,20 +45,6 @@ public abstract class TemplatedTestBase extends TestBase {
         return actual.stream()
                 .map(c -> c.toJson(JSON_WRITER_SETTINGS))
                 .collect(joining("\n\t", prefix, ""));
-    }
-
-    private static List<String> unwrapArray(List<String> resource) {
-        String line = resource.get(0).trim();
-        if (line.startsWith("[")) {
-            resource.set(0, line.trim().substring(1));
-        }
-        var last = resource.size() - 1;
-        line = resource.get(last).trim();
-        if (line.endsWith("]")) {
-            resource.set(last, line.substring(0, line.length() - 1));
-        }
-
-        return resource;
     }
 
     @NotNull
@@ -90,20 +58,36 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testPipeline(ActionTestOptions options,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
-        // A converted case's fixture directory holds only its scenario: the runner checks it instead.
-        String scenario = scenarioResource(discoverResourceName());
-        if (getClass().getResource(scenario) != null) {
-            new OperatorCaseRunner(this).aggregate(OperatorCase.of(scenario), options, pipeline);
-            return;
+        new OperatorCaseRunner(this).aggregate(scenario(), options, pipeline);
+    }
+
+    public void testQuery(Function<Query<Document>, Query<Document>> function) {
+        testQuery(new ActionTestOptions(), function);
+    }
+
+    public void testQuery(ActionTestOptions options,
+            Function<Query<Document>, Query<Document>> function) {
+        new OperatorCaseRunner(this).find(scenario(), options, function);
+    }
+
+    public void testUpdate(Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
+        testUpdate(new ActionTestOptions(), function, operators);
+    }
+
+    public void testUpdate(ActionTestOptions options,
+            Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
+        new OperatorCaseRunner(this).update(scenario(), options, function, operators);
+    }
+
+    /**
+     * A test that loaded an extra collection still names it: its scenario seeds every documented collection, so this
+     * only checks that the scenario seeds it.
+     */
+    protected void loadData(String collection, int index) {
+        OperatorCase scenario = scenario();
+        if (!scenario.scenario().getDocument("collections").containsKey(collection)) {
+            Assertions.fail(scenario.resource() + " does not seed the collection " + collection);
         }
-        var resourceName = prepareDatabase(options);
-
-        validateTestName(resourceName);
-
-        List<Document> actual = runPipeline(options, resourceName, pipeline.apply(
-                getDs().aggregate(aggregationOptions().collection(EXAMPLE_TEST_COLLECTION))));
-
-        checkExpected(options, resourceName, actual);
     }
 
     protected String discoverResourceName() {
@@ -121,61 +105,12 @@ public abstract class TemplatedTestBase extends TestBase {
         return methodName;
     }
 
-    protected void loadData(String resourceName, String collection) {
-        insert(collection, loadJson(format("%s/%s/data.json", prefix(), resourceName), "data", true));
-    }
-
-    protected void loadData(String collection, int index) {
-        // A converted case's scenario seeds every documented collection, so its body loads nothing.
-        String scenario = scenarioResource(discoverResourceName());
-        if (getClass().getResource(scenario) != null) {
-            if (!OperatorCase.of(scenario).scenario().getDocument("collections").containsKey(collection)) {
-                Assertions.fail(scenario + " does not seed the collection " + collection);
-            }
-            return;
-        }
-        insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), discoverResourceName(), index), "data", true));
-    }
-
-    protected @NotNull List<Document> loadExpected(String resourceName) {
-        return loadJson("%s/%s/expected.json".formatted(prefix(), resourceName), "expected", true);
-    }
-
     protected Method findTestMethod() {
         return stream(new Exception().getStackTrace())
                 .map(this::isTestMethod)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .get();
-    }
-
-    @NotNull
-    protected List<Document> loadJson(String name, String type, boolean failOnMissing) {
-        List<Document> data = new ArrayList<>();
-        InputStream stream = getClass().getResourceAsStream(name);
-        if (stream == null) {
-            if (failOnMissing) {
-                Assertions.fail(format("missing " + type + " file: src/test/resources/%s/%s",
-                        getClass().getPackageName().replace('.', '/'), name));
-            }
-        } else {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-                while (reader.ready()) {
-                    String json = reader.readLine();
-                    try {
-                        if (json.startsWith("[") && json.endsWith("]")) {
-                            json = json.substring(1, json.length() - 1);
-                        }
-                        data.add(Document.parse(json));
-                    } catch (JsonParseException e) {
-                        throw new JsonParseException(e.getMessage() + "\n" + json, e);
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-        return data;
     }
 
     /**
@@ -185,18 +120,20 @@ public abstract class TemplatedTestBase extends TestBase {
         return "/%s/%s/%s/scenario.json".formatted(getClass().getPackageName().replace('.', '/'), prefix(), resourceName);
     }
 
-    /**
-     * @return the scenario of a converted case, whose fixture directory holds only its scenario, or null
-     */
-    @Nullable
-    private OperatorCase converted() {
-        String scenario = scenarioResource(discoverResourceName());
-        return getClass().getResource(scenario) != null ? OperatorCase.of(scenario) : null;
-    }
-
     public final String prefix() {
         String root = getClass().getSimpleName().replace("Test", "");
         return toLowerCase(root.charAt(0)) + root.substring(1);
+    }
+
+    /**
+     * @return the calling test's scenario; every operator example test has one
+     */
+    private OperatorCase scenario() {
+        String scenario = scenarioResource(discoverResourceName());
+        if (getClass().getResource(scenario) == null) {
+            Assertions.fail("No scenario at " + scenario + ": every operator example runs on the operator case runner");
+        }
+        return OperatorCase.of(scenario);
     }
 
     @Nullable
@@ -209,281 +146,5 @@ public abstract class TemplatedTestBase extends TestBase {
         } catch (ReflectiveOperationException e) {
             return null;
         }
-    }
-
-    public void testQuery(Function<Query<Document>, Query<Document>> function) {
-        testQuery(new ActionTestOptions(), function);
-    }
-
-    public void testQuery(ActionTestOptions options,
-            Function<Query<Document>, Query<Document>> function) {
-        // A converted case's fixture directory holds only its scenario: the runner checks it instead.
-        OperatorCase converted = converted();
-        if (converted != null) {
-            new OperatorCaseRunner(this).find(converted, options, function);
-            return;
-        }
-
-        var resourceName = prepareDatabase(options);
-
-        Query<Document> apply = function.apply(getDs().find(Document.class, options.findOptions().collection(EXAMPLE_TEST_COLLECTION))
-                .disableValidation());
-        List<Document> actual = runQuery(options, resourceName, apply);
-
-        checkExpected(options, resourceName, actual);
-    }
-
-    public void testUpdate(Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
-        testUpdate(new ActionTestOptions(), function, operators);
-    }
-
-    public void testUpdate(ActionTestOptions options,
-            Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
-        OperatorCase converted = converted();
-        if (converted != null) {
-            new OperatorCaseRunner(this).update(converted, options, function, operators);
-            return;
-        }
-
-        var resourceName = prepareDatabase(options);
-
-        Query<Document> query = function.apply(getDs().find(EXAMPLE_TEST_COLLECTION, Document.class)
-                .disableValidation());
-        List<Document> actual = runUpdate(options, resourceName, query, operators);
-
-        checkExpected(options, resourceName, actual);
-    }
-
-    protected List<Document> loadAction(String actionName) {
-        return extractDocuments(unwrapArray(loadResource(actionName)));
-    }
-
-    protected void loadData(ActionTestOptions options, String collection, int index) {
-        if (!options.skipDataCheck()) {
-            loadData(collection, index);
-        }
-    }
-
-    protected void loadIndex(String resourceName, String collectionName) {
-        MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
-        String indexFile = "%s/%s/index.json".formatted(prefix(), resourceName);
-        List<Document> documents = loadJson(indexFile, "index", false);
-        if (documents.size() == 1) {
-            collection.createIndex(documents.get(0));
-        } else if (documents.size() == 2) {
-            collection.createIndex(documents.get(0), indexOptions(documents.get(1)));
-        } else if (documents.size() > 2) {
-            throw new UnsupportedOperationException("more than 2 docs in an index file: " + indexFile);
-        }
-    }
-
-    private IndexOptions indexOptions(Document document) {
-        var options = new IndexOptions();
-        document.keySet().forEach(key -> {
-            var method = stream(IndexOptions.class.getMethods())
-                    .filter(m -> m.getName().equals(key) && m.getParameterCount() == 1)
-                    .findFirst().orElseThrow();
-            try {
-                method.invoke(options, new Conversions(Thread.currentThread().getContextClassLoader()).convert(document.get(key),
-                        method.getParameterTypes()[0]));
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        return options;
-    }
-
-    protected void loadIndex(String resourceName, String databaseName, String collectionName) {
-        MongoCollection<Document> collection = getDatabase(databaseName).getCollection(collectionName);
-        List<Document> documents = loadJson("%s/%s/index.json".formatted(prefix(), resourceName), "index", false);
-        documents.forEach(document -> Assertions.assertNotNull(collection.createIndex(document)));
-    }
-
-    protected Document loadQuery(String pipelineName) {
-        return loadAction(pipelineName).get(0);
-    }
-
-    protected List<String> loadResource(String pipelineName) {
-        InputStream stream = getClass().getResourceAsStream(pipelineName);
-        if (stream == null) {
-            Assertions.fail(format("missing action file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
-                    pipelineName));
-        }
-        return new BufferedReader(new InputStreamReader(stream))
-                .lines()
-                .collect(toList());
-    }
-
-    protected String loadTestName(String resourceName) {
-        String name = format("%s/%s/name", prefix(), resourceName);
-
-        InputStream stream = getClass().getResourceAsStream(name);
-        if (stream == null) {
-            Assertions.fail(format("missing name file: %s", name));
-        }
-
-        try (var reader = new BufferedReader(new InputStreamReader(stream))) {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected List<Document> runPipeline(ActionTestOptions options, String pipelineTemplate, Aggregation<Document> aggregation) {
-        String pipelineName = format("%s/%s/action.json", prefix(), pipelineTemplate);
-        List<Document> pipeline = ((AggregationImpl) aggregation).pipeline();
-
-        if (!options.skipActionCheck()) {
-            List<Document> target = loadAction(pipelineName);
-
-            assertDocumentListEquals("Should generate the same pipeline", target, pipeline, false);
-        }
-
-        if (!options.skipDataCheck()) {
-            return aggregation.toList();
-        } else {
-            return emptyList();
-        }
-    }
-
-    @SuppressWarnings({ "rawtypes" })
-    protected List<Document> runQuery(ActionTestOptions testOptions, String pipelineTemplate, Query<Document> query) {
-        String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
-        Document document = ((MorphiaQuery) query).toDocument();
-
-        if (!testOptions.skipActionCheck()) {
-            Document target = loadQuery(resourceName);
-            assertDocumentEquals("Should generate the same query document", target, document);
-        }
-
-        if (!testOptions.skipDataCheck()) {
-            try (var cursor = query.iterator()) {
-                return cursor.toList();
-            }
-        } else {
-            return emptyList();
-        }
-    }
-
-    @SuppressWarnings({ "rawtypes" })
-    protected List<Document> runUpdate(ActionTestOptions testOptions, String pipelineTemplate, Query<Document> query,
-            UpdateOperator... operators) {
-        String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
-        Document document = ((MorphiaQuery) query).toDocument();
-
-        checkAction(testOptions, resourceName, document, operators);
-
-        if (!testOptions.skipDataCheck()) {
-            var resource = String.join("", loadResource(resourceName));
-            query.update(testOptions.updateOptions().multi(resource.contains("updateMany")), operators);
-            try (var cursor = query.iterator()) {
-                return cursor.toList();
-            }
-        } else {
-            return emptyList();
-        }
-    }
-
-    private void checkAction(ActionTestOptions testOptions,
-            String resourceName,
-            Document document,
-            UpdateOperator... operators) {
-        if (!testOptions.skipActionCheck()) {
-            List<Document> action = loadAction(resourceName);
-            assertDocumentEquals("Should generate the same query document", action.get(0), document);
-            Operations operations = new Operations(getDs(), null, asList(operators), false);
-            Document updates = operations.toDocument(getDs());
-            assertDocumentEquals("Should generate the same update document", action.get(1), updates);
-        }
-    }
-
-    protected void validateTestName(String resourceName) {
-        Method method = findTestMethod();
-        DisplayName displayName = method.getAnnotation(DisplayName.class);
-        String testName = displayName != null ? displayName.value() : "";
-        Assertions.assertEquals(loadTestName(resourceName), testName,
-                "%s#%s does not have a @DisplayName configured on the test.".formatted(
-                        method.getDeclaringClass().getName(), method.getName()));
-    }
-
-    private boolean balanced(String input) {
-        int open = 0;
-        int close = 0;
-        for (char c : input.toCharArray()) {
-            if (c == '{')
-                open++;
-            if (c == '}')
-                close++;
-        }
-
-        return open != 0 && open == close;
-    }
-
-    private void checkExpected(ActionTestOptions options, String resourceName, List<Document> actual) {
-        if (!options.skipDataCheck()) {
-            List<Document> expected = loadExpected(resourceName);
-
-            actual = options.removeIds() ? removeIds(actual) : actual;
-            expected = options.removeIds() ? removeIds(expected) : expected;
-
-            try {
-                toFile("actual", actual);
-                toFile("expected", expected);
-
-                assertDocumentListEquals(expected, actual, options.orderMatters());
-            } catch (Exception e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-    }
-
-    private List<Document> extractDocuments(List<String> resource) {
-        var line = resource.get(0).trim();
-        if (line.startsWith("db.")) {
-            line = line.substring(line.indexOf("(") + 1).trim();
-            resource.set(0, line);
-            line = resource.get(resource.size() - 1);
-            line = line.substring(0, line.lastIndexOf(")"));
-            resource.set(resource.size() - 1, line);
-        }
-        List<Document> docs = new ArrayList<>();
-        var current = "";
-        try (var lines = new StringReader(String.join("", resource))) {
-            int read;
-            while ((read = lines.read()) != -1) {
-                char c = (char) read;
-                if (!List.of(',', ' ', '\n').contains(c) || !current.isEmpty()) {
-
-                    current += c;
-                    if (balanced(current)) {
-                        try {
-                            docs.add(Document.parse(current));
-                            current = "";
-                        } catch (JsonParseException | BsonInvalidOperationException e) {
-                            throw new RuntimeException("Error parsing " + current, e);
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return docs;
-    }
-
-    private String prepareDatabase(ActionTestOptions options) {
-        checkMinServerVersion(options.serverVersion());
-        checkMinDriverVersion(options.minDriver());
-        var resourceName = discoverResourceName();
-        validateTestName(resourceName);
-        if (!options.skipDataCheck()) {
-            loadData(resourceName, EXAMPLE_TEST_COLLECTION);
-        }
-        if (!options.skipIndex()) {
-            loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
-        }
-        return resourceName;
     }
 }

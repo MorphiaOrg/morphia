@@ -80,7 +80,7 @@ flowchart LR
     end
     subgraph core[core tests: ordinary build]
         R[OperatorCaseRunner]
-        L[legacy fixture loader]
+        L[converted example tests]
         V[namespace and binding checks]
     end
     P --> I --> K
@@ -154,15 +154,18 @@ These are Java ports of audits-module code (`FormEquivalence`, `PublishedCompari
 | --- | --- | --- |
 | **Generated** | A class in `dev.morphia.test.generated.<family>`, written by the generator. | `generated/fixtures/<family>/<operator>/<stem>/scenario.json` |
 | **Migrated** | A handwritten body moved into the generated namespace, as a protected file. | Same as generated. |
-| **Converted** | The unchanged legacy test method; `TemplatedTestBase` sees the scenario and routes the call through the runner. | The legacy fixture directory, which now holds only `scenario.json`. |
-| **Legacy** | A legacy test reading `data.json`, `action.json` and `expected.json` through `TemplatedTestBase`. | None yet. |
+| **Converted** | The legacy test method; `TemplatedTestBase` finds its scenario through the example bindings and routes the call through the runner. | The legacy fixture directory, which holds only `scenario.json`. |
+
+The legacy fixture loader (`data.json`, `action.json` and `expected.json`, compared leniently) is
+retired: every operator example runs on the runner, and `TemplatedTestBase` fails a test with no
+scenario.
 
 `generated/manifest.json` lists every case on the runner (name, kind, scenario, test) and every
 file the generated namespace owns, with its SHA-256. A `GENERATED` file is rewritten by generation;
 a `PROTECTED` one never is. `GeneratedCasesTest` checks the namespace against the manifest in both
 directions, so an unlisted, missing or edited file fails the build.
 
-Legacy and converted tests are bound to their fixtures by `example-bindings.json`, which the
+Converted tests are bound to their fixtures by `example-bindings.json`, which the
 audits module captures from the test sources. `TestCoverageExtension` fails a test class whose
 methods or fixture directories disagree with it.
 
@@ -444,7 +447,6 @@ audits module or core's operator tests.
 
 These exist only until the migration finishes. The plan says what retires each one.
 
-- **The legacy fixture loader** in `TemplatedTestBase`, for fixtures not yet on the runner.
 - **The legacy RST extractor** (`rst/`, `model/`), which the example inventory and conversion use.
 - **`FormMainKt` conversion commands and their review files**, needed while legacy fixtures remain.
 

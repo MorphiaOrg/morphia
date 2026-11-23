@@ -168,11 +168,6 @@ trial run at MorphiaOrg/morphia. Use the disposable sandbox repository instead.
 These remain because coverage has not fully moved off them yet. Each one goes when the last of
 its users does.
 
-- **Core's legacy fixture loader** (`data.json`, `action.json`, `expected.json` through
-  `TemplatedTestBase`). No legacy fixture directory remains: 386 cases have moved to the runner; the 167 legacy tests whose
-  fixtures no documented source reproduced were deleted and are recorded in
-  `audits/catalog/deleted-fixtures.json`, with the three whose pages print results that do not
-  parse. The loader code itself retires next.
 - **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory
   read pages through it, with tested snippets spliced in and only the mongosh content of each
   language choice kept. It goes once the structured parser (`scenarios/`) owns example extraction,

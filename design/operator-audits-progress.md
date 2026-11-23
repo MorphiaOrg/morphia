@@ -44,7 +44,6 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The legacy fixture loader's code:** no legacy fixture directory remains; retire the loader.
 - **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
@@ -55,7 +54,6 @@ Step 6, monitoring:
 - **A capability-driven server matrix.** Integration runs only MongoDB 8.2.
 
 Step 7, retiring old paths:
-- **Core's legacy fixture loader:** retire it after the remaining fixtures convert.
 - **The legacy RST extractor:** retire it after the structured parser owns example extraction,
   snippets included.
 - **The frozen legacy documentation tables:** a separate documentation migration.
@@ -2736,3 +2734,11 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   their pages' printed results do not parse. The two declared ones record their already-retired
   locks' digests too.
 - No legacy fixture directory remains; 386 cases on the runner. Core: 548 under each mapper.
+
+## Legacy fixture loader retired (2026-11-23)
+
+- Branch audits-retire-loader. `TemplatedTestBase` keeps only the adapter: `testPipeline`,
+  `testQuery` and `testUpdate` find the calling test's scenario through the example bindings and
+  run it on `OperatorCaseRunner`, failing a test that has none; `loadData(collection, index)`
+  checks that the scenario seeds the collection. The legacy loading, lenient comparison and
+  index helpers are gone (about 340 lines). Core: 548 under each mapper.
