@@ -1,0 +1,200 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
+  "title": "Computing ``n`` Based on the Group Key for ``$group``",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d497b13c81d4853dce0760e07390cf9d03c33c28",
+    "path": "source/reference/operator/aggregation/bottomN.txt",
+    "blob": "6c13c2ef114628ba3582ee463c1a86b8b9edb9bf"
+  },
+  "dataset": null,
+  "collections": {
+    "gamescores": [
+      {
+        "playerId": "PlayerA",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "31"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "33"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "99"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "playerId": "PlayerA",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "14"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "66"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "gamescores",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": {
+            "gameId": "$gameId"
+          },
+          "gamescores": {
+            "$bottomN": {
+              "output": "$score",
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$gameId",
+                      "G2"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "1"
+                  },
+                  "else": {
+                    "$numberInt": "3"
+                  }
+                }
+              },
+              "sortBy": {
+                "score": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "gameId",
+                  "value": {
+                    "text": "G2"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "gamescores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "gameId",
+                  "value": {
+                    "text": "G1"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "gamescores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "33"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "31"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

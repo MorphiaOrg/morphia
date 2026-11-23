@@ -1664,6 +1664,68 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "bf22217d83fd67b9c7e83b83fb378067f645980fa67f28ae7e1583502def9c24",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "353b9ef5d5d94b8d4686820206be94359e42facbb298bf05e5518455368089eb",
+      "lock" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                (aggregation) -> aggregation.pipeline(group(id(document(\"gameId\", \"$gameId\"))).field(\"gamescores\",\n                        bottomN(condition(eq(\"$gameId\", \"G2\"), 1, 3), \"$score\", descending(\"score\")))));\n\n    }",
+    "legacyBodySha256" : "0dbeaef6d1623229515358128f87249c1c52dd44c22c72828bda98e6eabc532f",
+    "legacyMethod" : "testComputingNBasedOnTheGroupKeyForGroup",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestBottomN",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "7171140049a90ee4e0c8972f0e405a0f36263ce1ff68bf3358f2f35290c8824d",
+        "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $bottomN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+        "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "0a827a6f6f965d6a5e89edc8c43a42e4ee5cd1f85a7238221184e4b31550536d",
+        "text" : "[\n   { _id: { gameId: \"G2\" }, gamescores: [ 10 ] },\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 31, 1 ] }\n]"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+      "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
+      "fixtureFiles" : {
+        "action.json" : "bf22217d83fd67b9c7e83b83fb378067f645980fa67f28ae7e1583502def9c24",
+        "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+        "expected.json" : "353b9ef5d5d94b8d4686820206be94359e42facbb298bf05e5518455368089eb",
+        "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+      },
+      "includes" : [ ],
+      "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+      "pageBlob" : "6c13c2ef114628ba3582ee463c1a86b8b9edb9bf",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
+        "text" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs"
+      },
+      "retypes" : [ ],
+      "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
+        "path" : "source/reference/operator/aggregation/bottomN.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "scenarioSha256" : "063314d34265b88246c266f43032cd89ed353365cd635154f4f61f128db14d9e",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "ef71952a21e02cada1aebb7a4fa25e1ffc4af85e7d459b66b1b17143b6d5477d",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
       "expected.json" : "c3eb9244524df60828114aa70fc38bc62343b1842e8b159870b82af041dc1bdf",
@@ -13532,6 +13594,68 @@
   }, {
     "bodyEdit" : null,
     "files" : {
+      "action.json" : "f9c57111b63f78bc8ab906768edd3fbf9b7d4222e3b49f8432b05a73251fe136",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "c85b080d12e933f27c59fa7b49d3baa2ca30bf110a6a00a782169accb23cb373",
+      "lock" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().orderMatters(false),\n                (aggregation) -> aggregation.pipeline(group(id(document(\"gameId\", \"$gameId\"))).field(\"gamescores\", topN(\n                        condition(ComparisonExpressions.eq(\"$gameId\", \"G2\"), 1, 3), \"$score\", descending(\"score\")))));\n    }",
+    "legacyBodySha256" : "4eb5962631b18c4ed2066a2e8a86260a14477340cb83c7ddb07743d398480c33",
+    "legacyMethod" : "testComputingNBasedOnTheGroupKeyForGroup",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestTopN",
+    "options" : [ ],
+    "ordered" : false,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "c3765d7f98342679fda818463c567e9f533b600fb5a43c8240da664499d8dbc8",
+        "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $topN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+        "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "cbdb11eda34caac9874e65f962979646ef03541d6bf8a6d066eb1fd328da55d3",
+        "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 99, 33, 31 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 80 ] }\n]"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+      "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
+      "fixtureFiles" : {
+        "action.json" : "f9c57111b63f78bc8ab906768edd3fbf9b7d4222e3b49f8432b05a73251fe136",
+        "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+        "expected.json" : "c85b080d12e933f27c59fa7b49d3baa2ca30bf110a6a00a782169accb23cb373",
+        "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+      },
+      "includes" : [ ],
+      "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+      "pageBlob" : "5327b184fa5b8f1342bd6cfd26f8318c09d5709c",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
+        "text" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc"
+      },
+      "retypes" : [ ],
+      "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
+        "path" : "source/reference/operator/aggregation/topN.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "scenarioSha256" : "6312a806297990f0e1e227b93da0dcbfd3d15acc16aef67a4d3d9c183a619513",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
       "action.json" : "ef3b911bb270ec864118ceb7ff03599fe2756b1f5e13cf9e161c18fef8b9c3bc",
       "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
       "expected.json" : "b5f8bfc03ddd11186ec5af2ef8c75ffb47a8e8cc80b0cc3f4374873e10229b93",
@@ -14744,6 +14868,74 @@
     "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage/scenario.json",
     "scenarioSha256" : "41f547604b64f2d32549bb7fc1b1734b28f0dcc5484ef33b6be66b4cc9b7b094",
     "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testUseADocumentsStageInALookupStage"
+  }, {
+    "bodyEdit" : null,
+    "files" : {
+      "action.json" : "ee73a850a4643122181630957b2ba73f245a9d136616c165e3a36cc701903890",
+      "data.json" : "d24e60395c66e510f55feac543096acb938384ef5d927d9720bb099b51aaed8f",
+      "expected.json" : "ac28ea2dd929c9e63cf9adbe43f17872cd1fdd67088342a18b42d4a62e5e9020",
+      "lock" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "name" : "8a5be85ecdf30d55c6f9acb663f2166a858a03f27f3acff0f5eb749c38b448f8"
+    },
+    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(new ActionTestOptions().removeIds(true),\n                aggregation -> aggregation.pipeline(fill().sortBy(ascending(\"date\"))\n                        .partitionBy(document(\"restaurant\", \"$restaurant\")).field(\"score\", Method.LOCF)));\n    }",
+    "legacyBodySha256" : "fa4fea2454abc367258354f32dae54ff9a791ee78b7ae47394e9d14d7494d7ee",
+    "legacyMethod" : "testFillDataForDistinctPartitions",
+    "legacyType" : "dev.morphia.test.aggregation.stages.TestFill",
+    "options" : [ {
+      "argument" : "true",
+      "name" : "removeIds"
+    } ],
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "3fd4d0d6fd33db990e3e0049920fde5f773dadb388dba858855ac4433dbfe5eb",
+        "text" : "db.restaurantReviewsMultiple.aggregate( [\n   {\n      $fill:\n         {\n            sortBy: { date: 1 },\n            partitionBy: { \"restaurant\": \"$restaurant\" },\n            output:\n               {\n                  \"score\": { method: \"locf\" }\n               }\n         }\n   }\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "1fb862bb0dea7eb32123767adeba4569ebf59acc824cbdff35c6dcae3175b2d2",
+        "text" : "db.restaurantReviewsMultiple.insertMany( [ \n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Joe's Pizza\",\n      score: 90\n   },\n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Sally's Deli\",\n      score: 75\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Joe's Pizza\",\n      score: 92\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Sally's Deli\"\n   },\n   {\n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Joe's Pizza\"\n   },\n   { \n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Sally's Deli\",\n      score: 68\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Joe's Pizza\",\n      score: 93\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Sally's Deli\"\n   }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "c54300603c93986c5749c3d685f8150129df07ebb238f003525b1054d0a3933a",
+        "text" : "[\n  {\n    _id: ObjectId(\"620559f4394d47411658b58f\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 90\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b591\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b593\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b595\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 93\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b590\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b592\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b594\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b596\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  }\n]"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "Fill Data for Distinct Partitions",
+      "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+      "fixtureFiles" : {
+        "action.json" : "ee73a850a4643122181630957b2ba73f245a9d136616c165e3a36cc701903890",
+        "data.json" : "d24e60395c66e510f55feac543096acb938384ef5d927d9720bb099b51aaed8f",
+        "expected.json" : "ac28ea2dd929c9e63cf9adbe43f17872cd1fdd67088342a18b42d4a62e5e9020",
+        "name" : "8a5be85ecdf30d55c6f9acb663f2166a858a03f27f3acff0f5eb749c38b448f8"
+      },
+      "includes" : [ {
+        "blob" : "0173af6ff3a72a2ee52cbb8862869f66cb4056ed",
+        "path" : "source/includes/fact-fill-description.rst"
+      } ],
+      "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+      "pageBlob" : "b0ee7dd39cf46de21e670976d3f6842a77c293ef",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+        "text" : "reorder pipeline"
+      },
+      "retypes" : [ ],
+      "rules" : [ "NAMED_ARGUMENTS" ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+        "path" : "source/reference/operator/aggregation/fill.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/stages/fill/fillDataForDistinctPartitions/scenario.json",
+    "scenarioSha256" : "b2fb054467af88928f55a87d75e08ac45707cac830bbf652c37d2d0a502e652b",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillDataForDistinctPartitions"
   }, {
     "bodyEdit" : null,
     "files" : {

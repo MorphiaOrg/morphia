@@ -2,47 +2,6 @@
   "overrides" : [ {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "7171140049a90ee4e0c8972f0e405a0f36263ce1ff68bf3358f2f35290c8824d",
-      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $bottomN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
-      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "0a827a6f6f965d6a5e89edc8c43a42e4ee5cd1f85a7238221184e4b31550536d",
-      "text" : "[\n   { _id: { gameId: \"G2\" }, gamescores: [ 10 ] },\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 31, 1 ] }\n]"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
-    "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
-    "fixtureFiles" : {
-      "action.json" : "bf22217d83fd67b9c7e83b83fb378067f645980fa67f28ae7e1583502def9c24",
-      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
-      "expected.json" : "353b9ef5d5d94b8d4686820206be94359e42facbb298bf05e5518455368089eb",
-      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
-    },
-    "includes" : [ ],
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "6c13c2ef114628ba3582ee463c1a86b8b9edb9bf",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
-      "text" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs"
-    },
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
-      "path" : "source/reference/operator/aggregation/bottomN.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "505edb1e4bde2908694f17718f020da56a9df0140f79eab66f2d9f3d76ee0318",
       "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA:1, flowerFieldB: 1, allValues: { $setUnion: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
     }, {
@@ -93,47 +52,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "c3765d7f98342679fda818463c567e9f533b600fb5a43c8240da664499d8dbc8",
-      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $topN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
-      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "cbdb11eda34caac9874e65f962979646ef03541d6bf8a6d066eb1fd328da55d3",
-      "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 99, 33, 31 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 80 ] }\n]"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
-    "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
-    "fixtureFiles" : {
-      "action.json" : "f9c57111b63f78bc8ab906768edd3fbf9b7d4222e3b49f8432b05a73251fe136",
-      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
-      "expected.json" : "c85b080d12e933f27c59fa7b49d3baa2ca30bf110a6a00a782169accb23cb373",
-      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
-    },
-    "includes" : [ ],
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "5327b184fa5b8f1342bd6cfd26f8318c09d5709c",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
-      "text" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc"
-    },
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
-      "path" : "source/reference/operator/aggregation/topN.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "f4d68dd8cdbf77d323571973710fe8085111e5956b009ddb032e4a3f44ac8488",
       "text" : "db.weather.aggregate( [\n   {\n      $densify: {\n         field: \"timestamp\",\n         range: {\n            step: 1, \n            unit: \"hour\",\n            bounds:[ ISODate(\"2021-05-18T00:00:00.000Z\"), ISODate(\"2021-05-18T08:00:00.000Z\") ]\n         }\n      }\n   }\n] )"
     }, {
@@ -178,50 +96,6 @@
     "source" : {
       "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
       "path" : "source/reference/operator/aggregation/densify.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
-      "sha256" : "3fd4d0d6fd33db990e3e0049920fde5f773dadb388dba858855ac4433dbfe5eb",
-      "text" : "db.restaurantReviewsMultiple.aggregate( [\n   {\n      $fill:\n         {\n            sortBy: { date: 1 },\n            partitionBy: { \"restaurant\": \"$restaurant\" },\n            output:\n               {\n                  \"score\": { method: \"locf\" }\n               }\n         }\n   }\n] )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "1fb862bb0dea7eb32123767adeba4569ebf59acc824cbdff35c6dcae3175b2d2",
-      "text" : "db.restaurantReviewsMultiple.insertMany( [ \n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Joe's Pizza\",\n      score: 90\n   },\n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Sally's Deli\",\n      score: 75\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Joe's Pizza\",\n      score: 92\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Sally's Deli\"\n   },\n   {\n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Joe's Pizza\"\n   },\n   { \n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Sally's Deli\",\n      score: 68\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Joe's Pizza\",\n      score: 93\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Sally's Deli\"\n   }\n] )"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "c54300603c93986c5749c3d685f8150129df07ebb238f003525b1054d0a3933a",
-      "text" : "[\n  {\n    _id: ObjectId(\"620559f4394d47411658b58f\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 90\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b591\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b593\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b595\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 93\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b590\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b592\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b594\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b596\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  }\n]"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "Fill Data for Distinct Partitions",
-    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
-    "fixtureFiles" : {
-      "action.json" : "ee73a850a4643122181630957b2ba73f245a9d136616c165e3a36cc701903890",
-      "data.json" : "d24e60395c66e510f55feac543096acb938384ef5d927d9720bb099b51aaed8f",
-      "expected.json" : "ac28ea2dd929c9e63cf9adbe43f17872cd1fdd67088342a18b42d4a62e5e9020",
-      "name" : "8a5be85ecdf30d55c6f9acb663f2166a858a03f27f3acff0f5eb749c38b448f8"
-    },
-    "includes" : [ {
-      "blob" : "0173af6ff3a72a2ee52cbb8862869f66cb4056ed",
-      "path" : "source/includes/fact-fill-description.rst"
-    } ],
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "pageBlob" : "b0ee7dd39cf46de21e670976d3f6842a77c293ef",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    },
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
-      "path" : "source/reference/operator/aggregation/fill.txt",
       "relation" : "AT_ORIGIN"
     },
     "unexpandedIncludes" : [ ]
@@ -495,15 +369,15 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 9,
+    "overrides" : 6,
     "overrides.corrected" : 2,
     "overrides.exact" : 1,
     "overrides.retyped" : 0,
     "rule.ALTERNATIVE_COMMANDS" : 1,
-    "rule.COND_ARRAY" : 2,
+    "rule.COND_ARRAY" : 0,
     "rule.EQ_SHORTHAND" : 0,
     "rule.FIELD_OPERATORS_AND" : 0,
-    "rule.NAMED_ARGUMENTS" : 4,
+    "rule.NAMED_ARGUMENTS" : 1,
     "rule.PROJECTION_FLAGS" : 0,
     "rule.PROJECT_ID_FIRST" : 1,
     "rule.REGEX_FORM" : 0,

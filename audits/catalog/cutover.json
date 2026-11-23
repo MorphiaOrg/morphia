@@ -5,10 +5,6 @@
     "detail" : "results differ from the printed results at /1: no result matches this constraint",
     "fixture" : "aggregation/expressions/addToSet/useInGroupStage"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/gamescores/$bottomN: key order ['output', 'n', 'sortBy'], Morphia emits ['output', 'sortBy', 'n']",
-    "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup"
-  }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/cos/cosineOfValueInDegrees"
@@ -45,10 +41,6 @@
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians"
   }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$group/gamescores/$topN: key order ['output', 'n', 'sortBy'], Morphia emits ['output', 'sortBy', 'n']",
-    "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup"
-  }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: no result matches this constraint",
     "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregation"
@@ -60,10 +52,6 @@
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/densify/densifyTimeSeriesData"
-  }, {
-    "check" : "SERIALIZATION",
-    "detail" : "/0/$fill: key order ['sortBy', 'partitionBy', 'output'], Morphia emits ['partitionBy', 'sortBy', 'output']",
-    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions"
   }, {
     "check" : "SOURCE",
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",

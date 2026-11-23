@@ -18,8 +18,8 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 346 legacy cases (345 converted, 1 migrated), plus 1 generated case.
-  Core gate: 662 tests under each mapper; audits: 448.
+- **On the runner:** 349 legacy cases (348 converted, 1 migrated), plus 1 generated case.
+  Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (197 pages read; 300 examples owned,
   32 unowned, 11 unnamed), reviewed DSL bindings checked against core's API, and the
   candidate → integrate → promote path. One expressions case is generated, and three are
@@ -47,13 +47,13 @@ Step 5, generation and cutover:
   `$deserializeEJSON`, `$toObject`, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
 - **Reviewed names** for the 11 examples with generic titles.
-- **The remaining legacy fixtures:** 210 directories.
+- **The remaining legacy fixtures:** 207 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
-  - 28 are legacy-only in `cutover.json`, the `$graphLookup` pair among them (#4562, an
+  - 25 are legacy-only in `cutover.json`, the `$graphLookup` pair among them (#4562, an
     unordered-array comparison).
   - 81 never-locked fixtures have no pinned reference.
 - **Deferred cutover features:** documented projections (`findOptions`), indexes, alternative
-  commands, and `$topN`/`$bottomN`/`$fill` key order.
+  commands.
 
 Step 6, monitoring:
 - **An accepted production baseline for capability discovery.** It is needed before
@@ -2545,3 +2545,14 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   missing and there is something to publish; a closed one stops publication. `PublishMainKt`
   takes the pom as an argument, and the policy no longer names a milestone.
 - The gateway may now also POST `repos/O/R/milestones`; the job's `issues: write` covers it.
+
+## Cutover retry: named-argument key order (2026-11-23)
+
+- Branch audits-named-arguments, from the #4548 finding. `$topN`, `$bottomN` (computing `n` from
+  the group key) and `$fill` (distinct partitions) were legacy-only with a key-order difference.
+  The pages order these named arguments inconsistently (two `$topN` examples print
+  `output, sortBy, n`, this one `output, n, sortBy`), so reordering Morphia's output would break
+  the passing cases. All three already declare `NAMED_ARGUMENTS`, and on retry they convert and
+  pass under both mappers; removing the rule from the `$topN` scenario makes it fail with
+  "serialization differs", so the check is live.
+- Totals: ledger 349 cases; 25 legacy-only; form report 6 overrides; 207 legacy directories.

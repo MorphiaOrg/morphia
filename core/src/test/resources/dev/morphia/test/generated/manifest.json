@@ -141,6 +141,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestBottom#testFindingTheBottomScoreAcrossMultipleGames"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bottomN/findTheThreeLowestScores",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/findTheThreeLowestScores/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindTheThreeLowestScores"
@@ -1041,6 +1046,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestTop#testFindTheTopScoreAcrossMultipleGames"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testComputingNBasedOnTheGroupKeyForGroup"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/topN/findTheThreeHighestScores",
     "scenario" : "/dev/morphia/test/aggregation/expressions/topN/findTheThreeHighestScores/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindTheThreeHighestScores"
@@ -1134,6 +1144,11 @@
     "name" : "aggregation/stages/documents/useADocumentsStageInALookupStage",
     "scenario" : "/dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestDocuments#testUseADocumentsStageInALookupStage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+    "scenario" : "/dev/morphia/test/aggregation/stages/fill/fillDataForDistinctPartitions/scenario.json",
+    "test" : "dev.morphia.test.aggregation.stages.TestFill#testFillDataForDistinctPartitions"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue",
@@ -1853,6 +1868,10 @@
     "sha256" : "cca76fae04096bf4a4fcaa7a6802b8545b0abe970c3676fbf0f6aeb7db65c4cb"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "sha256" : "063314d34265b88246c266f43032cd89ed353365cd635154f4f61f128db14d9e"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/bottomN/findTheThreeLowestScores/scenario.json",
     "sha256" : "9e212b0b53daa3e64a426666180855c51ae4a3f1377d041ca82d45bc75335577"
   }, {
@@ -2569,6 +2588,10 @@
     "sha256" : "46621c13739291528010a1b86c592690e6f8349e3818452beb5909421b430cab"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
+    "sha256" : "6312a806297990f0e1e227b93da0dcbfd3d15acc16aef67a4d3d9c183a619513"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/topN/findTheThreeHighestScores/scenario.json",
     "sha256" : "a5031524c2277b1f99f943b1cdc764f18cb83d6c52c0a2b69b5ff2309e97572f"
   }, {
@@ -2643,6 +2666,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage/scenario.json",
     "sha256" : "41f547604b64f2d32549bb7fc1b1734b28f0dcc5484ef33b6be66b4cc9b7b094"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillDataForDistinctPartitions/scenario.json",
+    "sha256" : "b2fb054467af88928f55a87d75e08ac45707cac830bbf652c37d2d0a502e652b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue/scenario.json",
