@@ -2,7 +2,8 @@
 
 What each component of the [operator audits](../audits/README.md) module does and the contract it
 keeps. The module README is the operating guide; this page is the detail behind it. The overall
-design is [mongodb-operator-audits.md](mongodb-operator-audits.md).
+design is [operator-audits-design.md](operator-audits-design.md); the migration plan is
+[mongodb-operator-audits.md](mongodb-operator-audits.md).
 
 ## Corpus inventory
 
@@ -660,6 +661,13 @@ again until resolved. Keep the journal between runs: an issue it knows is read b
 GitHub's listing can lag a recent write. `AUDITS_GITHUB_TOKEN`, when set, is the token `gh` uses.
 `PublisherSandboxTest` runs the publisher against the sandbox repository (`-Daudits.sandbox=...`).
 
+`PublishMainKt discovery <discovery-out> audits/catalog/documented-examples.json <policy.json>
+<journal.json> OWNER/REPO [--publish]` files a discovery run's findings instead (`DiscoveryFindings`):
+`MISSING_BINDING`, one per node the generator has no binding for, listing the examples it blocks;
+`NEW_EXAMPLE`, an unowned example absent from the committed inventory; and `INTEGRATION_FAILURE`,
+naming the failing tests from `integration.log`. The scheduled workflow restores the previous run's
+journal before publishing.
+
 ## Candidates, integration and promotion
 
 `GenerateMainKt candidate <root> <out>` regenerates the operator-case namespace (every ledger
@@ -703,6 +711,7 @@ throwaway worktree of HEAD:
 
 `summary.md` (also the job summary) lists the counts, skipped pages, gaps, and each example
 without a handwritten owner with its state. The job uploads every report for 90 days and fails
-only when integration does. It never commits, promotes or files issues: accepting a changed
-inventory is a reviewed change made locally with the same commands. Run it locally the same way;
-the checkout is left untouched.
+only when integration does. A second job, with permission to write issues only, files the run's
+findings (see Publishing findings). Neither job commits or promotes: accepting a changed inventory
+is a reviewed change made locally with the same commands. Run it locally the same way; the
+checkout is left untouched.

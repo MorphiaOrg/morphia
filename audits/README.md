@@ -2,9 +2,10 @@
 
 Checks Morphia's aggregation, query and update operators against the MongoDB manual: which
 operators exist, which documented examples Morphia's tests cover, and whether Morphia builds and
-runs each one exactly as documented. The [design](../design/mongodb-operator-audits.md) explains
-why it works this way; the [component reference](../design/operator-audits-reference.md)
-describes each part and its contract.
+runs each one exactly as documented. The [design](../design/operator-audits-design.md) explains
+how the parts fit together; the [component reference](../design/operator-audits-reference.md)
+describes each part and its contract; the [plan](../design/mongodb-operator-audits.md) records
+why the old audit was replaced and what remains.
 
 Nothing here runs during an ordinary build, fetches documentation implicitly, rewrites core's
 tests, or files issues. Every networked or writing step is a command you run on purpose.

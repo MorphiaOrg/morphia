@@ -9,7 +9,8 @@ The descriptive naming/identity contracts are implemented on the next stacked br
 Pinned raw-source acquisition for step 2 is implemented on `audits-pinned-sources`.
 Structured parsing, the coordinated naming backport and steps 3–7 remain planned.
 See [implementation progress](operator-audits-progress.md) for delivered behavior,
-validation, review results, and the next checkpoint.
+validation, review results, and the next checkpoint. How the built system works is described
+in the [design](operator-audits-design.md), which is kept current as this plan is carried out.
 
 Evaluated on 2026-11-15 against Morphia commit `1ff98e9eebbf9bf81680d3cd4c85f33167ba20c6`.
 The upstream examples below were checked at MongoDB docs commit

@@ -11,6 +11,9 @@ migration (step 4); #4545 `audits-case-rules` → #4546 `audits-printed-constrai
 #4564 `audits-discovery-issues`. Nothing is merged; merging is the user's.
 Use `git worktree list` to locate the checkouts on this machine.
 
+The [design](operator-audits-design.md) describes how the built system works. A PR that changes
+how the audits work updates it too; this file records what each PR delivered.
+
 ## Current status at a glance (2026-11-22)
 
 Every step of the plan (0–7) has been started. What stands:

@@ -55,6 +55,11 @@ Rules:
 - When filing PRs, if a docs PR is needed, make sure the code PR and the docs PR each reference the other so the docs
   stay in sync
 
+## Operator audits
+- `design/operator-audits-design.md` describes how the operator audits (`audits/`, core's operator case runner and
+  the discovery workflow) work. A change to how they work updates it in the same PR, alongside the README, the
+  component reference and the progress file as they apply.
+
 ## Git Operations
 - Never commit or push code without an explicit request from the user.
 - Once a task's PR has merged, clean up: remove its worktree, delete the local branch, and delete the remote branch if
