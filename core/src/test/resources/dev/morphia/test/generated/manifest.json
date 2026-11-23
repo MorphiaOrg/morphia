@@ -1626,6 +1626,11 @@
     "test" : "dev.morphia.test.generated.filters.TestIn#matchValuesInAnArray"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/in/useTheInOperatorToMatchValues",
+    "scenario" : "/dev/morphia/test/query/filters/in/useTheInOperatorToMatchValues/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestIn#testUseTheInOperatorToMatchValues"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
     "scenario" : "/dev/morphia/test/query/filters/in/useTheInOperatorToMatchValuesInAnArray/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestIn#testUseTheInOperatorToMatchValuesInAnArray"
@@ -1681,6 +1686,11 @@
     "test" : "dev.morphia.test.query.filters.TestNearSphere#testSpecifyCenterPointUsingGeoJson"
   }, {
     "kind" : "CONVERTED",
+    "name" : "query/filters/nin/selectOnUnmatchingDocuments",
+    "scenario" : "/dev/morphia/test/query/filters/nin/selectOnUnmatchingDocuments/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestNin#testSelectOnUnmatchingDocuments"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "query/filters/nor/norAndAdditionalComparisons",
     "scenario" : "/dev/morphia/test/query/filters/nor/norAndAdditionalComparisons/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestNor#testNorAndAdditionalComparisons"
@@ -1729,6 +1739,11 @@
     "name" : "query/filters/text/queryADifferentLanguage",
     "scenario" : "/dev/morphia/test/query/filters/text/queryADifferentLanguage/scenario.json",
     "test" : "dev.morphia.test.query.filters.TestText#testQueryADifferentLanguage"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "query/filters/text/relevanceScoreExamples",
+    "scenario" : "/dev/morphia/test/query/filters/text/relevanceScoreExamples/scenario.json",
+    "test" : "dev.morphia.test.query.filters.TestText#testRelevanceScoreExamples"
   }, {
     "kind" : "CONVERTED",
     "name" : "query/filters/text/textWithASingleWord",
@@ -3294,6 +3309,10 @@
     "sha256" : "240da48253c0ae273da07a1c1fac1d18b5460f3d4cbf47af47b25613585f1b39"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/in/useTheInOperatorToMatchValues/scenario.json",
+    "sha256" : "e93beb956188ae149c0c02e7c87191fc700d0752c86ffcd155809cffc8e84815"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/in/useTheInOperatorToMatchValuesInAnArray/scenario.json",
     "sha256" : "ac5db471cbed86163f90abcc6789c772aed1f7386ecb66d24d942f0b9535c771"
   }, {
@@ -3338,6 +3357,10 @@
     "sha256" : "e542a4a0092203869ffeaf3f39db98c1408fd3e1f9eeb735c45de12dd513531e"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/nin/selectOnUnmatchingDocuments/scenario.json",
+    "sha256" : "0220aaeb04b41124da9e4d0e06fae054509b54df0e18cc61b0797fe267f870c1"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/nor/norAndAdditionalComparisons/scenario.json",
     "sha256" : "64f238040904a4bda89b63b62196d79f61779de919ebd0a453a2d62b831a428a"
   }, {
@@ -3376,6 +3399,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/text/queryADifferentLanguage/scenario.json",
     "sha256" : "f96a5fc66dd8a48fa6ffcaa220857295d31e777347cf7c8f0d3adadffa7506e5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/query/filters/text/relevanceScoreExamples/scenario.json",
+    "sha256" : "902c67ea095d9a5b77d9c5aaac3244c3b43835b707220f86697b800de9970275"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/query/filters/text/textWithASingleWord/scenario.json",

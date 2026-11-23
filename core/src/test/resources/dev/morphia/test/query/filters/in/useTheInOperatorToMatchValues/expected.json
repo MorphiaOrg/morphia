@@ -1,2 +1,0 @@
-{ item: 'Erasers', quantity: 15, tags: [ 'school', 'home' ] },
-{ item: 'Books', quantity: 5, tags: [ 'school', 'storage', 'home' ] }

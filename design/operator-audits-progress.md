@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 370 legacy cases (369 converted, 1 migrated), plus 14 generated cases.
+- **On the runner:** 373 legacy cases (372 converted, 1 migrated), plus 14 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
@@ -44,11 +44,11 @@ Step 5, generation and cutover:
 - **Bindings for the remaining gaps** the weekly job files as issues (today `$serializeEJSON`,
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
-- **The remaining legacy fixtures:** 186 directories.
+- **The remaining legacy fixtures:** 183 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
-  - 16 are legacy-only in `cutover.json`.
+  - 15 are legacy-only in `cutover.json`.
   - 69 never-locked fixtures have no pinned reference.
-- **Deferred cutover features:** documented projections (`findOptions`), update options
+- **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
 - **The stage pages' family** (41 unowned examples, most on sample datasets).
@@ -2667,3 +2667,17 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - The seven `$text` cases that were legacy-only because "the page creates an index" convert and
   pass under both mappers. Legacy-only: 16; 186 legacy directories; 370 cases on the runner.
 - Core: 692 tests under each mapper; audits: 458.
+
+## Documented projections (2026-11-23)
+
+- Branch audits-projections. A find scenario carries the page's `projection`; the runner's new
+  `find(case, dsl, FindOptions)` compares `[filter, projection]` with Morphia's query and
+  projection, and runs the projected query on both sides. Converted tests pass their legacy
+  `findOptions`, now a mapped option: it changes nothing in the scenario, and any non-projection
+  option would change the results, which the behavior check compares.
+- `$in` and `$nin` (`useTheInOperatorToMatchValues`, `selectOnUnmatchingDocuments`) convert: their
+  bodies gained the page's `{_id: 0}` projection, recorded as reviewed body edits.
+  `$text`'s `relevanceScoreExamples` converts unchanged. `$rand`'s
+  `selectRandomItemsFromACollection` is legacy-only: the page projects `{_id: 0, name: 1,
+  registered: 1}`, and the test's projection omits the `_id` exclusion.
+- Totals: ledger 373 cases; 15 legacy-only; 183 legacy directories. Core: 692 under each mapper.

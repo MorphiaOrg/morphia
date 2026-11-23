@@ -110,7 +110,7 @@ A case is one documented example, described entirely by a `scenario.json` (schem
 | `name`, `title`, `context` | The qualified name (`aggregation/expressions/add/addNonIntegerValuesToADate`), the page's title for it, and the operator context. |
 | `source` | The repository, commit, path and blob of the page it came from. |
 | `collections`, `indexes`, `dataset` | The seed data, in extended JSON with exact BSON types; the indexes the page creates, each with its collection, keys and options; or the sample dataset the example queries instead. |
-| `action` | The documented command: an aggregate pipeline, a find, or an update, with its collection. |
+| `action` | The documented command: an aggregate pipeline, a find (with the page's projection, if any), or an update, with its collection. |
 | `expected` | The documented results, either exact BSON or `printed`: the constraints mongosh's printed output proves (see below). |
 | `comparison` | Result order, declared form rules, ignored fields, unordered arrays and tolerance. |
 | `requirements` | The minimum server version and topology. |

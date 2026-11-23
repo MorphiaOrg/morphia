@@ -6399,6 +6399,9 @@
     "markers" : [ ],
     "method" : "testUseTheInOperatorToMatchValues",
     "options" : [ {
+      "argument" : "new FindOptions().projection().exclude(\"_id\")",
+      "name" : "findOptions"
+    }, {
       "argument" : "true",
       "name" : "removeIds"
     } ],
@@ -6733,6 +6736,9 @@
     "markers" : [ ],
     "method" : "testSelectOnUnmatchingDocuments",
     "options" : [ {
+      "argument" : "new FindOptions().projection().exclude(\"_id\")",
+      "name" : "findOptions"
+    }, {
       "argument" : "true",
       "name" : "removeIds"
     } ],
@@ -7985,7 +7991,7 @@
     "exclusion.TESTED_ELSEWHERE" : 1,
     "markers.lock" : 97,
     "markers.lockd" : 1,
-    "option.findOptions" : 6,
+    "option.findOptions" : 8,
     "option.orderMatters" : 107,
     "option.removeIds" : 61,
     "option.serverVersion" : 18,

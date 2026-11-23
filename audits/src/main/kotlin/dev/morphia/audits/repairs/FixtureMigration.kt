@@ -138,7 +138,12 @@ object FixtureMigration {
      * comparison, `serverVersion` becomes the minimum server, and `skipActionCheck` and
      * `skipDataCheck` become skipped checks that name their reason.
      */
-    val mappedOptions = setOf("removeIds", "serverVersion", "skipActionCheck", "skipDataCheck")
+    /**
+     * The legacy options a converted case may keep. `findOptions` carries the projection the page
+     * documents, which the runner compares with the page's; it changes nothing in the scenario.
+     */
+    val mappedOptions =
+        setOf("removeIds", "serverVersion", "skipActionCheck", "skipDataCheck", "findOptions")
 
     /**
      * [documented] with [override]'s retypes and corrections applied as it pins them: to the rows
@@ -293,11 +298,9 @@ object FixtureMigration {
         when (documented.shape) {
             ActionShape.PIPELINE -> action["pipeline"] = BsonArray(documented.action)
             ActionShape.FIND -> {
-                // A projection needs the legacy findOptions, which the adapter does not map yet.
-                require(documented.action.size == 1) {
-                    "${override.fixture}: a documented projection is not supported yet"
-                }
                 action["filter"] = documented.action[0]
+                // The page's projection, when it documents one.
+                documented.action.getOrNull(1)?.let { action["projection"] = it }
             }
             ActionShape.UPDATE -> {
                 require(documented.action.size == 2 && documented.action[1].isDocument) {

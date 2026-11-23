@@ -57,13 +57,9 @@
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections"
   }, {
-    "check" : "SOURCE",
-    "detail" : "the page documents a projection, which needs the unmapped findOptions",
-    "fixture" : "query/filters/in/useTheInOperatorToMatchValues"
-  }, {
-    "check" : "SOURCE",
-    "detail" : "the page documents a projection, which needs the unmapped findOptions",
-    "fixture" : "query/filters/nin/selectOnUnmatchingDocuments"
+    "check" : "SERIALIZATION",
+    "detail" : "the page's projection is {_id: 0, name: 1, registered: 1}; the test includes name and registered and drops _id with removeIds, so Morphia's projection lacks the _id exclusion",
+    "fixture" : "query/filters/rand/selectRandomItemsFromACollection"
   } ],
   "schemaVersion" : 1
 }

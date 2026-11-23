@@ -94,20 +94,36 @@ public class OperatorCaseRunner {
      */
     public void find(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl) {
         options(operatorCase, options);
-        find(operatorCase, dsl);
+        find(operatorCase, dsl, options.findOptions());
     }
 
     /**
      * Runs a query case: the documented filter runs through the driver, and Morphia's query as {@code dsl} builds it.
      */
     public void find(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl) {
+        find(operatorCase, dsl, new FindOptions());
+    }
+
+    /**
+     * Runs a query case whose page documents a projection: Morphia's is {@code options}', compared with the page's
+     * after the filter. Any other option would change the results, which the behavior check compares with the
+     * documented query's.
+     */
+    public void find(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, FindOptions options) {
         run(operatorCase, "find", Shape.FIND, (action, collection) -> {
-            Query<Document> query = dsl.apply(test.getDs().find(Document.class, new FindOptions().collection(collection))
-                    .disableValidation());
+            FindOptions found = new FindOptions().copy(options).collection(collection);
+            Query<Document> query = dsl.apply(test.getDs().find(Document.class, found).disableValidation());
             BsonDocument filter = action.getDocument("filter");
-            return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument())),
+            BsonDocument projection = action.getDocument("projection", null);
+            List<Document> emitted = new ArrayList<>(List.of(((MorphiaQuery<Document>) query).toDocument()));
+            found.projection().disableValidation(true);
+            Document mapped = found.projection().map(test.getMapper(), Document.class);
+            if (mapped != null || projection != null) {
+                emitted.add(mapped != null ? mapped : new Document());
+            }
+            return new Execution(bson(emitted),
                     reference -> new ArrayList<>(reference.getCollection(collection, BsonDocument.class).find(filter)
-                            .into(new ArrayList<>())),
+                            .projection(projection).into(new ArrayList<>())),
                     () -> {
                         try (var cursor = query.iterator()) {
                             return bson(cursor.toList()).getValues();
@@ -165,7 +181,9 @@ public class OperatorCaseRunner {
     private static BsonArray documented(BsonDocument action) {
         return switch (action.getString("kind").getValue()) {
             case "aggregate" -> action.getArray("pipeline");
-            case "find" -> new BsonArray(List.of(action.getDocument("filter")));
+            case "find" -> action.containsKey("projection")
+                    ? new BsonArray(List.of(action.getDocument("filter"), action.getDocument("projection")))
+                    : new BsonArray(List.of(action.getDocument("filter")));
             default -> new BsonArray(List.of(action.getDocument("filter"), action.getDocument("update")));
         };
     }
@@ -197,7 +215,10 @@ public class OperatorCaseRunner {
         }
         // The runner builds its own find and update options, so a test's own would be silently dropped.
         // FindOptions.equals leaves out timeoutMode, so it is checked on its own.
-        if (!options.findOptions().equals(new FindOptions()) || options.findOptions().timeoutMode() != null
+        // A documented projection is Morphia's findOptions; any other find option changes the results, which the behavior
+        // check compares.
+        boolean projected = scenario.getDocument("action").containsKey("projection");
+        if (!projected && (!options.findOptions().equals(new FindOptions()) || options.findOptions().timeoutMode() != null)
                 || options.hasUpdateOptions()) {
             differences.add("findOptions/updateOptions");
         }
@@ -371,7 +392,8 @@ public class OperatorCaseRunner {
         BsonDocument action = scenario.getDocument("action");
         Set<String> fields = switch (action.getString("kind", new BsonString("")).getValue()) {
             case "aggregate" -> Set.of("kind", "collection", "pipeline");
-            case "find" -> Set.of("kind", "collection", "filter");
+            case "find" -> action.containsKey("projection") ? Set.of("kind", "collection", "filter", "projection")
+                    : Set.of("kind", "collection", "filter");
             case "update" -> Set.of("kind", "collection", "filter", "update", "multi");
             default -> Set.of();
         };

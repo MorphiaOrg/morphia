@@ -3,6 +3,7 @@ package dev.morphia.test.query.filters;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.morphia.query.FindOptions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,7 +21,8 @@ public class TestIn extends TemplatedTestBase {
     @Test
     @DisplayName("Use the ``$in`` Operator to Match Values")
     public void testUseTheInOperatorToMatchValues() {
-        testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(in("quantity", List.of(5, 15))));
+        testQuery(new ActionTestOptions().removeIds(true).findOptions(new FindOptions().projection().exclude("_id")),
+                (query) -> query.filter(in("quantity", List.of(5, 15))));
     }
 
     /**
