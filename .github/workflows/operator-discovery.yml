@@ -41,10 +41,23 @@ jobs:
       - name: Checkout mongodb/docs operator pages
         run: |
           git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git "$RUNNER_TEMP/docs"
+          # The operator pages, their includes and tested snippets, and for capability coverage the
+          # rest of the reference and the pages its links name (audits/config/manual-baseline-sources.json).
           git -C "$RUNNER_TEMP/docs" sparse-checkout set --no-cone \
-            /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/ \
+            /content/manual/manual/snooty.toml /content/manual/manual/source/reference/ \
+            /content/manual/manual/source/includes/ /content/manual/manual/source/core/ \
+            /content/manual/manual/source/tutorial/ /content/manual/manual/source/images/ \
+            /content/manual/manual/source/code-examples/ \
             /content/code-examples/tested/
           git -C "$RUNNER_TEMP/docs" checkout -q
+
+      - name: Setup the pinned parser's Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12.16'
+
+      - name: Install the pinned runtime manager
+        run: python -m pip install uv==0.13.7
 
       - name: Discover, generate and integrate
         run: audits/discover.sh "$RUNNER_TEMP/docs" "$RUNNER_TEMP/discovery" --integrate
@@ -118,6 +131,14 @@ jobs:
             -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
             -Dexec.args="discovery $RUNNER_TEMP/discovery $PWD/audits/catalog/documented-examples.json $PWD/audits/catalog/publication-policy.json $RUNNER_TEMP/journal.json $PWD/pom.xml ${{ github.repository }} $flag" \
             | tee "$RUNNER_TEMP/publications.json"
+          # Capability coverage against the accepted baseline: missing APIs and version annotations,
+          # from the contexts the report finds healthy. The same journal keeps both idempotent.
+          if [ -f "$RUNNER_TEMP/discovery/coverage.json" ]; then
+            ./mvnw -B -ntp -q -Daudits -pl audits exec:java \
+              -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
+              -Dexec.args="$RUNNER_TEMP/discovery/coverage.json $PWD/audits/catalog/publication-policy.json $RUNNER_TEMP/journal.json $PWD/pom.xml ${{ github.repository }} $flag" \
+              | tee "$RUNNER_TEMP/coverage-publications.json"
+          fi
 
       - name: Upload publications
         uses: actions/upload-artifact@v7
@@ -126,6 +147,7 @@ jobs:
           name: operator-publications
           path: |
             ${{ runner.temp }}/publications.json
+            ${{ runner.temp }}/coverage-publications.json
             ${{ runner.temp }}/journal.json
           if-no-files-found: ignore
           retention-days: 90

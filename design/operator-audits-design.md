@@ -184,8 +184,9 @@ methods or fixture directories disagree with it.
 | `bindings` | Captures which legacy test owns which fixture, and the descriptive-name backport. | Yes |
 | `naming` | Descriptive example names, and the name registry reconciler. | Names: yes. Reconciler: not yet. |
 | `rst`, `model` | The legacy line-based RST extractor. | Yes, until the structured parser replaces it |
-| `sources`, `documents`, `discovery`, `scenarios` | Pinned Git source bundles, the Snooty parser adapter, capability discovery, structured scenario extraction. | Not yet |
-| `coverage` | Capability catalog and plan contracts, coverage comparison, and `AuditJson`, the strict JSON codec every package uses. | `AuditJson`: yes. Comparison: not yet. |
+| `sources`, `documents`, `discovery` | Pinned Git source bundles, the Snooty parser adapter, capability discovery. | Yes, weekly |
+| `scenarios` | Structured scenario extraction. | Not yet |
+| `coverage` | Capability catalog and plan contracts, coverage comparison, and `AuditJson`, the strict JSON codec every package uses. | Yes, weekly |
 
 Each package with a command has a `*Main.kt` entry point, run through the exec plugin with
 `-Daudits.mainClass`. The README lists the commands; the reference gives each one's contract.
@@ -399,7 +400,7 @@ never MorphiaOrg/morphia.
 
 ### Capability coverage
 
-The structured path is built, but not yet in production use. It goes from pinned sources to a
+The structured path runs weekly against an accepted baseline. It goes from pinned sources to a
 coverage report:
 
 ```mermaid
@@ -422,10 +423,25 @@ flowchart LR
   APIs and wrong version annotations, and never treats a partial result as proof that something
   is absent.
 
-Two pieces are missing before this path replaces the legacy extractor and runs on a schedule: an
-accepted production baseline for the plan, and snippet resolution in the structured scenario
-extraction (the legacy extractor splices snippets in itself). Until then, example extraction uses
-the legacy RST extractor described above.
+The baseline is three reviewed files in `audits/catalog/`:
+
+- `discovery-plan.json`: the catalog pages and their rules, plus reviewed `assignments` (a
+  definition placed in a context its catalog page omits, such as a window-only function the manual
+  documents as a group operator) and `omissions` (a definition that is not an operator of its own,
+  such as `$regex`'s `$options`), each with its reason.
+- `capability-catalog.json`: the capabilities discovery found at the baseline's commit, with their
+  evidence.
+- `coverage-plan.json`: the accepted identities and per-context minimums later runs must keep,
+  explicit API bindings where tags do not settle the mapping, and reviewed exclusions.
+
+`audits/discover.sh` acquires the manual at the clone's commit (`manual-baseline-sources.json`
+with that revision), parses it, discovers its capabilities under the committed discovery plan,
+inventories core's API and writes `coverage.json`; the Publish job files its `MISSING_API` and
+`VERSION_ANNOTATION` findings from healthy contexts. A lost capability or a count drop makes its
+context unhealthy, and nothing is published for it.
+
+Example extraction still uses the legacy RST extractor described above; it retires once the
+structured scenario extraction resolves tested snippets and drivers' content as it does.
 
 ## Testing the audits
 

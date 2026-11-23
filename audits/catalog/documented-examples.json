@@ -9436,6 +9436,9 @@
       "title" : "Exclude All Fields at a Given Level"
     } ],
     "includes" : [ {
+      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
+      "path" : "content/manual/manual/source/images/redact-security-architecture.rst"
+    }, {
       "blob" : "0cddf475a176062e830da309cba006943c376330",
       "path" : "content/manual/manual/source/includes/driver-examples/node/aggregation/sample-mflix.rst"
     }, {

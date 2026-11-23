@@ -49,9 +49,8 @@ Step 5, generation and cutover:
   the filter's matches), alternative commands.
 
 Step 6, monitoring:
-- **An accepted production baseline for capability discovery.** It is needed before
-  `MISSING_API`/`VERSION_ANNOTATION` findings can be published.
-- **A capability-driven server matrix.** Integration runs only MongoDB 8.2.
+- **Explicit bindings for the 102 capabilities tags do not map** (`UNKNOWN_MAPPING` in the
+  coverage report); until then they are neither published nor counted as present.
 
 Step 7, retiring old paths:
 - **The legacy RST extractor:** retire it after the structured parser owns example extraction,
@@ -2742,3 +2741,20 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   run it on `OperatorCaseRunner`, failing a test that has none; `loadData(collection, index)`
   checks that the scenario seeds the collection. The legacy loading, lenient comparison and
   index helpers are gone (about 340 lines). Core: 548 under each mapper.
+
+## Capability baseline (2026-11-23)
+
+- Branch audits-capability-baseline, drafted for the user's review. Discovery at mongodb/docs
+  `e4b0c153` over the whole reference (plus the `core/`, `tutorial/` and `images/` pages its links
+  name) is READY: 346 capabilities, all 8 contexts healthy, no discovery problems.
+- The discovery plan gained reviewed `assignments` (22: new expression pages, `$score`,
+  `$scoreFusion`, `$text`, and 12 window-only functions documented as group operators) and
+  `omissions` (`$vectorSearch`'s expression directive, `$regex`'s `$options`).
+- The coverage plan accepts every identity with today's counts as minimums, binds `$push`'s
+  `$position`, `$slice` and `$sort` to `PushOptions`, and excludes the positional operators
+  (field-path syntax) and `$substr` (an alias). The report: 231 typed, 41 missing, 102 unmapped,
+  5 excluded; the publisher would file 41 MISSING_API and 2 VERSION_ANNOTATION (`$toUUID` has no
+  server annotation, `$documents` says 5.1 where the manual says 6.0).
+- `audits/discover.sh` runs the coverage step; the workflow's clone widens its sparse set and installs
+  the pinned parser, and the Publish job files the coverage findings. A local run at `e4b0c153`
+  reproduced the inventory and the coverage states. The server matrix stays at 8.2 (user's decision).

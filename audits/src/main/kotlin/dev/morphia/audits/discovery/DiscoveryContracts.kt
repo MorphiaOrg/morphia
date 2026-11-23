@@ -11,7 +11,17 @@ data class DiscoveryPlan(
     val product: String,
     val definitionRoots: List<String>,
     val catalogs: List<CatalogRule>,
+    /** Definitions a reviewer placed in a context its catalog page omits. */
+    val assignments: List<ReviewedAssignment> = emptyList(),
+    /** Definitions a reviewer found are not operators of their own. */
+    val omissions: List<ReviewedOmission> = emptyList(),
 )
+
+/** A definition ([target], as `exp.$name`) in [context], which no catalog page lists, and why. */
+data class ReviewedAssignment(val target: String, val context: OperatorContext, val reason: String)
+
+/** A definition ([target]) that is not an operator of its own, such as a parameter, and why. */
+data class ReviewedOmission(val target: String, val reason: String)
 
 /**
  * Only first-column names count as catalog members. Sections refer to AST heading anchors; an empty

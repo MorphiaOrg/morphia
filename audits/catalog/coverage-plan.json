@@ -1,0 +1,2570 @@
+{
+  "api" : {
+    "minimumDeclarations" : 3000,
+    "minimumOperatorTags" : 1,
+    "sourceRoots" : [ "annotations/src/main/java", "core/src/main/java" ]
+  },
+  "bindings" : [ {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$position"
+      }
+    },
+    "id" : "push-modifier-position",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "position",
+      "owner" : "dev.morphia.query.PushOptions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$slice"
+      }
+    },
+    "id" : "push-modifier-slice",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "slice",
+      "owner" : "dev.morphia.query.PushOptions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$sort"
+      }
+    },
+    "id" : "push-modifier-sort",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "sort",
+      "owner" : "dev.morphia.query.PushOptions"
+    }
+  } ],
+  "contexts" : [ {
+    "context" : "AGGREGATION_EXPRESSION",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$abs"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$accumulator"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$acos"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$acosh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$add"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$allElementsTrue"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$and"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$anyElementTrue"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$arrayElemAt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$arrayToObject"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$asin"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$asinh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$atan"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$atan2"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$atanh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$binarySize"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bitAnd"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bitNot"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bitOr"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bitXor"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bsonSize"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ceil"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$cmp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$concat"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$cond"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$cos"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$cosh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$createObjectId"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateAdd"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateDiff"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateFromParts"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateFromString"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateSubtract"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateToParts"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateToString"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateTrunc"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dayOfMonth"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dayOfWeek"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dayOfYear"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$degreesToRadians"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$deserializeEJSON"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$divide"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrContains"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrEndsWith"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrNormalizedEq"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrStartsWith"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$eq"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$exp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$filter"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$floor"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$function"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$getField"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$gt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$gte"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$hash"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$hexHash"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$hour"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ifNull"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$in"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$indexOfArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$indexOfBytes"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$indexOfCP"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$isArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$isNumber"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$isoDayOfWeek"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$isoWeek"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$isoWeekYear"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$let"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$literal"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ln"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$log"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$log10"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$lt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$lte"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ltrim"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$map"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$millisecond"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$minute"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$mod"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$month"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$multiply"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ne"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$not"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$objectToArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$or"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$pow"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$radiansToDegrees"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$rand"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$range"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$reduce"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$regexFind"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$regexFindAll"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$regexMatch"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$replaceAll"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$replaceOne"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$reverseArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$round"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$rtrim"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sampleRate"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$second"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$serializeEJSON"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setDifference"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setEquals"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setField"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setIntersection"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setIsSubset"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sigmoid"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$similarityCosine"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$similarityDotProduct"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$similarityEuclidean"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sin"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sinh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$size"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$slice"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sortArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$split"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$sqrt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$strLenBytes"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$strLenCP"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$strcasecmp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$substr"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$substrBytes"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$substrCP"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$subtract"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$subtype"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$switch"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$tan"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$tanh"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toArray"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toBool"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toDate"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toDecimal"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toDouble"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toHashedIndexKey"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toInt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toLong"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toLower"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toObject"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toObjectId"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toString"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toUUID"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toUpper"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$trim"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$trunc"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$tsIncrement"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$tsSecond"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$type"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$unsetField"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$week"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$year"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$zip"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 172
+  }, {
+    "context" : "GROUP_ACCUMULATOR",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$accumulator"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$count"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$stdDevSamp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$sum"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 25
+  }, {
+    "context" : "PIPELINE_STAGE",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$addFields"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$bucket"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$bucketAuto"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$changeStream"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$changeStreamSplitLargeEvent"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$collStats"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$count"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$currentOp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$densify"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$documents"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$facet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$fill"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$geoNear"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$graphLookup"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$group"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$indexStats"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$limit"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listClusterCatalog"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listLocalSessions"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSampledQueries"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSearchIndexes"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSessions"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$lookup"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$match"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$merge"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$out"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$planCacheStats"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$project"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$querySettings"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$rankFusion"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$redact"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$replaceRoot"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$replaceWith"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$sample"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$score"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$scoreFusion"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$search"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$searchMeta"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$set"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$setWindowFields"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$shardedDataDistribution"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$skip"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$sort"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$sortByCount"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$unionWith"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$unset"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$unwind"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$vectorSearch"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 49
+  }, {
+    "context" : "QUERY_PREDICATE",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$all"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$and"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$bitsAllClear"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$bitsAllSet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$bitsAnyClear"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$bitsAnySet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$box"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$center"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$centerSphere"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$elemMatch"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$eq"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$exists"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$expr"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$geoIntersects"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$geoWithin"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$geometry"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$gt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$gte"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$in"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$jsonSchema"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$lt"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$lte"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$maxDistance"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$minDistance"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$mod"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$ne"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$near"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$nearSphere"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$nin"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$nor"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$not"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$or"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$polygon"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$regex"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$size"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$text"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$type"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$where"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 38
+  }, {
+    "context" : "QUERY_PROJECTION",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$elemMatch"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$slice"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 4
+  }, {
+    "context" : "UPDATE_MODIFIER",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$each"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$position"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$slice"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$sort"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 4
+  }, {
+    "context" : "UPDATE_OPERATOR",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$[<identifier>]"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$[]"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$bit"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$currentDate"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$inc"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$mul"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$pop"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$pull"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$pullAll"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$rename"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$set"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$setOnInsert"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$unset"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 18
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "expected" : [ {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$count"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$covariancePop"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$covarianceSamp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$denseRank"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$derivative"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$documentNumber"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$expMovingAvg"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$integral"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$linearFill"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$locf"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$minMaxScaler"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$rank"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$shift"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$stdDevSamp"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$sum"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    }, {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    } ],
+    "intentionalEmptyEvidence" : [ ],
+    "minimumCapabilities" : 36
+  } ],
+  "exclusions" : [ {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$"
+      }
+    },
+    "reason" : "positional operators are written into field paths (\"grades.$\", \"grades.$[]\", \"grades.$[elem]\"); Morphia has no factory for them, and its updates and projections accept them as field names"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$"
+      }
+    },
+    "reason" : "positional operators are written into field paths (\"grades.$\", \"grades.$[]\", \"grades.$[elem]\"); Morphia has no factory for them, and its updates and projections accept them as field names"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$[]"
+      }
+    },
+    "reason" : "positional operators are written into field paths (\"grades.$\", \"grades.$[]\", \"grades.$[elem]\"); Morphia has no factory for them, and its updates and projections accept them as field names"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$[<identifier>]"
+      }
+    },
+    "reason" : "positional operators are written into field paths (\"grades.$\", \"grades.$[]\", \"grades.$[elem]\"); Morphia has no factory for them, and its updates and projections accept them as field names"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$substr"
+      }
+    },
+    "reason" : "$substr is a deprecated alias of $substrBytes, which Morphia builds"
+  } ],
+  "omissions" : [ ],
+  "product" : "mongodb",
+  "schemaVersion" : 1
+}

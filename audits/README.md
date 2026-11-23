@@ -46,6 +46,7 @@ Every command below runs through the exec plugin from the repository root, after
 | `audits/catalog/name-backport*.json` | Descriptive names given to the legacy fixtures. |
 | `audits/catalog/legacy-corpus.json` | The preservation snapshot of the legacy corpus. |
 | `audits/catalog/publication-policy.json` | Labels the publisher applies. |
+| `audits/catalog/discovery-plan.json`, `capability-catalog.json`, `coverage-plan.json` | The accepted capability baseline: discovery policy with reviewed assignments and omissions, the capabilities found at the baseline's commit, and the identities, minimums, bindings and exclusions later runs are held to. |
 | `core/src/test/resources/dev/morphia/test/generated/manifest.json` | Every case on the runner and every file the generated namespace owns. |
 | `core/src/test/java/dev/morphia/test/generated/` | Generated test classes; never edit them by hand. |
 
@@ -59,6 +60,9 @@ of mongodb/docs, then its Publish job files the findings as issues in this repos
 - **Cover the documented `<operator>` example "…"** (`Task`, `proposed`): an example that appeared
   upstream since the committed inventory, with no test.
 - **Generated operator cases fail integration** (`bug`), naming the failing tests.
+- **Add `<operator>`** (`enhancement`, `proposed`) and version-annotation fixes (`bug`): from the
+  capability coverage report, which compares the manual's operators, contexts and versions with the
+  accepted baseline in `discovery-plan.json`, `capability-catalog.json` and `coverage-plan.json`.
 
 Each issue carries a hidden marker, so a rerun updates the publisher's section of an open issue
 instead of filing it again, and keeps any edits outside that section. The journal of filed issues
@@ -79,8 +83,11 @@ To run discovery locally, clone the pages the same way (about 5 seconds):
 ```sh
 git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git /tmp/docs
 git -C /tmp/docs sparse-checkout set --no-cone \
-  /content/manual/manual/source/reference/operator/ /content/manual/manual/source/includes/ \
-  /content/code-examples/tested/
+  /content/manual/manual/snooty.toml /content/manual/manual/source/reference/ \
+  /content/manual/manual/source/includes/ /content/manual/manual/source/core/ \
+  /content/manual/manual/source/tutorial/ /content/manual/manual/source/images/ \
+  /content/manual/manual/source/code-examples/ /content/code-examples/tested/
+uv sync --frozen --project audits/parser   # the pinned parser, for capability coverage
 git -C /tmp/docs checkout -q
 audits/discover.sh /tmp/docs /tmp/discovery --integrate
 ```

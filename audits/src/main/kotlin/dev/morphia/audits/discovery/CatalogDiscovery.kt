@@ -42,6 +42,17 @@ object CatalogDiscovery {
             plan.catalogs.isNotEmpty() &&
                 plan.catalogs.map { it.id }.distinct().size == plan.catalogs.size
         )
+        // Reviews carry their reason, name each definition once, and an assignment's context has a
+        // catalog.
+        val reviewed = plan.assignments.map { it.target } + plan.omissions.map { it.target }
+        require(reviewed.distinct().size == reviewed.size) { "A definition is reviewed twice" }
+        require(
+            plan.assignments.all {
+                it.reason.isNotBlank() && plan.catalogs.any { rule -> rule.context == it.context }
+            } && plan.omissions.all { it.reason.isNotBlank() }
+        ) {
+            "A review needs its reason, and an assignment a catalog of its context"
+        }
         plan.catalogs.forEach { rule ->
             require(
                 rule.id.isNotBlank() &&
@@ -103,6 +114,8 @@ object CatalogDiscovery {
                             )
                         }
                         .sortedBy { it.id },
+                assignments = plan.assignments.sortedBy { it.target },
+                omissions = plan.omissions.sortedBy { it.target },
             )
         return canonical
     }
@@ -126,6 +139,8 @@ private class DiscoveryRun(
         val token: String,
         val location: LocatedNode,
         val evidence: SourceEvidence,
+        /** The definition a reviewed assignment placed here, which owns the capability directly. */
+        val assigned: Definition? = null,
     )
 
     private val sourcePrefix =
@@ -184,6 +199,38 @@ private class DiscoveryRun(
         scanDefinitions()
         plan.catalogs.forEach(::scanCatalog)
         checkTableOwnership()
+        plan.assignments.forEach { assignment ->
+            val definition = definitions.singleOrNull { it.target == assignment.target }
+            val rule = plan.catalogs.firstOrNull { it.context == assignment.context }
+            if (definition == null || rule == null)
+                problem(
+                    "STALE_REVIEW",
+                    DiscoveryDomain.DEFINITION,
+                    assignment.context,
+                    assignment.target,
+                    "The reviewed assignment of ${assignment.target} names no single definition",
+                )
+            else
+                members +=
+                    Member(
+                        rule,
+                        definition.token,
+                        definition.location,
+                        definition.evidence,
+                        definition,
+                    )
+        }
+        plan.omissions
+            .filter { omission -> definitions.none { it.target == omission.target } }
+            .forEach {
+                problem(
+                    "STALE_REVIEW",
+                    DiscoveryDomain.DEFINITION,
+                    null,
+                    it.target,
+                    "The reviewed omission of ${it.target} names no definition",
+                )
+            }
         val used = mutableMapOf<Definition, MutableSet<OperatorContext>>()
         val capabilityPages = mutableMapOf<String, MutableSet<CapabilityKey>>()
         val capabilities =
@@ -199,9 +246,15 @@ private class DiscoveryRun(
                         definitions.filter { it.token == key.token && it.role in preferred }
                     val fallback = rows.flatMap { it.rule.fallbackDefinitionRoles }.toSet()
                     val chosen =
-                        primary.ifEmpty {
-                            definitions.filter { it.token == key.token && it.role in fallback }
-                        }
+                        rows
+                            .mapNotNull { it.assigned }
+                            .ifEmpty {
+                                primary.ifEmpty {
+                                    definitions.filter {
+                                        it.token == key.token && it.role in fallback
+                                    }
+                                }
+                            }
                     chosen.forEach { used.getOrPut(it) { mutableSetOf() } += key.context }
                     chosen.forEach {
                         capabilityPages.getOrPut(it.location.page) { mutableSetOf() } += key
@@ -273,8 +326,10 @@ private class DiscoveryRun(
                         emptyList(),
                     )
                 }
+        val omitted = plan.omissions.map { it.target }.toSet()
         val unassigned =
             definitions
+                .filter { it.target !in omitted }
                 .filter { definition ->
                     val nativeContexts =
                         plan.catalogs
@@ -282,6 +337,13 @@ private class DiscoveryRun(
                             .map { it.context }
                             .toSet()
                     val assigned = used[definition].orEmpty()
+                    // A reviewed assignment settles a definition whose directive names another
+                    // context, such as a window-only function documented as a group operator.
+                    val reviewed =
+                        plan.assignments
+                            .filter { it.target == definition.target }
+                            .map { it.context }
+                    if (reviewed.isNotEmpty() && assigned.containsAll(reviewed)) return@filter false
                     assigned.isEmpty() ||
                         (nativeContexts.isNotEmpty() &&
                             assigned.intersect(nativeContexts).isEmpty())

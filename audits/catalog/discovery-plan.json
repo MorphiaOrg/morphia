@@ -1,0 +1,228 @@
+{
+  "assignments" : [ {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "the 8.3 array expression form, whose page the expressions catalog page does not list yet",
+    "target" : "exp.$bottom"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "the 8.3 array expression form, whose page the expressions catalog page does not list yet",
+    "target" : "exp.$bottomN"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "an expression page the expressions catalog page does not list",
+    "target" : "exp.$deserializeEJSON"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "an expression page the expressions catalog page does not list",
+    "target" : "exp.$serializeEJSON"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "an expression page the expressions catalog page does not list",
+    "target" : "exp.$subtype"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "the 8.3 array expression form, whose page the expressions catalog page does not list yet",
+    "target" : "exp.$top"
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "reason" : "an expression page the expressions catalog page does not list",
+    "target" : "exp.$unsetField"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$covariancePop"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$covarianceSamp"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$denseRank"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$derivative"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$documentNumber"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$expMovingAvg"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$integral"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$linearFill"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$locf"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$minMaxScaler"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$rank"
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "reason" : "a window-only function the manual documents with the group directive; it is not a $group accumulator",
+    "target" : "grp.$shift"
+  }, {
+    "context" : "QUERY_PREDICATE",
+    "reason" : "a query predicate page the query-predicates catalog page does not list",
+    "target" : "op.$text"
+  }, {
+    "context" : "PIPELINE_STAGE",
+    "reason" : "a stage page the stages catalog page does not list",
+    "target" : "pipe.$score"
+  }, {
+    "context" : "PIPELINE_STAGE",
+    "reason" : "a stage page the stages catalog page does not list",
+    "target" : "pipe.$scoreFusion"
+  } ],
+  "catalogs" : [ {
+    "context" : "QUERY_PREDICATE",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name", "Operator" ],
+    "id" : "predicates",
+    "ignoredHeaders" : [ "Operator Type" ],
+    "includeDescendants" : true,
+    "minimumMembers" : 30,
+    "page" : "reference/mql/query-predicates.txt",
+    "primaryDefinitionRole" : "query",
+    "referenceRoles" : [ "query" ],
+    "sections" : [ ]
+  }, {
+    "context" : "QUERY_PROJECTION",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ "expression" ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "projections",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 4,
+    "page" : "reference/mql/projection.txt",
+    "primaryDefinitionRole" : "projection",
+    "referenceRoles" : [ "projection", "expression" ],
+    "sections" : [ ]
+  }, {
+    "context" : "UPDATE_OPERATOR",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "updates",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 18,
+    "page" : "reference/mql/update.txt",
+    "primaryDefinitionRole" : "update",
+    "referenceRoles" : [ "update" ],
+    "sections" : [ "array-update-operators", "bitwise-update-operators", "field-update-operators", "positional-update-operators" ]
+  }, {
+    "context" : "UPDATE_MODIFIER",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "update-modifiers",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 4,
+    "page" : "reference/mql/update.txt",
+    "primaryDefinitionRole" : "update",
+    "referenceRoles" : [ "update" ],
+    "sections" : [ "array-update-modifiers" ]
+  }, {
+    "context" : "PIPELINE_STAGE",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Stage" ],
+    "id" : "stages",
+    "ignoredHeaders" : [ "Command" ],
+    "includeDescendants" : false,
+    "minimumMembers" : 40,
+    "page" : "reference/mql/aggregation-stages.txt",
+    "primaryDefinitionRole" : "pipeline",
+    "referenceRoles" : [ "pipeline" ],
+    "sections" : [ ]
+  }, {
+    "context" : "AGGREGATION_EXPRESSION",
+    "excludedSections" : [ "window-operators" ],
+    "fallbackDefinitionRoles" : [ "group" ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "expressions",
+    "ignoredHeaders" : [ "Component" ],
+    "includeDescendants" : false,
+    "minimumMembers" : 150,
+    "page" : "reference/mql/expressions.txt",
+    "primaryDefinitionRole" : "expression",
+    "referenceRoles" : [ "expression", "group" ],
+    "sections" : [ ]
+  }, {
+    "context" : "GROUP_ACCUMULATOR",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "accumulators",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 25,
+    "page" : "reference/mql/accumulators.txt",
+    "primaryDefinitionRole" : "group",
+    "referenceRoles" : [ "group" ],
+    "sections" : [ ]
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ "group", "expression" ],
+    "format" : "TABLE_FIRST_COLUMN",
+    "headers" : [ "Name" ],
+    "id" : "window-functions",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 24,
+    "page" : "reference/mql/window-functions.txt",
+    "primaryDefinitionRole" : "window",
+    "referenceRoles" : [ "window" ],
+    "sections" : [ ]
+  }, {
+    "context" : "WINDOW_FUNCTION",
+    "excludedSections" : [ ],
+    "fallbackDefinitionRoles" : [ "group", "expression" ],
+    "format" : "OPERATOR_REFERENCE_LIST",
+    "headers" : [ "Name" ],
+    "id" : "window-stage-functions",
+    "ignoredHeaders" : [ ],
+    "includeDescendants" : false,
+    "minimumMembers" : 30,
+    "page" : "reference/operator/aggregation/setWindowFields.txt",
+    "primaryDefinitionRole" : "window",
+    "referenceRoles" : [ "group", "window", "expression" ],
+    "sections" : [ "window-operators" ]
+  } ],
+  "definitionRoots" : [ "reference/operator", "reference/mql/window-functions" ],
+  "omissions" : [ {
+    "reason" : "the $vectorSearch stage page declares its definition with the expression directive; the stage itself is in the stages catalog",
+    "target" : "exp.$vectorSearch"
+  }, {
+    "reason" : "a parameter of $regex that its page documents with the query directive",
+    "target" : "op.$options"
+  } ],
+  "product" : "mongodb",
+  "schemaVersion" : 1
+}
