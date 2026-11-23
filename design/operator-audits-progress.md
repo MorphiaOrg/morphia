@@ -18,10 +18,10 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 11 generated cases.
+- **On the runner:** 363 legacy cases (362 converted, 1 migrated), plus 12 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
-  included; 433 examples owned, 115 unowned, 30 unnamed, 4 ambiguous), reviewed DSL bindings checked against core's API, and the
+  included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
   candidate → integrate → promote path. One expressions case is generated, and three are
   excluded with evidence.
 - **Monitoring:** a weekly discovery workflow that re-inventories the docs, regenerates,
@@ -45,7 +45,6 @@ Step 5, generation and cutover:
   `$deserializeEJSON`, `$toObject`, `$toArray`, `$hexHash`, `$percentile`, `$limit`, `$type`, a
   compound `$group` `_id`, `$convert` options, `$reduce` `valueAs`).
 - **Find and update generation.** Only aggregation pipelines are generated.
-- **Reviewed names** for the 30 unnamed and 4 ambiguous examples.
 - **The remaining legacy fixtures:** 193 directories.
   - 98 are locked; 96 are unresolved in `form-review.json`.
   - 23 are legacy-only in `cutover.json`.
@@ -2627,3 +2626,18 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   one-key documents. Fixed in #4571 (2.5 has the same code).
 - 10 new generated cases (`$top`, `$bottom`, `$topN`, `$bottomN`, `$firstN`, `$maxN`, `$minN`), all
   sample-dataset cases checking serialization. Core: 689 tests under each mapper; audits: 456.
+
+## Reviewed example names (2026-11-23)
+
+- Branch audits-example-names. `audits/catalog/example-names.json` holds 34 reviews, keyed by page,
+  title and action SHA-256: 30 descriptive names for examples titled `main`, and the owner of 4
+  examples several legacy variants match (`bucketAuto`, `currentOp`, `planCacheStats`, `project`).
+  A review names an example or its owner, never both, and gives a reason; stale reviews are counted
+  as `reviews.stale`. Ambiguous examples now keep their source blocks for review.
+- Inventory: 437 owned, 145 unowned, none unnamed or ambiguous.
+- Generator: a reviewed name is the case's title and display name; a hyphenated page name
+  (`maxN-array-element`) becomes a valid class name (`TestMaxNArrayElement`); `NAMED_ARGUMENTS` is
+  declared for every named-argument operator it emits, since Morphia chooses their order (it writes
+  `$maxN` as `{input, n}`).
+- One more generated case (`maxN-array-element`, "Find the Top Two Cast Members"); 12 in all.
+  Core: 690 tests under each mapper; audits: 457.

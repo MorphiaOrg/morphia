@@ -182,10 +182,11 @@
         "sha256" : "e70a5f27d182fb59b190293dc0c4a82563d5737c2a7cfd99759536232ac92cf3",
         "text" : "[\n  { _id: 'A. Dean Bell', genres: [ 'Crime', 'Drama' ] },\n  { _id: 'A. Karunakaran', genres: [ 'Romance' ] },\n  { _id: 'A. Vanichkin', genres: [ 'Animation', 'Fantasy' ] },\n  { _id: 'A.J. Edwards', genres: [ 'Biography', 'Drama', 'History' ] },\n  {\n    _id: 'A.R. Murugadoss',\n    genres: [ 'Drama', 'Sci-Fi', 'Thriller', 'Action', 'Mystery' ]\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Collect the Genres of Each Director",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "collectTheGenresOfEachDirector",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -1199,10 +1200,11 @@
         "sha256" : "c4a04a9725ecfb87d106222fb38ea92725ceaeb2dd7c7c3e28577f3d8ebbb614",
         "text" : "[\n   { _id: 'Drama', countNumberOfMoviesForGenre: 12385 },\n   { _id: 'Short', countNumberOfMoviesForGenre: 442 }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Count the Movies in Each Genre",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "countTheMoviesInEachGenre",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -1874,10 +1876,11 @@
         "sha256" : "439165b8d124f4b30952bf22c75e335a74f3841b06ade05c09ba116214dcd02e",
         "text" : "db.collection('MyCollection').aggregate([\n   {\n      $match: {\n         $expr: {\n            $encStrContains: {\n               input: '$employeeLastName',\n               substring: 'earso'\n            }\n         }\n      }\n   }\n])"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Match an Encrypted Substring",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "matchAnEncryptedSubstring",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -1899,10 +1902,11 @@
         "sha256" : "31a65962f19997c88759b2c7986bb385d7f2673137d91318f083336a7ffa95b9",
         "text" : "db.collection('MyCollection').aggregate([\n   {\n      $match: {\n         $expr: {\n            $encStrEndsWith: {\n               input: '$employeeFirstName',\n               suffix: 'son'\n            }\n         }\n      }\n   }\n])"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Match an Encrypted Suffix",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "matchAnEncryptedSuffix",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -1924,10 +1928,11 @@
         "sha256" : "9f83861d081923ddacc1dadbf61d4d8e7541203e1fd94e802d3264d23d98210a",
         "text" : "db.collection('MyCollection').aggregate([\n   {\n      $match: {\n         $expr: {\n            $encStrNormalizedEq: {\n               input: '$employeeLastName',\n               string: 'Béatrice'\n            }\n         }\n      }\n   }\n])"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Match a Normalized Encrypted String",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "matchANormalizedEncryptedString",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -1949,10 +1954,11 @@
         "sha256" : "9d269e8a85656803552e70bf616cda49c8bfef42194941f93df701ffae3bba5b",
         "text" : "db.collection('MyCollection').aggregate([\n   {\n      $match: {\n         $expr: {\n            $encStrStartsWith: {\n               input: '$employeeFirstName',\n               prefix: 'Sam'\n            }\n         }\n      }\n   }\n])"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Match an Encrypted Prefix",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "matchAnEncryptedPrefix",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -2173,10 +2179,11 @@
         "sha256" : "2b0d30d3cfb3aa1fc4ac587631e62fbfcfafbf18dc048cd10174cd9083163873",
         "text" : "[\n  {\n    _id: 'Action',\n    firstMovieTitle: 'The Perils of Pauline',\n    firstMovieYear: 1914\n  },\n  {\n    _id: 'Adventure',\n    firstMovieTitle: 'Robin Hood',\n    firstMovieYear: 1922\n  },\n  {\n    _id: 'Animation',\n    firstMovieTitle: 'Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics',\n    firstMovieYear: 1911\n  },\n  {\n    _id: 'Biography',\n    firstMovieTitle: 'Regeneration',\n    firstMovieYear: 1915\n  },\n  {\n    _id: 'Comedy',\n    firstMovieTitle: 'Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics',\n    firstMovieYear: 1911\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Find the First Movie in Each Genre",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "findTheFirstMovieInEachGenre",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -2897,10 +2904,11 @@
         "sha256" : "f25e5dfef43c90ca37eedfb58c83a3893128024c072c10925a00811216334757",
         "text" : "[\n  {\n    _id: 'Action',\n    lastMovieTitle: 'The Masked Saint',\n    lastMovieYear: 2016\n  },\n  {\n    _id: 'Adventure',\n    lastMovieTitle: 'Wolf Totem',\n    lastMovieYear: 2015\n  },\n  {\n    _id: 'Animation',\n    lastMovieTitle: 'World of Tomorrow',\n    lastMovieYear: 2015\n  },\n  {\n    _id: 'Biography',\n    lastMovieTitle: 'The Masked Saint',\n    lastMovieYear: 2016\n  },\n  {\n    _id: 'Comedy',\n    lastMovieTitle: \"You're Ugly Too\",\n    lastMovieYear: 2015\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Find the Last Movie in Each Genre",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "findTheLastMovieInEachGenre",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -3503,10 +3511,11 @@
         "sha256" : "2bcbfebf81e7629d820f5229a29f8035f2fb78163c1f18163a27c286e5e98cd8",
         "text" : "[\n  {\n    title: 'Spirited Away',\n    cast: [ 'Rumi Hiiragi', 'Miyu Irino', 'Mari Natsuki', 'Takashi Naitè' ],\n    topTwoCast: [ 'Takashi Naitè', 'Rumi Hiiragi' ]\n  },\n  {\n    title: 'The Dark Knight',\n    cast: [ 'Christian Bale', 'Heath Ledger', 'Aaron Eckhart', 'Michael Caine' ],\n    topTwoCast: [ 'Michael Caine', 'Heath Ledger' ]\n  },\n  {\n    title: 'The Godfather',\n    cast: [ 'Marlon Brando', 'Al Pacino', 'James Caan', 'Richard S. Castellano' ],\n    topTwoCast: [ 'Richard S. Castellano', 'Marlon Brando' ]\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Find the Top Two Cast Members",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "findTheTopTwoCastMembers",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -3538,10 +3547,11 @@
         "sha256" : "7d615c68cc77d83af4164bdcd020ae6674aac766df91a511b779665667432a0b",
         "text" : "[\n  { _id: 2000, medianRating: 6.4 },\n  { _id: 2001, medianRating: 6.4 },\n  { _id: 2002, medianRating: 6.2 },\n  { _id: 2003, medianRating: 6.4 },\n  { _id: 2004, medianRating: 6.5 }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Calculate the Median Rating by Year",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "calculateTheMedianRatingByYear",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -3580,10 +3590,11 @@
         "sha256" : "b3d3fc5f49f87184aa040ca3d12d9c03e2d5f137f6059e6ebba69a0f3393318c",
         "text" : "[\n  {\n    _id: 'Galactic Odyssey',\n    allRatings: {\n      rating: 8.1,\n      votes: 1482903,\n      tomatometer: 79,\n      audienceScore: 85\n    }\n  },\n  {\n    _id: 'Neon Horizon',\n    allRatings: {\n      rating: 7.4,\n      votes: 983201,\n      tomatometer: 68,\n      audienceScore: 74\n    }\n  },\n  {\n    _id: 'The Last Protocol',\n    allRatings: {\n      rating: 8.7,\n      votes: 2104567,\n      tomatometer: 91,\n      audienceScore: 88\n    }\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Merge the Ratings of Each Movie",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "mergeTheRatingsOfEachMovie",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -3720,10 +3731,11 @@
         "sha256" : "f89e000e4970665b100b4e05c1fdf28d322b67b1a66f95a49e32cecee1eafff8",
         "text" : "{a: 1, scaled: 0, scaledTo100: 0}\n{a: 5, scaled: 0.2, scaledTo100: 20}\n{a: 13, scaled: 0.6, scaledTo100: 60}\n{a: 21, scaled: 1, scaledTo100: 100}"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Scale Values to a Range",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "scaleValuesToARange",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -4098,10 +4110,11 @@
         "sha256" : "6f1b4c1bca04e3c984029110946fb67098be509bb6947978fb268008f4fe6ef9",
         "text" : "[\n  { _id: 'A. Karunakaran', genres: [ 'Romance' ] },\n  { _id: 'A.J. Edwards', genres: [ 'Biography' ] },\n  { _id: 'A.R. Murugadoss', genres: [ 'Action', 'Action' ] },\n  { _id: 'AJ Schnack', genres: [ 'Documentary' ] },\n  { _id: 'Aanand Rai', genres: [ 'Comedy' ] }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Collect the First Genre of Each Director's Movies",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "collectTheFirstGenreOfEachDirectorSMovies",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -4990,10 +5003,11 @@
         "sha256" : "2bfb81d13a219376801a67440936897e63acb1c25fbd8e7cd594d1c5d5a21562",
         "text" : "{ score: 1, scaled: 0.7310585786 }\n{ score: 5, scaled: 0.9933071491 }\n{ scaled: null }\n{ score: 13, scaled: 0.9999977397 }\n{ score: null, scaled: null }\n{ score: 19, scaled: 0.9999999992 }"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Scale Scores with a Sigmoid",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "scaleScoresWithASigmoid",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -5020,10 +5034,11 @@
         "sha256" : "a6fa68c9f58c227d7f0303d685a4d8c074106648671ffe5008a19f2b63ad2575",
         "text" : "{ _id: 1, raw: 1, normalized: 1 }\n{ _id: 2, raw: 0.7142857142857143,\n  normalized: 0.8571428571428571 }\n{ _id: 3, raw: 0.9746318461970762,\n  normalized: 0.9873159230985381 }"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Compute Raw and Normalized Cosine Similarity",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "computeRawAndNormalizedCosineSimilarity",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -5050,10 +5065,11 @@
         "sha256" : "ef946dd2910528a6f2abe665eeb791046b6b398e19f9971a553d2e465a5a79e8",
         "text" : "{ _id: 1, raw: 14, normalized: 7.5 }\n{ _id: 2, raw: 10, normalized: 5.5 }\n{ _id: 3, raw: 32, normalized: 16.5 }"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Compute Raw and Normalized Dot Products",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "computeRawAndNormalizedDotProducts",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -5080,10 +5096,11 @@
         "sha256" : "7f0e52017d8ade1ee78e95f7c585a5d65d08cad73d33a7ffd6f2eee2e363aede",
         "text" : "{ _id: 1, raw: 0, normalized: 1 }\n{ _id: 2, raw: 2.8284271247461903,\n  normalized: 0.2612038749637415 }\n{ _id: 3, raw: 5.196152422706632,\n  normalized: 0.16139702886038895 }"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Compute Raw and Normalized Euclidean Distances",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "computeRawAndNormalizedEuclideanDistances",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -5295,10 +5312,11 @@
         "sha256" : "5734a9b9cd62c944a7e2e6e0f769d449ea1cd0413710bab6ec26745d3e3c9cec",
         "text" : "[\n  { _id: 'Bob Clark', movieCount: 12, stdDevRating: 1.6436747447918845 },\n  { _id: 'John McTiernan', movieCount: 10, stdDevRating: 1.439305388025766 },\n  { _id: 'James Cameron', movieCount: 10, stdDevRating: 1.3683566786477859 },\n  { _id: 'Sean McNamara', movieCount: 13, stdDevRating: 1.3499945211372495 },\n  {\n    _id: 'Robert Rodriguez',\n    movieCount: 20,\n    stdDevRating: 1.2701476292148088\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Find the Directors with the Most Varied Ratings",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "findTheDirectorsWithTheMostVariedRatings",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -5336,10 +5354,11 @@
         "sha256" : "d4c95b1f93e5c606dabaa1707ea12dc6b80818a732d1af9e4aeaffc4dab4b163",
         "text" : "[\n  {\n    _id: 'Bob Clark',\n    movieCount: 12,\n    stdDevSampRating: 1.7167622803617066\n  },\n  {\n    _id: 'John McTiernan',\n    movieCount: 10,\n    stdDevSampRating: 1.517161091571287\n  },\n  {\n    _id: 'James Cameron',\n    movieCount: 10,\n    stdDevSampRating: 1.4423745853433652\n  },\n  {\n    _id: 'Sean McNamara',\n    movieCount: 13,\n    stdDevSampRating: 1.4051188470584879\n  },\n  {\n    _id: 'Robert Rodriguez',\n    movieCount: 20,\n    stdDevSampRating: 1.303143971526675\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Find the Directors with the Most Varied Sampled Ratings",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "findTheDirectorsWithTheMostVariedSampledRatings",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -5449,10 +5468,11 @@
         "sha256" : "636b077332755da09044bc7f69eb11f2ea37d4934117b90ce982408e225d339d",
         "text" : "[\n  {\n    title: 'Centennial',\n    titleStart: 'Cen',\n    titleRest: 'tennial'\n  },\n  {\n    title: 'Baseball',\n    titleStart: 'Bas',\n    titleRest: 'eball'\n  }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Split Titles into Two Parts",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "splitTitlesIntoTwoParts",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -5601,10 +5621,11 @@
         "sha256" : "0ed0046e5edc63dddccd63483b5f81106c692aa719f37ccf9088112a8ab0bf4b",
         "text" : "[\n  { _id: 'G', totalVotes: 12773015 },\n  { _id: 'PG', totalVotes: 57205811 },\n  { _id: 'PG-13', totalVotes: 152323029 },\n  { _id: 'R', totalVotes: 209762435 }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Total the Votes by Rating",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "totalTheVotesByRating",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -5876,10 +5897,11 @@
         "sha256" : "6b54fc3800486eaa98108027ce1c14ab2470c6fb1ae257ce21174cdeee28cea4",
         "text" : "[ { val: 'string to hash', hashedVal: Long(\"763543691661428748\") } ]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Hash a String Value",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "hashAStringValue",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -6683,9 +6705,9 @@
       "title" : "Single Facet Aggregation"
     }, {
       "blocks" : [ ],
-      "detail" : "matches aggregation/stages/bucketAuto/multiFacetedAggregation, aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline",
-      "owner" : null,
-      "status" : "AMBIGUOUS",
+      "detail" : "reviewed owner: the AsPipeline fixture tests the same example as a pipeline list",
+      "owner" : "aggregation/stages/bucketAuto/multiFacetedAggregation",
+      "status" : "OWNED",
       "stem" : null,
       "title" : "Multi-Faceted Aggregation"
     } ],
@@ -6724,10 +6746,11 @@
         "sha256" : "5ea747115d72208c8ee9c70a804a5b104cdae11e80aea431c7920a23287c0f10",
         "text" : "{\n   \"_id\": {\n      _data: \"8262E2EE54000000022B022C0100296E5A100448E5E3DD01364019AE8FE8C6859527E046645F6964006462E2EE54C8756C0D5CF6F0720004\"\n   },\n   \"operationType\": \"insert\",\n   \"clusterTime\": Timestamp({ t: 1659039316, i: 2 }),\n   \"wallTime\": ISODate(\"2022-07-28T20:15:16.148Z\"),\n   \"fullDocument\": {\n      \"_id\": ObjectId(\"62e2ee54c8756c0d5cf6f072\"),\n      \"name\": \"Walker Percy\"\n   },\n   \"ns\": {\n      \"db\": \"test\",\n      \"coll\": \"names\"\n   },\n   \"documentKey\": { _id: ObjectId(\"62e2ee54c8756c0d5cf6f072\") }\n}"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Open a Change Stream",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "openAChangeStream",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -6765,10 +6788,11 @@
         "sha256" : "0c080d4ea36d19ef3d5be80659186b6051f8064bf7a381f85517a0f9145e5871",
         "text" : "const firstFragment = myChangeStreamCursor.next()\nconst secondFragment = myChangeStreamCursor.next()\nconst thirdFragment = myChangeStreamCursor.next()"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Split a Large Change Event",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "splitALargeChangeEvent",
       "title" : "main"
     } ],
     "includes" : [ ],
@@ -6920,9 +6944,9 @@
     "context" : "aggregation/stages",
     "examples" : [ {
       "blocks" : [ ],
-      "detail" : "matches aggregation/stages/currentOp/inactiveSessionsReplicaSet, aggregation/stages/currentOp/inactiveSessionsShardedCluster, aggregation/stages/currentOp/inactiveSessionsShardedClusterLocalOpsTrue",
-      "owner" : null,
-      "status" : "AMBIGUOUS",
+      "detail" : "reviewed owner: the sharded-cluster fixtures run the same example on other topologies",
+      "owner" : "aggregation/stages/currentOp/inactiveSessionsReplicaSet",
+      "status" : "OWNED",
       "stem" : null,
       "title" : "main"
     } ],
@@ -7984,10 +8008,11 @@
         "sha256" : "226b294bd763b0a9aa5e5cb2c0c743e34efb3462b6eefaf2bde11a424ff9778f",
         "text" : "[\n  { _id: { year: 1939, rated: 'PASSED' }, count: 1 },\n  { _id: { year: 1962, rated: 'PG' }, count: 1 },\n  { _id: { year: 1963, rated: 'PG' }, count: 1 },\n  { _id: { year: 1970, rated: 'R' }, count: 1 },\n  { _id: { year: 1972, rated: 'R' }, count: 1 }\n]"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Summarize Ratings into Another Collection",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "summarizeRatingsIntoAnotherCollection",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -8170,10 +8195,11 @@
         "sha256" : "b3d6e7b032a3c21453fb20e7eaff7a3eadc87ad5e4527b3ec4fa8c3934ac96e4",
         "text" : "db.orders.insertMany( [\n    { \"_id\" : 1, \"item\" : \"abc\", \"price\" : Decimal128(\"12\"), \"quantity\" : 2, \"type\": \"apparel\" },\n    { \"_id\" : 2, \"item\" : \"jkl\", \"price\" : Decimal128(\"20\"), \"quantity\" : 1, \"type\": \"electronics\" },\n    { \"_id\" : 3, \"item\" : \"abc\", \"price\" : Decimal128(\"10\"), \"quantity\" : 5, \"type\": \"apparel\" },\n    { \"_id\" : 4, \"item\" : \"abc\", \"price\" : Decimal128(\"8\"), \"quantity\" : 10, \"type\": \"apparel\" },\n    { \"_id\" : 5, \"item\" : \"jkl\", \"price\" : Decimal128(\"15\"), \"quantity\" : 15, \"type\": \"electronics\" }\n] )"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Populate the Plan Cache",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "populateThePlanCache",
       "title" : "main"
     }, {
       "blocks" : [ ],
@@ -8184,9 +8210,9 @@
       "title" : "Return Information for All Entries in the Query Cache"
     }, {
       "blocks" : [ ],
-      "detail" : "matches aggregation/stages/planCacheStats/findCacheEntryDetailsForAPlanCacheShapeHash, aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
-      "owner" : null,
-      "status" : "AMBIGUOUS",
+      "detail" : "reviewed owner: its name is the example's title; the other fixture holds the same example under the page's later title",
+      "owner" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
+      "status" : "OWNED",
       "stem" : null,
       "title" : "Find Cache Entry Details for a Query Hash"
     } ],
@@ -8289,9 +8315,9 @@
       "title" : "Conditionally Exclude Fields"
     }, {
       "blocks" : [ ],
-      "detail" : "matches aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments, aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage",
-      "owner" : null,
-      "status" : "AMBIGUOUS",
+      "detail" : "reviewed owner: the AsStage fixture tests the same example built as a stage",
+      "owner" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+      "status" : "OWNED",
       "stem" : null,
       "title" : "Include Specific Fields from Embedded Documents"
     }, {
@@ -8429,10 +8455,11 @@
         "sha256" : "d435a4dccc7b8b18fdafc74f92b095ed1d92f7c92bfef6f6e360b516c7e161fb",
         "text" : "// Create pizzaOrders collection\ndb.pizzaOrders.insertMany( [\n   { _id: 0, type: \"pepperoni\", totalNumber: 5,\n   orderDate: new Date( \"2024-01-15T12:00:00Z\" ) },\n   { _id: 1, type: \"cheese\", totalNumber: 15,\n   orderDate: new Date( \"2024-01-23T11:12:32Z\" ) },\n   { _id: 2, type: \"vegan\", totalNumber: 20,\n   orderDate: new Date( \"2024-03-20T10:01:12Z\" ) }\n] )\n\n// Create ascending index on orderDate field\ndb.pizzaOrders.createIndex( { orderDate: 1 } )\n\n// Create ascending index on totalNumber field\ndb.pizzaOrders.createIndex( { totalNumber: 1 } )"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Show the Debug Query Shape",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "showTheDebugQueryShape",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -8470,10 +8497,11 @@
         "sha256" : "27920a8bd7fdb91f3762fd9560792ec18c1ecf5771df88adb52a13ecabc8f626",
         "text" : "db.products.insertMany(\n  [\n    { item: \"card\", qty: 15 },\n    { item: \"envelope\", qty: 20 },\n    { item: \"stamps\" , qty: 30 }\n  ]\n)"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Return Query Statistics",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "returnQueryStatistics",
       "title" : "main"
     }, {
       "blocks" : [ {
@@ -8550,10 +8578,11 @@
         "sha256" : "054c7747654f26dab710536e6dfe273da83876c9f3bc9e57fdba8be10de2f88f",
         "text" : "db.embedded_movies.createSearchIndex(\n   \"vector_index\", \n   \"vectorSearch\", \n   {\n      \"fields\": [\n         {\n            \"type\": \"vector\",\n            \"path\": \"<FIELD_NAME>\",\n            \"numDimensions\": <NUMBER_OF_DIMENSIONS>,\n            \"similarity\": \"dotProduct\"\n         }\n      ]\n   }\n);"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Combine Vector and Text Search Ranks",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "combineVectorAndTextSearchRanks",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -8877,10 +8906,11 @@
         "sha256" : "19537f318a97d327480703fc1671764fdaa47e5dc2a754698f3a019858a083f8",
         "text" : "db.embedded_movies.createSearchIndex(\n   \"<INDEX_NAME>\", \n   \"vectorSearch\", \n   {\n      \"fields\": [\n         {\n            \"type\": \"vector\",\n            \"path\": \"<FIELD_NAME>\",\n            \"numDimensions\": <NUMBER_OF_DIMENSIONS>,\n            \"similarity\": \"dotProduct\"\n         }\n      ]\n   }\n);"
       } ],
-      "detail" : "a generic title needs a reviewed name",
+      "detail" : null,
+      "name" : "Combine Vector and Text Search Scores",
       "owner" : null,
-      "status" : "UNNAMED",
-      "stem" : null,
+      "status" : "UNOWNED",
+      "stem" : "combineVectorAndTextSearchScores",
       "title" : "main"
     } ],
     "includes" : [ {
@@ -12687,11 +12717,12 @@
   } ],
   "sourceRepository" : "mongodb/docs",
   "summary" : {
-    "examples.ambiguous" : 4,
-    "examples.owned" : 433,
-    "examples.unnamed" : 30,
-    "examples.unowned" : 115,
+    "examples.ambiguous" : 0,
+    "examples.owned" : 437,
+    "examples.unnamed" : 0,
+    "examples.unowned" : 145,
     "pages" : 297,
-    "pages.skipped" : 3
+    "pages.skipped" : 3,
+    "reviews.stale" : 0
   }
 }

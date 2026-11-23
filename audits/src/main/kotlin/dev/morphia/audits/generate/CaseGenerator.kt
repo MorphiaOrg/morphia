@@ -3,6 +3,7 @@ package dev.morphia.audits.generate
 import dev.morphia.audits.repairs.ActionShape
 import dev.morphia.audits.repairs.BlockRole
 import dev.morphia.audits.repairs.FixtureMigration
+import dev.morphia.audits.repairs.FormEquivalence
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormOverride
 import dev.morphia.audits.repairs.FormRule
@@ -113,7 +114,12 @@ object CaseGenerator {
             .filter { it.context in review.families }
             .forEach { page ->
                 val folder = page.context.substringAfter('/')
-                val type = "Test" + page.operator.replaceFirstChar { it.uppercase() }
+                // A page name such as `maxN-array-element` becomes `TestMaxNArrayElement`.
+                val type =
+                    "Test" +
+                        page.operator.split('-').joinToString("") { part ->
+                            part.replaceFirstChar { it.uppercase() }
+                        }
                 val source = "$SOURCES/${PACKAGE.replace('.', '/')}/$folder/$type.java"
                 page.examples.forEach { example ->
                     fun gap(kind: GapKind, detail: String) {
@@ -176,7 +182,8 @@ object CaseGenerator {
                             pageBlob = page.pageBlob,
                             includes = page.includes,
                             unexpandedIncludes = emptyList(),
-                            example = example.title,
+                            // A reviewed name is the case's title, as its display name is.
+                            example = example.name ?: example.title,
                             shape = documented.shape,
                             blocks = example.blocks,
                             rules = emitted.rules.sorted(),
@@ -187,7 +194,7 @@ object CaseGenerator {
                     val method =
                         """
                         |    @Test
-                        |    @DisplayName(${literal(example.title)})
+                        |    @DisplayName(${literal(example.name ?: example.title)})
                         |    public void $stem() {
                         |        runner.aggregate(
                         |                OperatorCase.of(${literal(resource)}),
@@ -301,8 +308,8 @@ object CaseGenerator {
         /** Types named in the source, such as an enum argument's. */
         val types = mutableSetOf<String>()
         /**
-         * The form rules the emitted spelling needs: Morphia writes an implicit equality as `$eq`
-         * and several operators on one field as one filter each.
+         * The form rules the emitted spelling needs: Morphia writes an implicit equality as `$eq`,
+         * several operators on one field as one filter each, and named arguments in its own order.
          */
         val rules = mutableSetOf<FormRule>()
 
@@ -350,6 +357,10 @@ object CaseGenerator {
                     )
                 }
                 BindingForm.NAMED -> {
+                    // The server reads named arguments in any order, and the generator cannot know
+                    // the order Morphia writes them in.
+                    if (binding.operator in FormEquivalence.namedArgumentOperators)
+                        rules += FormRule.NAMED_ARGUMENTS
                     if (!argument.isDocument)
                         throw Unbound("$path: ${binding.operator} takes a document")
                     val document = argument.asDocument()

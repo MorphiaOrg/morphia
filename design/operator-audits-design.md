@@ -218,7 +218,13 @@ Each example gets one status:
 - **UNOWNED**: nothing covers it; the inventory keeps its source blocks so generation never needs
   the page again.
 - **UNNAMED**: it has no usable title, so it needs a reviewed name.
-- **AMBIGUOUS**: its name collides with another.
+- **AMBIGUOUS**: its name collides with another, or several fixtures match it.
+
+`example-names.json` holds the reviews that resolve the last two: a descriptive name for a generic
+title, or the owner among several matching fixtures, each with its reason. A review is keyed by page,
+title and the action block's SHA-256, so an example that changes upstream comes back for review; the
+inventory counts the reviews that no longer apply (`reviews.stale`). A reviewed name is the
+generated case's title and display name.
 
 Generated cases never count as owners: generation derives them from the unowned examples on
 every run.
@@ -255,7 +261,8 @@ a test method:
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
    case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
    plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter
-   each.
+   each, and `NAMED_ARGUMENTS` when it calls an operator that takes only named arguments, whose
+   order the server ignores and Morphia chooses.
 
 An example that seeds no data and queries a collection of MongoDB's sample datasets, as most tested
 snippets do, names that dataset (`generation-review.json`'s `sampleDatasets`). The tests do not load

@@ -168,7 +168,9 @@
   },
   "comparison": {
     "order": "ORDERED",
-    "rules": [],
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
     "ignore": [],
     "tolerance": null
   },

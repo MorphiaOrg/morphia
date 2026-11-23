@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "page": "aggregation/expressions/addToSet",
+      "title": "main",
+      "actionSha256": "2d9e3bbe1326348b788e7dcef099935f6dbb443e699f9709bef7d21152397e66",
+      "name": "Collect the Genres of Each Director",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/count-accumulator",
+      "title": "main",
+      "actionSha256": "547ca4198a6a6587a9e3c721552fe0d3729d947cf48f022949322edc9b50e709",
+      "name": "Count the Movies in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/encStrContains",
+      "title": "main",
+      "actionSha256": "439165b8d124f4b30952bf22c75e335a74f3841b06ade05c09ba116214dcd02e",
+      "name": "Match an Encrypted Substring",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/encStrEndsWith",
+      "title": "main",
+      "actionSha256": "31a65962f19997c88759b2c7986bb385d7f2673137d91318f083336a7ffa95b9",
+      "name": "Match an Encrypted Suffix",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/encStrNormalizedEq",
+      "title": "main",
+      "actionSha256": "9f83861d081923ddacc1dadbf61d4d8e7541203e1fd94e802d3264d23d98210a",
+      "name": "Match a Normalized Encrypted String",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/encStrStartsWith",
+      "title": "main",
+      "actionSha256": "9d269e8a85656803552e70bf616cda49c8bfef42194941f93df701ffae3bba5b",
+      "name": "Match an Encrypted Prefix",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/first",
+      "title": "main",
+      "actionSha256": "99e7a077d4f186a6186965e5188771a3c2c1b06e5cbd848a1f592eb468826943",
+      "name": "Find the First Movie in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/last",
+      "title": "main",
+      "actionSha256": "d405687abd3755d309ea59681b98811681fbf01d8bc954e367b83f4c04dc3ec2",
+      "name": "Find the Last Movie in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/maxN-array-element",
+      "title": "main",
+      "actionSha256": "43f4465048f9e85efd325217402ce4bd451023d3c6b10224558e315a26ae2e16",
+      "name": "Find the Top Two Cast Members",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/median",
+      "title": "main",
+      "actionSha256": "1c5ec50e7061ef69eb7cc7582c7b25b643d55fa416c29202aab8b4a545555737",
+      "name": "Calculate the Median Rating by Year",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/mergeObjects",
+      "title": "main",
+      "actionSha256": "fc0dd9b6a18d455f53bf804fd1baf4f6932813f3e46264c38867a4680d8a1509",
+      "name": "Merge the Ratings of Each Movie",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/minMaxScaler",
+      "title": "main",
+      "actionSha256": "68cadc2ee23a651e9c95b29ee02069dcc6e06179ee07642c59916ac765840f4a",
+      "name": "Scale Values to a Range",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/push",
+      "title": "main",
+      "actionSha256": "40df131bf80452fa7ae8ae5bbeec3d865ce04bea7d77f5ca1bbe484d81c26e11",
+      "name": "Collect the First Genre of Each Director's Movies",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/sigmoid",
+      "title": "main",
+      "actionSha256": "fc237c4d2252310228970e1c493c3dd128a2730f29c7b8901d1534ec0b538f20",
+      "name": "Scale Scores with a Sigmoid",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityCosine",
+      "title": "main",
+      "actionSha256": "761c882c498b557b206107249e2fbcfe23ff60f1f26e646e4210f79134cbd98a",
+      "name": "Compute Raw and Normalized Cosine Similarity",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityDotProduct",
+      "title": "main",
+      "actionSha256": "7d7f0bf63a3871a56df88c55d6d5e81c4404a7447cebae6a713f498db15e635e",
+      "name": "Compute Raw and Normalized Dot Products",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityEuclidean",
+      "title": "main",
+      "actionSha256": "039cd71bf2c4e59b2a61141123e73452d0c6796e82e828d280be950e501f9384",
+      "name": "Compute Raw and Normalized Euclidean Distances",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/stdDevPop",
+      "title": "main",
+      "actionSha256": "afdb393803aae8254cfbcf2ab0a54f7e819668ef5fefe646095b360ba9262b1e",
+      "name": "Find the Directors with the Most Varied Ratings",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/stdDevSamp",
+      "title": "main",
+      "actionSha256": "da5aa827655931d1df76e3118176e51f7d4da003dc04a20eb1d6311fabb3afa0",
+      "name": "Find the Directors with the Most Varied Sampled Ratings",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/substr",
+      "title": "main",
+      "actionSha256": "2b76bac3b7a35957d453ce8f7ec257a9fecb726124b44b6226e312981cdf3aaa",
+      "name": "Split Titles into Two Parts",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/sum",
+      "title": "main",
+      "actionSha256": "71390247d6d31ae4b9cbf51c29648ee2bb46e43474602550df84e0c08b5225ff",
+      "name": "Total the Votes by Rating",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/toHashedIndexKey",
+      "title": "main",
+      "actionSha256": "799d9684b84aac32629867f268a98d012b4426c697157b36769341364b88e174",
+      "name": "Hash a String Value",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/bucketAuto",
+      "title": "Multi-Faceted Aggregation",
+      "actionSha256": "49c497fa22b49783b1df464f3eb1938f1e8ca2f690771b7bb759cf6042ca1313",
+      "owner": "aggregation/stages/bucketAuto/multiFacetedAggregation",
+      "reason": "the AsPipeline fixture tests the same example as a pipeline list"
+    },
+    {
+      "page": "aggregation/stages/changeStream",
+      "title": "main",
+      "actionSha256": "c7b41eadb79149ce317163d6e02efa3551551fd91e9c2e61d40544733f4bfee4",
+      "name": "Open a Change Stream",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/changeStreamSplitLargeEvent",
+      "title": "main",
+      "actionSha256": "93f73aef6deac8d63fb3888a36b4d1013b7a438b16b710b9f2fc61364bb10276",
+      "name": "Split a Large Change Event",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/currentOp",
+      "title": "main",
+      "actionSha256": "030833abe66b5010e1ad768cb461b4434d7d3289c5a83e2ccd388a7ff74a2964",
+      "owner": "aggregation/stages/currentOp/inactiveSessionsReplicaSet",
+      "reason": "the sharded-cluster fixtures run the same example on other topologies"
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "main",
+      "actionSha256": "0b8c38bc0cb8bfa1dd7d46446a1a31898fb3e717d9b0525158fe3eabd7657b61",
+      "name": "Summarize Ratings into Another Collection",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/planCacheStats",
+      "title": "Find Cache Entry Details for a Query Hash",
+      "actionSha256": "41f810575e2a2f27f90e5db0ca0f282d533759c52329575ed1c53c37f3582475",
+      "owner": "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
+      "reason": "its name is the example's title; the other fixture holds the same example under the page's later title"
+    },
+    {
+      "page": "aggregation/stages/planCacheStats",
+      "title": "main",
+      "actionSha256": "765ee31913796b69459dc41e9283d927ced627ebb30433792b28a79a25507816",
+      "name": "Populate the Plan Cache",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Include Specific Fields from Embedded Documents",
+      "actionSha256": "f398fb4337ec993a21c9853230ee5bb28aa545539addcee0262f18fc0d54f80d",
+      "owner": "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+      "reason": "the AsStage fixture tests the same example built as a stage"
+    },
+    {
+      "page": "aggregation/stages/querySettings",
+      "title": "main",
+      "actionSha256": "415e2de99a5204c0b349852f37c78b452b6017228665df712c7c4f28b639bce9",
+      "name": "Show the Debug Query Shape",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/queryStats",
+      "title": "main",
+      "actionSha256": "288929e2472bc93b5617f57e3401f5ce3a9b8579aba823372f815ba922f01cdc",
+      "name": "Return Query Statistics",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/rankFusion",
+      "title": "main",
+      "actionSha256": "c4871e0499a25d9f92545f72679122a16ef1d2a2cd514d387b5a72018b4a611e",
+      "name": "Combine Vector and Text Search Ranks",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/scoreFusion",
+      "title": "main",
+      "actionSha256": "2d6d65f7de803401276c55fbb86f847215ae51a080176a56dcaab7302d331433",
+      "name": "Combine Vector and Text Search Scores",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    }
+  ]
+}

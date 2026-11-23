@@ -34,6 +34,7 @@ Every command below runs through the exec plugin from the repository root, after
 | --- | --- |
 | `audits/catalog/documented-examples.json` | Every example on the current operator pages, with its owner; unowned examples keep their source text. |
 | `audits/catalog/dsl-bindings.json` | Reviewed MQL-to-Morphia factory bindings the generator uses. |
+| `audits/catalog/example-names.json` | Reviewed names for examples with generic titles, and owners for examples several fixtures match. |
 | `audits/catalog/generation-review.json` | The generated families, the reviewed exclusions with their evidence, and the sample-dataset collections. |
 | `audits/catalog/fixture-migration.json` | The ledger of legacy cases moved onto the case runner, with their documented sources. |
 | `audits/catalog/cutover.json` | Legacy cases that stay on the legacy path, with the check that fails and its first difference. |
@@ -112,7 +113,9 @@ To cover more examples, read `gaps.json`:
 - **UNBOUND** names the first node without a binding, such as `stage $match has no binding`. Add
   the binding to `dsl-bindings.json` with the factory's exact erased parameter types.
 - **SOURCE_UNSUPPORTED** means the page's mongosh text does not lower; that is parser work.
-- **UNNAMED** and **AMBIGUOUS** need a descriptive, unique name for the example.
+- **UNNAMED** and **AMBIGUOUS** need a review in `example-names.json`: a descriptive name, or the
+  owner among the matching fixtures, keyed by the action block's `sha256` from the inventory. Then
+  rerun `inventory`; `reviews.stale` counts reviews whose example changed.
 - **EXCLUDED** is a reviewed exclusion; its reason says what would lift it.
 
 When a generated case fails integration, read why in `integration.log`. Never loosen the scenario

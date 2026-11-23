@@ -27,6 +27,7 @@ import dev.morphia.audits.generate.DslBindingCatalog
 import dev.morphia.audits.generate.ExampleInventory
 import dev.morphia.audits.generate.GenerationGaps
 import dev.morphia.audits.generate.GenerationReview
+import dev.morphia.audits.generate.ReviewedExamples
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
@@ -199,6 +200,8 @@ object AuditJson {
     fun generationGaps(json: String): GenerationGaps = read(json, GenerationGaps::class.java)
 
     fun exampleInventory(json: String): ExampleInventory = read(json, ExampleInventory::class.java)
+
+    fun reviewedExamples(json: String): ReviewedExamples = read(json, ReviewedExamples::class.java)
 
     fun publicationJournal(json: String): PublicationJournal =
         read(json, PublicationJournal::class.java)

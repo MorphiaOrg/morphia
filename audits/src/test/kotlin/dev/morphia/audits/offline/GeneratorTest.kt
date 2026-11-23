@@ -17,6 +17,9 @@ import dev.morphia.audits.generate.Exclusion
 import dev.morphia.audits.generate.GapKind
 import dev.morphia.audits.generate.GenerationReview
 import dev.morphia.audits.generate.MethodRef
+import dev.morphia.audits.generate.ReviewedExample
+import dev.morphia.audits.generate.ReviewedExamples
+import dev.morphia.audits.repairs.BlockRole
 import dev.morphia.audits.repairs.FixtureMigrationLedger
 import dev.morphia.audits.repairs.FormSource
 import java.nio.file.Files
@@ -175,6 +178,79 @@ class GeneratorTest {
         )
         assertEquals(listOf("no operator directive"), inventory.skipped.map { it.detail })
         assertEquals(inventory, AuditJson.exampleInventory(AuditJson.write(inventory)))
+    }
+
+    /** A reviewed name stands in for a generic title; a stale review is counted, not applied. */
+    @Test
+    fun reviewedNamesResolveGenericTitles() {
+        val first = inventory()
+        val main =
+            first.pages.single { it.operator == "bitAnd" }.examples.single { it.title == "main" }
+        val action = main.blocks.single { it.role == BlockRole.ACTION }
+        fun review(vararg examples: ReviewedExample) =
+            write(
+                directory.resolve("repository/${DocumentedExamples.REVIEWED}"),
+                AuditJson.write(ReviewedExamples(examples = examples.toList())),
+            )
+        review(
+            ReviewedExample(
+                "aggregation/expressions/bitAnd",
+                "main",
+                action.sha256,
+                name = "AND a Field with One",
+                reason = "untitled",
+            ),
+            ReviewedExample(
+                "aggregation/expressions/bitAnd",
+                "main",
+                "0".repeat(64),
+                name = "Changed Since",
+                reason = "its example changed",
+            ),
+        )
+        val named = inventory()
+        val example =
+            named.pages.single { it.operator == "bitAnd" }.examples.single { it.title == "main" }
+        assertEquals(
+            Triple(ExampleStatus.UNOWNED, "andAFieldWithOne", "AND a Field with One"),
+            Triple(example.status, example.stem, example.name),
+        )
+        assertEquals(1, named.summary["reviews.stale"])
+        val source =
+            CaseGenerator.generate(
+                    named,
+                    bindings.copy(
+                        bindings =
+                            bindings.bindings +
+                                DslBinding(
+                                    "\$bitAnd",
+                                    BindingPosition.EXPRESSION,
+                                    BindingForm.POSITIONAL,
+                                    "$expressions.MathExpressions",
+                                    "bitAnd",
+                                    listOf("java.lang.Object", "java.lang.Object"),
+                                )
+                    ),
+                    GenerationReview(families = listOf("aggregation/expressions")),
+                    emptySet(),
+                )
+                .files
+                .getValue(
+                    "core/src/test/java/dev/morphia/test/generated/expressions/TestBitAnd.java"
+                )
+        assertTrue("@DisplayName(\"AND a Field with One\")" in source, source)
+        // A review names an example or its owner, never both.
+        review(
+            ReviewedExample(
+                "aggregation/expressions/bitAnd",
+                "main",
+                action.sha256,
+                name = "x",
+                owner = "y",
+                reason = "both",
+            )
+        )
+        assertThrows(IllegalArgumentException::class.java) { inventory() }
     }
 
     private val expressions = "dev.morphia.aggregation.expressions"
@@ -389,7 +465,8 @@ class GeneratorTest {
         assertEquals("sample_mflix", scenario.getString("dataset").value)
         assertTrue("sample_mflix" in scenario.getDocument("skipped").getString("results").value)
         assertEquals(
-            listOf("EQ_SHORTHAND", "FIELD_OPERATORS_AND"),
+            // $top's named arguments may come in any order.
+            listOf("EQ_SHORTHAND", "FIELD_OPERATORS_AND", "NAMED_ARGUMENTS"),
             scenario.getDocument("comparison").getArray("rules").map { it.asString().value },
         )
         assertEquals(

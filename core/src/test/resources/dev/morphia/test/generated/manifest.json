@@ -565,6 +565,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/max/useInSetWindowFieldsStage/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMax#testUseInSetWindowFieldsStage"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/maxN-array-element/findTheTopTwoCastMembers",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/maxN-array-element/findTheTopTwoCastMembers/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMaxNArrayElement#findTheTopTwoCastMembers"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "scenario" : "/dev/morphia/test/aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup/scenario.json",
@@ -1892,6 +1897,10 @@
     "sha256" : "4f95b5f229f7fb00e340c3ded0f48ca1444335c71152a6f4a6a39c14c4acca8b"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMaxNArrayElement.java",
+    "sha256" : "cb41ee0b3be918fa7cd34e2621fe6edfded90ba044f9aeea5c5e1c3fef06ede4"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMinN.java",
     "sha256" : "bc0d5fc21f1a298c678e407a4aafaf07c778dd0259ca7e8ec150e7c004d8111d"
   }, {
@@ -3033,31 +3042,35 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingAcrossMultipleYears/scenario.json",
-    "sha256" : "386a320bce697eb4944f465f8423cd9b447cdfd1180d6b6b625935e53b1a2e77"
+    "sha256" : "a0d5201577c5074deb78b21f253ca42d331adb83e59dc28885d11841e7829239"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingInAGenre/scenario.json",
-    "sha256" : "ca01406e371ac6d641ed62694c18090af9777d6b061a58ddd5850f7e6228f790"
+    "sha256" : "4128485c63db3adfac11548496f0eb6fa296f1392f2054644be532dc740cd246"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/findTheThreeLowestRatedMoviesInASingleGenre/scenario.json",
-    "sha256" : "22053109001193c7bb877b43311df5ac88254c3c38b4b70a95c1299539932466"
+    "sha256" : "c39d5e9bf578743e5c62e1860855de6de0b16c4f97e4b7e7eb1a36d4aec8e0d0"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesForASingleGenre/scenario.json",
-    "sha256" : "e6b04741d3a95332d0b6530eaba9197231cc7355c15a718a754a70252581ff02"
+    "sha256" : "5f7e61c8328a7846714106adb205ad931964ac8fba344b5f6d7e5fbbd6b06cda"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN-array-element/findTheTopTwoCastMembers/scenario.json",
+    "sha256" : "64842f658bd4a8276dea7f2206c0b6b3c408c2a8422081eedf45a2f70027904d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears/scenario.json",
-    "sha256" : "58b899553d1f69903b4888716263c7e729356dda9fcb1e8937acd58f6346536f"
+    "sha256" : "300e1f76bf307ecbbdb0c8bffba7bcfd4c211383c9041b655feece4bfadf67d1"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear/scenario.json",
-    "sha256" : "2f9a52e4361e091ed0af097cb67085665606deb9afa35bbf05c4696c3ef257ca"
+    "sha256" : "d64d3877583249c2452d3065799e494cc0e990f39f24201bd2e4f3d70b2582f5"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsForASingleGenre/scenario.json",
-    "sha256" : "39119f69699062f533d5e6facae77297af5757e7e0351fbb0f0e1152119c62f0"
+    "sha256" : "a256b42390db32b61d78f9017f2d1d62871ae0d1fc83547723ea437e112d2626"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
@@ -3065,15 +3078,15 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingAcrossMultipleRatings/scenario.json",
-    "sha256" : "a68bef250e2fcc2f0a3898874873d0aef30d0bfd6a8a4c5b986190fc7ea795b3"
+    "sha256" : "bb74126de8c6ba5ff3a9a4048ffbaa5d6455be9407e862ad4cb1b43c04ef7077"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingInAGenre/scenario.json",
-    "sha256" : "4ec04e434e2517e18ed05c11129fae06d55dee0c5f743a354fc40152ccd81e37"
+    "sha256" : "49525d957d45ca1c4eda22c8c8829da59f9b983aff38b251fc1d34cb208f4bc1"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
-    "sha256" : "60aa1a5031c2b402052f2c1f619abe9d70b98b55a5ca499a6e2df6ee8a53eae5"
+    "sha256" : "c00273bdf10a7ad0ba29a9e4f603963c802b0be41588284f15a273a45343d6ba"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",

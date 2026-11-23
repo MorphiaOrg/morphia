@@ -148,7 +148,8 @@
   "comparison": {
     "order": "ORDERED",
     "rules": [
-      "FIELD_OPERATORS_AND"
+      "FIELD_OPERATORS_AND",
+      "NAMED_ARGUMENTS"
     ],
     "ignore": [],
     "tolerance": null

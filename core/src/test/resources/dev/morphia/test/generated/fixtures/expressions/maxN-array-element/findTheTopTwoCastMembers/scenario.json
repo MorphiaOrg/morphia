@@ -1,0 +1,214 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/maxN-array-element/findTheTopTwoCastMembers",
+  "title": "Find the Top Two Cast Members",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/maxN-array-element.txt",
+    "blob": "4351c1c52f41b27c5d963e1106567f95c3bfd32e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "The Godfather",
+              "Spirited Away",
+              "The Dark Knight"
+            ]
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "topTwoCast": {
+            "$maxN": {
+              "n": {
+                "$numberInt": "2"
+              },
+              "input": "$cast"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "cast": {
+            "$numberInt": "1"
+          },
+          "topTwoCast": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Spirited Away"
+            }
+          },
+          {
+            "name": "cast",
+            "value": {
+              "array": [
+                {
+                  "text": "Rumi Hiiragi"
+                },
+                {
+                  "text": "Miyu Irino"
+                },
+                {
+                  "text": "Mari Natsuki"
+                },
+                {
+                  "text": "Takashi Naitè"
+                }
+              ]
+            }
+          },
+          {
+            "name": "topTwoCast",
+            "value": {
+              "array": [
+                {
+                  "text": "Takashi Naitè"
+                },
+                {
+                  "text": "Rumi Hiiragi"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Dark Knight"
+            }
+          },
+          {
+            "name": "cast",
+            "value": {
+              "array": [
+                {
+                  "text": "Christian Bale"
+                },
+                {
+                  "text": "Heath Ledger"
+                },
+                {
+                  "text": "Aaron Eckhart"
+                },
+                {
+                  "text": "Michael Caine"
+                }
+              ]
+            }
+          },
+          {
+            "name": "topTwoCast",
+            "value": {
+              "array": [
+                {
+                  "text": "Michael Caine"
+                },
+                {
+                  "text": "Heath Ledger"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Godfather"
+            }
+          },
+          {
+            "name": "cast",
+            "value": {
+              "array": [
+                {
+                  "text": "Marlon Brando"
+                },
+                {
+                  "text": "Al Pacino"
+                },
+                {
+                  "text": "James Caan"
+                },
+                {
+                  "text": "Richard S. Castellano"
+                }
+              ]
+            }
+          },
+          {
+            "name": "topTwoCast",
+            "value": {
+              "array": [
+                {
+                  "text": "Richard S. Castellano"
+                },
+                {
+                  "text": "Marlon Brando"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

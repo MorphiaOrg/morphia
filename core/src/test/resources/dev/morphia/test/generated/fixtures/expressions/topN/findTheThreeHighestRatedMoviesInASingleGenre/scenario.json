@@ -114,7 +114,8 @@
   "comparison": {
     "order": "ORDERED",
     "rules": [
-      "EQ_SHORTHAND"
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
     ],
     "ignore": [],
     "tolerance": null

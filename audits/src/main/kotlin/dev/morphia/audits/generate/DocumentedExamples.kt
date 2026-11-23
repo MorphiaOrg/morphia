@@ -1,5 +1,6 @@
 package dev.morphia.audits.generate
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.model.OperatorType
 import dev.morphia.audits.naming.DescriptiveNames
@@ -22,7 +23,10 @@ enum class ExampleStatus {
     UNOWNED,
     /** No test owns the example, and its title is generic, so it needs a reviewed name. */
     UNNAMED,
-    /** The example matches more than one owner, or shares its name with another example. */
+    /**
+     * The example matches more than one owner, or shares its name with another example; it keeps
+     * its source blocks for the review that resolves it.
+     */
     AMBIGUOUS,
 }
 
@@ -38,7 +42,26 @@ data class DocumentedExample(
     val owner: String? = null,
     val detail: String? = null,
     val blocks: List<SourceBlock> = emptyList(),
+    /** The reviewed name of an example whose title is generic; omitted when there is none. */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val name: String? = null,
 )
+
+/**
+ * A reviewed decision about one example, identified by its page (`context/operator`), its title and
+ * the SHA-256 of its action block, so a changed example comes back for review. Exactly one of
+ * [name] (a descriptive name for a generic title) and [owner] (the fixture that owns an example
+ * several fixtures match) is set, with the [reason].
+ */
+data class ReviewedExample(
+    val page: String,
+    val title: String,
+    val actionSha256: String,
+    val name: String? = null,
+    val owner: String? = null,
+    val reason: String,
+)
+
+data class ReviewedExamples(val schemaVersion: Int = 1, val examples: List<ReviewedExample>)
 
 /**
  * An operator page at the inventory's commit: `context` is the legacy package
@@ -74,6 +97,7 @@ object DocumentedExamples {
     const val PATH = "audits/catalog/documented-examples.json"
     private const val RESOURCES = "core/src/test/resources/dev/morphia/test"
     private const val LEDGER = "audits/catalog/fixture-migration.json"
+    const val REVIEWED = "audits/catalog/example-names.json"
     private val DIRECTIVES =
         mapOf(
             "expression" to "aggregation/expressions",
@@ -96,6 +120,18 @@ object DocumentedExamples {
     fun capture(repository: Path, pages: Path, sources: CurrentPages): ExampleInventory {
         val root = repository.toRealPath()
         val owned = owned(root).groupBy { it.fixture.substringBeforeLast('/') }
+        val reviewed =
+            root
+                .resolve(REVIEWED)
+                .takeIf { Files.isRegularFile(it) }
+                ?.let { AuditJson.reviewedExamples(Files.readString(it)).examples }
+                .orEmpty()
+        reviewed.forEach {
+            require((it.name == null) != (it.owner == null) && it.reason.isNotBlank()) {
+                "${it.page} ${it.title}: a review names an example or its owner, with a reason"
+            }
+        }
+        val used = mutableSetOf<ReviewedExample>()
         val documented = mutableListOf<DocumentedPage>()
         val skipped = mutableListOf<SkippedPage>()
         sources.pages.forEach { entry ->
@@ -136,7 +172,12 @@ object DocumentedExamples {
                     source,
                     read.pageBlob,
                     read.includes,
-                    examples(read.examples.map { it.name to it.blocks }, candidates),
+                    examples(
+                        read.examples.map { it.name to it.blocks },
+                        candidates,
+                        reviewed.filter { it.page == "$context/$operator" },
+                        used,
+                    ),
                 )
         }
         val examples = documented.flatMap { it.examples }
@@ -148,7 +189,13 @@ object DocumentedExamples {
             summary =
                 ExampleStatus.entries.associate { status ->
                     "examples.${status.name.lowercase()}" to examples.count { it.status == status }
-                } + mapOf("pages" to documented.size, "pages.skipped" to skipped.size),
+                } +
+                    mapOf(
+                        "pages" to documented.size,
+                        "pages.skipped" to skipped.size,
+                        // A review whose example changed or left no longer applies; it is redone.
+                        "reviews.stale" to (reviewed - used).size,
+                    ),
         )
     }
 
@@ -158,32 +205,60 @@ object DocumentedExamples {
     private fun examples(
         read: List<Pair<String, List<SourceBlock>>>,
         owners: List<Owned>,
+        reviewed: List<ReviewedExample>,
+        used: MutableSet<ReviewedExample>,
     ): List<DocumentedExample> {
+        val reviews =
+            read.map { (title, blocks) ->
+                val action = blocks.firstOrNull { it.role == BlockRole.ACTION }?.sha256
+                reviewed.singleOrNull { it.title == title && it.actionSha256 == action }
+            }
+        used += reviews.filterNotNull()
+        // A reviewed name stands in for a generic title.
+        val names = read.mapIndexed { index, (title, _) -> reviews[index]?.name ?: title }
         val stems =
-            read.map { (title, _) ->
+            names.map { title ->
                 if (DescriptiveNames.isGeneric(title)) null
                 else runCatching { DescriptiveNames.stem(title) }.getOrNull()
             }
         return read.mapIndexed { index, (title, blocks) ->
+            val review = reviews[index]
+            val name = review?.name
             val action = blocks.firstOrNull { it.role == BlockRole.ACTION }?.text?.let(::squeeze)
-            val byTitle = owners.filter { it.title == title }
+            val byTitle = owners.filter { it.title == title || name != null && it.title == name }
             val byAction =
                 if (byTitle.isNotEmpty() || action == null) emptyList()
                 else owners.filter { it.action != null && it.action in action }
             val matched = byTitle.ifEmpty { byAction }
             val stem = stems[index]
             when {
-                read.count { it.first == title } > 1 ->
+                review?.owner != null ->
+                    if (matched.any { it.fixture == review.owner })
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.OWNED,
+                            owner = review.owner,
+                            detail = "reviewed owner: ${review.reason}",
+                        )
+                    else
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.AMBIGUOUS,
+                            detail = "the reviewed owner ${review.owner} no longer matches",
+                        )
+                names.count { it == names[index] } > 1 ->
                     DocumentedExample(
                         title,
                         ExampleStatus.AMBIGUOUS,
                         detail = "the page has several examples titled \"$title\"",
+                        blocks = blocks,
                     )
                 matched.size > 1 ->
                     DocumentedExample(
                         title,
                         ExampleStatus.AMBIGUOUS,
                         detail = "matches ${matched.joinToString { it.fixture }}",
+                        blocks = blocks,
                     )
                 matched.size == 1 ->
                     DocumentedExample(
@@ -191,6 +266,7 @@ object DocumentedExamples {
                         ExampleStatus.OWNED,
                         owner = matched.single().fixture,
                         detail = if (byTitle.isEmpty()) "matched by action text" else null,
+                        name = name,
                     )
                 stem == null ->
                     DocumentedExample(
@@ -205,8 +281,16 @@ object DocumentedExamples {
                         ExampleStatus.AMBIGUOUS,
                         stem,
                         detail = "another example on the page has the name $stem",
+                        name = name,
                     )
-                else -> DocumentedExample(title, ExampleStatus.UNOWNED, stem, blocks = blocks)
+                else ->
+                    DocumentedExample(
+                        title,
+                        ExampleStatus.UNOWNED,
+                        stem,
+                        blocks = blocks,
+                        name = name,
+                    )
             }
         }
     }
