@@ -210,7 +210,8 @@ Every example on the current operator pages, with its owner, lives in `documente
    from a sparse Git clone. `fetch.py current` followed by `fetch.py pages` does the same through
    the GitHub API, which rate-limits.
 2. `GenerateMainKt inventory` extracts each page's examples and matches each one to an existing
-   fixture, by title or, if the title changed, by its action text. The matching uses the legacy RST
+   fixture: by title, or, if the title changed, by its action text, or else by its descriptive name
+   (the backport named every fixture for its example). The matching uses the legacy RST
    extractor, which is also how the fixtures were made.
 
 Each example gets one status:
@@ -283,9 +284,9 @@ Examples that are not generated are listed in `gaps.json`, each with its reason:
 | `EXCLUDED` | A reviewed exclusion. | Its reason says what would lift it. |
 | `PROTECTED_CLASS` | The operator's class holds a moved handwritten body. | Move the body or the case. |
 
-The aggregation expressions, query filters and query updates families are generated today. Stage
-pages need their family enabled and more bindings; documented projections and update options
-(`arrayFilters`) need generator and runner support.
+All four families are generated today: aggregation expressions and stages, query filters and
+updates. Most remaining gaps are bindings, database-level commands (`db.aggregate(...)`),
+documented projections and update options (`arrayFilters`).
 
 ### Candidates, integration and promotion
 

@@ -1,0 +1,191 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/unwindMultipleArrayFields",
+  "title": "Unwind Multiple Array Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unwind.txt",
+    "blob": "195393b7aefd488cbd70cbdab4478fde747707f1"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "Inception",
+              "The Dark Knight",
+              "Interstellar"
+            ]
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "genres": {
+            "$numberInt": "1"
+          },
+          "cast": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$unwind": "$cast"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "castAppearances": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Crime"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Drama"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Mystery"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Sci-Fi"
+            }
+          },
+          {
+            "name": "castAppearances",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

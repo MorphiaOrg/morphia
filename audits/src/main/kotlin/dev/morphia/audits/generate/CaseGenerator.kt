@@ -630,6 +630,12 @@ object CaseGenerator {
                 STRING ->
                     if (value.isString) literal(value.asString().value)
                     else throw Unbound("$path: ${value.bsonType} where $type is required")
+                "long" ->
+                    when {
+                        value.isInt32 -> "${value.asInt32().value}"
+                        value.isInt64 -> "${value.asInt64().value}L"
+                        else -> throw Unbound("$path: ${value.bsonType} where $type is required")
+                    }
                 NUMBER ->
                     when {
                         value.isInt32 -> "${value.asInt32().value}"

@@ -287,6 +287,35 @@ class GeneratorTest {
         )
     }
 
+    /**
+     * A fixture named for an example owns it even when its title and action text have changed since
+     * the fixture was written.
+     */
+    @Test
+    fun aFixtureWithTheExamplesNameOwnsIt() {
+        write(
+            directory.resolve(
+                "repository/core/src/test/resources/dev/morphia/test/aggregation/expressions/bitOr/" +
+                    "bitwiseOrWithALongAndInteger/name"
+            ),
+            "Bitwise OR with a Long\n",
+        )
+        val example =
+            inventory()
+                .pages
+                .single { it.operator == "bitOr" }
+                .examples
+                .single { it.title == "Bitwise ``OR`` with a Long and Integer" }
+        assertEquals(
+            Triple(
+                ExampleStatus.OWNED,
+                "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
+                "matched by name",
+            ),
+            Triple(example.status, example.owner, example.detail),
+        )
+    }
+
     /** A reviewed name stands in for a generic title; a stale review is counted, not applied. */
     @Test
     fun reviewedNamesResolveGenericTitles() {
@@ -680,7 +709,12 @@ class GeneratorTest {
         val review =
             AuditJson.generationReview(Files.readString(root.resolve(CaseGenerator.REVIEW)))
         assertEquals(
-            listOf("aggregation/expressions", "query/filters", "query/updates"),
+            listOf(
+                "aggregation/expressions",
+                "aggregation/stages",
+                "query/filters",
+                "query/updates",
+            ),
             review.families,
         )
         // The inventory's recorded source text is what generation reads; its digests must hold.

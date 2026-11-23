@@ -17,6 +17,35 @@
       "fields": {}
     },
     {
+      "operator": "$addToSet",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "addToSet",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$avg",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "avg",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$bitAnd",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -191,6 +220,20 @@
       "fields": {}
     },
     {
+      "operator": "$first",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "first",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$firstN",
       "position": "EXPRESSION",
       "form": "NAMED",
@@ -205,6 +248,20 @@
         "n",
         "input"
       ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$last",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "last",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
       "options": {},
       "fields": {}
     },
@@ -252,6 +309,21 @@
       "fields": {}
     },
     {
+      "operator": "$max",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "max",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$maxN",
       "position": "EXPRESSION",
       "form": "NAMED",
@@ -266,6 +338,21 @@
         "n",
         "input"
       ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$min",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "min",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
       "options": {},
       "fields": {}
     },
@@ -295,6 +382,35 @@
       "method": "mod",
       "parameters": [
         "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$multiply",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.MathExpressions",
+      "method": "multiply",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$push",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "push",
+      "parameters": [
         "java.lang.Object"
       ],
       "varargs": false,
@@ -360,6 +476,21 @@
       ],
       "options": {},
       "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$sum",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.AccumulatorExpressions",
+      "method": "sum",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
       "fields": {}
     },
     {
@@ -568,6 +699,20 @@
       "options": {}
     },
     {
+      "operator": "$count",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.Count",
+      "method": "count",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$group",
       "position": "STAGE",
       "form": "GROUP",
@@ -594,6 +739,20 @@
           ]
         }
       }
+    },
+    {
+      "operator": "$limit",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.Limit",
+      "method": "limit",
+      "parameters": [
+        "long"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     },
     {
       "operator": "$match",
@@ -666,6 +825,20 @@
       "options": {}
     },
     {
+      "operator": "$skip",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.Skip",
+      "method": "skip",
+      "parameters": [
+        "long"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$sort",
       "position": "STAGE",
       "form": "SORT",
@@ -691,6 +864,20 @@
           ]
         }
       }
+    },
+    {
+      "operator": "$sortByCount",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.SortByCount",
+      "method": "sortByCount",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     },
     {
       "operator": "$unwind",

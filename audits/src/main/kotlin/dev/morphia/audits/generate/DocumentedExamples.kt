@@ -32,8 +32,8 @@ enum class ExampleStatus {
 
 /**
  * One example on a current page. [owner] is the owning fixture, by title or, when the title changed
- * since the fixture was written, by its action text. An unowned example keeps its source [blocks],
- * so generation never needs the page.
+ * since the fixture was written, by its action text or its descriptive name. An unowned example
+ * keeps its source [blocks], so generation never needs the page.
  */
 data class DocumentedExample(
     val title: String,
@@ -229,8 +229,13 @@ object DocumentedExamples {
             val byAction =
                 if (byTitle.isNotEmpty() || action == null) emptyList()
                 else owners.filter { it.action != null && it.action in action }
-            val matched = byTitle.ifEmpty { byAction }
             val stem = stems[index]
+            // The descriptive-name backport named each fixture for its example, so a fixture with
+            // the example's name owns it even when the title or action text has changed since.
+            val byName =
+                if (byTitle.isNotEmpty() || byAction.isNotEmpty() || stem == null) emptyList()
+                else owners.filter { it.fixture.substringAfterLast('/') == stem }
+            val matched = byTitle.ifEmpty { byAction }.ifEmpty { byName }
             when {
                 review?.owner != null ->
                     if (matched.any { it.fixture == review.owner })
@@ -265,7 +270,12 @@ object DocumentedExamples {
                         title,
                         ExampleStatus.OWNED,
                         owner = matched.single().fixture,
-                        detail = if (byTitle.isEmpty()) "matched by action text" else null,
+                        detail =
+                            when {
+                                byTitle.isNotEmpty() -> null
+                                byAction.isNotEmpty() -> "matched by action text"
+                                else -> "matched by name"
+                            },
                         name = name,
                     )
                 stem == null ->

@@ -541,23 +541,11 @@
       "stem" : null,
       "title" : "Bitwise ``AND`` with Two Integers "
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "1aadffa313a8052ccf34cccc5fc442e15db9580eb0fd3fdb90a60d883f7432fe",
-        "text" : "db.switches.aggregate( [\n  { \n    $project: { \n      result: { \n        $bitAnd: [ \"$a\", Long(\"63\") ]\n      }\n    }\n  }\n])"
-      }, {
-        "role" : "DATA",
-        "sha256" : "b2a88d93c5c6a57747258e1afb0a59e50d7153194b9683d1440687a755ae7900",
-        "text" : "db.switches.insertMany( [\n    { _id: 0, a: Int32(0), b: Int32(127) },\n    { _id: 1, a: Int32(2), b: Int32(3) },\n    { _id: 2, a: Int32(3), b: Int32(5) }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "dd4f6c27a92b2caf6a7525bb9626602b11d80f5681ee5178b65be76ffe8a1d70",
-        "text" : "[\n  { _id: 0, result: Long(\"0\") }\n  { _id: 1, result: Long(\"2\") }\n  { _id: 2, result: Long(\"3\") }\n]"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "bitwiseAndWithALongAndInteger",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/expressions/bitAnd/bitwiseAndWithALongAndInteger",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Bitwise ``AND`` with a Long and Integer "
     } ],
     "includes" : [ {
@@ -611,23 +599,11 @@
       "stem" : null,
       "title" : "Bitwise ``OR`` with Two Integers "
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "3562bc55bfdf8a9d74f6a100315321a7eead79236e79543ef138d8a2915fab16",
-        "text" : "db.switches.aggregate( [\n  { \n    $project: { \n      result: { \n        $bitOr: [ \"$a\", Long(\"63\") ]\n      }\n    }\n  }\n])"
-      }, {
-        "role" : "DATA",
-        "sha256" : "b2a88d93c5c6a57747258e1afb0a59e50d7153194b9683d1440687a755ae7900",
-        "text" : "db.switches.insertMany( [\n    { _id: 0, a: Int32(0), b: Int32(127) },\n    { _id: 1, a: Int32(2), b: Int32(3) },\n    { _id: 2, a: Int32(3), b: Int32(5) }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "7f781c5dcb9db120b52f2671a70c7570d3a97f2b99b67d3b72116fc9d44f5703",
-        "text" : "[\n  { _id: 0, result: Long(\"0\") },\n  { _id: 1, result: Long(\"2\") },\n  { _id: 2, result: Long(\"3\") }\n]"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "bitwiseOrWithALongAndInteger",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Bitwise ``OR`` with a Long and Integer "
     } ],
     "includes" : [ {
@@ -6551,19 +6527,11 @@
       "stem" : null,
       "title" : "Adding Fields to an Embedded Document"
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "20083a5b7334419a85db9485000aef46fbcb3bec0e50fcb93c7693f1e9bb867e",
-        "text" : "db.movies.aggregate( [\n   { $match: { runtime: { $gt: 1000 } } },\n   {\n      $addFields: { runtime: { $add: [ \"$runtime\", 15 ] } }\n   }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "08430c1f571f50d496021e8d16151661684de58f4a9a89e0e9ae2b21354a6f3a",
-        "text" : "[\n  { _id: ..., title: 'Baseball', runtime: 1155 },\n  { _id: ..., title: 'Centennial', runtime: 1271 }\n]\n..."
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "overwritingAnExistingField",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/stages/addFields/overwritingAnExistingField",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ ],
@@ -8270,19 +8238,11 @@
       "stem" : null,
       "title" : "Include Specific Fields in Output Documents"
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "47227f0bf20295cd3cd125bd7d4cd6f3f0438e742f2c18bf2db95bb6cf52c337",
-        "text" : "db.movies.aggregate( [\n   { $match: { title: \"The Great Train Robbery\" } },\n   { $project : { _id: 0, title : 1, rated : 1 } },\n   { $limit: 1 }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "628c71d12c7b97c6ea537334bec0def92e30aa9a96c9ca4e294eac10b8178f8c",
-        "text" : "[ { title: 'The Great Train Robbery', rated: 'TV-G' } ]"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "suppressIdFieldInTheOutputDocuments",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/stages/project/suppressIdFieldInTheOutputDocuments",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Suppress _id Field in the Output Documents"
     }, {
       "blocks" : [ ],
@@ -8941,19 +8901,11 @@
       "stem" : null,
       "title" : "Adding Fields to an Embedded Document"
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "3b807cf2d4c9b9770f5340a630371b891ac255770c1a963ce3ca51ba36867cd2",
-        "text" : "db.movies.aggregate( [\n   { $match: { title: \"Baseball\" } },\n   { $set: { rated: \"UNRATED\" } }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "38ac7d3b077d70fc4407b44cea604a7ad530877aadf8aadb269858501d853f8a",
-        "text" : "[\n  { _id: ..., title: 'Baseball', rated: 'UNRATED' }\n]\n..."
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "overwritingAnExistingField",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/stages/set/overwritingAnExistingField",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ ],
@@ -9545,19 +9497,11 @@
       "stem" : null,
       "title" : "Missing or Non-array Values"
     }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "c921bbbb4ec17afad0e42edf95716db567e167f3231b1e4651f3d64301adf106",
-        "text" : "db.movies.aggregate( [\n  {\n    $match: {\n      title: {\n        $in: [\n          \"Inception\",\n          \"Brave\",\n          \"La porta del cielo\",\n          \"Neecha Nagar\"\n        ]\n      }\n    }\n  },\n  { $project: { _id: 0, title: 1, genres: 1 } },\n  {\n    $unwind: {\n      path: \"$genres\",\n      preserveNullAndEmptyArrays: true\n    }\n  }\n] )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "d0053fa65e56cd16ee5a9469c86fbf4cd0e3d116a23565c4545a520ad0c0977d",
-        "text" : "[\n  {\n    title: 'La porta del cielo'\n  },\n  {\n    title: 'Neecha Nagar'\n  },\n  {\n    genres: 'Animation',\n    title: 'Brave'\n  },\n  {\n    genres: 'Adventure',\n    title: 'Brave'\n  },\n  {\n    genres: 'Comedy',\n    title: 'Brave'\n  },\n  {\n    genres: 'Action',\n    title: 'Inception'\n  },\n  {\n    genres: 'Mystery',\n    title: 'Inception'\n  },\n  {\n    genres: 'Sci-Fi',\n    title: 'Inception'\n  }\n]"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "preserveNullAndEmptyArraysAndIncludeArrayIndex",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "preserveNullAndEmptyArrays and includeArrayIndex"
     }, {
       "blocks" : [ ],
@@ -10134,19 +10078,11 @@
   }, {
     "context" : "query/filters",
     "examples" : [ {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "6f38e367f7b7fb2449061ac27968800152d980828cf8792dfe638db14b883d05",
-        "text" : "db.movies.find(\n   { $expr: { $gt: [ \"$tomatoes.viewer.rating\", \"$tomatoes.critic.rating\" ] } },\n   { _id: 0, title: 1, \"tomatoes.viewer.rating\": 1, \"tomatoes.critic.rating\": 1 }\n).sort( { \"tomatoes.viewer.rating\": -1 } ).limit( 3 )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "4e9959f8cd9aac85c128f28a5b112d8f23a30bcb9ea3ca0ad6506aad5c112973",
-        "text" : "[\n  { title: 'I Am Maria', tomatoes: { viewer: { rating: 5 } } },\n  { title: 'Kadin Hamlet', tomatoes: { viewer: { rating: 5 } } },\n  { title: 'The Seine Meets Paris', tomatoes: { viewer: { rating: 5 } } }\n]"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "compareTwoFieldsFromASingleDocument",
+      "blocks" : [ ],
+      "detail" : "matched by name",
+      "owner" : "query/filters/expr/compareTwoFieldsFromASingleDocument",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Compare Two Fields from a Single Document"
     }, {
       "blocks" : [ ],
@@ -12718,9 +12654,9 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 437,
+    "examples.owned" : 444,
     "examples.unnamed" : 0,
-    "examples.unowned" : 145,
+    "examples.unowned" : 138,
     "pages" : 297,
     "pages.skipped" : 3,
     "reviews.stale" : 0

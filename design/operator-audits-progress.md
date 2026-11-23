@@ -18,7 +18,7 @@ how the audits work updates it too; this file records what each PR delivered.
 
 Every step of the plan (0–7) has been started. What stands:
 
-- **On the runner:** 373 legacy cases (372 converted, 1 migrated), plus 14 generated cases.
+- **On the runner:** 373 legacy cases (372 converted, 1 migrated), plus 26 generated cases.
   Core gate: 662 tests under each mapper; audits: 452.
 - **Generation:** inventory of mongodb/docs `e4b0c153` (297 pages read, tested snippets
   included; 437 examples owned, 145 unowned, none unnamed or ambiguous after review), reviewed DSL bindings checked against core's API, and the
@@ -51,7 +51,6 @@ Step 5, generation and cutover:
 - **Deferred cutover features:** generated projections (converted cases carry theirs), update options
   (`arrayFilters`, `upsert`), update results as the page reads them (the whole collection, not
   the filter's matches), alternative commands.
-- **The stage pages' family** (41 unowned examples, most on sample datasets).
 
 Step 6, monitoring:
 - **An accepted production baseline for capability discovery.** It is needed before
@@ -2681,3 +2680,16 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `selectRandomItemsFromACollection` is legacy-only: the page projects `{_id: 0, name: 1,
   registered: 1}`, and the test's projection omits the `_id` exclusion.
 - Totals: ledger 373 cases; 15 legacy-only; 183 legacy directories. Core: 692 under each mapper.
+
+## Stage family and common bindings (2026-11-23)
+
+- Branch audits-stage-family. `aggregation/stages` joins the generated families. New bindings:
+  `$limit`, `$skip`, `$count`, `$sortByCount`; `$sum`, `$avg`, `$first`, `$last`, `$push`,
+  `$addToSet`, `$max`, `$min`, `$multiply`. A `long` parameter takes integer literals.
+- The inventory now also matches an example to the fixture named for it (the backport named every
+  fixture for its example), when its title and action text have both changed: 7 examples, among
+  them `$project`'s "Suppress _id Field in the Output Documents", which generation would otherwise
+  have duplicated. `$bitOr`'s "Bitwise OR with a Long and Integer" is owned this way, so its
+  generator exclusion went away (the page error stays in #4563).
+- 12 more generated cases (26 in all), integrated under both mappers and promoted. Inventory: 444
+  owned, 138 unowned. Core: 704 tests under each mapper; audits: 459.

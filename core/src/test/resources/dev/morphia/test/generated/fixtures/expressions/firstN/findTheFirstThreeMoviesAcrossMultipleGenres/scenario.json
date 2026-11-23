@@ -1,0 +1,345 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/firstN/findTheFirstThreeMoviesAcrossMultipleGenres",
+  "title": "Find the First Three Movies Across Multiple Genres",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/firstN.txt",
+    "blob": "0bc605aac52ba143b2d5c2f4be44cb68254dcafe"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "movies": {
+            "$firstN": {
+              "input": [
+                "$title",
+                "$year"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "The Perils of Pauline"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1914"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "From Hand to Mouth"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1919"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "For Heaven's Sake"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1926"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Robin Hood"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1922"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Peter Pan"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1924"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Thief of Bagdad"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1924"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1911"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1911"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Gertie the Dinosaur"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1914"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Regeneration"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1915"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Salomè"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1922"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Napoleon"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1927"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1911"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1911"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Gertie the Dinosaur"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1914"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

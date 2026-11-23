@@ -1,0 +1,190 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/addToSet/collectTheGenresOfEachDirector",
+  "title": "Collect the Genres of Each Director",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/addToSet.txt",
+    "blob": "0ce8087c09957d3d8a7ded7498b8162ce0ab553a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$directors"
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$directors",
+          "genres": {
+            "$addToSet": "$genres"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A. Dean Bell"
+            }
+          },
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Crime"
+                },
+                {
+                  "text": "Drama"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A. Karunakaran"
+            }
+          },
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Romance"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A. Vanichkin"
+            }
+          },
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Animation"
+                },
+                {
+                  "text": "Fantasy"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A.J. Edwards"
+            }
+          },
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Biography"
+                },
+                {
+                  "text": "Drama"
+                },
+                {
+                  "text": "History"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A.R. Murugadoss"
+            }
+          },
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Drama"
+                },
+                {
+                  "text": "Sci-Fi"
+                },
+                {
+                  "text": "Thriller"
+                },
+                {
+                  "text": "Action"
+                },
+                {
+                  "text": "Mystery"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}
