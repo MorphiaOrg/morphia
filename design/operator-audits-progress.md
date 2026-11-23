@@ -2758,3 +2758,6 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - `audits/discover.sh` runs the coverage step; the workflow's clone widens its sparse set and installs
   the pinned parser, and the Publish job files the coverage findings. A local run at `e4b0c153`
   reproduced the inventory and the coverage states. The server matrix stays at 8.2 (user's decision).
+- Per the user: the Atlas Search and hybrid-search stages, the diagnostic and administration stages,
+  and the Queryable Encryption operators are excluded with their reasons (32 exclusions with facets);
+  14 missing APIs remain, all new server expressions.

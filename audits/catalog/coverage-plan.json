@@ -2563,6 +2563,276 @@
       }
     },
     "reason" : "$substr is a deprecated alias of $substrBytes, which Morphia builds"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$search"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$searchMeta"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$vectorSearch"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$rankFusion"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$scoreFusion"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$score"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSearchIndexes"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : "section-output-errors-d64f4648f905",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSearchIndexes"
+      }
+    },
+    "reason" : "an Atlas Search or hybrid-search stage that runs only on MongoDB Atlas; Morphia does not build Atlas Search pipelines"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-how-querystats-samples-operations-3443fa7b7a08",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-sharded-cluster-behavior-17a44d0d05f8",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-output-cec9db6fe2d6",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-output-plan-shape-counters-1ae5aa9f2cae",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-output-query-shape-delete-command-query-shape-b2bce0331b83",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-output-query-shape-insert-command-query-shape-d28196d1153f",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : "section-output-query-shape-update-command-query-shape-9010951a1c37",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$queryStats"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$querySettings"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSessions"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listLocalSessions"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listSampledQueries"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$listClusterCatalog"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$shardedDataDistribution"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$changeStreamSplitLargeEvent"
+      }
+    },
+    "reason" : "a server diagnostic or administration stage that reports on the deployment rather than querying data; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrContains"
+      }
+    },
+    "reason" : "a Queryable Encryption operator, usable only on encrypted fields through the client-side encryption setup; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrStartsWith"
+      }
+    },
+    "reason" : "a Queryable Encryption operator, usable only on encrypted fields through the client-side encryption setup; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrEndsWith"
+      }
+    },
+    "reason" : "a Queryable Encryption operator, usable only on encrypted fields through the client-side encryption setup; out of Morphia's scope"
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$encStrNormalizedEq"
+      }
+    },
+    "reason" : "a Queryable Encryption operator, usable only on encrypted fields through the client-side encryption setup; out of Morphia's scope"
   } ],
   "omissions" : [ ],
   "product" : "mongodb",
