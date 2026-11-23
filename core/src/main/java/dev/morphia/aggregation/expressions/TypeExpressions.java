@@ -137,6 +137,7 @@ public final class TypeExpressions {
      *
      * @param input the value to convert
      * @return the new expression
+     * @mongodb.server.release 8.0
      * @aggregation.expression $toUUID
      */
     public static Expression toUuid(Object input) {
