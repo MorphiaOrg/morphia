@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1795459357428,
+  "lastUpdate": 1795459360387,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -3096,6 +3096,298 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter\"} )",
             "value": 23.139145862564977,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]",
+            "email": "49699333+dependabot[bot]@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "05759847a73c50e1444ddf35163c18b7bea69bcf",
+          "message": "Bump the maven-dependencies group with 4 updates (#4526)\n\nBumps the maven-dependencies group with 4 updates:\n[ch.qos.logback:logback-classic](https://github.com/qos-ch/logback),\n[com.google.devtools.ksp:symbol-processing-api](https://github.com/google/ksp),\n[com.google.devtools.ksp:symbol-processing-common-deps](https://github.com/google/ksp)\nand\n[com.google.devtools.ksp:symbol-processing-aa-embeddable](https://github.com/google/ksp).\n\nUpdates `ch.qos.logback:logback-classic` from 1.6.6 to 1.6.7\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/qos-ch/logback/releases\">ch.qos.logback:logback-classic's\nreleases</a>.</em></p>\n<blockquote>\n<h2>Logback 1.6.7</h2>\n<h3>2026-11-14 Release of logback version 1.6.7</h3>\n<p>• The <code>scan</code> attribute of the\n<code>&lt;propertiesConfigurator&gt;</code> element, when\nset, now takes precedence over the <code>scan</code> attribute of the\ntop-level\n<code>&lt;configuration&gt;</code> element, in both directions. With\n<code>scan=&quot;true&quot;</code>\nand scanning disabled or unset at the top level, the properties file\nis now actually monitored for changes. Previously, the file was\nadded to the watch list but no task ever polled it. The scan period\nis taken from the <code>scanPeriod</code> attribute of the top-level\n<code>&lt;configuration&gt;</code> element. Conversely, with\n<code>scan=&quot;false&quot;</code> and\n<code>scan=&quot;true&quot;</code> at the top level, the properties file\nis no longer\nmonitored. Moreover, when several <code>&lt;propertiesConfigurator\nscan=&quot;true&quot;&gt;</code>\nelements are present without top-level scanning, all\nthe referenced files are now monitored. Previously, only the last\none was.</p>\n<p>• Two new modules, <em>logback-core-kryo</em> and\n<em>logback-classic-kryo</em>,\nencode and decode logging events with the <a\nhref=\"https://github.com/EsotericSoftware/kryo\">Kryo 5</a> serialization\nlibrary. <a\nhref=\"https://logback.qos.ch/manual/encoders.html#KryoEncoder\"><code>KryoEncoder</code></a>\nwrites <code>ILoggingEvent</code> instances into a\n<strong>compact binary stream</strong> and <code>KryoDecoder</code>\nreads them back. The\nstream is framed so that the decoder can recover from torn or truncated\nwrites, for example after a crash of the application. Both modules\nrequire\nJava 11 and ship with JPMS module descriptors, namely\n<code>ch.qos.logback.core.kryo</code>\nand <code>ch.qos.logback.classic.kryo</code>. See also the relevant\ndocumentation\nat <a\nhref=\"https://logback.qos.ch/manual/encoders.html#KryoEncoder\">KryoEncoder</a>.</p>\n<p>• Added the <code>toBooleanObject(String, Boolean)</code> and\n<code>toLopsidedBooleanObject</code> methods in\n<code>OptionHelper</code>.</p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/8b97c2fe6dd0cfa298ed3c3dd4f500b942edc63a\"><code>8b97c2f</code></a>\nprepare release 1.6.7</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/764b5c4613edb5c0920edfe7ff2404e778a0f0f1\"><code>764b5c4</code></a>\nkryo: use stream version 0 when KryoEncoder is set to Vanilla</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/b29f465c3a3556a5432f768d37f0b3e127ebc076\"><code>b29f465</code></a>\nkryo: remove V3 and V4 stream encodings, keep Vanilla and V5</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/d42c0129146630e7d769e9e8c2261bb68a3c04e5\"><code>d42c012</code></a>\nadd logback-core-kryo and logback-classic-kryo modules</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/069d51abcd1549d67f872fc4a315d585150f8087\"><code>069d51a</code></a>\nremove dead code</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/271d89c82cad3b7071478610e2eea2013210bb6f\"><code>271d89c</code></a>\nhonor scan attribute of &lt;propertiesConfigurator&gt; in both\ndirections</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/b01611fddfddd58ff03be4c7cbb37b6a4e7161ca\"><code>b01611f</code></a>\nadded a OptionHelper#toLopsidedBooleanObject</li>\n<li><a\nhref=\"https://github.com/qos-ch/logback/commit/b1267ca05580340c42aca3985394de6e9093e501\"><code>b1267ca</code></a>\nstart work on 1.6.7-SNAPSHOT</li>\n<li>See full diff in <a\nhref=\"https://github.com/qos-ch/logback/compare/v_1.6.6...v_1.6.7\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\nUpdates `com.google.devtools.ksp:symbol-processing-api` from 2.3.13 to\n2.3.14\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/google/ksp/releases\">com.google.devtools.ksp:symbol-processing-api's\nreleases</a>.</em></p>\n<blockquote>\n<h2>2.3.14</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Fix regression where library symbols disappear during concurrent KSP\nexecutions by only clearing <code>CoreJarFileSystem</code> handlers when\nno executions are active (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3286\">#3286</a>)</li>\n<li>Implement support for reading Kotlin context parameters\n(<code>KSContextParameter</code>) on functions and properties (<a\nhref=\"https://redirect.github.com/google/ksp/issues/2472\">#2472</a>)</li>\n<li>Skip Analysis API session initialization and processor execution\nduring incremental builds when no files are dirty (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3256\">#3256</a>)</li>\n<li>Fix <code>KSAnnotation.arguments</code> omitting <code>vararg</code>\nparameters when annotations are applied with no arguments (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3271\">#3271</a>)</li>\n<li>Align <code>KSAnnotation.defaultArguments</code> behavior across\nplatforms by not falling back to an empty array on JVM for array-typed\nparameters (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3233\">#3233</a>)</li>\n<li>Fix <code>KSTypeParameter.bounds</code> returning expanded type\narguments when the bound is a type alias (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3242\">#3242</a>)</li>\n</ul>\n<h2>Contributors</h2>\n<ul>\n<li>Thanks to <a\nhref=\"https://github.com/bcorso\"><code>@​bcorso</code></a>, and everyone\nwho reported bugs and participated in discussions!</li>\n</ul>\n<p>Full Changelog: <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">https://github.com/google/ksp/compare/2.3.13...2.3.14</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a3aaaabae570bae3ab4b84e72385483a14ab4498\"><code>a3aaaab</code></a>\nSkip impossible URL lookups</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/ff066aca3f800b8c61cf4d1c20e7518035247e84\"><code>ff066ac</code></a>\nFix potential memory leak in jarFileSystem cleanup</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/e2c1e7696a8f5380cb5515b4d6f2caa9774e269c\"><code>e2c1e76</code></a>\nRun LibraryRootsSearchScopeTest in isolation</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/5f7fa4b24ab2ebab15bff5da6a34539208108d50\"><code>5f7fa4b</code></a>\nKSP2: Skip the Analysis API session and processors when an incremental\nrun ha...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/3ed0f292b993796fa2df68d4ca203257e73dc015\"><code>3ed0f29</code></a>\nRead KSBackingFieldJavaImpl.modifiers from the underlying Java field\nPSI</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a2133e0e320a6bc14fac30010dfdfb5e2d342b12\"><code>a2133e0</code></a>\nRemove wrong leading '/' in test path</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/9dd67d2487a51853d68850ee2d21f17b6158ab9e\"><code>9dd67d2</code></a>\nFix KSBackingField case in <code>mapToJvmSignatureInternal</code></li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/cae8dc66f772085e12901220b17375c631ab7388\"><code>cae8dc6</code></a>\nAdd helper functions in KSPUnitTestSuite</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/96ba20a67aaf8fe7c48ceab49c2fb620c59aee71\"><code>96ba20a</code></a>\nOnly clear CoreJarFileSystem handlers when no concurrent KSP executions\nare a...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/1b0eb9a1696a03ffa53429078af9700b483dad47\"><code>1b0eb9a</code></a>\nFallback to root URLs in LibraryRootsSearchScope when JAR handlers are\ncleared</li>\n<li>Additional commits viewable in <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\nUpdates `com.google.devtools.ksp:symbol-processing-common-deps` from\n2.3.13 to 2.3.14\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/google/ksp/releases\">com.google.devtools.ksp:symbol-processing-common-deps's\nreleases</a>.</em></p>\n<blockquote>\n<h2>2.3.14</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Fix regression where library symbols disappear during concurrent KSP\nexecutions by only clearing <code>CoreJarFileSystem</code> handlers when\nno executions are active (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3286\">#3286</a>)</li>\n<li>Implement support for reading Kotlin context parameters\n(<code>KSContextParameter</code>) on functions and properties (<a\nhref=\"https://redirect.github.com/google/ksp/issues/2472\">#2472</a>)</li>\n<li>Skip Analysis API session initialization and processor execution\nduring incremental builds when no files are dirty (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3256\">#3256</a>)</li>\n<li>Fix <code>KSAnnotation.arguments</code> omitting <code>vararg</code>\nparameters when annotations are applied with no arguments (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3271\">#3271</a>)</li>\n<li>Align <code>KSAnnotation.defaultArguments</code> behavior across\nplatforms by not falling back to an empty array on JVM for array-typed\nparameters (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3233\">#3233</a>)</li>\n<li>Fix <code>KSTypeParameter.bounds</code> returning expanded type\narguments when the bound is a type alias (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3242\">#3242</a>)</li>\n</ul>\n<h2>Contributors</h2>\n<ul>\n<li>Thanks to <a\nhref=\"https://github.com/bcorso\"><code>@​bcorso</code></a>, and everyone\nwho reported bugs and participated in discussions!</li>\n</ul>\n<p>Full Changelog: <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">https://github.com/google/ksp/compare/2.3.13...2.3.14</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a3aaaabae570bae3ab4b84e72385483a14ab4498\"><code>a3aaaab</code></a>\nSkip impossible URL lookups</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/ff066aca3f800b8c61cf4d1c20e7518035247e84\"><code>ff066ac</code></a>\nFix potential memory leak in jarFileSystem cleanup</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/e2c1e7696a8f5380cb5515b4d6f2caa9774e269c\"><code>e2c1e76</code></a>\nRun LibraryRootsSearchScopeTest in isolation</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/5f7fa4b24ab2ebab15bff5da6a34539208108d50\"><code>5f7fa4b</code></a>\nKSP2: Skip the Analysis API session and processors when an incremental\nrun ha...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/3ed0f292b993796fa2df68d4ca203257e73dc015\"><code>3ed0f29</code></a>\nRead KSBackingFieldJavaImpl.modifiers from the underlying Java field\nPSI</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a2133e0e320a6bc14fac30010dfdfb5e2d342b12\"><code>a2133e0</code></a>\nRemove wrong leading '/' in test path</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/9dd67d2487a51853d68850ee2d21f17b6158ab9e\"><code>9dd67d2</code></a>\nFix KSBackingField case in <code>mapToJvmSignatureInternal</code></li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/cae8dc66f772085e12901220b17375c631ab7388\"><code>cae8dc6</code></a>\nAdd helper functions in KSPUnitTestSuite</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/96ba20a67aaf8fe7c48ceab49c2fb620c59aee71\"><code>96ba20a</code></a>\nOnly clear CoreJarFileSystem handlers when no concurrent KSP executions\nare a...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/1b0eb9a1696a03ffa53429078af9700b483dad47\"><code>1b0eb9a</code></a>\nFallback to root URLs in LibraryRootsSearchScope when JAR handlers are\ncleared</li>\n<li>Additional commits viewable in <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\nUpdates `com.google.devtools.ksp:symbol-processing-aa-embeddable` from\n2.3.13 to 2.3.14\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/google/ksp/releases\">com.google.devtools.ksp:symbol-processing-aa-embeddable's\nreleases</a>.</em></p>\n<blockquote>\n<h2>2.3.14</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Fix regression where library symbols disappear during concurrent KSP\nexecutions by only clearing <code>CoreJarFileSystem</code> handlers when\nno executions are active (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3286\">#3286</a>)</li>\n<li>Implement support for reading Kotlin context parameters\n(<code>KSContextParameter</code>) on functions and properties (<a\nhref=\"https://redirect.github.com/google/ksp/issues/2472\">#2472</a>)</li>\n<li>Skip Analysis API session initialization and processor execution\nduring incremental builds when no files are dirty (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3256\">#3256</a>)</li>\n<li>Fix <code>KSAnnotation.arguments</code> omitting <code>vararg</code>\nparameters when annotations are applied with no arguments (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3271\">#3271</a>)</li>\n<li>Align <code>KSAnnotation.defaultArguments</code> behavior across\nplatforms by not falling back to an empty array on JVM for array-typed\nparameters (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3233\">#3233</a>)</li>\n<li>Fix <code>KSTypeParameter.bounds</code> returning expanded type\narguments when the bound is a type alias (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3242\">#3242</a>)</li>\n</ul>\n<h2>Contributors</h2>\n<ul>\n<li>Thanks to <a\nhref=\"https://github.com/bcorso\"><code>@​bcorso</code></a>, and everyone\nwho reported bugs and participated in discussions!</li>\n</ul>\n<p>Full Changelog: <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">https://github.com/google/ksp/compare/2.3.13...2.3.14</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a3aaaabae570bae3ab4b84e72385483a14ab4498\"><code>a3aaaab</code></a>\nSkip impossible URL lookups</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/ff066aca3f800b8c61cf4d1c20e7518035247e84\"><code>ff066ac</code></a>\nFix potential memory leak in jarFileSystem cleanup</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/e2c1e7696a8f5380cb5515b4d6f2caa9774e269c\"><code>e2c1e76</code></a>\nRun LibraryRootsSearchScopeTest in isolation</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/5f7fa4b24ab2ebab15bff5da6a34539208108d50\"><code>5f7fa4b</code></a>\nKSP2: Skip the Analysis API session and processors when an incremental\nrun ha...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/3ed0f292b993796fa2df68d4ca203257e73dc015\"><code>3ed0f29</code></a>\nRead KSBackingFieldJavaImpl.modifiers from the underlying Java field\nPSI</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a2133e0e320a6bc14fac30010dfdfb5e2d342b12\"><code>a2133e0</code></a>\nRemove wrong leading '/' in test path</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/9dd67d2487a51853d68850ee2d21f17b6158ab9e\"><code>9dd67d2</code></a>\nFix KSBackingField case in <code>mapToJvmSignatureInternal</code></li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/cae8dc66f772085e12901220b17375c631ab7388\"><code>cae8dc6</code></a>\nAdd helper functions in KSPUnitTestSuite</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/96ba20a67aaf8fe7c48ceab49c2fb620c59aee71\"><code>96ba20a</code></a>\nOnly clear CoreJarFileSystem handlers when no concurrent KSP executions\nare a...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/1b0eb9a1696a03ffa53429078af9700b483dad47\"><code>1b0eb9a</code></a>\nFallback to root URLs in LibraryRootsSearchScope when JAR handlers are\ncleared</li>\n<li>Additional commits viewable in <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\nUpdates `com.google.devtools.ksp:symbol-processing-common-deps` from\n2.3.13 to 2.3.14\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/google/ksp/releases\">com.google.devtools.ksp:symbol-processing-common-deps's\nreleases</a>.</em></p>\n<blockquote>\n<h2>2.3.14</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Fix regression where library symbols disappear during concurrent KSP\nexecutions by only clearing <code>CoreJarFileSystem</code> handlers when\nno executions are active (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3286\">#3286</a>)</li>\n<li>Implement support for reading Kotlin context parameters\n(<code>KSContextParameter</code>) on functions and properties (<a\nhref=\"https://redirect.github.com/google/ksp/issues/2472\">#2472</a>)</li>\n<li>Skip Analysis API session initialization and processor execution\nduring incremental builds when no files are dirty (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3256\">#3256</a>)</li>\n<li>Fix <code>KSAnnotation.arguments</code> omitting <code>vararg</code>\nparameters when annotations are applied with no arguments (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3271\">#3271</a>)</li>\n<li>Align <code>KSAnnotation.defaultArguments</code> behavior across\nplatforms by not falling back to an empty array on JVM for array-typed\nparameters (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3233\">#3233</a>)</li>\n<li>Fix <code>KSTypeParameter.bounds</code> returning expanded type\narguments when the bound is a type alias (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3242\">#3242</a>)</li>\n</ul>\n<h2>Contributors</h2>\n<ul>\n<li>Thanks to <a\nhref=\"https://github.com/bcorso\"><code>@​bcorso</code></a>, and everyone\nwho reported bugs and participated in discussions!</li>\n</ul>\n<p>Full Changelog: <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">https://github.com/google/ksp/compare/2.3.13...2.3.14</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a3aaaabae570bae3ab4b84e72385483a14ab4498\"><code>a3aaaab</code></a>\nSkip impossible URL lookups</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/ff066aca3f800b8c61cf4d1c20e7518035247e84\"><code>ff066ac</code></a>\nFix potential memory leak in jarFileSystem cleanup</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/e2c1e7696a8f5380cb5515b4d6f2caa9774e269c\"><code>e2c1e76</code></a>\nRun LibraryRootsSearchScopeTest in isolation</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/5f7fa4b24ab2ebab15bff5da6a34539208108d50\"><code>5f7fa4b</code></a>\nKSP2: Skip the Analysis API session and processors when an incremental\nrun ha...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/3ed0f292b993796fa2df68d4ca203257e73dc015\"><code>3ed0f29</code></a>\nRead KSBackingFieldJavaImpl.modifiers from the underlying Java field\nPSI</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a2133e0e320a6bc14fac30010dfdfb5e2d342b12\"><code>a2133e0</code></a>\nRemove wrong leading '/' in test path</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/9dd67d2487a51853d68850ee2d21f17b6158ab9e\"><code>9dd67d2</code></a>\nFix KSBackingField case in <code>mapToJvmSignatureInternal</code></li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/cae8dc66f772085e12901220b17375c631ab7388\"><code>cae8dc6</code></a>\nAdd helper functions in KSPUnitTestSuite</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/96ba20a67aaf8fe7c48ceab49c2fb620c59aee71\"><code>96ba20a</code></a>\nOnly clear CoreJarFileSystem handlers when no concurrent KSP executions\nare a...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/1b0eb9a1696a03ffa53429078af9700b483dad47\"><code>1b0eb9a</code></a>\nFallback to root URLs in LibraryRootsSearchScope when JAR handlers are\ncleared</li>\n<li>Additional commits viewable in <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\nUpdates `com.google.devtools.ksp:symbol-processing-aa-embeddable` from\n2.3.13 to 2.3.14\n<details>\n<summary>Release notes</summary>\n<p><em>Sourced from <a\nhref=\"https://github.com/google/ksp/releases\">com.google.devtools.ksp:symbol-processing-aa-embeddable's\nreleases</a>.</em></p>\n<blockquote>\n<h2>2.3.14</h2>\n<h2>What's Changed</h2>\n<ul>\n<li>Fix regression where library symbols disappear during concurrent KSP\nexecutions by only clearing <code>CoreJarFileSystem</code> handlers when\nno executions are active (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3286\">#3286</a>)</li>\n<li>Implement support for reading Kotlin context parameters\n(<code>KSContextParameter</code>) on functions and properties (<a\nhref=\"https://redirect.github.com/google/ksp/issues/2472\">#2472</a>)</li>\n<li>Skip Analysis API session initialization and processor execution\nduring incremental builds when no files are dirty (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3256\">#3256</a>)</li>\n<li>Fix <code>KSAnnotation.arguments</code> omitting <code>vararg</code>\nparameters when annotations are applied with no arguments (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3271\">#3271</a>)</li>\n<li>Align <code>KSAnnotation.defaultArguments</code> behavior across\nplatforms by not falling back to an empty array on JVM for array-typed\nparameters (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3233\">#3233</a>)</li>\n<li>Fix <code>KSTypeParameter.bounds</code> returning expanded type\narguments when the bound is a type alias (<a\nhref=\"https://redirect.github.com/google/ksp/issues/3242\">#3242</a>)</li>\n</ul>\n<h2>Contributors</h2>\n<ul>\n<li>Thanks to <a\nhref=\"https://github.com/bcorso\"><code>@​bcorso</code></a>, and everyone\nwho reported bugs and participated in discussions!</li>\n</ul>\n<p>Full Changelog: <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">https://github.com/google/ksp/compare/2.3.13...2.3.14</a></p>\n</blockquote>\n</details>\n<details>\n<summary>Commits</summary>\n<ul>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a3aaaabae570bae3ab4b84e72385483a14ab4498\"><code>a3aaaab</code></a>\nSkip impossible URL lookups</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/ff066aca3f800b8c61cf4d1c20e7518035247e84\"><code>ff066ac</code></a>\nFix potential memory leak in jarFileSystem cleanup</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/e2c1e7696a8f5380cb5515b4d6f2caa9774e269c\"><code>e2c1e76</code></a>\nRun LibraryRootsSearchScopeTest in isolation</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/5f7fa4b24ab2ebab15bff5da6a34539208108d50\"><code>5f7fa4b</code></a>\nKSP2: Skip the Analysis API session and processors when an incremental\nrun ha...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/3ed0f292b993796fa2df68d4ca203257e73dc015\"><code>3ed0f29</code></a>\nRead KSBackingFieldJavaImpl.modifiers from the underlying Java field\nPSI</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/a2133e0e320a6bc14fac30010dfdfb5e2d342b12\"><code>a2133e0</code></a>\nRemove wrong leading '/' in test path</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/9dd67d2487a51853d68850ee2d21f17b6158ab9e\"><code>9dd67d2</code></a>\nFix KSBackingField case in <code>mapToJvmSignatureInternal</code></li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/cae8dc66f772085e12901220b17375c631ab7388\"><code>cae8dc6</code></a>\nAdd helper functions in KSPUnitTestSuite</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/96ba20a67aaf8fe7c48ceab49c2fb620c59aee71\"><code>96ba20a</code></a>\nOnly clear CoreJarFileSystem handlers when no concurrent KSP executions\nare a...</li>\n<li><a\nhref=\"https://github.com/google/ksp/commit/1b0eb9a1696a03ffa53429078af9700b483dad47\"><code>1b0eb9a</code></a>\nFallback to root URLs in LibraryRootsSearchScope when JAR handlers are\ncleared</li>\n<li>Additional commits viewable in <a\nhref=\"https://github.com/google/ksp/compare/2.3.13...2.3.14\">compare\nview</a></li>\n</ul>\n</details>\n<br />\n\n\nDependabot will resolve any conflicts with this PR as long as you don't\nalter it yourself. You can also trigger a rebase manually by commenting\n`@dependabot rebase`.\n\n[//]: # (dependabot-automerge-start)\n[//]: # (dependabot-automerge-end)\n\n---\n\n<details>\n<summary>Dependabot commands and options</summary>\n<br />\n\nYou can trigger Dependabot actions by commenting on this PR:\n- `@dependabot rebase` will rebase this PR\n- `@dependabot recreate` will recreate this PR, overwriting any edits\nthat have been made to it\n- `@dependabot show <dependency name> ignore conditions` will show all\nof the ignore conditions of the specified dependency\n- `@dependabot ignore <dependency name> major version` will close this\ngroup update PR and stop Dependabot creating any more for the specific\ndependency's major version (unless you unignore this specific\ndependency's major version or upgrade to it yourself)\n- `@dependabot ignore <dependency name> minor version` will close this\ngroup update PR and stop Dependabot creating any more for the specific\ndependency's minor version (unless you unignore this specific\ndependency's minor version or upgrade to it yourself)\n- `@dependabot ignore <dependency name>` will close this group update PR\nand stop Dependabot creating any more for the specific dependency\n(unless you unignore this specific dependency or upgrade to it yourself)\n- `@dependabot unignore <dependency name>` will remove all of the ignore\nconditions of the specified dependency\n- `@dependabot unignore <dependency name> <ignore condition>` will\nremove the ignore condition of the specified dependency and ignore\nconditions\n\n\n</details>\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-11-20T10:00:13Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/05759847a73c50e1444ddf35163c18b7bea69bcf"
+        },
+        "date": 1795459359853,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 880.1314440064665,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2801.029505769473,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9588.500454088198,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4590.159214731915,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 560.2931410862434,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 34846.43565182713,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2807.0582099725993,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 2543.8519089411598,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.decode ( {\"variant\":\"critter\"} )",
+            "value": 26979.883425647873,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.encode ( {\"variant\":\"critter\"} )",
+            "value": 25457.496378316086,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.queryDocument ( {\"variant\":\"critter\"} )",
+            "value": 1557.227127751463,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.translatedPath ( {\"variant\":\"critter\"} )",
+            "value": 353.220350390278,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter\"} )",
+            "value": 241.4475668,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanEverything ( {\"variant\":\"critter\"} )",
+            "value": 1182.1643542,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"critter\"} )",
+            "value": 411.440834,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 902.3383851192319,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2834.795518717614,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9869.750314164026,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4699.430750056646,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 570.9690716797171,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 35225.36929330698,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2887.319597550787,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 2596.1392559412106,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 852.7891453701072,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2613.8522138508533,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9253.889226596217,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4712.183728046959,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 412.23736338071456,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 39646.73916327786,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2504.5261847495613,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 1852.965739438982,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copy ( {\"variant\":\"critter\"} )",
+            "value": 4.378959306821434,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copyAndDecode ( {\"variant\":\"critter\"} )",
+            "value": 8.746041868768446,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"AS_WRITTEN\",\"variant\":\"critter\"} )",
+            "value": 888.7609449338593,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"NO_DISCRIMINATOR\",\"variant\":\"critter\"} )",
+            "value": 1326.237176517361,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"SCHEMA_DRIFT\",\"variant\":\"critter\"} )",
+            "value": 5085.8473280767,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 2146.488404846892,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 10128.06869756325,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 962.6558063148143,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2928.5409525317796,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 1751.8762020643355,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 7315.393016536812,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 889.1029465408411,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2770.97380480126,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter\"} )",
+            "value": 22.813319930186914,
             "unit": "us/op",
             "extra": "iterations: 3\nforks: 5\nthreads: 1"
           }
