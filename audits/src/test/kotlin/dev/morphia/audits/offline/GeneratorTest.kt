@@ -789,6 +789,150 @@ class GeneratorTest {
         )
     }
 
+    /**
+     * Write stages with the committed bindings: `$merge`'s options, one of which spreads an array
+     * over varargs and one of which is a camel-case enum value, and the shorthand of a named stage.
+     */
+    @Test
+    fun writeStagesTakeTheirShorthandsAndOptions() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val orders = "db.orders.insertMany( [ { _id: 1, region: \"east\", total: 5 } ] )"
+        pages.operator("merge", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    code(orders),
+                    section(
+                        "Keep Existing Totals",
+                        code(
+                            "db.orders.aggregate( [ { \$merge: { whenMatched: \"keepExisting\", " +
+                                "into: \"totals\", on: [ \"_id\", \"region\" ], " +
+                                "whenNotMatched: \"insert\" } } ] )"
+                        ),
+                        code("db.totals.find()"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                    section(
+                        "Merge Into a Collection",
+                        code("db.orders.aggregate( [ { \$merge: \"totals\" } ] )"),
+                        code("db.totals.find()"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                    section(
+                        "Merge With Only Its Target",
+                        code("db.orders.aggregate( [ { \$merge: { into: \"totals\" } } ] )"),
+                        code("db.totals.find()"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                    section(
+                        "Merge On One Field",
+                        code(
+                            "db.orders.aggregate( [ { \$merge: { into: \"totals\", " +
+                                "on: [ \"_id\" ], whenMatched: \"fail\" } } ] )"
+                        ),
+                        code("db.totals.find()"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                    section(
+                        "Merge Into Another Database",
+                        code(
+                            "db.orders.aggregate( [ { \$merge: { into: { db: \"reporting\", " +
+                                "coll: \"totals\" } } } ] )"
+                        ),
+                        code("db.totals.find()"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                )
+            )
+        }
+        pages.operator("unwind", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    code(orders),
+                    section(
+                        "Unwind a Path",
+                        code("db.orders.aggregate( [ { \$unwind: { path: \"\$region\" } } ] )"),
+                        code("[ { _id: 1, region: \"east\", total: 5 } ]"),
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val committed =
+            AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH)))
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                committed,
+                GenerationReview(families = listOf("aggregation/stages")),
+                emptySet(),
+            )
+        // The runner refuses a stage naming another database, so generation does too; spellings
+        // Morphia writes otherwise, with no form rule equating them, are gaps.
+        assertEquals(
+            setOf(
+                Triple(
+                    "Merge Into Another Database",
+                    GapKind.SOURCE_UNSUPPORTED,
+                    "a stage naming another database: \$merge",
+                ),
+                Triple(
+                    "Merge With Only Its Target",
+                    GapKind.UNBOUND,
+                    "/pipeline/0/\$merge: Morphia writes \$merge without options as its shorthand",
+                ),
+                Triple(
+                    "Merge On One Field",
+                    GapKind.UNBOUND,
+                    "/pipeline/0/\$merge/on: Morphia writes a one-item on as its item",
+                ),
+            ),
+            generation.gaps.map { Triple(it.title, it.kind, it.detail) }.toSet(),
+        )
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/stages/TestMerge.java"
+            )
+        assertTrue(
+            "merge(\"totals\").whenMatched(WhenMatched.KEEP_EXISTING).on(\"_id\", \"region\")" +
+                ".whenNotMatched(WhenNotMatched.INSERT)" in source,
+            source,
+        )
+        assertTrue(
+            "aggregation.pipeline(\n                        merge(\"totals\"))" in source,
+            source,
+        )
+        assertTrue("import com.mongodb.client.model.MergeOptions.WhenMatched;" in source, source)
+        // Each case reads the collection its stage writes.
+        generation.cases
+            .filter { "/merge/" in it.manifest.name }
+            .forEach { case ->
+                val action =
+                    BsonDocument.parse(
+                            generation.files.getValue(
+                                "core/src/test/resources${case.manifest.scenario}"
+                            )
+                        )
+                        .getDocument("action")
+                assertEquals("totals", action.getDocument("read").getString("collection").value)
+            }
+        // The page's key order is not Morphia's, which the server ignores.
+        val reordered =
+            generation.cases.single { it.manifest.name.endsWith("keepExistingTotals") }.scenario
+        assertTrue("NAMED_ARGUMENTS" in reordered, reordered)
+        // Without options, `$unwind` is written as its path, which UNWIND_PATH equates.
+        val unwind = generation.cases.single { it.manifest.name.contains("/unwind/") }.scenario
+        assertTrue("UNWIND_PATH" in unwind, unwind)
+    }
+
     @Test
     fun bindingsAreCheckedAgainstTheCurrentSource() {
         val root = directory.resolve("api")
@@ -868,6 +1012,9 @@ class GeneratorTest {
                 .size,
         )
         assertEquals(1, problems(filter.copy(arguments = listOf("input"))).size)
+        // Only a named operator of one argument takes its argument alone.
+        assertEquals(1, problems(add.copy(shorthand = true)).size)
+        assertEquals(1, problems(filter.copy(shorthand = true)).size)
         assertEquals(1, problems(add, add).size)
     }
 

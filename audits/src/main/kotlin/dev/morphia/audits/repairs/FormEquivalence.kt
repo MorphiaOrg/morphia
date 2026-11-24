@@ -91,6 +91,7 @@ object FormEquivalence {
             "\$lookup",
             "\$map",
             "\$maxN",
+            "\$merge",
             "\$minN",
             "\$reduce",
             "\$regexFind",

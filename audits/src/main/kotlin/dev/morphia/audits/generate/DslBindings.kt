@@ -23,7 +23,9 @@ enum class BindingForm {
     POSITIONAL,
     /**
      * `{$op: {k: v, …}}`: the [DslBinding.arguments] keys, in parameter order, are the factory's
-     * arguments; every other key is an [DslBinding.options] call on its result.
+     * arguments; every other key is an [DslBinding.options] call on its result. An option whose
+     * last parameter is an array takes a single value, or an array's items, as its arguments. With
+     * [DslBinding.shorthand], `{$op: v}` is the one argument itself (`{$out: "coll"}`).
      */
     NAMED,
     /**
@@ -76,6 +78,8 @@ data class DslBinding(
     val arguments: List<String> = emptyList(),
     val options: Map<String, MethodRef> = emptyMap(),
     val fields: Map<String, MethodRef> = emptyMap(),
+    /** A [BindingForm.NAMED] operator of one argument also takes that argument alone. */
+    val shorthand: Boolean = false,
 )
 
 data class DslBindingCatalog(val schemaVersion: Int = 1, val bindings: List<DslBinding>)
@@ -109,6 +113,8 @@ object DslBindings {
             .forEach { (position, operator) -> problems += "$operator: bound twice as $position" }
         catalog.bindings.forEach { binding ->
             val label = "${binding.operator} (${binding.owner}#${binding.method})"
+            if (binding.shorthand && binding.form != BindingForm.NAMED)
+                problems += "$label: only a named binding has a shorthand"
             val factory = methods[id(binding.owner, binding.method, binding.parameters)]
             if (factory == null || "static" !in factory.modifiers) {
                 problems += "$label: no public static ${binding.method}${binding.parameters}"
@@ -125,6 +131,8 @@ object DslBindings {
                     if (binding.arguments.size != binding.parameters.size)
                         problems +=
                             "$label: ${binding.arguments.size} keys for ${binding.parameters.size} parameters"
+                    else if (binding.shorthand && binding.arguments.size != 1)
+                        problems += "$label: only a one-argument operator has a shorthand"
                 BindingForm.FIELDS ->
                     if (binding.fields.keys != setOf("value") || binding.parameters.isNotEmpty())
                         problems += "$label: a fields stage takes no arguments and binds [value]"

@@ -769,6 +769,60 @@
       "fields": {}
     },
     {
+      "operator": "$merge",
+      "position": "STAGE",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.stages.Merge",
+      "method": "merge",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [
+        "into"
+      ],
+      "options": {
+        "on": {
+          "method": "on",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.String[]"
+          ]
+        },
+        "whenMatched": {
+          "method": "whenMatched",
+          "parameters": [
+            "com.mongodb.client.model.MergeOptions.WhenMatched"
+          ]
+        },
+        "whenNotMatched": {
+          "method": "whenNotMatched",
+          "parameters": [
+            "com.mongodb.client.model.MergeOptions.WhenNotMatched"
+          ]
+        }
+      },
+      "fields": {},
+      "shorthand": true
+    },
+    {
+      "operator": "$out",
+      "position": "STAGE",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.stages.Out",
+      "method": "out",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [
+        "coll"
+      ],
+      "options": {},
+      "fields": {},
+      "shorthand": true
+    },
+    {
       "operator": "$project",
       "position": "STAGE",
       "form": "PROJECTION",
@@ -882,16 +936,32 @@
     {
       "operator": "$unwind",
       "position": "STAGE",
-      "form": "POSITIONAL",
+      "form": "NAMED",
       "owner": "dev.morphia.aggregation.stages.Unwind",
       "method": "unwind",
       "parameters": [
         "java.lang.String"
       ],
       "varargs": false,
-      "arguments": [],
-      "options": {},
-      "fields": {}
+      "arguments": [
+        "path"
+      ],
+      "options": {
+        "includeArrayIndex": {
+          "method": "includeArrayIndex",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "preserveNullAndEmptyArrays": {
+          "method": "preserveNullAndEmptyArrays",
+          "parameters": [
+            "java.lang.Boolean"
+          ]
+        }
+      },
+      "fields": {},
+      "shorthand": true
     },
     {
       "operator": "$addToSet",

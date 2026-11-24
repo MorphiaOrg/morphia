@@ -2801,3 +2801,16 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   job would file 32 `MISSING_API` issues and no version findings: 4 annotation checks of later
   variants are `LATER_VARIANT`, and `AggregationOptions#let`, which only the `$merge` variables
   facet uses, now carries its `@mongodb.server.release 5.0`.
+- Write generation: `$merge` and `$out` are bound as named stages with a shorthand for their
+  one-argument spelling, `$merge`'s `on`, `whenMatched` and `whenNotMatched` as options, and
+  `$unwind` moves from a positional to a named binding so its `includeArrayIndex` and
+  `preserveNullAndEmptyArrays` options generate. Enum values convert camel case to Morphia's and the
+  driver's constants. `$merge` joins the named-argument operators, whose key order the server
+  ignores. Stages naming another database are gaps, as the runner refuses them, and so are
+  spellings Morphia writes otherwise (`{$merge: {into: "t"}}`, `on: ["_id"]`). Five
+  cases generate: two `$merge`, one `$out` and two `$unwind`; the `$merge` and `$out` ones query the
+  sample dataset, so only their serialization is checked. The paired reads of the seeded
+  `$merge` examples still wait on compound `_id` and date literals, and pipeline updates stay
+  unbound: the one example (`$currentDate`'s aggregation alternative) also needs a document
+  literal. Binding `whenMatched: "keepExisting"` found that `MergeCodec` wrote `keep_existing`,
+  which the server rejects; that is fixed in core separately.

@@ -79,6 +79,7 @@ object CaseGenerator {
     private const val PACKAGE = "dev.morphia.test.generated"
     private const val OBJECT = "java.lang.Object"
     private const val STRING = "java.lang.String"
+    private const val BOOLEAN = "java.lang.Boolean"
     private const val ITERABLE = "java.lang.Iterable"
     private const val LIST = "java.util.List"
     private const val NUMBER = "java.lang.Number"
@@ -172,6 +173,16 @@ object CaseGenerator {
                             "a documented projection is not generated yet",
                         )
                     }
+                    // The runner refuses a stage that reads or writes another database, since the
+                    // two behavior runs would share it.
+                    if (documented.shape == ActionShape.PIPELINE) {
+                        documented.action.firstOrNull(::namesADatabase)?.let { stage ->
+                            return@forEach gap(
+                                GapKind.SOURCE_UNSUPPORTED,
+                                "a stage naming another database: ${stage.asDocument().firstKey}",
+                            )
+                        }
+                    }
                     val emitted = Emitter(stages, expressions, filters, updates)
                     val resource =
                         FixtureMigration.scenarioPath(name, GENERATED).removePrefix(RESOURCES)
@@ -261,6 +272,18 @@ object CaseGenerator {
             gaps.sortedWith(compareBy({ it.context }, { it.operator }, { it.title })),
         )
     }
+
+    /**
+     * Whether [value] has a `db` key at any depth, as `OperatorCaseRunner` decides a stage names
+     * another database.
+     */
+    private fun namesADatabase(value: BsonValue): Boolean =
+        when {
+            value.isDocument ->
+                "db" in value.asDocument() || value.asDocument().values.any(::namesADatabase)
+            value.isArray -> value.asArray().values.any(::namesADatabase)
+            else -> false
+        }
 
     /** The query function of a find or an update: its filters, or the query itself for none. */
     private fun query(filters: List<String>): String =
@@ -394,13 +417,24 @@ object CaseGenerator {
                     )
                 }
                 BindingForm.NAMED -> {
+                    if (!argument.isDocument) {
+                        if (!binding.shorthand)
+                            throw Unbound("$path: ${binding.operator} takes a document")
+                        return factory.format(value(argument, binding.parameters.single(), path))
+                    }
                     // The server reads named arguments in any order, and the generator cannot know
                     // the order Morphia writes them in.
                     if (binding.operator in FormEquivalence.namedArgumentOperators)
                         rules += FormRule.NAMED_ARGUMENTS
-                    if (!argument.isDocument)
-                        throw Unbound("$path: ${binding.operator} takes a document")
                     val document = argument.asDocument()
+                    // Without options, Morphia writes a shorthand operator in its short form.
+                    if (binding.shorthand && document.keys.all { it in binding.arguments }) {
+                        if (binding.operator != "\$unwind")
+                            throw Unbound(
+                                "$path: Morphia writes ${binding.operator} without options as its shorthand"
+                            )
+                        rules += FormRule.UNWIND_PATH
+                    }
                     val missing = binding.arguments.filter { it !in document }
                     if (missing.isNotEmpty())
                         throw Unbound("$path: ${binding.operator} without $missing")
@@ -421,7 +455,7 @@ object CaseGenerator {
                                         ?: throw Unbound(
                                             "$path/$key: ${binding.operator} option $key has no binding"
                                         )
-                                ".${option.method}(${value(each, option.parameters.single(), "$path/$key")})"
+                                ".${option.method}(${arguments(option, each, "$path/$key")})"
                             }
                 }
                 BindingForm.FIELDS -> {
@@ -498,6 +532,30 @@ object CaseGenerator {
                         }
                 }
             }
+        }
+
+        /**
+         * The arguments of an option call: its one parameter's value, or, when its last parameter
+         * is an array (`on(String, String...)`), a single value or an array's items in order.
+         */
+        private fun arguments(option: MethodRef, value: BsonValue, path: String): String {
+            val parameters = option.parameters
+            if (parameters.size == 1) return value(value, parameters.single(), path)
+            if (!parameters.last().endsWith("[]"))
+                throw Unbound("$path: ${option.method}$parameters takes no single value")
+            val values = if (value.isArray) value.asArray().values else listOf(value)
+            // Morphia writes one value alone (`MergeCodec`'s `on: "_id"`), never a one-item array.
+            if (value.isArray && values.size == 1)
+                throw Unbound("$path: Morphia writes a one-item ${option.method} as its item")
+            val fixed = parameters.size - 1
+            if (values.size < fixed)
+                throw Unbound("$path: ${values.size} arguments for ${option.method}$parameters")
+            val component = parameters.last().removeSuffix("[]")
+            return values
+                .mapIndexed { index, each ->
+                    value(each, if (index < fixed) parameters[index] else component, "$path/$index")
+                }
+                .joinToString(", ")
         }
 
         /** The filters of a query document, one per field operator, in order. */
@@ -638,6 +696,9 @@ object CaseGenerator {
                         value.isNull -> "null"
                         else -> throw Unbound("$path: a ${value.bsonType} literal has no binding")
                     }
+                BOOLEAN ->
+                    if (value.isBoolean) "${value.asBoolean().value}"
+                    else throw Unbound("$path: ${value.bsonType} where $type is required")
                 STRING ->
                     if (value.isString) literal(value.asString().value)
                     else throw Unbound("$path: ${value.bsonType} where $type is required")
@@ -655,14 +716,21 @@ object CaseGenerator {
                         else -> throw Unbound("$path: ${value.bsonType} where $type is required")
                     }
                 else ->
-                    // Any other parameter type is an enum whose constants are the upper-cased MQL
-                    // values; integration's compile step proves the constant exists.
-                    if (value.isString && type.startsWith("dev.morphia.")) {
+                    // Any other parameter type is an enum whose constants are the MQL values in
+                    // upper snake case (`keepExisting` is `KEEP_EXISTING`); integration's compile
+                    // step proves the constant exists.
+                    if (value.isString && enums.any { type.startsWith(it) }) {
                         types += type
-                        "${type.substringAfterLast('.')}.${value.asString().value.uppercase()}"
+                        "${type.substringAfterLast('.')}.${constant(value.asString().value)}"
                     } else throw Unbound("$path: ${value.bsonType} where $type is required")
             }
         }
+
+        /** Morphia's and the driver's packages, whose enums take MQL values. */
+        private val enums = listOf("dev.morphia.", "com.mongodb.")
+
+        private fun constant(value: String): String =
+            value.replace(Regex("([a-z0-9])([A-Z])"), "$1_$2").uppercase()
 
         private fun double(value: Double): String =
             when {

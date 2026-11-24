@@ -1,0 +1,189 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/preserveNullAndEmptyArrays",
+  "title": "preserveNullAndEmptyArrays",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unwind.txt",
+    "blob": "195393b7aefd488cbd70cbdab4478fde747707f1"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "Inception",
+              "Brave",
+              "La porta del cielo",
+              "Neecha Nagar"
+            ]
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "genres": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$genres",
+          "preserveNullAndEmptyArrays": true
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "La porta del cielo"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Neecha Nagar"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Brave"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Brave"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Brave"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Mystery"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Sci-Fi"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

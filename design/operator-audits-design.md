@@ -271,7 +271,12 @@ a test method:
    its BSON takes:
    - `POSITIONAL` and `NAMED` for operators, `PROJECTION`, `FIELDS`, `GROUP` and `SORT` for those
      stages, `FILTERS` for `$match`, and `FIELD` for a query or update operator on a field;
-   - the `[]` entry binds an array literal (`ArrayExpressions.array`).
+   - the `[]` entry binds an array literal (`ArrayExpressions.array`);
+   - a `NAMED` binding with `shorthand` also takes its one argument alone, as `{$out: "coll"}` and
+     `{$unwind: "$sizes"}` are spelled; an option whose last parameter is an array takes a single
+     value or an array's items (`$merge`'s `on`). Spellings Morphia writes differently, with no
+     form rule equating them, are gaps: a shorthand operator's document without options (except
+     `$unwind`, which `UNWIND_PATH` covers) and a one-item array for such an option.
 
    The API inventory of core's current source must contain every one; a stale binding stops
    generation.
@@ -282,8 +287,10 @@ a test method:
    one `UpdateOperators` call per field. Every node needs a binding, and every value is emitted only
    in a form its parameter type accepts: a sort document as `Sort` varargs, and an array as `List.of`
    where it is data (a query or update operand, an `Iterable`) or as `array(...)` where it is an
-   expression. The first node without a binding makes the example a gap; so does a documented
-   projection or a pipeline update.
+   expression. An enum parameter of Morphia's or the driver's takes the MQL value in upper snake
+   case (`keepExisting` is `KEEP_EXISTING`). The first node without a binding makes the example a
+   gap; so does a documented projection, a pipeline update, or a stage that names another database,
+   which the runner refuses because both behavior runs would share it.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
    case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
    plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter
