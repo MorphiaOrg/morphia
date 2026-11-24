@@ -5,6 +5,7 @@ import dev.morphia.audits.coverage.ApiState
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.coverage.CapabilityCoverage
 import dev.morphia.audits.coverage.CoverageReport
+import dev.morphia.audits.coverage.REVIEWED_GAP
 import dev.morphia.audits.coverage.ReportState
 import java.nio.file.Files
 import java.nio.file.Path
@@ -308,13 +309,21 @@ class Publisher(
         private fun missingApi(coverage: CapabilityCoverage): Finding? {
             if (coverage.api != ApiState.MISSING_TYPED_API) return null
             val subject = subject(coverage)
+            // A reviewed gap says which variant Morphia can't express; its first sentence tells
+            // the issues for one operator's variants apart.
+            val gap =
+                coverage.notes
+                    .firstOrNull { it.startsWith(REVIEWED_GAP) }
+                    ?.removePrefix(REVIEWED_GAP)
             return Finding(
                 "${FindingType.MISSING_API}:$subject",
                 FindingType.MISSING_API,
-                "Add typed support for ${coverage.capability.key.token} (${coverage.capability.key.context.name.lowercase()})",
+                "Add typed support for ${coverage.capability.key.token} (${coverage.capability.key.context.name.lowercase()})" +
+                    gap?.let { ": " + it.substringBefore(". ").removeSuffix(".") }.orEmpty(),
                 "The documentation describes `${coverage.capability.key.token}`" +
                     (coverage.capability.facet?.let { " (`$it`)" } ?: "") +
                     " in the ${coverage.capability.key.context} context, and Morphia has no typed API for it." +
+                    gap?.let { "\n\n$it" }.orEmpty() +
                     coverage.introduction.version
                         ?.let { "\n\nIntroduced in MongoDB ${it.display()}." }
                         .orEmpty(),

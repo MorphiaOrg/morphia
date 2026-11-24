@@ -98,7 +98,8 @@ A lifecycle removal notice does not erase a current observation; a deliberate po
 can suppress support checks while preserving that evidence.
 
 The plan declares all eight contexts, accepted identities and lower bounds, explicit evidence
-for empty contexts, API input scope, binding exceptions, exclusions, and reviewed omissions.
+for empty contexts, API input scope, binding exceptions, exclusions, reviewed omissions, and
+reviewed gaps (`missing`) for capabilities the tagged API claims but can't express.
 New identities are allowed. Missing accepted identities, lost categories, and unexplained
 count drops invalidate their discovery domain. A broken example does not hide an independently
 verified new capability. Invalid/empty API inventories invalidate the comparison.
@@ -106,11 +107,21 @@ verified new capability. Invalid/empty API inventories invalidate the comparison
 Unambiguous method-level tags map ordinary operator APIs automatically. All compatible
 discovery contexts must be healthy before inference; broad or conflicting claims remain
 `UNKNOWN_MAPPING`. Explicit bindings select every public overload of a factory/builder member
-where aliases or multiple contexts require a decision. Unresolved selectors and overload
-groups claiming different operator tokens produce binding errors and a partial report,
-rather than a false missing-API finding. Raw BSON bindings have a distinct state. Version checks inspect every selected overload and retain class/method annotation
+where aliases or multiple contexts require a decision. Binding a selector stops inference for
+it, so each capability that selector serves is bound explicitly. Unresolved selectors produce
+binding errors and a partial report, rather than a false missing-API finding. So does an overload
+group that doesn't claim the bound token, or also claims another operator of the bound context or
+one the manual doesn't document; a claim of an operator the manual documents only in other
+contexts is allowed, as a `push` that takes a list also claims the `$each` modifier. An untagged
+member, such as a builder option bound for a facet, claims nothing. A reviewed gap turns
+inference off for its capability. Raw BSON bindings have a distinct state. Version checks inspect every selected overload and retain class/method annotation
 origins. A later minimum on an inferred API can indicate a feature variant requiring a binding,
-so it is ambiguous rather than automatically incorrect.
+so it is ambiguous rather than automatically incorrect. One declaration can serve several
+capabilities, such as an accumulator factory that later became an expression, and carries the
+earliest one's annotation. A missing or earlier annotation for a later one, when the declaration
+also serves an earlier capability or one of unknown introduction, is `LATER_VARIANT`, not a
+finding. A facet's base counts only when the declaration serves it: a method only the facet uses,
+such as an option the facet added, carries the facet's version.
 
 API presence, version annotations, serialization, behavior, and example extraction have
 independent report states. This milestone has no execution attestations: serialization and

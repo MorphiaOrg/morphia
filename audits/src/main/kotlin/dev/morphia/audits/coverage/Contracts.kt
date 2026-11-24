@@ -179,6 +179,16 @@ data class ApiBinding(
 
 data class PolicyExclusion(val capability: CapabilityRef, val reason: String)
 
+/**
+ * A reviewed gap: a capability, usually a feature facet, that Morphia's tagged API claims but
+ * cannot express, such as an option its builder lacks. It reports [ApiState.MISSING_TYPED_API] with
+ * the reason instead of staying [ApiState.UNKNOWN_MAPPING].
+ */
+data class ReviewedGap(val capability: CapabilityRef, val reason: String)
+
+/** The prefix of the coverage note that carries a [ReviewedGap]'s reason. */
+const val REVIEWED_GAP = "Reviewed gap: "
+
 data class ExpectedOmission(
     val capability: CapabilityRef,
     val reason: String,
@@ -193,6 +203,7 @@ data class CoveragePlan(
     val bindings: List<ApiBinding>,
     val exclusions: List<PolicyExclusion>,
     val omissions: List<ExpectedOmission>,
+    val missing: List<ReviewedGap> = emptyList(),
 )
 
 enum class ReportState {
@@ -231,6 +242,12 @@ enum class AnnotationState {
     AMBIGUOUS,
     UNKNOWN_EXPECTATION,
     NOT_APPLICABLE,
+    /**
+     * The declaration also serves an earlier capability, or one whose introduction is unknown, such
+     * as an accumulator factory that later became an expression, or the base of a facet. One
+     * annotation can't carry a minimum per context, so the earliest one decides it.
+     */
+    LATER_VARIANT,
 }
 
 enum class CheckState {

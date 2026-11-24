@@ -46,7 +46,7 @@ Every command below runs through the exec plugin from the repository root, after
 | `audits/catalog/name-backport*.json` | Descriptive names given to the legacy fixtures. |
 | `audits/catalog/legacy-corpus.json` | The preservation snapshot of the legacy corpus. |
 | `audits/catalog/publication-policy.json` | Labels the publisher applies. |
-| `audits/catalog/discovery-plan.json`, `capability-catalog.json`, `coverage-plan.json` | The accepted capability baseline: discovery policy with reviewed assignments and omissions, the capabilities found at the baseline's commit, and the identities, minimums, bindings and exclusions later runs are held to. |
+| `audits/catalog/discovery-plan.json`, `capability-catalog.json`, `coverage-plan.json` | The accepted capability baseline: discovery policy with reviewed assignments and omissions, the capabilities found at the baseline's commit, and the identities, minimums, bindings, exclusions and reviewed gaps later runs are held to. |
 | `core/src/test/resources/dev/morphia/test/generated/manifest.json` | Every case on the runner and every file the generated namespace owns. |
 | `core/src/test/java/dev/morphia/test/generated/` | Generated test classes; never edit them by hand. |
 

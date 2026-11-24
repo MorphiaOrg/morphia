@@ -449,6 +449,38 @@ class CoverageComparisonTest {
         assertEquals(7, rows.single { it.capability.facet == null }.introduction.version!!.major)
         assertEquals(8, rows.single { it.capability.facet != null }.introduction.version!!.major)
         assertTrue(rows.all { it.annotations.single().state == AnnotationState.MINIMUM_MATCH })
+        fun facet(plan: CoveragePlan, extra: String) =
+            CoverageComparison.compare(
+                    candidate,
+                    plan,
+                    api(root.resolve("x").also { it.toFile().mkdirs() }, extra),
+                )
+                .capabilities
+                .single { it.capability.facet != null }
+                .annotations
+                .map { it.state }
+        // A method only the facet uses carries the facet's version: without one it's a finding.
+        assertEquals(
+            listOf(AnnotationState.MISSING),
+            facet(
+                expected,
+                "/** @aggregation.expression ${'$'}median */\n" +
+                    "public static Object modern(Object value) { return value; }",
+            ),
+        )
+        // The base's factory, serving the facet too, keeps the base's 7.0.
+        val shared =
+            expected.copy(
+                bindings =
+                    plan().bindings +
+                        ApiBinding(
+                            "shared",
+                            feature,
+                            ApiSelector("fixture.Factories", "median"),
+                            BindingKind.TYPED,
+                        )
+            )
+        assertEquals(listOf(AnnotationState.LATER_VARIANT), facet(shared, ""))
     }
 
     @Test
@@ -969,6 +1001,135 @@ class CoverageComparisonTest {
         assertEquals(ApiState.INVALID_BINDING, result.capabilities.single().api)
         assertTrue(result.capabilities.single().annotations.isEmpty())
         assertTrue(result.problems.any { it.code == "AMBIGUOUS_API_BINDING" })
+    }
+
+    /**
+     * [catalog] and [plan] with a second capability, [other] introduced in [version], expected in
+     * its context and, when [bound], bound to the same factory as the first.
+     */
+    private fun withSecond(
+        other: CapabilityKey,
+        version: String,
+        bound: Boolean,
+    ): Pair<CapabilityCatalog, CoveragePlan> {
+        val base = catalog()
+        val second =
+            base.capabilities
+                .single()
+                .copy(
+                    key = other,
+                    versions =
+                        listOf(
+                            VersionEvent(
+                                LifecycleEvent.INTRODUCED,
+                                null,
+                                version,
+                                VersionRange.parse(version),
+                                EvidenceConfidence.EXPLICIT,
+                                listOf("introduced"),
+                            )
+                        ),
+                )
+        val otherRef = CapabilityRef(other, null)
+        val plan = plan()
+        return base.copy(capabilities = base.capabilities + second) to
+            plan.copy(
+                contexts =
+                    plan.contexts.map {
+                        if (it.context == other.context)
+                            it.copy(
+                                minimumCapabilities = 1,
+                                expected = listOf(otherRef),
+                                intentionalEmptyEvidence = emptyList(),
+                            )
+                        else it
+                    },
+                bindings =
+                    plan.bindings +
+                        listOfNotNull(
+                            ApiBinding(
+                                    "second",
+                                    otherRef,
+                                    ApiSelector("fixture.Factories", "median"),
+                                    BindingKind.TYPED,
+                                )
+                                .takeIf { bound }
+                        ),
+            )
+    }
+
+    @Test
+    fun aReviewedGapIsMissingWithItsReason(@TempDir root: Path) {
+        val reason = "Factories has no median option. The server added it in 7.0."
+        val gapped = plan().copy(bindings = emptyList(), missing = listOf(ReviewedGap(ref, reason)))
+        val row = CoverageComparison.compare(catalog(), gapped, api(root)).capabilities.single()
+        assertEquals(ApiState.MISSING_TYPED_API, row.api)
+        assertTrue(row.notes.contains(REVIEWED_GAP + reason), row.notes.toString())
+        // A reviewed gap can't also be bound.
+        val bound = plan().copy(missing = listOf(ReviewedGap(ref, reason)))
+        val invalid = CoverageComparison.compare(catalog(), bound, api(root))
+        assertEquals(ReportState.INVALID, invalid.state)
+        assertTrue(
+            invalid.problems.any { it.code == "INVALID_REVIEWED_GAP" },
+            invalid.problems.toString(),
+        )
+    }
+
+    @Test
+    fun aSelectorMayAlsoClaimAnOperatorOfAnotherContext(@TempDir root: Path) {
+        // As a push that takes a list writes $each, a modifier the manual documents elsewhere.
+        val each = CapabilityKey(key.product, OperatorContext.WINDOW_FUNCTION, "${'$'}each")
+        val (catalog, plan) = withSecond(each, "7.0", bound = false)
+        val inventory =
+            api(
+                root,
+                """
+                /**
+                 * @aggregation.expression ${'$'}median
+                 * @aggregation.expression ${'$'}each
+                 * @mongodb.server.release 7.0
+                 */
+                public static Object median(Object value, Object other) { return value; }
+                """
+                    .trimIndent(),
+            )
+        val result = CoverageComparison.compare(catalog, plan, inventory)
+        assertEquals(
+            ApiState.TYPED_PRESENT,
+            result.capabilities.single { it.capability == ref }.api,
+            result.problems.toString(),
+        )
+        assertTrue(result.problems.none { it.code == "AMBIGUOUS_API_BINDING" })
+    }
+
+    @Test
+    fun aLaterContextOfOneFactoryIsAVariantNotAWrongAnnotation(@TempDir root: Path) {
+        // The factory's 7.0 annotation is right for the accumulator; the window function came
+        // later.
+        val window = CapabilityKey(key.product, OperatorContext.WINDOW_FUNCTION, key.token)
+        val (catalog, plan) = withSecond(window, "8.0", bound = true)
+        val result = CoverageComparison.compare(catalog, plan, api(root))
+        fun state(of: CapabilityKey) =
+            result.capabilities.single { it.capability.key == of }.annotations.single().state
+        assertEquals(AnnotationState.MINIMUM_MATCH, state(key))
+        assertEquals(AnnotationState.LATER_VARIANT, state(window))
+        // A minimum after the window function's own introduction is wrong whatever else it serves.
+        val late = CoverageComparison.compare(catalog, plan, api(root, server = "9.0"))
+        assertEquals(
+            AnnotationState.INCORRECT_MINIMUM,
+            late.capabilities.single { it.capability.key == window }.annotations.single().state,
+        )
+        // Alone, the same 7.0 annotation is wrong for an 8.0 capability.
+        val alone = plan.copy(bindings = plan.bindings.filter { it.capability.key == window })
+        assertEquals(
+            AnnotationState.INCORRECT_MINIMUM,
+            CoverageComparison.compare(catalog, alone, api(root))
+                .capabilities
+                .single { it.capability.key == window }
+                .annotations
+                .single()
+                .state,
+        )
     }
 
     @Test

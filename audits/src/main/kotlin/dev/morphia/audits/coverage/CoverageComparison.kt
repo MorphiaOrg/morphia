@@ -129,8 +129,10 @@ object CoverageComparison {
                                 )
                     }
                 val configured = plan.bindings.filter { it.capability == ref }
+                // A reviewed gap overrides what the tags would infer.
+                val gap = plan.missing.firstOrNull { it.capability == ref }
                 val inferred =
-                    if (configured.isEmpty() && ref.facet == null)
+                    if (configured.isEmpty() && ref.facet == null && gap == null)
                         inferBindings(ref, active, plan, api, byContext)
                     else emptyList()
                 val bindings = configured + inferred
@@ -164,7 +166,18 @@ object CoverageComparison {
                                         }
                                     }
                                     .toSet()
-                            claims.size > 1
+                            // A selector may claim operators the manual documents only in
+                            // other contexts, as a push that takes a list writes $each. Another
+                            // operator of this context, one the manual doesn't document, or
+                            // claims that name other tokens only, leave its capability
+                            // undecided. An untagged member, such as a builder option, claims
+                            // nothing.
+                            claims.isNotEmpty() && ref.key.token !in claims ||
+                                (claims - ref.key.token).any { other ->
+                                    val documented = active.filter { it.key.token == other }
+                                    documented.isEmpty() ||
+                                        documented.any { it.key.context == ref.key.context }
+                                }
                         }
                         .keys
                 val mappingProblems =
@@ -197,6 +210,7 @@ object CoverageComparison {
                         "Unresolved API binding: ${it.id} (${it.selector.owner}#${it.selector.member})"
                 }
                 if (exclusion != null) notes += "Policy exclusion: ${exclusion.reason}"
+                if (gap != null) notes += REVIEWED_GAP + gap.reason
                 if (!observed && omitted != null) notes += "Reviewed omission: ${omitted.reason}"
                 val apiState =
                     when {
@@ -207,6 +221,7 @@ object CoverageComparison {
                         stale.isNotEmpty() -> ApiState.INVALID_BINDING
                         typed.isNotEmpty() -> ApiState.TYPED_PRESENT
                         raw.isNotEmpty() -> ApiState.RAW_BSON_ONLY
+                        gap != null -> ApiState.MISSING_TYPED_API
                         tokenClaim -> ApiState.UNKNOWN_MAPPING
                         else -> ApiState.MISSING_TYPED_API
                     }
@@ -302,7 +317,7 @@ object CoverageComparison {
                     )
                 ),
             contexts = health,
-            capabilities = rows,
+            capabilities = laterVariants(rows),
             problems =
                 (health.flatMap { it.problems } + bindingProblems)
                     .distinct()
@@ -325,6 +340,49 @@ object CoverageComparison {
                 setOf(OperatorContext.UPDATE_OPERATOR, OperatorContext.UPDATE_MODIFIER)
             else -> emptySet()
         }
+
+    /**
+     * A declaration serving several capabilities carries the earliest one's annotation. A missing
+     * or earlier annotation for a later one, when another capability the declaration serves is
+     * earlier or of unknown introduction, reports [AnnotationState.LATER_VARIANT]; an annotation
+     * after the capability's own introduction stays a finding. A facet's base counts only when the
+     * declaration serves it too: a method only the facet uses carries the facet's version.
+     */
+    private fun laterVariants(rows: List<CapabilityCoverage>): List<CapabilityCoverage> {
+        val served =
+            rows
+                .flatMap { row -> row.annotations.map { it.declaration to row } }
+                .groupBy({ it.first }) { it.second }
+        fun earlier(other: CapabilityCoverage, row: CapabilityCoverage): Boolean {
+            val version = other.introduction.version
+            return other.introduction.state != IntroductionState.EXPLICIT ||
+                version == null ||
+                version < row.introduction.version!!
+        }
+        return rows.map { row ->
+            if (row.introduction.state != IntroductionState.EXPLICIT) return@map row
+            row.copy(
+                annotations =
+                    row.annotations.map { check ->
+                        val others = served[check.declaration].orEmpty().filter { it !== row }
+                        // Only a missing or earlier annotation fits an earlier capability; a
+                        // minimum after this one's introduction is wrong whatever else it serves.
+                        val minimum =
+                            check.serverRequirements.firstOrNull()?.let {
+                                VersionRange.parse(it.value)?.minimum
+                            }
+                        val earlierAnnotation =
+                            check.state == AnnotationState.MISSING ||
+                                check.state == AnnotationState.INCORRECT_MINIMUM &&
+                                    minimum != null &&
+                                    minimum < row.introduction.version!!
+                        if (earlierAnnotation && others.any { earlier(it, row) })
+                            check.copy(state = AnnotationState.LATER_VARIANT)
+                        else check
+                    }
+            )
+        }
+    }
 
     private fun inferBindings(
         ref: CapabilityRef,
@@ -449,6 +507,7 @@ object CoverageComparison {
             api = plan.api.copy(sourceRoots = plan.api.sourceRoots.sorted()),
             bindings = plan.bindings.sortedBy { it.id },
             exclusions = plan.exclusions.sortedBy { it.capability.id() },
+            missing = plan.missing.sortedBy { it.capability.id() },
             omissions =
                 plan.omissions
                     .sortedBy { it.capability.id() }

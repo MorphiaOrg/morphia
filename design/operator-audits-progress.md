@@ -49,8 +49,8 @@ Step 5, generation and cutover:
   the filter's matches), alternative commands.
 
 Step 6, monitoring:
-- **Explicit bindings for the 102 capabilities tags do not map** (`UNKNOWN_MAPPING` in the
-  coverage report); until then they are neither published nor counted as present.
+- ~~Explicit bindings for the 102 capabilities tags do not map~~: done (see Capability bindings
+  below).
 
 Step 7, retiring old paths:
 - **The legacy RST extractor:** retire it after the structured parser owns example extraction,
@@ -2785,3 +2785,19 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   from 112 to 104. None generates yet: `$merge`, `$out` and pipeline updates have no binding.
   The page-wide pass now also marks a write after a write, and no longer counts a syntax template
   as a write.
+- Capability bindings: the 102 `UNKNOWN_MAPPING` capabilities are settled. Tokens the manual
+  documents in several contexts (`$sum` as an accumulator and a window function, `$push` as an
+  accumulator and an update) are bound to the factories that claim them where the factory writes
+  that context's form, and `$merge` and `$out` to their stage factories (their tags are on the
+  class). Eight contexts the factories can't write are reviewed gaps: `$concatArrays` and
+  `$setUnion` as accumulators and window functions (the factories always write an array), and
+  `$top`, `$bottom`, `$topN` and `$bottomN` as expressions (the factories write `output`, not the
+  expression's `input`). Of the 25 facets, 15 are reachable through the existing API (server
+  behavior, or a variant the builder already writes, such as `$lookup`'s concise syntax and
+  `$merge` with aggregate-level `let`) and are bound; 10 are reviewed gaps (`$convert` to array,
+  object and binData, its `format` and subtypes, `arrayIndexAs` on `$filter` and `$map`,
+  `$currentOp`'s `targetAllNodes`, `$out`'s time series options, and `$elemMatch` as a
+  projection). Coverage at e4b0c153: 315 typed, 32 excluded, 32 missing, none unmapped. The weekly
+  job would file 32 `MISSING_API` issues and no version findings: 4 annotation checks of later
+  variants are `LATER_VARIANT`, and `AggregationOptions#let`, which only the `$merge` variables
+  facet uses, now carries its `@mongodb.server.release 5.0`.

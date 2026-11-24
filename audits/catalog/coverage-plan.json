@@ -8,6 +8,1056 @@
     "capability" : {
       "facet" : null,
       "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$accumulator"
+      }
+    },
+    "id" : "aggregation-expression-accumulator-accumulatorexpressions-accumulator",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "accumulator",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    },
+    "id" : "aggregation-expression-avg-accumulatorexpressions-avg",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "avg",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bsonSize"
+      }
+    },
+    "id" : "aggregation-expression-bsonsize-datasizeexpressions-bsonsize",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bsonSize",
+      "owner" : "dev.morphia.aggregation.expressions.DataSizeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-65e37ad46b63",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bsonSize"
+      }
+    },
+    "id" : "aggregation-expression-bsonsize-facet-65e37ad46b63-datasizeexpressions-bsonsize",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bsonSize",
+      "owner" : "dev.morphia.aggregation.expressions.DataSizeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    },
+    "id" : "aggregation-expression-concatarrays-arrayexpressions-concatarrays",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "concatArrays",
+      "owner" : "dev.morphia.aggregation.expressions.ArrayExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-convert-to-string-f88cada25d76",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "id" : "aggregation-expression-convert-facet-f88cada25d76-typeexpressions-convert",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "convert",
+      "owner" : "dev.morphia.aggregation.expressions.TypeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "id" : "aggregation-expression-convert-typeexpressions-convert",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "convert",
+      "owner" : "dev.morphia.aggregation.expressions.TypeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateToString"
+      }
+    },
+    "id" : "aggregation-expression-datetostring-dateexpressions-datetostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "dateToString",
+      "owner" : "dev.morphia.aggregation.expressions.DateExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-format-specifiers-cd1738c8df24",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$dateToString"
+      }
+    },
+    "id" : "aggregation-expression-datetostring-facet-cd1738c8df24-dateexpressions-datetostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "dateToString",
+      "owner" : "dev.morphia.aggregation.expressions.DateExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    },
+    "id" : "aggregation-expression-first-accumulatorexpressions-first",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "first",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    },
+    "id" : "aggregation-expression-firstn-accumulatorexpressions-firstn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "firstN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-05102744efbd",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$getField"
+      }
+    },
+    "id" : "aggregation-expression-getfield-facet-05102744efbd-miscellaneous-getfield",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "getField",
+      "owner" : "dev.morphia.aggregation.expressions.Miscellaneous"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$getField"
+      }
+    },
+    "id" : "aggregation-expression-getfield-miscellaneous-getfield",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "getField",
+      "owner" : "dev.morphia.aggregation.expressions.Miscellaneous"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ifNull"
+      }
+    },
+    "id" : "aggregation-expression-ifnull-conditionalexpressions-ifnull",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "ifNull",
+      "owner" : "dev.morphia.aggregation.expressions.ConditionalExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-examples-multiple-input-expressions-111ebf9f4094",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$ifNull"
+      }
+    },
+    "id" : "aggregation-expression-ifnull-facet-111ebf9f4094-conditionalexpressions-ifnull",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "ifNull",
+      "owner" : "dev.morphia.aggregation.expressions.ConditionalExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    },
+    "id" : "aggregation-expression-last-accumulatorexpressions-last",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "last",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    },
+    "id" : "aggregation-expression-lastn-accumulatorexpressions-lastn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "lastN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    },
+    "id" : "aggregation-expression-max-accumulatorexpressions-max",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "max",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    },
+    "id" : "aggregation-expression-maxn-accumulatorexpressions-maxn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "maxN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    },
+    "id" : "aggregation-expression-median-mathexpressions-median",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "median",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    },
+    "id" : "aggregation-expression-mergeobjects-objectexpressions-mergeobjects",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "mergeObjects",
+      "owner" : "dev.morphia.aggregation.expressions.ObjectExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    },
+    "id" : "aggregation-expression-min-accumulatorexpressions-min",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "min",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    },
+    "id" : "aggregation-expression-minn-accumulatorexpressions-minn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "minN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    },
+    "id" : "aggregation-expression-percentile-mathexpressions-percentile",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "percentile",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    },
+    "id" : "aggregation-expression-setunion-setexpressions-setunion",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "setUnion",
+      "owner" : "dev.morphia.aggregation.expressions.SetExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    },
+    "id" : "aggregation-expression-stddevpop-windowexpressions-stddevpop",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "stdDevPop",
+      "owner" : "dev.morphia.aggregation.expressions.WindowExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-65e37ad46b63",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toString"
+      }
+    },
+    "id" : "aggregation-expression-tostring-facet-65e37ad46b63-stringexpressions-tostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "toString",
+      "owner" : "dev.morphia.aggregation.expressions.StringExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-65e37ad46b63",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toString"
+      }
+    },
+    "id" : "aggregation-expression-tostring-facet-65e37ad46b63-typeexpressions-tostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "toString",
+      "owner" : "dev.morphia.aggregation.expressions.TypeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toString"
+      }
+    },
+    "id" : "aggregation-expression-tostring-stringexpressions-tostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "toString",
+      "owner" : "dev.morphia.aggregation.expressions.StringExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$toString"
+      }
+    },
+    "id" : "aggregation-expression-tostring-typeexpressions-tostring",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "toString",
+      "owner" : "dev.morphia.aggregation.expressions.TypeExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$accumulator"
+      }
+    },
+    "id" : "group-accumulator-accumulator-accumulatorexpressions-accumulator",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "accumulator",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    },
+    "id" : "group-accumulator-addtoset-accumulatorexpressions-addtoset",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "addToSet",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    },
+    "id" : "group-accumulator-avg-accumulatorexpressions-avg",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "avg",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    },
+    "id" : "group-accumulator-bottom-accumulatorexpressions-bottom",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bottom",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    },
+    "id" : "group-accumulator-bottomn-accumulatorexpressions-bottomn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bottomN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$count"
+      }
+    },
+    "id" : "group-accumulator-count-accumulatorexpressions-count",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "count",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    },
+    "id" : "group-accumulator-first-accumulatorexpressions-first",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "first",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    },
+    "id" : "group-accumulator-firstn-accumulatorexpressions-firstn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "firstN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    },
+    "id" : "group-accumulator-last-accumulatorexpressions-last",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "last",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    },
+    "id" : "group-accumulator-lastn-accumulatorexpressions-lastn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "lastN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    },
+    "id" : "group-accumulator-max-accumulatorexpressions-max",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "max",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    },
+    "id" : "group-accumulator-maxn-accumulatorexpressions-maxn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "maxN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    },
+    "id" : "group-accumulator-median-mathexpressions-median",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "median",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    },
+    "id" : "group-accumulator-mergeobjects-objectexpressions-mergeobjects",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "mergeObjects",
+      "owner" : "dev.morphia.aggregation.expressions.ObjectExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    },
+    "id" : "group-accumulator-min-accumulatorexpressions-min",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "min",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    },
+    "id" : "group-accumulator-minn-accumulatorexpressions-minn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "minN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    },
+    "id" : "group-accumulator-percentile-mathexpressions-percentile",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "percentile",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    },
+    "id" : "group-accumulator-push-accumulatorexpressions-push",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "push",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    },
+    "id" : "group-accumulator-stddevpop-windowexpressions-stddevpop",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "stdDevPop",
+      "owner" : "dev.morphia.aggregation.expressions.WindowExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$stdDevSamp"
+      }
+    },
+    "id" : "group-accumulator-stddevsamp-windowexpressions-stddevsamp",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "stdDevSamp",
+      "owner" : "dev.morphia.aggregation.expressions.WindowExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$sum"
+      }
+    },
+    "id" : "group-accumulator-sum-accumulatorexpressions-sum",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "sum",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    },
+    "id" : "group-accumulator-top-accumulatorexpressions-top",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "top",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    },
+    "id" : "group-accumulator-topn-accumulatorexpressions-topn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "topN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$densify"
+      }
+    },
+    "id" : "pipeline-stage-densify-densify-densify",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "densify",
+      "owner" : "dev.morphia.aggregation.stages.Densify"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-and-restrictions-field-restrictions-444483791d70",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$densify"
+      }
+    },
+    "id" : "pipeline-stage-densify-facet-444483791d70-densify-densify",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "densify",
+      "owner" : "dev.morphia.aggregation.stages.Densify"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-examples-interpolate-identical-values-in-different-partitions-32901c9ce91a",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$fill"
+      }
+    },
+    "id" : "pipeline-stage-fill-facet-32901c9ce91a-fill-fill",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "fill",
+      "owner" : "dev.morphia.aggregation.stages.Fill"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$fill"
+      }
+    },
+    "id" : "pipeline-stage-fill-fill-fill",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "fill",
+      "owner" : "dev.morphia.aggregation.stages.Fill"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-considerations-accumulator-operator-d085bdf1a820",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$group"
+      }
+    },
+    "id" : "pipeline-stage-group-facet-d085bdf1a820-group-group",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "group",
+      "owner" : "dev.morphia.aggregation.stages.Group"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$group"
+      }
+    },
+    "id" : "pipeline-stage-group-group-group",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "group",
+      "owner" : "dev.morphia.aggregation.stages.Group"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-correlated-subqueries-using-concise-syntax-2bf9ea10f597",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$lookup"
+      }
+    },
+    "id" : "pipeline-stage-lookup-facet-2bf9ea10f597-lookup-pipeline",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "pipeline",
+      "owner" : "dev.morphia.aggregation.stages.Lookup"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-examples-perform-a-concise-correlated-subquery-with-lookup-fa69f50a291a",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$lookup"
+      }
+    },
+    "id" : "pipeline-stage-lookup-facet-fa69f50a291a-lookup-pipeline",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "pipeline",
+      "owner" : "dev.morphia.aggregation.stages.Lookup"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$lookup"
+      }
+    },
+    "id" : "pipeline-stage-lookup-lookup-lookup",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "lookup",
+      "owner" : "dev.morphia.aggregation.stages.Lookup"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$lookup"
+      }
+    },
+    "id" : "pipeline-stage-lookup-lookup-pipeline",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "pipeline",
+      "owner" : "dev.morphia.aggregation.stages.Lookup"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-examples-use-variables-to-customize-the-merge-use-variables-defined-in-the-aggre-deb3897cb957",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$merge"
+      }
+    },
+    "id" : "pipeline-stage-merge-facet-deb3897cb957-aggregationoptions-let",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "let",
+      "owner" : "dev.morphia.aggregation.AggregationOptions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$merge"
+      }
+    },
+    "id" : "pipeline-stage-merge-merge-merge",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "merge",
+      "owner" : "dev.morphia.aggregation.stages.Merge"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$out"
+      }
+    },
+    "id" : "pipeline-stage-out-out-out",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "out",
+      "owner" : "dev.morphia.aggregation.stages.Out"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-output-cec9db6fe2d6",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$planCacheStats"
+      }
+    },
+    "id" : "pipeline-stage-plancachestats-facet-cec9db6fe2d6-plancachestats-plancachestats",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "planCacheStats",
+      "owner" : "dev.morphia.aggregation.stages.PlanCacheStats"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$planCacheStats"
+      }
+    },
+    "id" : "pipeline-stage-plancachestats-plancachestats-plancachestats",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "planCacheStats",
+      "owner" : "dev.morphia.aggregation.stages.PlanCacheStats"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-explain-output-01b439c107f5",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$setWindowFields"
+      }
+    },
+    "id" : "pipeline-stage-setwindowfields-facet-01b439c107f5-setwindowfields-setwindowfields",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "setWindowFields",
+      "owner" : "dev.morphia.aggregation.stages.SetWindowFields"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$setWindowFields"
+      }
+    },
+    "id" : "pipeline-stage-setwindowfields-setwindowfields-setwindowfields",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "setWindowFields",
+      "owner" : "dev.morphia.aggregation.stages.SetWindowFields"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
         "context" : "UPDATE_MODIFIER",
         "product" : "mongodb",
         "token" : "$position"
@@ -48,6 +1098,531 @@
     "selector" : {
       "member" : "sort",
       "owner" : "dev.morphia.query.PushOptions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$elemMatch"
+      }
+    },
+    "id" : "query-predicate-elemmatch-filters-elemmatch",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "elemMatch",
+      "owner" : "dev.morphia.query.filters.Filters"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-examples-extend-regex-options-to-match-characters-outside-of-ascii-fe70f91967e1",
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$regex"
+      }
+    },
+    "id" : "query-predicate-regex-facet-fe70f91967e1-filters-regex",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "regex",
+      "owner" : "dev.morphia.query.filters.Filters"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$regex"
+      }
+    },
+    "id" : "query-predicate-regex-filters-regex",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "regex",
+      "owner" : "dev.morphia.query.filters.Filters"
+    }
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-memory-limits-4128eb35ae26",
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$text"
+      }
+    },
+    "id" : "query-predicate-text-facet-4128eb35ae26-filters-text",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "text",
+      "owner" : "dev.morphia.query.filters.Filters"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PREDICATE",
+        "product" : "mongodb",
+        "token" : "$text"
+      }
+    },
+    "id" : "query-predicate-text-filters-text",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "text",
+      "owner" : "dev.morphia.query.filters.Filters"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    },
+    "id" : "query-projection-meta-meta-indexkey",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "indexKey",
+      "owner" : "dev.morphia.query.Meta"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    },
+    "id" : "query-projection-meta-meta-searchhighlights",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "searchHighlights",
+      "owner" : "dev.morphia.query.Meta"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    },
+    "id" : "query-projection-meta-meta-searchscore",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "searchScore",
+      "owner" : "dev.morphia.query.Meta"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$meta"
+      }
+    },
+    "id" : "query-projection-meta-meta-textscore",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "textScore",
+      "owner" : "dev.morphia.query.Meta"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$each"
+      }
+    },
+    "id" : "update-modifier-each-updateoperators-addtoset",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "addToSet",
+      "owner" : "dev.morphia.query.updates.UpdateOperators"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_MODIFIER",
+        "product" : "mongodb",
+        "token" : "$each"
+      }
+    },
+    "id" : "update-modifier-each-updateoperators-push",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "push",
+      "owner" : "dev.morphia.query.updates.UpdateOperators"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    },
+    "id" : "update-operator-addtoset-updateoperators-addtoset",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "addToSet",
+      "owner" : "dev.morphia.query.updates.UpdateOperators"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "UPDATE_OPERATOR",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    },
+    "id" : "update-operator-push-updateoperators-push",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "push",
+      "owner" : "dev.morphia.query.updates.UpdateOperators"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$addToSet"
+      }
+    },
+    "id" : "window-function-addtoset-accumulatorexpressions-addtoset",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "addToSet",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$avg"
+      }
+    },
+    "id" : "window-function-avg-accumulatorexpressions-avg",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "avg",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    },
+    "id" : "window-function-bottom-accumulatorexpressions-bottom",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bottom",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    },
+    "id" : "window-function-bottomn-accumulatorexpressions-bottomn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "bottomN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$count"
+      }
+    },
+    "id" : "window-function-count-accumulatorexpressions-count",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "count",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$first"
+      }
+    },
+    "id" : "window-function-first-accumulatorexpressions-first",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "first",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$firstN"
+      }
+    },
+    "id" : "window-function-firstn-accumulatorexpressions-firstn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "firstN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$last"
+      }
+    },
+    "id" : "window-function-last-accumulatorexpressions-last",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "last",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$lastN"
+      }
+    },
+    "id" : "window-function-lastn-accumulatorexpressions-lastn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "lastN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$max"
+      }
+    },
+    "id" : "window-function-max-accumulatorexpressions-max",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "max",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$maxN"
+      }
+    },
+    "id" : "window-function-maxn-accumulatorexpressions-maxn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "maxN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$median"
+      }
+    },
+    "id" : "window-function-median-mathexpressions-median",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "median",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$mergeObjects"
+      }
+    },
+    "id" : "window-function-mergeobjects-objectexpressions-mergeobjects",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "mergeObjects",
+      "owner" : "dev.morphia.aggregation.expressions.ObjectExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$min"
+      }
+    },
+    "id" : "window-function-min-accumulatorexpressions-min",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "min",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$minN"
+      }
+    },
+    "id" : "window-function-minn-accumulatorexpressions-minn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "minN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$percentile"
+      }
+    },
+    "id" : "window-function-percentile-mathexpressions-percentile",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "percentile",
+      "owner" : "dev.morphia.aggregation.expressions.MathExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$push"
+      }
+    },
+    "id" : "window-function-push-accumulatorexpressions-push",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "push",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$stdDevPop"
+      }
+    },
+    "id" : "window-function-stddevpop-windowexpressions-stddevpop",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "stdDevPop",
+      "owner" : "dev.morphia.aggregation.expressions.WindowExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$stdDevSamp"
+      }
+    },
+    "id" : "window-function-stddevsamp-windowexpressions-stddevsamp",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "stdDevSamp",
+      "owner" : "dev.morphia.aggregation.expressions.WindowExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$sum"
+      }
+    },
+    "id" : "window-function-sum-accumulatorexpressions-sum",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "sum",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    },
+    "id" : "window-function-top-accumulatorexpressions-top",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "top",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
+    }
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    },
+    "id" : "window-function-topn-accumulatorexpressions-topn",
+    "kind" : "TYPED",
+    "selector" : {
+      "member" : "topN",
+      "owner" : "dev.morphia.aggregation.expressions.AccumulatorExpressions"
     }
   } ],
   "contexts" : [ {
@@ -2833,6 +4408,187 @@
       }
     },
     "reason" : "a Queryable Encryption operator, usable only on encrypted fields through the client-side encryption setup; out of Morphia's scope"
+  } ],
+  "missing" : [ {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bottom"
+      }
+    },
+    "reason" : "AccumulatorExpressions.bottom writes the accumulator's output field. The $bottom expression operator takes the array to rank as input."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$bottomN"
+      }
+    },
+    "reason" : "AccumulatorExpressions.bottomN writes the accumulator's output field. The $bottomN expression operator takes the array to rank as input."
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-convert-to-array-ba04d6ce2c9e",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "reason" : "ConvertType has no array target. MongoDB 8.3 converts strings and other inputs to arrays with to: \"array\"."
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-convert-to-bindata-convert-an-object-to-bindata-4f7b29fcaed2",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "reason" : "ConvertType has no binData target. MongoDB 9.0 converts an object to its raw BSON as binData."
+  }, {
+    "capability" : {
+      "facet" : "section-behavior-convert-to-object-ed7abbe03b50",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "reason" : "ConvertType has no object target. MongoDB 8.3 converts strings and other inputs to objects with to: \"object\"."
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-05102744efbd",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "reason" : "ConvertExpression has no format option. MongoDB 8.3 requires format when converting between binData and string."
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-binary-subtypes-2a132119fd41",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$convert"
+      }
+    },
+    "reason" : "ConvertType has no binData target with a subtype. $convert takes to: {type: \"binData\", subtype: n} for binary subtypes."
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-05102744efbd",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$filter"
+      }
+    },
+    "reason" : "FilterExpression has no arrayIndexAs option. MongoDB 8.3 names the element's index variable with arrayIndexAs."
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-05102744efbd",
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$map"
+      }
+    },
+    "reason" : "MapExpression has no arrayIndexAs option. MongoDB 8.3 names the element's index variable with arrayIndexAs."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$top"
+      }
+    },
+    "reason" : "AccumulatorExpressions.top writes the accumulator's output field. The $top expression operator takes the array to rank as input."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "AGGREGATION_EXPRESSION",
+        "product" : "mongodb",
+        "token" : "$topN"
+      }
+    },
+    "reason" : "AccumulatorExpressions.topN writes the accumulator's output field. The $topN expression operator takes the array to rank as input."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    },
+    "reason" : "ArrayExpressions.concatArrays always writes an array of its arguments. As an accumulator, $concatArrays takes one array expression, written without the array."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "GROUP_ACCUMULATOR",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    },
+    "reason" : "SetExpressions.setUnion always writes an array of its arguments. As an accumulator, $setUnion takes one array expression, written without the array."
+  }, {
+    "capability" : {
+      "facet" : "section-definition-syntax-f03d636e3559",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$currentOp"
+      }
+    },
+    "reason" : "CurrentOp has no targetAllNodes option. MongoDB 7.1 reports every node of a sharded cluster with targetAllNodes."
+  }, {
+    "capability" : {
+      "facet" : "section-syntax-05102744efbd",
+      "key" : {
+        "context" : "PIPELINE_STAGE",
+        "product" : "mongodb",
+        "token" : "$out"
+      }
+    },
+    "reason" : "Out has no timeseries options. $out can create a time series collection, with bucketMaxSpanSeconds and bucketRoundingSeconds since MongoDB 6.3."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "QUERY_PROJECTION",
+        "product" : "mongodb",
+        "token" : "$elemMatch"
+      }
+    },
+    "reason" : "FindOptions has no elemMatch projection. Filters.elemMatch is the query predicate; a find can't project the first matching array element with $elemMatch."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$concatArrays"
+      }
+    },
+    "reason" : "ArrayExpressions.concatArrays always writes an array of its arguments. As a window function, $concatArrays takes one array expression, written without the array."
+  }, {
+    "capability" : {
+      "facet" : null,
+      "key" : {
+        "context" : "WINDOW_FUNCTION",
+        "product" : "mongodb",
+        "token" : "$setUnion"
+      }
+    },
+    "reason" : "SetExpressions.setUnion always writes an array of its arguments. As a window function, $setUnion takes one array expression, written without the array."
   } ],
   "omissions" : [ ],
   "product" : "mongodb",

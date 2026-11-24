@@ -318,6 +318,21 @@ internal object ContractValidation {
                 it.capability.id(),
             )
         }
+        unique(plan.missing.map { it.capability }, "reviewed gaps")
+        val excluded = plan.exclusions.map { it.capability }.toSet()
+        val bound = plan.bindings.map { it.capability }.toSet()
+        plan.missing.forEach {
+            ref(it.capability)
+            check(
+                it.capability in bindingRefs &&
+                    it.reason.isNotBlank() &&
+                    it.capability !in excluded &&
+                    it.capability !in bound,
+                "INVALID_REVIEWED_GAP",
+                "A reviewed gap needs a current target and rationale, and no binding or exclusion",
+                it.capability.id(),
+            )
+        }
         unique(plan.omissions.map { it.capability }, "expected omissions")
         plan.omissions.forEach {
             ref(it.capability)

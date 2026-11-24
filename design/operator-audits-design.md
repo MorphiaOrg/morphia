@@ -452,7 +452,12 @@ The baseline is three reviewed files in `audits/catalog/`:
 - `capability-catalog.json`: the capabilities discovery found at the baseline's commit, with their
   evidence.
 - `coverage-plan.json`: the accepted identities and per-context minimums later runs must keep,
-  explicit API bindings where tags do not settle the mapping, and reviewed exclusions.
+  explicit API bindings where tags do not settle the mapping, reviewed exclusions, and reviewed
+  gaps (`missing`): a capability, usually a feature facet, that the tagged API claims but can't
+  express, such as `$out`'s time series options. A gap reports `MISSING_TYPED_API` with its
+  reason, so the weekly job files it; the issue's title carries the reason's first sentence.
+  Every capability the manual documents is bound, inferred, excluded or a reviewed gap; none is
+  left `UNKNOWN_MAPPING`.
 
 `audits/discover.sh` acquires the manual at the clone's commit (`manual-baseline-sources.json`
 with that revision), parses it, discovers its capabilities under the committed discovery plan,

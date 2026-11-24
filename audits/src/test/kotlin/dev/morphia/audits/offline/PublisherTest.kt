@@ -15,6 +15,7 @@ import dev.morphia.audits.coverage.Introduction
 import dev.morphia.audits.coverage.IntroductionState
 import dev.morphia.audits.coverage.OperatorContext
 import dev.morphia.audits.coverage.OverloadVersionCheck
+import dev.morphia.audits.coverage.REVIEWED_GAP
 import dev.morphia.audits.coverage.ReleaseVersion
 import dev.morphia.audits.coverage.ReportState
 import dev.morphia.audits.publish.Finding
@@ -461,5 +462,43 @@ class PublisherTest {
         assertThrows(IllegalArgumentException::class.java) {
             Publisher.findings(report.copy(state = ReportState.INVALID))
         }
+    }
+
+    @Test
+    fun aReviewedGapNamesTheVariantMorphiaLacks() {
+        val gap =
+            coverage("\$out", OperatorContext.PIPELINE_STAGE, ApiState.MISSING_TYPED_API)
+                .copy(
+                    capability =
+                        CapabilityRef(
+                            CapabilityKey("docs", OperatorContext.PIPELINE_STAGE, "\$out"),
+                            "section-syntax",
+                        ),
+                    notes =
+                        listOf(REVIEWED_GAP + "Out has no timeseries options. It can create one."),
+                )
+        val report =
+            CoverageReport(
+                state = ReportState.COMPARED,
+                catalogSha256 = null,
+                planSha256 = null,
+                apiSha256 = null,
+                contexts =
+                    listOf(
+                        ContextHealth(OperatorContext.PIPELINE_STAGE, true, 40, 30, emptyList())
+                    ),
+                capabilities = listOf(gap),
+                problems = emptyList(),
+            )
+        val finding = Publisher.findings(report).single()
+        assertEquals("MISSING_API:docs/PIPELINE_STAGE/\$out#section-syntax", finding.key)
+        assertEquals(
+            "Add typed support for \$out (pipeline_stage): Out has no timeseries options",
+            finding.title,
+        )
+        assertTrue(
+            "Out has no timeseries options. It can create one." in finding.body,
+            finding.body,
+        )
     }
 }
