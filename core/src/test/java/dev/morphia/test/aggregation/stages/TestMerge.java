@@ -16,12 +16,14 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
+import static com.mongodb.client.model.MergeOptions.WhenMatched.KEEP_EXISTING;
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Merge.into;
+import static org.testng.Assert.assertEquals;
 
 public class TestMerge extends AggregationTest {
     @Test
@@ -72,6 +74,24 @@ public class TestMerge extends AggregationTest {
         entity.strings = Arrays.asList("Test1", null, "Test2");
         ds.merge(entity, new InsertOneOptions().unsetMissing(true));
 
+    }
+
+    @Test
+    public void keepExisting() {
+        checkMinServerVersion(4.2);
+        insert("salaries", parseDocs(
+                "{ '_id' : 1, employee: 'new' }",
+                "{ '_id' : 2, employee: 'new' }"));
+        getDatabase().getCollection("budgets").insertOne(new Document("_id", 1).append("employee", "old"));
+
+        getDs().aggregate(Salary.class)
+                .merge(into("budgets")
+                        .on("_id")
+                        .whenMatched(KEEP_EXISTING)
+                        .whenNotMatched(INSERT));
+
+        assertEquals(getDatabase().getCollection("budgets").find().sort(new Document("_id", 1)).into(new ArrayList<>()),
+                List.of(new Document("_id", 1).append("employee", "old"), new Document("_id", 2).append("employee", "new")));
     }
 
     @Entity
