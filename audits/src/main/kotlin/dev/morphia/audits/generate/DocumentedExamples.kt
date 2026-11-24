@@ -521,5 +521,3 @@ object DocumentedExamples {
     /** Text without whitespace, so a fixture's copied action is found in its page's block. */
     private fun squeeze(text: String): String = text.filterNot { it.isWhitespace() }
 }
-
-/** A `fetch.py current` sources file: every operator page at one commit. */

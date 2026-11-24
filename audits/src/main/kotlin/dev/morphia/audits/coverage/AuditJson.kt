@@ -37,7 +37,6 @@ import dev.morphia.audits.repairs.CuratedRepairReport
 import dev.morphia.audits.repairs.CutoverReport
 import dev.morphia.audits.repairs.FixtureDeletionLedger
 import dev.morphia.audits.repairs.FixtureMigrationLedger
-import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigrationReport
 import dev.morphia.audits.repairs.FormReview
 import dev.morphia.audits.repairs.LegacyReferenceReport
@@ -212,9 +211,6 @@ object AuditJson {
 
     fun legacyReferences(json: String): LegacyReferenceReport =
         read(json, LegacyReferenceReport::class.java)
-
-    fun formCandidates(json: String): FormMigration.Candidates =
-        read(json, FormMigration.Candidates::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

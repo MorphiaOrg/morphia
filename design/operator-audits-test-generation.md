@@ -84,7 +84,8 @@ fixture files:
   corrections are applied to the reference as the override pins them.
 - **Cases that never had a lock** take their documented scenario from a pinned revision: the page as
   of the Morphia commit that created the fixture, found and verified the way the form migration
-  finds its sources (`fetch.py candidates`, with blob pins). Drift between that revision and the
+  finds its sources (with blob pins; the retired `fetch.py candidates` did this, and its pins are
+  frozen in the catalogs). Drift between that revision and the
   current page is reported separately, so upstream edits do not turn into Morphia failures.
 - **Collection names:** some `FIXTURE_CURATION` corrections only rename a documented collection to
   the legacy harness's `example_test`, for example `$graphLookup`'s `from` and `$merge`'s target.
@@ -300,8 +301,8 @@ A candidate records:
    with the generator, the first step that matches extracted scenarios to owners.
 3. **Compatibility adapter.** Implemented for aggregation cases whose reference is an accepted,
    exact override: `TemplatedTestBase.testPipeline` hands a converted case's unchanged lambda to the
-   runner, after checking its options against the scenario, and `FormMainKt convert` replaces its
-   legacy files with the scenario in place. References for never-locked cases, `CURATED_REFERENCE`
+   runner, after checking its options against the scenario, and the retired `FormMainKt convert`
+   replaced its legacy files with the scenario in place. References for never-locked cases, `CURATED_REFERENCE`
    and query and update cases come with the cutover (slice 5).
    - **Descriptor:** built for a legacy case from the binding manifest and backport ledger.
    - **Scenario:** emitted from its reference (see
@@ -320,12 +321,14 @@ A candidate records:
    cases that need them can be checked rather than reported as gaps. Coming before cutover, they
    let cases with declared rules or printed results convert in one pass.
 5. **Legacy cutover by context**, as several PRs:
-   - **5a, references for never-locked cases:** `fetch.py references` finds each never-locked
-     fixture's page as of its first and last fixture commits. `FormMainKt references` pins the
+   - **5a, references for never-locked cases:** the retired `fetch.py references` found each
+     never-locked fixture's page as of its first and last fixture commits, and `FormMainKt
+     references` pinned the
      first one that reproduces the fixture exactly (or satisfies its printed results) into
      `audits/catalog/legacy-references.json`, the reviewed artifact; references are overrides
-     without a retired lock. `recheck-references` re-derives the pins from the pages, and
-     `convert` reads them. One case,
+     without a retired lock. `recheck-references` re-derived the pins from the pages, and
+     `convert` read them. All of these commands are retired now that every case has moved; the
+     catalog is frozen and `FormMigrationTest` checks it offline. One case,
      `abs/absExpressionOperator`, is converted.
    - **5b, expressions:** the legacy options above are mapped, `convert` takes many fixtures, and
      every eligible expressions case is tried. 160 convert; the 45 whose strict checks fail stay
@@ -357,8 +360,9 @@ A candidate records:
 7. **Bindings and generator.** Emit Java and `scenario.json` for unowned examples, as a candidate
    only until it is integrated and promoted through slice 6. The first family is the one with the
    most unowned, environment-independent examples at that time.
-   - **Inventory:** `fetch.py current` lists every operator page at one mongodb/docs commit and
-     `fetch.py pages` fetches them; `GenerateMainKt inventory` writes
+   - **Inventory:** `GenerateMainKt inventory` extracts the pages named by the committed
+     `scenario-plan.json` with the structured extractor (it once read pages that `fetch.py`
+     fetched) and writes
      `audits/catalog/documented-examples.json`, matching each example to its owner by title, or by
      its action text when the page renamed it since the fixture was written. Statuses are `OWNED`,
      `UNOWNED`, `UNNAMED` (a generic title) and `AMBIGUOUS` (a shared title or name, or several

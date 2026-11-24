@@ -133,20 +133,19 @@ When a generated case fails integration, read why in `integration.log`. Never lo
 to pass. If the page is wrong or the server cannot run the case, add an exclusion to
 `generation-review.json` that states the evidence. If Morphia is wrong, fix Morphia.
 
-## Converting legacy cases
+## Legacy cases
 
-A legacy case joins the runner when its documented source reproduces its fixture:
+The MORPHIA_FORM migration is frozen. Its records (`form-review.json`, `form-migration.json`,
+`legacy-references.json` and the ledger, `fixture-migration.json`) are checked offline by
+`FormMigrationTest` and `FixtureMigrationTest`. The commands that drafted, captured and converted
+them read historical pages with the retired RST extractor and are gone; a case that stays legacy is
+recorded in `cutover.json`. Two maintenance commands remain:
 
 ```sh
 # -Daudits.mainClass=dev.morphia.audits.repairs.FormMainKt
-#   convert  <root> <revision> <fixture>...   # writes scenario.json, records the ledger entry
-#   manifest <root>                           # rewrites the manifest, generated cases included
+#   rescenario <root>   # rewrites the ledger's scenarios from their recorded overrides
+#   manifest   <root>   # rewrites the manifest, generated cases included
 ```
-
-`convert` touches a fixture only after every check passes; a failing fixture is reported and left
-alone. Record a case that stays legacy in `cutover.json` with its failing check. References for
-never-locked fixtures come from `fetch.py references`, `fetch.py pages` and
-`FormMainKt references`; recheck them with `FormMainKt recheck-references`.
 
 ## Publishing findings
 
@@ -170,17 +169,11 @@ trial run at MorphiaOrg/morphia. Use the disposable sandbox repository instead.
 | `Exclusions of cases that are not generated` | An exclusion outlived its case. Remove it. |
 | A removed scenario still runs | Stale `core/target/test-classes`; delete it and rebuild. |
 | `Owned file changed` in `GeneratedCasesTest` | A generated or protected file was edited. Regenerate, or run `FormMainKt manifest` after a reviewed edit. |
-| `External snippet requires a source resolver` | A code directive inside an example names a file that is not in the pages directory: a remote shared include, or a snippet outside the sparse clone (include `/content/code-examples/tested/`). The page is skipped. |
-| `gh` rate limits while fetching pages | Use a git clone and `fetch.py local`, as discovery does, instead of `fetch.py pages`. |
 
 ## Legacy paths still in use
 
 These remain because coverage has not fully moved off them yet. Each one goes when the last of
 its users does.
 
-- **The legacy RST extractor** (`rst/`, `model/CodeBlock`). Cutover and the example inventory
-  read pages through it, with tested snippets spliced in and only the mongosh content of each
-  language choice kept. It goes once the structured parser (`scenarios/`) owns example extraction,
-  snippets included.
 - **The frozen legacy documentation tables** stay until a separate documentation migration retires
   them.

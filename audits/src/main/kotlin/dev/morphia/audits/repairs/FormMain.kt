@@ -1,165 +1,25 @@
 package dev.morphia.audits.repairs
 
-import dev.morphia.audits.bindings.LegacyBindings
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.generate.Candidates
 import java.nio.file.Files
 import java.nio.file.Path
 
-/** The pinned references of never-locked fixtures, relative to the repository root. */
-const val REFERENCES = "audits/catalog/legacy-references.json"
-
 private const val USAGE =
-    """Usage: FormMainKt draft <repository-root> <pages> <source-repository> <review-out> <candidates.json>...
-       FormMainKt capture <repository-root> <revision> <pages> <review.json> <out>
-       FormMainKt apply <repository-root> <report.json>
-       FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>
-       FormMainKt convert <repository-root> <revision> <fixture>...
-       FormMainKt manifest <repository-root>
-       FormMainKt rescenario <repository-root>
-       FormMainKt references <repository-root> <revision> <pages> <source-repository> <out> <candidates.json>...
-       FormMainKt recheck-references <repository-root> <pages>"""
+    """Usage: FormMainKt manifest <repository-root>
+       FormMainKt rescenario <repository-root>"""
 
 /**
- * Drafts, captures and applies the MORPHIA_FORM lock migration. Pages are read from an explicit
- * directory laid out as `<pages>/<commit>/<path>`; nothing is fetched. Lock categories and the
- * tests' extra collections come from the committed repair inventory,
- * `audits/catalog/curated-repairs.json`.
+ * Maintains the frozen MORPHIA_FORM migration ledger, `audits/catalog/fixture-migration.json`. The
+ * commands that drafted, captured and converted it read historical pages with the retired RST
+ * extractor and are gone; the ledger, the review and the references stay as reviewed records.
+ * `rescenario` rewrites the ledger's scenarios from their recorded overrides, and `manifest` writes
+ * the case manifest from it.
  */
 fun main(args: Array<String>) {
     fun read(path: String) =
         Files.readAllBytes(Path.of(path)).decodeToString(throwOnInvalidSequence = true)
-    fun facts(root: String) =
-        FormMigration.facts(
-            AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json"))
-        )
-    fun references(root: String) =
-        Path.of("$root/$REFERENCES")
-            .takeIf { Files.exists(it) }
-            ?.let { AuditJson.legacyReferences(read(it.toString())) }
     when (args.firstOrNull()) {
-        "draft" -> {
-            require(args.size >= 6) { USAGE }
-            val review =
-                FormMigration.draft(
-                    Path.of(args[1]),
-                    Path.of(args[2]),
-                    args[3],
-                    args.drop(5).map { AuditJson.formCandidates(read(it)).candidates },
-                    facts(args[1]),
-                )
-            Files.writeString(Path.of(args[4]), AuditJson.write(review))
-        }
-        "references" -> {
-            require(args.size >= 7) { USAGE }
-            val report =
-                FormMigration.references(
-                    Path.of(args[1]),
-                    args[2],
-                    Path.of(args[3]),
-                    args[4],
-                    args.drop(6).map { AuditJson.formCandidates(read(it)).candidates },
-                    facts(args[1]),
-                )
-            Files.writeString(Path.of(args[5]), AuditJson.write(report))
-        }
-        "recheck-references" -> {
-            require(args.size == 3) { USAGE }
-            val root = args[1]
-            val ledger =
-                AuditJson.fixtureMigration(read("$root/audits/catalog/fixture-migration.json"))
-            FormMigration.recheckReferences(
-                Path.of(root),
-                Path.of(args[2]),
-                requireNotNull(references(root)) { "No $REFERENCES" },
-                facts(root),
-                ledger.migrations.map { it.fixture }.toSet(),
-            )
-        }
-        "capture" -> {
-            require(args.size == 6) { USAGE }
-            val report =
-                FormMigration.capture(
-                    Path.of(args[1]),
-                    args[2],
-                    Path.of(args[3]),
-                    AuditJson.formReview(read(args[4])),
-                    facts(args[1]),
-                )
-            Files.writeString(Path.of(args[5]), AuditJson.write(report))
-        }
-        "apply" -> {
-            require(args.size == 3) { USAGE }
-            FormMigration.apply(Path.of(args[1]), AuditJson.formMigration(read(args[2])))
-        }
-        "migrate" -> {
-            require(args.size == 5) { USAGE }
-            val root = args[1]
-            val ledgerPath = Path.of("$root/audits/catalog/fixture-migration.json")
-            val ledger =
-                if (Files.exists(ledgerPath))
-                    AuditJson.fixtureMigration(read(ledgerPath.toString()))
-                else FixtureMigrationLedger()
-            val migrated =
-                FixtureMigration.migrate(
-                    Path.of(root),
-                    AuditJson.formMigration(read("$root/audits/catalog/form-migration.json")),
-                    AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json")),
-                    LegacyBindings.capture(
-                        Path.of(root),
-                        args[2],
-                        AuditJson.bindingPolicy(read("$root/audits/catalog/binding-policy.json")),
-                    ),
-                    args[3],
-                    args[4],
-                    references(root),
-                )
-            val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
-            Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
-        }
-        "convert" -> {
-            require(args.size >= 4) { USAGE }
-            val root = args[1]
-            val ledgerPath = Path.of("$root/audits/catalog/fixture-migration.json")
-            val ledger =
-                if (Files.exists(ledgerPath))
-                    AuditJson.fixtureMigration(read(ledgerPath.toString()))
-                else FixtureMigrationLedger()
-            val report = AuditJson.formMigration(read("$root/audits/catalog/form-migration.json"))
-            val inventory =
-                AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json"))
-            val catalog =
-                LegacyBindings.capture(
-                    Path.of(root),
-                    args[2],
-                    AuditJson.bindingPolicy(read("$root/audits/catalog/binding-policy.json")),
-                )
-            // Each fixture converts on its own: one that fails a check is reported and left in
-            // place, since every check runs before its files are touched. Any other failure stops
-            // the batch, and the conversions already made are still recorded.
-            val references = references(root)
-            val migrated = mutableListOf<MigratedFixture>()
-            try {
-                args.drop(3).forEach { fixture ->
-                    try {
-                        migrated +=
-                            FixtureMigration.convert(
-                                Path.of(root),
-                                report,
-                                inventory,
-                                catalog,
-                                fixture,
-                                references,
-                            )
-                    } catch (failure: IllegalArgumentException) {
-                        System.err.println("not converted: ${failure.message}")
-                    }
-                }
-            } finally {
-                val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
-                Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
-            }
-        }
         "rescenario" -> {
             require(args.size == 2) { USAGE }
             val path = Path.of("${args[1]}/audits/catalog/fixture-migration.json")

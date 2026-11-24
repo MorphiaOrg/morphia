@@ -28,14 +28,8 @@ Run this from the repository root and redirect output to a candidate artifact fo
 the command never replaces the accepted snapshot. The supplied revision is recorded as
 caller-provided metadata, while individual hashes describe the actual working-tree files.
 
-The retained legacy parser now preserves raw snippet text without sanitizing JavaScript,
-dates, Decimal128 values, comments, strings, or operator names. Include and external snippet
-directives raise an explicit unsupported-source diagnostic until the pinned resolver is
-implemented.
-Its heading/example heuristics and character-count indentation helper remain legacy code;
-the helper does not expand RST tab stops. Do not use this parser as a complete upstream
-operator inventory. The fixtures under `src/test/resources/parser` capture the known
-extraction failures independently of live documentation.
+The legacy RST parser that earlier versions of this section described (`rst/`, `model/`) is
+retired; operator pages are read by the structured extractor in `shell/` and `scenarios/`.
 
 ## Source API inventory
 
@@ -565,65 +559,19 @@ bound test's `ActionTestOptions`, executed assertion paths and extra `loadData` 
 
 ## MORPHIA_FORM lock migration
 
-`audits/probes/form-sources/fetch.py` fetches the historical `mongodb/docs` pages behind locked
-`MORPHIA_FORM` fixtures (it is the only networked step). `FormMainKt` then works offline:
+The migration is finished and its records are frozen: `audits/catalog/form-review.json`,
+`form-migration.json` (no overrides or unresolved fixtures remain), `legacy-references.json` (250
+references, every one moved), the ledger `fixture-migration.json` and `cutover.json`. The commands
+that built them (`FormMainKt draft`, `capture`, `apply`, `references`, `recheck-references`,
+`migrate` and `convert`, and `audits/probes/form-sources/fetch.py`) read historical pages with the
+legacy RST extractor and were retired with it. The [migration design](operator-audits-form-migration.md)
+records how they worked.
 
-```sh
-python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" first /tmp/first.json
-python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" last /tmp/last.json
-# Optional trailing categories widen the selection, e.g. ... first /tmp/first.json NUMERIC_TYPE MORPHIA_FORM
-python3 -I audits/probes/form-sources/fetch.py pages /tmp/first.json /tmp/pages
-python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
-./mvnw -q -Daudits -pl audits compile exec:java \
-  -Daudits.mainClass=dev.morphia.audits.repairs.FormMainKt \
-  -Dexec.args="draft $PWD /tmp/pages mongodb/docs /tmp/form-review.json /tmp/first.json /tmp/last.json"
-```
+`FormMigrationTest` rechecks the frozen records offline: the report matches its review, every
+reference is exact, keeps its source digests and has moved onto the runner, and every locked or
+never-locked example is accounted for. `FixtureMigrationTest` holds each moved case's scenario to
+its recorded override or reference, the binding catalog and the preserved corpus.
 
-`draft` only proposes a review. Every command reads the locks' categories (form rules need `MORPHIA_FORM`, number retypes
-`NUMERIC_TYPE`, value corrections `DOCS_ERROR` or `FIXTURE_CURATION`) and the tests' extra collections
-(`loadData("airports", 2)` → `data2.json`) from the committed `audits/catalog/curated-repairs.json`,
-so recapture that inventory first when a test's `loadData` calls change. The reviewed `audits/catalog/form-review.json` is consumed by
-`capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,
-and by `apply <root> <report>`, which deletes the retired locks. To reject a drafted declaration,
-move its fixture to `unresolved` with gap `REJECTED` and the reason; `capture` keeps it rejected while it
-still reproduces. Generated `/includes/extracts/` files are assembled from the `extracts*.yaml` that
-`fetch.py pages` downloads with them.
-
-`migrate <root> <revision> <fixture> <test-type#method>` moves a legacy case with an exact accepted
-override onto the operator case runner. It writes the case's `scenario.json` under
-`core/src/test/resources/dev/morphia/test/generated/fixtures/` from the override's documented source,
-deletes the legacy fixture directory and records the move in `audits/catalog/fixture-migration.json`.
-Run it before editing the legacy test, because it records the bound method's body digest; then move
-the body into the named test, move the fixture's declaration in `form-review.json` from
-`declarations` to `migrated` (it keeps pinning the source, and the ledger's copy must match it), and
-regenerate `example-bindings.json`, the repair inventory and the form report. `convert <root> <revision> <fixture>` converts a `testPipeline` case with an accepted override (its
-declared form rules travel with the scenario, and results the page prints as mongosh prints them
-travel as the constraints they prove, written by `PublishedEncoding`; retypes, corrections and alternative commands are not
-supported yet) in place: its legacy fixture files are replaced by the scenario, its unchanged test runs through the
-runner's compatibility adapter, and the ledger records the move (kind `CONVERTED`, with the legacy
-body text). Move its declaration to `migrated` as for `migrate`. A converted case whose legacy body
-or fixture file had to change first records the change as a reviewed edit: `bodyEdit` or
-`fileEdits` (by file name), each with the digest it started from and the reason. The checks hold
-the frozen binding catalog and the preserved corpus to those starting digests.
-
-`references <root> <revision> <pages> <source-repository> <out> <candidates.json>...` pins the
-documented reference of every never-locked fixture into `audits/catalog/legacy-references.json`.
-Candidates come from `fetch.py references <root> first|last <out>`; each fixture takes the first
-candidate whose page reproduces it exactly (or, where the page prints mongosh results, satisfies
-what they prove), with no rule, retype or correction. A fixture no candidate reproduces is listed
-with its gap and stays on the legacy path. The file is the reviewed artifact: an audits test
-rechecks its recorded source text against the tree without the pages, and
-`recheck-references <root> <pages>` re-derives every pin and gap from the fetched pages. `convert`
-reads a fixture's reference when it has no override.
-
-`convert` takes several fixtures and maps the legacy options: `removeIds` ignores `_id` in every
-comparison, `serverVersion` becomes the minimum server, and `skipActionCheck`/`skipDataCheck` become
-`skipped` checks with their reason. A fixture it cannot convert is reported and left in place. A case
-that converts but fails its strict checks is reverted and recorded in `audits/catalog/cutover.json`
-(`LEGACY_ONLY`, with the failing check). An audits test keeps that list consistent with the ledger
-and requires every convertible case in the cutover's `contexts` to have moved or be listed. To retry
-legacy-only cases after a Morphia fix, convert them again, run their tests under both mappers, and
-remove from `cutover.json` the ones that now pass.
 `rescenario <root>` rewrites every ledger scenario from its override after a scenario-format
 change, refreshing the digests.
 
@@ -631,9 +579,7 @@ change, refreshing the digests.
 the migration ledger: every case with its scenario and test, and every owned file with its digest.
 Core's `GeneratedCasesTest` checks the namespace against it in both directions, and an audits test
 requires it to equal a fresh capture and every example to have one owner. See the
-[test generation design](operator-audits-test-generation.md). An audits test rechecks the committed
-report against the tree without the pages. See the [migration design](operator-audits-form-migration.md).
-
+[test generation design](operator-audits-test-generation.md).
 
 ## GitHub transport
 
@@ -692,17 +638,13 @@ not own, and restores every original if any change fails.
 
 ## Generated cases
 
-`fetch.py current <out.json>` lists every operator page at one mongodb/docs commit, and
-`fetch.py pages <out.json> <pages>` fetches them. `GenerateMainKt inventory <root> <pages> <out.json>`
-then writes `audits/catalog/documented-examples.json`, which records every example's owner and the
-source text of the unowned ones. `FormMigration.pageExamples` first keeps only the `shell` tab of each
-`.. tabs-drivers::` set and the `.. selected-content::` blocks selected for `shell`
-(`FormMigration.shellTabs`), then splices in the files that `.. input::`, `.. output::` and
-`.. literalinclude::` name under `/code-examples/` or `/includes/` (`FormMigration.snippets`).
-`source/code-examples/tested` is a repository symlink to `../../../../code-examples/tested`, so
-tested snippets are read from `content/code-examples`; every spliced file is recorded with its git
-blob among the page's includes. `fetch.py pages` fetches those targets too, and the local clone
-needs `/content/code-examples/tested/` in its sparse checkout.
+`GenerateMainKt plan <root> <bundle> <content-sha256> <documents.json>` drafts
+`audits/catalog/scenario-plan.json` from a pinned source bundle and its parsed pages (`SourcesMainKt`,
+then `DocumentsMainKt`): one rule per page that declares one operator and has an examples section.
+The committed plan is reviewed policy. `GenerateMainKt inventory` takes the same arguments, extracts
+the planned pages with the structured extractor and writes `audits/catalog/documented-examples.json`,
+which records every example's owner, the source text of the unowned ones and, for an example with no
+program, why (`UNSUPPORTED`).
 
 `GenerateMainKt candidate <root> <out> <core-classpath-file>` checks `audits/catalog/dsl-bindings.json`
 against core's current source (pass `./mvnw dependency:build-classpath -pl :morphia-core` output, and
@@ -723,9 +665,11 @@ It clones the operator pages of mongodb/docs sparsely (git checks every blob, an
 limit applies) and runs `audits/discover.sh <docs-checkout> <out> --integrate`, which works in a
 throwaway worktree of HEAD:
 
-- `fetch.py local` lists the checkout's operator pages;
-- `GenerateMainKt inventory` reinventories them, and `inventory.diff` is the change against the
-  committed `documented-examples.json`: new, renamed or removed examples to review;
+- `SourcesMainKt` pins the checkout's manual into a source bundle, and `DocumentsMainKt` parses its
+  operator pages;
+- `GenerateMainKt inventory` reinventories them under the committed plan, and `inventory.diff` is
+  the change against the committed `documented-examples.json`: new, renamed or removed examples to
+  review; `plan.diff` compares a freshly drafted plan with the committed one;
 - `candidate` regenerates with the committed bindings and review, writing `gaps.json`;
 - `integrate` runs the candidate's tests under Critter, then reflection.
 

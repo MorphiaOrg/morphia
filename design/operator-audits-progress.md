@@ -2771,3 +2771,8 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   discovery parses the operator pages instead of running `fetch.py`. At docs e4b0c153: 290 pages,
   307 owned, 291 unowned, 101 unsupported, none ambiguous or unnamed. 60 sibling examples got
   proposed names; 19 reviews whose examples have no action any more were dropped.
+- Parser retirement, step 3 (retire the legacy tooling): the RST extractor (`rst/`, `model/`),
+  `GizaExtracts`, `fetch.py` and the form-migration commands (`draft`, `capture`, `apply`,
+  `references`, `recheck-references`, `migrate`, `convert`) are deleted. Their catalogs stay frozen:
+  `FormMigrationTest` checks the 136 migrated declarations and the 250 references offline, and that
+  every referenced fixture is in the ledger. `FormMainKt` keeps `rescenario` and `manifest`.

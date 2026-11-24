@@ -1,5 +1,11 @@
 # MORPHIA_FORM lock migration
 
+> **Historical record.** This migration is finished. The commands it describes (`fetch.py`,
+> `FormMainKt draft`, `capture`, `apply`, `references`, `recheck-references`, `migrate` and
+> `convert`) and the `GizaExtracts` and RST extractor code are retired. `form-review.json`,
+> `form-migration.json` and `legacy-references.json` stay frozen and are checked offline by
+> `FormMigrationTest`; see [Frozen records](operator-audits-design.md#frozen-records).
+
 The second slice of step 4 of [the operator audit plan](mongodb-operator-audits.md), following the
 [curated repair inventory](operator-audits-curated-repairs.md). It replaces the locks whose only
 category is `MORPHIA_FORM` with declared equivalences, and retires a lock only when its documented

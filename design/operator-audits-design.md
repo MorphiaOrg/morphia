@@ -93,7 +93,7 @@ flowchart LR
 ```
 
 - **The audits module** (`audits/`) holds the tools: it reads pages, inventories examples, generates
-  and converts cases, and files issues. It depends on core's sources and builds, but core never
+  cases, and files issues. It depends on core's sources and builds, but core never
   depends on it.
 - **Core's operator tests** (`core/src/test/`) run the cases. They read scenarios, the
   manifest and the binding descriptor from the test classpath, and know nothing about pages or
@@ -176,14 +176,13 @@ methods or fixture directories disagree with it.
 | Package | Role | In production use |
 | --- | --- | --- |
 | `generate` | Example inventory, DSL bindings, case generator, candidates. | Yes |
-| `repairs` | Legacy migration: lock inventory, form rules, conversion, the migration ledger, the manifest. | Yes |
+| `repairs` | The frozen legacy migration records and their checks: lock inventory, form rules, the migration ledger, the manifest. | Yes |
 | `publish` | `gh` transport, the idempotent publisher, discovery findings. | Yes |
 | `shell` | Lowers mongosh source into typed commands and BSON through a pinned Rhino AST, without evaluating it. | Yes, through `repairs` |
 | `semantics`, `published` | Strict BSON comparison, and comparison against printed results. | Yes, through `repairs` |
 | `api` | Inventories Morphia's public API with the JDK compiler, used to verify bindings. | Yes |
 | `bindings` | Captures which legacy test owns which fixture, and the descriptive-name backport. | Yes |
 | `naming` | Descriptive example names, and the name registry reconciler. | Names: yes. Reconciler: not yet. |
-| `rst`, `model` | The legacy line-based RST extractor. | Only by the retired conversion commands |
 | `sources`, `documents`, `discovery` | Pinned Git source bundles, the Snooty parser adapter, capability discovery. | Yes, weekly |
 | `scenarios` | Structured scenario extraction: native input/output groups, and section assembly, which gives each block a role by what the shell grammar makes of it. | Yes: the example inventory, weekly |
 | `coverage` | Capability catalog and plan contracts, coverage comparison, and `AuditJson`, the strict JSON codec every package uses. | Yes, weekly |
@@ -202,9 +201,9 @@ every file. The ones the running system depends on:
 | `documented-examples.json` | `GenerateMainKt inventory` | The generator, discovery's diff, the publisher's new-example check. |
 | `dsl-bindings.json` | Hand, reviewed | The generator, after verification against core's API. |
 | `generation-review.json` | Hand, reviewed | The generator: which families to generate, and the exclusions. |
-| `fixture-migration.json` | `FormMainKt migrate` / `convert` | The manifest, candidates, `rescenario`. |
-| `cutover.json` | Hand, from failed conversions | The conversion completeness check. |
-| `form-review.json`, `form-migration.json` | Review, then `FormMainKt capture` | Conversion, which carries the rules into each scenario. |
+| `fixture-migration.json` | Frozen (the retired `convert`); `rescenario` rewrites its scenarios | The manifest, candidates, `rescenario`. |
+| `cutover.json` | Frozen, from failed conversions | The conversion completeness check. |
+| `form-review.json`, `form-migration.json`, `legacy-references.json` | Frozen (the retired `capture` and `references`) | The ledger check, which carries their rules and pins into each scenario. |
 | `publication-policy.json` | Hand | The publisher: the labels for each finding type. |
 
 ### Example inventory
@@ -347,9 +346,9 @@ losing what the locks protected:
    it came from and the declared rules, numeric retypes or corrections that reproduce it exactly
    (`form-review.json`, captured as `form-migration.json`). Never-locked fixtures are pinned to their
    pages in `legacy-references.json`.
-5. **Convert.** `FormMainKt convert` replaces a fixture's files with a scenario built from its
-   documented source, and records the move in `fixture-migration.json`. A case that converts but
-   fails a strict check is reverted and recorded in `cutover.json` as legacy-only, with the failing
+5. **Convert.** The retired `FormMainKt convert` replaced a fixture's files with a scenario built from its
+   documented source, and recorded the move in `fixture-migration.json`. A case that converted but
+   failed a strict check was reverted and recorded in `cutover.json` as legacy-only, with the failing
    check. When a legacy test body or fixture file had to change first, the ledger records the
    change as a reviewed edit with the digest it started from, so the preserved originals still
    check.
@@ -476,12 +475,14 @@ The example inventory reads the same bundle; the legacy RST extractor no longer 
 `.github/workflows/audits.yml` runs the offline and parser tests on pull requests that touch the
 audits module or core's operator tests.
 
-## Transitional parts
+## Frozen records
 
-These exist only until the migration finishes. The plan says what retires each one.
-
-- **The legacy RST extractor** (`rst/`, `model/`), which only the retired conversion commands still use.
-- **`FormMainKt` conversion commands and their review files**, needed while legacy fixtures remain.
+The legacy migration is finished. The RST extractor (`rst/`, `model/`) and the `FormMainKt`
+commands that read historical pages through it (`draft`, `capture`, `apply`, `references`,
+`recheck-references`, `migrate`, `convert`) are gone, with `fetch.py`. Their records stay frozen and
+are checked offline: the form review and report match each other, every reference is exact, keeps
+its source digests and has moved onto the runner, and the ledger holds each moved case to its
+reference. `FormMainKt rescenario` and `manifest` remain for the ledger and the manifest.
 
 ## Keeping this document current
 

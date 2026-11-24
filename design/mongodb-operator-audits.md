@@ -52,7 +52,8 @@ GitHub issue creation, checks release tags, modifies core Java tests, and writes
 under this repository's old `docs/` tree. Its `Results` mixes coverage and mutation results.
 The live-HTML `OperationAuditTest` is another, partly disabled discovery path.
 
-Reviewed files and downstream contracts:
+Reviewed files and downstream contracts (as of the original review; the RST extractor under
+`rst/` and `model/` has since been retired, so those links no longer resolve):
 
 | Area | Files and relevant behavior |
 | --- | --- |
