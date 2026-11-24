@@ -41,6 +41,8 @@ Skipped source stays visible on its scenario (`skipped`) or, for shared setup, o
 - `SEVERAL_COMMANDS`: a block holding more than one action;
 - `MIXED_SECTION_ROLES`: a block holding setup and an action together, which one role can't describe;
 - `TRAILING_SETUP`: setup or a seed no action follows;
+- `UNSUPPORTED_SETUP`: an insert or index build the grammar can't read; the actions after it report
+  `UNSUPPORTED_SETUP` rather than run without that data;
 - `UNSUPPORTED_SOURCE`: anything else the processor can't read, such as a binding used before it is
   declared.
 
@@ -75,13 +77,30 @@ example selection; it does not implicitly select that section's descendants. Set
 not be excluded. Missing/duplicate ownership, unresolved languages/selectors and non-setup commands
 block promotion and complete naming. Selected raw source remains visible when validation fails.
 
+A section that inserts in plain code and queries in a native input/output group gives that
+group its inserts; its insert-only code is then not a scenario of its own. After a page's
+scenarios are built, two page-wide passes run in page order:
+
+- **Inherited inserts.** A scenario that inserts nothing into its action's collection gets the
+  inserts the page most recently made into that collection, from any earlier section (a section
+  that only loads data included), with the declarations they read, but never another example's
+  action. When the inherited setup doesn't run, the query reports `UNSUPPORTED_INHERITED_SETUP`.
+  Setup the grammar can't read may have replaced older data, so nothing is inherited past it; a
+  native group after such setup in its own section reports it too. Inherited copies count
+  against the source and report budgets. A later section's query on "the survey collection above" runs against
+  it.
+- **Reads after writes.** A read that follows a write in its section (an update, a pipeline with
+  `$merge` or `$out`, or a write the page shows but no scenario runs, such as a `bulkWrite` in a
+  `try` block) reports `AFTER_EARLIER_WRITE` and has no program of its own.
+
 Tabs and `selected-content` branches start separate owners; a selection naming a reference tab
 reads as reference, one naming a foreign tab as foreign. A shared section with one branch per
 language shares its reference branch, and shares nothing when only other languages show code.
 The shared source contributes only its setup blocks, classified as above; its commands, templates and unreadable blocks are skipped with their reasons. Where it inserts nothing, its documents seed the collection of each action that consumes them. Verified setup
 is retained in the page's `sharedSetup` field even if every consumer disappears. It is prepended,
-in the declared order, to standalone and native IO reference candidates. The module never borrows
-state from the first sibling or treats section ancestry as proof of a shared dependency.
+in the declared order, to standalone and native IO reference candidates. Beyond declared shared
+setup, only the inherited inserts below carry data between sections; section ancestry alone is
+never proof of a shared dependency.
 Every emitted setup occurrence is charged against the source budget before normalization. Embedded
 program bytes share the report byte cap, which is checked incrementally before retaining another
 program. The final report cap also covers provenance and repeated containers. Large inputs still

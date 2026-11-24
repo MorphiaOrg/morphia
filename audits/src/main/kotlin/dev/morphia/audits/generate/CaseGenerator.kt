@@ -130,7 +130,13 @@ object CaseGenerator {
                 page.examples.forEach { example ->
                     fun gap(kind: GapKind, detail: String) {
                         gaps +=
-                            GenerationGap(page.context, page.operator, example.title, kind, detail)
+                            GenerationGap(
+                                page.context,
+                                page.operator,
+                                example.name ?: example.title,
+                                kind,
+                                detail,
+                            )
                     }
                     when (example.status) {
                         ExampleStatus.OWNED -> return@forEach
@@ -138,6 +144,8 @@ object CaseGenerator {
                             return@forEach gap(GapKind.UNNAMED, example.detail ?: "")
                         ExampleStatus.AMBIGUOUS ->
                             return@forEach gap(GapKind.AMBIGUOUS, example.detail ?: "")
+                        ExampleStatus.UNSUPPORTED ->
+                            return@forEach gap(GapKind.SOURCE_UNSUPPORTED, example.detail ?: "")
                         ExampleStatus.UNOWNED -> Unit
                     }
                     val stem = example.stem!!
@@ -467,6 +475,9 @@ object CaseGenerator {
                 BindingForm.PROJECTION -> {
                     if (!argument.isDocument)
                         throw Unbound("$path: ${binding.operator} takes a document")
+                    // The projection writes a suppressed _id first, wherever the page put it.
+                    if (argument.asDocument().keys.indexOf("_id") > 0)
+                        rules += FormRule.PROJECT_ID_FIRST
                     factory.format("") +
                         argument.asDocument().entries.joinToString("") { (field, each) ->
                             val flag = flag(each)

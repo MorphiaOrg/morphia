@@ -17,6 +17,9 @@ fun main(args: Array<String>) {
                 args.drop(4),
                 Path.of(args[2]),
                 Path.of(args[3]),
+                // Every operator page parses in one run of a few minutes.
+                timeoutSeconds = 600,
+                maximumOutputBytes = 128L * 1024 * 1024,
             )
         System.out.write(AuditJson.write(report).toByteArray(Charsets.UTF_8))
         System.out.flush()

@@ -1,10 +1,12 @@
 package dev.morphia.audits.publish
 
 import dev.morphia.audits.generate.Attestation
+import dev.morphia.audits.generate.DocumentedPage
 import dev.morphia.audits.generate.ExampleInventory
 import dev.morphia.audits.generate.ExampleStatus
 import dev.morphia.audits.generate.GapKind
 import dev.morphia.audits.generate.GenerationGap
+import dev.morphia.audits.repairs.CaseManifests
 
 /**
  * The publishable findings of one discovery run (`audits/discover.sh`): each binding the generated
@@ -55,28 +57,49 @@ object DiscoveryFindings {
     ): List<Finding> {
         fun key(context: String, operator: String, title: String) =
             "$context/$operator/${title.trim()}"
-        val known =
-            committed.pages
-                .flatMap { page ->
-                    page.examples.map { key(page.context, page.operator, it.title) }
-                }
-                .toSet()
+        // An example is its reviewed name, else its title, which the inventory keeps unique for
+        // unowned examples. One in any other state adds a digest of its own source and detail,
+        // so its key doesn't depend on its siblings.
+        fun keys(page: DocumentedPage): List<String> =
+            page.examples.map { example ->
+                val label = example.name ?: example.title
+                key(
+                    page.context,
+                    page.operator,
+                    if (example.status == ExampleStatus.UNOWNED) label
+                    else
+                        "$label#" +
+                            CaseManifests.sha256(
+                                    (example.blocks.map { it.sha256 } + example.detail.orEmpty())
+                                        .joinToString("\n")
+                                        .toByteArray()
+                                )
+                                .take(12),
+                )
+            }
+        val known = committed.pages.flatMap(::keys).toSet()
         val gapOf = gaps.associateBy { key(it.context, it.operator, it.title) }
         return current.pages.flatMap { page ->
             page.examples
-                .filter { it.status != ExampleStatus.OWNED }
-                .filter { key(page.context, page.operator, it.title) !in known }
-                .map { example ->
-                    val key = key(page.context, page.operator, example.title)
+                .zip(keys(page))
+                // An example with no source has nothing to generate from or cover by hand yet.
+                .filter { (example, key) ->
+                    example.status != ExampleStatus.OWNED &&
+                        (example.status == ExampleStatus.UNOWNED || example.blocks.isNotEmpty()) &&
+                        key !in known
+                }
+                .distinctBy { (_, key) -> key }
+                .map { (example, key) ->
                     val state =
-                        gapOf[key]?.let { "Generation reports ${it.kind}: ${it.detail}" }
+                        gapOf[key(page.context, page.operator, example.name ?: example.title)]
+                            ?.let { "Generation reports ${it.kind}: ${it.detail}" }
                             ?: if (example.status == ExampleStatus.UNOWNED)
                                 "It is generated when its family is in `audits/catalog/generation-review.json`."
                             else "It is ${example.status}: ${example.detail}"
                     Finding(
                         "${FindingType.NEW_EXAMPLE}:$key",
                         FindingType.NEW_EXAMPLE,
-                        "Cover the documented ${page.operator} example \"${example.title.trim()}\"",
+                        "Cover the documented ${page.operator} example \"${(example.name ?: example.title).trim()}\"",
                         "mongodb/docs `${current.commit.take(10)}` documents this ${page.context} example " +
                             "at `${page.source.path}`, and no test covers it.\n\n$state\n\n" +
                             "Accept the new inventory (see audits/README.md, Weekly discovery) and " +

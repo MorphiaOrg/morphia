@@ -11,7 +11,9 @@ import dev.morphia.audits.generate.GenerationGap
 import dev.morphia.audits.generate.GenerationGaps
 import dev.morphia.audits.publish.DiscoveryFindings
 import dev.morphia.audits.publish.FindingType
+import dev.morphia.audits.repairs.BlockRole
 import dev.morphia.audits.repairs.FormSource
+import dev.morphia.audits.repairs.SourceBlock
 import java.nio.file.Files
 import java.nio.file.Path
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,6 +56,33 @@ class DiscoveryFindingsTest {
 
     private fun gap(title: String, detail: String) =
         GenerationGap("aggregation/expressions", "bitOr", title, GapKind.UNBOUND, detail)
+
+    /** Examples that share a section's title are found by their names, or else their actions. */
+    @Test
+    fun siblingsUnderOneTitleAreSeparateFindings() {
+        fun block(text: String) = SourceBlock(BlockRole.ACTION, text, text.repeat(64).take(64))
+        val one =
+            DocumentedExample("Two Ways", ExampleStatus.UNOWNED, "orWithOne", name = "OR with One")
+        val two =
+            DocumentedExample("Two Ways", ExampleStatus.UNOWNED, "orWithTwo", name = "OR with Two")
+        val third =
+            DocumentedExample("Two Ways", ExampleStatus.AMBIGUOUS, blocks = listOf(block("a")))
+        val fourth =
+            DocumentedExample("Two Ways", ExampleStatus.AMBIGUOUS, blocks = listOf(block("b")))
+        fun keys(committed: ExampleInventory, current: ExampleInventory) =
+            DiscoveryFindings.findings(committed, current, emptyList(), null, null).map { it.key }
+        val found = keys(inventory(one), inventory(one, two, third, fourth))
+        assertEquals(3, found.distinct().size, found.toString())
+        assertTrue(
+            "NEW_EXAMPLE:aggregation/expressions/bitOr/OR with Two" in found,
+            found.toString(),
+        )
+        // A sibling added later leaves an example's key alone, so it isn't found again.
+        assertEquals(
+            keys(inventory(one), inventory(one, fourth)),
+            keys(inventory(one, third), inventory(one, third, fourth)),
+        )
+    }
 
     @Test
     fun findingsNameMissingBindingsNewExamplesAndFailedIntegration() {

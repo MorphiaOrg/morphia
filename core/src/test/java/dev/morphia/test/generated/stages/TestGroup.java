@@ -9,7 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
+import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -22,14 +24,12 @@ public class TestGroup extends TestBase {
     private final OperatorCaseRunner runner = new OperatorCaseRunner(this);
 
     @Test
-    @DisplayName("Calculate Count, Sum, and Average")
-    public void calculateCountSumAndAverage() {
+    @DisplayName("Group by null")
+    public void groupByNull() {
         runner.aggregate(
-                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/group/calculateCountSumAndAverage/scenario.json"),
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/group/groupByNull/scenario.json"),
                 (aggregation) -> aggregation.pipeline(
-                        match(lt("year", 1910)),
-                        group(id("$year")).field("totalRuntime", sum("$runtime")).field("averageRuntime", avg("$runtime")).field("count", sum(1)),
-                        sort().descending("totalRuntime")));
+                        group(id(null)).field("totalRuntime", sum("$runtime")).field("averageRuntime", avg("$runtime")).field("count", sum(1))));
     }
 
     @Test
@@ -40,6 +40,40 @@ public class TestGroup extends TestBase {
                 (aggregation) -> aggregation.pipeline(
                         group(id("$rated")).field("totalRuntime", sum("$runtime")),
                         match(gte("totalRuntime", 100000))));
+    }
+
+    @Test
+    @DisplayName("Group by Year")
+    public void groupByYear() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/group/groupByYear/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(lt("year", 1910)),
+                        group(id("$year")).field("totalRuntime", sum("$runtime")).field("averageRuntime", avg("$runtime")).field("count", sum(1)),
+                        sort().descending("totalRuntime")));
+    }
+
+    @Test
+    @DisplayName("Group Documents by Year")
+    public void groupDocumentsByYear() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/group/groupDocumentsByYear/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(lt("year", 1910)),
+                        group(id("$year")).field("movies", push("$$ROOT")),
+                        addFields().field("totalRuntime", sum("$movies.runtime")),
+                        sort().ascending("_id")));
+    }
+
+    @Test
+    @DisplayName("Group Titles by Year")
+    public void groupTitlesByYear() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/group/groupTitlesByYear/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(lt("year", 1910)),
+                        group(id("$year")).field("titles", push("$title")),
+                        sort().ascending("_id")));
     }
 
     @Test

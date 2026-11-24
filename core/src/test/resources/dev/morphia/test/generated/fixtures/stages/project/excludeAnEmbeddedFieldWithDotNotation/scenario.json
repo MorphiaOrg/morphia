@@ -2,8 +2,8 @@
   "schemaVersion": {
     "$numberInt": "1"
   },
-  "name": "aggregation/stages/project/excludeFieldsFromEmbeddedDocuments",
-  "title": "Exclude Fields from Embedded Documents",
+  "name": "aggregation/stages/project/excludeAnEmbeddedFieldWithDotNotation",
+  "title": "Exclude an Embedded Field with Dot Notation",
   "context": "STAGE",
   "source": {
     "repository": "mongodb/docs",

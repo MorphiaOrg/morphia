@@ -1,0 +1,334 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/eq/matchOneArrayElement",
+  "title": "Match One Array Element",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/eq.txt",
+    "blob": "833cb20778a655fe9152395c1bd33475ffe603e9"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": {
+          "name": "ab",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "15"
+        },
+        "tags": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": {
+          "name": "cd",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": {
+          "name": "ij",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "25"
+        },
+        "tags": [
+          "A",
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": {
+          "name": "xy",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "30"
+        },
+        "tags": [
+          "B",
+          "A"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": {
+          "name": "mn",
+          "code": "000"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          [
+            "A",
+            "B"
+          ],
+          "C"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "tags": "B"
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "ab"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "123"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "15"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "A"
+                },
+                {
+                  "text": "B"
+                },
+                {
+                  "text": "C"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "cd"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "123"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "B"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "ij"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "456"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "25"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "A"
+                },
+                {
+                  "text": "B"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "xy"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "456"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "B"
+                },
+                {
+                  "text": "A"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

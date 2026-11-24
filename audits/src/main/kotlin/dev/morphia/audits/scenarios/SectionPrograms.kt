@@ -30,7 +30,14 @@ internal object SectionPrograms {
     private sealed interface Kind {
         data class Setup(val inserts: Boolean) : Kind
 
-        data class Action(val update: Boolean, val namespace: LogicalNamespace) : Kind
+        /**
+         * [update] is an update command; [writes] also covers a pipeline that writes its output.
+         */
+        data class Action(
+            val update: Boolean,
+            val namespace: LogicalNamespace,
+            val writes: Boolean = update,
+        ) : Kind
 
         data object Document : Kind
 
@@ -60,7 +67,13 @@ internal object SectionPrograms {
                     else -> null
                 }
             }
-        return Assignment(setup, null, skipped)
+        // Shared data the grammar can't read leaves every consumer without it.
+        return Assignment(
+            setup,
+            if (kinds.any { it == Kind.Skip("UNSUPPORTED_SETUP") }) "UNSUPPORTED_SHARED_SETUP"
+            else null,
+            skipped,
+        )
     }
 
     /**
@@ -86,7 +99,8 @@ internal object SectionPrograms {
                     is Kind.Skip -> SkippedCode(block, kind.reason)
                     Kind.Document ->
                         when {
-                            updated(i) -> SkippedCode(block, "UPDATE_RESULT")
+                            // The update's own scenario records what it printed.
+                            updated(i) -> null
                             result(i) -> null
                             trailing(i) -> SkippedCode(block, "SAMPLE_DOCUMENT")
                             else -> null
@@ -118,14 +132,24 @@ internal object SectionPrograms {
                     ?.copy(role = ProgramRole.EXPECTED)
             // A read after an update in the same section sees the update's effect, which this
             // scenario doesn't run; the update's own read will cover it.
-            val afterWrite = actions.any { it < action && (kinds[it] as Kind.Action).update }
+            val afterWrite = actions.any { it < action && (kinds[it] as Kind.Action).writes }
+            val lostSetup = (0 until action).any { kinds[it] == Kind.Skip("UNSUPPORTED_SETUP") }
             Assignment(
                 shared +
                     setup +
                     own[action].copy(role = ProgramRole.ACTION) +
                     listOfNotNull(result),
-                if (afterWrite) "AFTER_EARLIER_WRITE" else null,
-                skipped,
+                when {
+                    lostSetup -> "UNSUPPORTED_SETUP"
+                    afterWrite -> "AFTER_EARLIER_WRITE"
+                    else -> null
+                },
+                skipped +
+                    listOfNotNull(
+                        own.getOrNull(action + 1)
+                            ?.takeIf { result(action + 1) && updated(action + 1) }
+                            ?.let { SkippedCode(it, "UPDATE_RESULT") }
+                    ),
             )
         }
     }
@@ -174,6 +198,9 @@ internal object SectionPrograms {
                         template(block.source) -> Kind.Skip("SYNTAX_TEMPLATE")
                         expression(block) -> Kind.Skip("OPERATOR_EXPRESSION")
                         isDocument(block) -> Kind.Document
+                        // Data the page loads but the grammar can't read: what runs after it
+                        // would run without it.
+                        setupCall.containsMatchIn(block.source) -> Kind.Skip("UNSUPPORTED_SETUP")
                         else -> Kind.Skip("UNSUPPORTED_SOURCE")
                     }
                 own.isEmpty() ->
@@ -189,10 +216,14 @@ internal object SectionPrograms {
                 own.any { it.second in setupKinds } -> Kind.Skip("MIXED_SECTION_ROLES")
                 // An action isn't setup for the actions after it, which are other scenarios.
                 else ->
-                    Kind.Action(
-                        own.any { it.second == ShellOperationKind.UPDATE },
-                        inspection.namespaces.last { it.first == id }.second,
-                    )
+                    own.any { it.second == ShellOperationKind.UPDATE }
+                        .let { update ->
+                            Kind.Action(
+                                update,
+                                inspection.namespaces.last { it.first == id }.second,
+                                update || output.containsMatchIn(block.source),
+                            )
+                        }
             }
         }
     }
@@ -200,6 +231,30 @@ internal object SectionPrograms {
     // Another language's code can open with a bracket too: a C# `[BsonIgnoreExtraElements]`.
     private val documentLanguages =
         setOf(null, "none", "json", "javascript", "js", "shell", "mongosh", "bash", "sh")
+
+    private val setupCall = Regex("""\.(?:insert\w*|createIndex\w*)\s*\(""")
+
+    /** The setup in [blocks] through the last insert into each collection, by collection. */
+    fun inserts(
+        blocks: List<ScenarioCode>,
+        dialect: ShellDialect,
+    ): Map<LogicalNamespace, List<ScenarioCode>> {
+        val setup = shared(blocks, dialect).blocks.filter { it.format == null }
+        if (setup.isEmpty()) return emptyMap()
+        val inspection = inspect(setup, dialect)
+        if (inspection.state != ShellLiteralState.NORMALIZED) return emptyMap()
+        return inspection.operations
+            .filter { it.second == ShellOperationKind.INSERT }
+            .groupBy({ (id, _) -> inspection.namespaces.first { it.first == id }.second }) { (id, _)
+                ->
+                id.removePrefix("block-").toInt()
+            }
+            .mapValues { (_, indexes) -> setup.take(indexes.max() + 1) }
+    }
+
+    // A `$merge` or `$out` stage writes a pipeline's output for a later read; a `'$out'` string
+    // doesn't.
+    private val output = Regex("""[{,]\s*["']?\$(?:merge|out)["']?\s*:""")
 
     /** A document or document list in a data or shell language: data, not program code. */
     fun isDocument(block: ScenarioCode) =

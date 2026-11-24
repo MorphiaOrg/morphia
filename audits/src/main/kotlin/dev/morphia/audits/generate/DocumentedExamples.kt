@@ -2,13 +2,22 @@ package dev.morphia.audits.generate
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.coverage.AuditJson
-import dev.morphia.audits.model.OperatorType
+import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.DescriptiveNames
 import dev.morphia.audits.repairs.BlockRole
+import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FormInclude
-import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormSource
 import dev.morphia.audits.repairs.SourceBlock
+import dev.morphia.audits.scenarios.ExtractedScenario
+import dev.morphia.audits.scenarios.ScenarioCode
+import dev.morphia.audits.scenarios.ScenarioExtraction
+import dev.morphia.audits.scenarios.ScenarioExtractionPlan
+import dev.morphia.audits.scenarios.ScenarioPageRule
+import dev.morphia.audits.scenarios.ScenarioVariant
+import dev.morphia.audits.shell.ProgramRole
+import dev.morphia.audits.shell.ShellLiteralState
+import dev.morphia.audits.sources.VerifiedSourceBundle
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.isDirectory
@@ -28,6 +37,8 @@ enum class ExampleStatus {
      * its source blocks for the review that resolves it.
      */
     AMBIGUOUS,
+    /** No test owns the example, and the extractor found no program to generate it from. */
+    UNSUPPORTED,
 }
 
 /**
@@ -98,26 +109,20 @@ object DocumentedExamples {
     private const val RESOURCES = "core/src/test/resources/dev/morphia/test"
     private const val LEDGER = "audits/catalog/fixture-migration.json"
     const val REVIEWED = "audits/catalog/example-names.json"
-    private val DIRECTIVES =
-        mapOf(
-            "expression" to "aggregation/expressions",
-            // Accumulator and window operator pages; Morphia's tests keep them with the
-            // expressions.
-            "group" to "aggregation/expressions",
-            "pipeline" to "aggregation/stages",
-            "query" to "query/filters",
-            "update" to "query/updates",
-        )
-    private val directive = Regex("""^\.\. (expression|group|pipeline|query|update):: \$\S*\s*$""")
 
     /** An owned example: its fixture, its title when recorded, and its action text. */
     private data class Owned(val fixture: String, val title: String?, val action: String?)
 
     /**
-     * Reads every page of [sources] (a `fetch.py current` file) from [pages] and matches each
-     * example with the fixtures of [repository]'s legacy packages and migration ledger.
+     * Extracts every operator page [plan] names from the parsed [document] of [bundle], and matches
+     * each example with the fixtures of [repository]'s legacy packages and migration ledger.
      */
-    fun capture(repository: Path, pages: Path, sources: CurrentPages): ExampleInventory {
+    fun capture(
+        repository: Path,
+        bundle: VerifiedSourceBundle,
+        document: DocumentReport,
+        plan: ScenarioExtractionPlan,
+    ): ExampleInventory {
         val root = repository.toRealPath()
         val owned = owned(root).groupBy { it.fixture.substringBeforeLast('/') }
         val reviewed =
@@ -131,51 +136,53 @@ object DocumentedExamples {
                 "${it.page} ${it.title}: a review names an example or its owner, with a reason"
             }
         }
+        val manifest = bundle.manifest
+        val commit = manifest.request.revision
+        val blobs = manifest.resources.associate { it.path to it.gitObject }
+        val report = ScenarioExtraction.extract(bundle, document, plan)
+        val rules = plan.pages.associateBy { it.id }
         val used = mutableSetOf<ReviewedExample>()
         val documented = mutableListOf<DocumentedPage>()
-        val skipped = mutableListOf<SkippedPage>()
-        sources.pages.forEach { entry ->
-            val source = entry.source
-            require(source.commit == sources.commit) {
-                "${source.path} is not at ${sources.commit}"
-            }
-            val file = pages.resolve(source.commit).resolve(source.path)
-            val declared =
-                file.readText().lines().firstNotNullOfOrNull { directive.matchEntire(it.trimEnd()) }
-            if (declared == null) {
-                skipped += SkippedPage(source.path, "no operator directive")
+        val operators = ScenarioPlans.operatorPages(document)
+        val skipped =
+            document.pages
+                .filter { page -> operators.none { it.page.id == page.id } }
+                .map { SkippedPage(it.id, "no operator directive") }
+                .toMutableList()
+        operators.forEach { operator ->
+            val rule = rules[operator.id]
+            val path = operator.page.expanded?.origin?.path
+            if (rule == null || path == null) {
+                skipped += SkippedPage(operator.page.id, "no examples section")
                 return@forEach
             }
-            val context = DIRECTIVES.getValue(declared.groupValues[1])
-            // The page's file name, as the legacy fixture directories use it: `$[]` is
-            // `positional-all`.
-            val operator = source.path.substringAfterLast('/').removeSuffix(".txt")
-            val type =
-                when (context) {
-                    "aggregation/expressions" -> OperatorType.EXPRESSION
-                    "aggregation/stages" -> OperatorType.STAGE
-                    "query/filters" -> OperatorType.FILTER
-                    else -> OperatorType.UPDATE
-                }
-            val read =
-                try {
-                    FormMigration.pageExamples(pages, source, type)
-                } catch (failure: RuntimeException) {
-                    skipped += SkippedPage(source.path, failure.message ?: "$failure")
-                    return@forEach
-                }
-            val candidates = owned["$context/$operator"].orEmpty()
+            val scenarios =
+                report.scenarios
+                    .filter { it.rule == rule.id && it.variant == ScenarioVariant.REFERENCE }
+                    .sortedWith { a, b -> compareLocators(position(a), position(b)) }
             documented +=
                 DocumentedPage(
-                    context,
-                    operator,
-                    source,
-                    read.pageBlob,
-                    read.includes,
+                    operator.context,
+                    operator.operator,
+                    FormSource(commit, path),
+                    blobs.getValue(path),
+                    operator.page.dependencies
+                        .mapNotNull { it.origin.path }
+                        .distinct()
+                        .filter { it in blobs }
+                        .map { FormInclude(it, blobs.getValue(it)) },
                     examples(
-                        read.examples.map { it.name to it.blocks },
-                        candidates,
-                        reviewed.filter { it.page == "$context/$operator" },
+                        // A page that repeats an example, say for a second user, shows it once.
+                        scenarios
+                            .map { title(it, rule) to blocks(it) }
+                            .distinctBy { (title, example) ->
+                                // The same example: the same title, source and state. Examples
+                                // without an action are never the same one.
+                                if (example.blocks.none { it.role == BlockRole.ACTION }) Any()
+                                else Triple(title, example.blocks, example.problem)
+                            },
+                        owned[operator.id].orEmpty(),
+                        reviewed.filter { it.page == operator.id },
                         used,
                     ),
                 )
@@ -183,7 +190,7 @@ object DocumentedExamples {
         val examples = documented.flatMap { it.examples }
         return ExampleInventory(
             sourceRepository = "mongodb/docs",
-            commit = sources.commit,
+            commit = commit,
             pages = documented.sortedWith(compareBy({ it.context }, { it.operator })),
             skipped = skipped.sortedBy { it.path },
             summary =
@@ -200,17 +207,112 @@ object DocumentedExamples {
     }
 
     /**
+     * An example's title as the legacy inventory spelled it: its section's, `main` for a generic
+     * one, and `<section> :: <tab>` for an example a scenario tab shows.
+     */
+    private fun title(scenario: ExtractedScenario, rule: ScenarioPageRule): String {
+        // The first section is the page's own.
+        val section =
+            scenario.sections
+                .drop(1)
+                .lastOrNull()
+                ?.title
+                ?.trim()
+                ?.takeUnless(DescriptiveNames::isGeneric) ?: "main"
+        val tab =
+            scenario.containers.lastOrNull {
+                it.name == "tab" &&
+                    it.options["tabid"]?.let(AuditJson::textValue) in
+                        rule.sectionAssembly?.scenarioTabs.orEmpty()
+            }
+        return if (tab == null) section else "$section :: ${tab.argument.trim()}"
+    }
+
+    /**
+     * The scenario's blocks as generation reads them, or none when it has no program to generate:
+     * inserts and seeds are data, index builds are indexes, and declarations travel with the action
+     * they serve.
+     */
+    private fun blocks(scenario: ExtractedScenario): Unrunnable {
+        val problem =
+            scenario.normalizationProblem
+                ?: scenario.program
+                    ?.takeIf { it.state != ShellLiteralState.NORMALIZED }
+                    ?.let { program -> program.problems.joinToString { it.code } }
+        fun declaration(code: ScenarioCode) =
+            code.role == ProgramRole.SETUP &&
+                code.format == null &&
+                ".insert" !in code.source &&
+                ".createIndex" !in code.source
+        // Each declaration travels with the next block that runs, in page order: the insert or
+        // action that reads it.
+        val pending = mutableListOf<String>()
+        val blocks =
+            scenario.blocks
+                .filter { it.role != null }
+                .mapNotNull { code ->
+                    if (declaration(code)) {
+                        pending += code.source
+                        return@mapNotNull null
+                    }
+                    val role =
+                        when (code.role) {
+                            ProgramRole.ACTION -> BlockRole.ACTION
+                            ProgramRole.EXPECTED -> BlockRole.EXPECTED
+                            else ->
+                                if (code.format == null && ".createIndex" in code.source)
+                                    BlockRole.INDEX
+                                else BlockRole.DATA
+                        }
+                    val runs = role != BlockRole.EXPECTED && code.format == null
+                    val text =
+                        if (runs && pending.isNotEmpty())
+                            (pending + code.source).joinToString("\n").also { pending.clear() }
+                        else code.source
+                    SourceBlock(role, text, CaseManifests.sha256(text.toByteArray()))
+                }
+        // Until an update's case runs the page's own read, generation keeps the legacy reading of
+        // what the page prints after it: an acknowledgement, or the documents the filter matches.
+        val printed =
+            scenario.skipped
+                .firstOrNull { it.reason == "UPDATE_RESULT" }
+                ?.code
+                ?.source
+                ?.takeIf { scenario.blocks.any { it.role == ProgramRole.ACTION } }
+                ?.let {
+                    SourceBlock(BlockRole.EXPECTED, it, CaseManifests.sha256(it.toByteArray()))
+                }
+        return Unrunnable(
+            blocks + listOfNotNull(printed),
+            problem ?: "no program".takeIf { scenario.program == null },
+        )
+    }
+
+    /** A scenario's source blocks, and why it has no program when it hasn't. */
+    private data class Unrunnable(val blocks: List<SourceBlock>, val problem: String?)
+
+    /** Where a scenario's action sits on its page, so examples keep the page's order. */
+    private fun position(scenario: ExtractedScenario): List<Int> =
+        (scenario.blocks.firstOrNull { it.role == ProgramRole.ACTION } ?: scenario.blocks.first())
+            .locator
+
+    private fun compareLocators(a: List<Int>, b: List<Int>): Int {
+        a.zip(b).forEach { (x, y) -> if (x != y) return x.compareTo(y) }
+        return a.size.compareTo(b.size)
+    }
+
+    /**
      * Assigns each of a page's examples its owner or status; first by title, then by action text.
      */
     private fun examples(
-        read: List<Pair<String, List<SourceBlock>>>,
+        read: List<Pair<String, Unrunnable>>,
         owners: List<Owned>,
         reviewed: List<ReviewedExample>,
         used: MutableSet<ReviewedExample>,
     ): List<DocumentedExample> {
         val reviews =
-            read.map { (title, blocks) ->
-                val action = blocks.firstOrNull { it.role == BlockRole.ACTION }?.sha256
+            read.map { (title, example) ->
+                val action = example.blocks.firstOrNull { it.role == BlockRole.ACTION }?.sha256
                 reviewed.singleOrNull { it.title == title && it.actionSha256 == action }
             }
         used += reviews.filterNotNull()
@@ -221,87 +323,143 @@ object DocumentedExamples {
                 if (DescriptiveNames.isGeneric(title)) null
                 else runCatching { DescriptiveNames.stem(title) }.getOrNull()
             }
-        return read.mapIndexed { index, (title, blocks) ->
-            val review = reviews[index]
-            val name = review?.name
-            val action = blocks.firstOrNull { it.role == BlockRole.ACTION }?.text?.let(::squeeze)
-            val byTitle = owners.filter { it.title == title || name != null && it.title == name }
-            val byAction =
-                if (byTitle.isNotEmpty() || action == null) emptyList()
-                else owners.filter { it.action != null && it.action in action }
-            val stem = stems[index]
-            // The descriptive-name backport named each fixture for its example, so a fixture with
-            // the example's name owns it even when the title or action text has changed since.
-            val byName =
-                if (byTitle.isNotEmpty() || byAction.isNotEmpty() || stem == null) emptyList()
-                else owners.filter { it.fixture.substringAfterLast('/') == stem }
-            val matched = byTitle.ifEmpty { byAction }.ifEmpty { byName }
-            when {
-                review?.owner != null ->
-                    if (matched.any { it.fixture == review.owner })
-                        DocumentedExample(
-                            title,
-                            ExampleStatus.OWNED,
-                            owner = review.owner,
-                            detail = "reviewed owner: ${review.reason}",
-                        )
+        val matched =
+            read.mapIndexed { index, (title, example) ->
+                val blocks = example.blocks
+                val review = reviews[index]
+                val name = review?.name
+                val action =
+                    blocks.firstOrNull { it.role == BlockRole.ACTION }?.text?.let(::squeeze)
+                // Examples that share a section's title are told apart by their action text alone.
+                // Another runnable example with the title takes it from this one, runnable or not.
+                val shared =
+                    names.indices.any {
+                        it != index && names[it] == names[index] && read[it].second.problem == null
+                    }
+                // A title several runnable examples share names none of them, even once reviewed
+                // names tell them apart.
+                // An example without a program yields the title to any other.
+                val titled =
+                    read.indices.none {
+                        it != index &&
+                            read[it].first == title &&
+                            (read[it].second.problem == null || example.problem != null)
+                    }
+                val byTitle =
+                    if (shared) emptyList()
                     else
+                        owners.filter {
+                            titled && it.title == title || name != null && it.title == name
+                        }
+                val byAction =
+                    if (byTitle.isNotEmpty() || action == null) emptyList()
+                    else owners.filter { it.action != null && it.action in action }
+                val stem = stems[index]
+                // The descriptive-name backport named each fixture for its example, so a fixture
+                // with
+                // the example's name owns it even when the title or action text has changed since.
+                val byName =
+                    if (byTitle.isNotEmpty() || byAction.isNotEmpty() || stem == null || shared)
+                        emptyList()
+                    else owners.filter { it.fixture.substringAfterLast('/') == stem }
+                val matched = byTitle.ifEmpty { byAction }.ifEmpty { byName }
+                when {
+                    review?.owner != null ->
+                        if (matched.any { it.fixture == review.owner })
+                            DocumentedExample(
+                                title,
+                                ExampleStatus.OWNED,
+                                owner = review.owner,
+                                detail = "reviewed owner: ${review.reason}",
+                            )
+                        else
+                            DocumentedExample(
+                                title,
+                                ExampleStatus.AMBIGUOUS,
+                                detail = "the reviewed owner ${review.owner} no longer matches",
+                            )
+                    matched.size > 1 ->
                         DocumentedExample(
                             title,
                             ExampleStatus.AMBIGUOUS,
-                            detail = "the reviewed owner ${review.owner} no longer matches",
+                            detail = "matches ${matched.joinToString { it.fixture }}",
+                            blocks = blocks,
                         )
-                names.count { it == names[index] } > 1 ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.AMBIGUOUS,
-                        detail = "the page has several examples titled \"$title\"",
-                        blocks = blocks,
-                    )
-                matched.size > 1 ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.AMBIGUOUS,
-                        detail = "matches ${matched.joinToString { it.fixture }}",
-                        blocks = blocks,
-                    )
-                matched.size == 1 ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.OWNED,
-                        owner = matched.single().fixture,
-                        detail =
-                            when {
-                                byTitle.isNotEmpty() -> null
-                                byAction.isNotEmpty() -> "matched by action text"
-                                else -> "matched by name"
-                            },
-                        name = name,
-                    )
-                stem == null ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.UNNAMED,
-                        detail = "a generic title needs a reviewed name",
-                        blocks = blocks,
-                    )
-                stems.count { it == stem } > 1 ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.AMBIGUOUS,
-                        stem,
-                        detail = "another example on the page has the name $stem",
-                        name = name,
-                    )
-                else ->
-                    DocumentedExample(
-                        title,
-                        ExampleStatus.UNOWNED,
-                        stem,
-                        blocks = blocks,
-                        name = name,
-                    )
+                    matched.size == 1 ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.OWNED,
+                            owner = matched.single().fixture,
+                            detail =
+                                when {
+                                    byTitle.isNotEmpty() -> null
+                                    byAction.isNotEmpty() -> "matched by action text"
+                                    else -> "matched by name"
+                                },
+                            name = name,
+                        )
+                    example.problem != null ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.UNSUPPORTED,
+                            stem,
+                            detail = example.problem,
+                            blocks = blocks,
+                            name = name,
+                        )
+                    shared ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.AMBIGUOUS,
+                            detail = "the page has several examples titled \"$title\"",
+                            blocks = blocks,
+                        )
+                    stem == null ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.UNNAMED,
+                            detail = "a generic title needs a reviewed name",
+                            blocks = blocks,
+                        )
+                    stems.indices.any {
+                        it != index && stems[it] == stem && read[it].second.problem == null
+                    } ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.AMBIGUOUS,
+                            stem,
+                            detail = "another example on the page has the name $stem",
+                            name = name,
+                        )
+                    else ->
+                        DocumentedExample(
+                            title,
+                            ExampleStatus.UNOWNED,
+                            stem,
+                            blocks = blocks,
+                            name = name,
+                        )
+                }
             }
+        // One fixture can't own two examples; the review decides which, as for any other match.
+        val claimed =
+            matched
+                .filter { it.detail?.startsWith("reviewed owner") != true }
+                .mapNotNull { it.owner }
+                .groupingBy { it }
+                .eachCount()
+                .filterValues { it > 1 }
+                .keys
+        return matched.mapIndexed { index, example ->
+            if (example.owner !in claimed || example.detail?.startsWith("reviewed owner") == true)
+                example
+            else
+                DocumentedExample(
+                    example.title,
+                    ExampleStatus.AMBIGUOUS,
+                    detail = "${example.owner} matches several examples",
+                    blocks = read[index].second.blocks,
+                )
         }
     }
 
@@ -324,7 +482,7 @@ object DocumentedExamples {
             }
         val known = migrated.map { it.fixture }.toSet()
         val legacy =
-            DIRECTIVES.values.distinct().flatMap { context ->
+            OperatorPage.CONTEXTS.values.distinct().flatMap { context ->
                 val base = root.resolve("$RESOURCES/$context")
                 if (!base.isDirectory()) emptyList()
                 else
@@ -365,10 +523,3 @@ object DocumentedExamples {
 }
 
 /** A `fetch.py current` sources file: every operator page at one commit. */
-data class CurrentPages(
-    val schemaVersion: Int = 1,
-    val commit: String,
-    val pages: List<CurrentPage>,
-)
-
-data class CurrentPage(val source: FormSource)

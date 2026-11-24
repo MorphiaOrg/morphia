@@ -75,6 +75,9 @@ artifact:
   clone the docs as the workflow does, run `audits/discover.sh <docs> <out>`, copy
   `<out>/documented-examples.json` into `audits/catalog/`, then regenerate (below) and review both
   changes together.
+- **`plan.diff` is not empty**: a page appeared, or its examples section or tabs changed, so the
+  plan drafted from the parsed pages differs from the committed `scenario-plan.json`. Review the
+  draft, copy `<out>/scenario-plan.json` into `audits/catalog/`, and rerun `inventory`.
 - **Integration failed**: a generated case no longer passes. Its log is in the artifact; treat it
   like a failure under "Generating cases".
 
@@ -87,7 +90,7 @@ git -C /tmp/docs sparse-checkout set --no-cone \
   /content/manual/manual/source/includes/ /content/manual/manual/source/core/ \
   /content/manual/manual/source/tutorial/ /content/manual/manual/source/images/ \
   /content/manual/manual/source/code-examples/ /content/code-examples/tested/
-uv sync --frozen --project audits/parser   # the pinned parser, for capability coverage
+uv sync --frozen --project audits/parser   # the pinned parser, for the inventory and coverage
 git -C /tmp/docs checkout -q
 audits/discover.sh /tmp/docs /tmp/discovery --integrate
 ```

@@ -225,6 +225,12 @@ object ScenarioExtraction {
         }
     }
 
+    // Commands that change the data a later read sees.
+    private val write =
+        Regex(
+            """\.(?:update|replace|delete|bulkWrite|findOneAnd|findAndModify)\w*\s*\(|[{,]\s*["']?\$(?:merge|out)["']?\s*:"""
+        )
+
     private class Run(
         val bundle: VerifiedSourceBundle,
         val document: DocumentReport,
@@ -682,6 +688,12 @@ object ScenarioExtraction {
             )
             val owners = linkedMapOf<List<Int>, Owner>()
             val pendingIo = mutableListOf<() -> Unit>()
+            // Setup that only native groups consumed, for the page-wide inheritance.
+            val setupSources = mutableListOf<List<ScenarioCode>>()
+            // Sections holding a native input/output group, and the setup their own code gives it.
+            val ioSections = mutableSetOf<List<ScenarioSection>>()
+            val sectionSetup = mutableMapOf<List<ScenarioSection>, List<ScenarioCode>>()
+            val sectionSetupProblem = mutableMapOf<List<ScenarioSection>, String>()
             var sharedSetup = emptyList<ScenarioCode>()
             var sharedSetupSkipped = emptyList<SkippedCode>()
             var setupProblem: String? = null
@@ -735,19 +747,27 @@ object ScenarioExtraction {
                             attachedLabels,
                         )
                     else
-                        pendingIo += {
-                            group(
-                                rule,
-                                page,
-                                node,
-                                locator,
-                                nextSections,
-                                nextContainers,
-                                attachedLabels,
-                                sharedSetup,
-                                setupProblem,
-                            )
-                        }
+                        pendingIo +=
+                            {
+                                    group(
+                                        rule,
+                                        page,
+                                        node,
+                                        locator,
+                                        nextSections,
+                                        nextContainers,
+                                        attachedLabels,
+                                        // Only the section's setup that comes before the group.
+                                        sharedSetup +
+                                            sectionSetup[nextSections].orEmpty().filter {
+                                                locatorOrder.compare(it.locator, locator) < 0
+                                            },
+                                        // Setup of its own the grammar can't read leaves the
+                                        // group without its data.
+                                        setupProblem ?: sectionSetupProblem[nextSections],
+                                    )
+                                }
+                                .also { ioSections += nextSections }
                     return
                 }
                 if (node.kind == "code" && selected(rule, nextSections)) {
@@ -844,6 +864,24 @@ object ScenarioExtraction {
                         val setup =
                             if (ownVariant == ScenarioVariant.REFERENCE) sharedSetup
                             else emptyList()
+                        // A section that inserts in plain code and queries in an input/output
+                        // group gives its setup to that group, rather than running nothing.
+                        if (
+                            ownVariant == ScenarioVariant.REFERENCE &&
+                                policy.layout == SectionLayout.COMMANDS_THEN_RESULT &&
+                                owner.sections in ioSections &&
+                                SectionPrograms.assign(setup, owner.blocks, rule.dialect).all {
+                                    it.problem == "MISSING_COMMAND_OR_RESULT"
+                                }
+                        ) {
+                            val local = SectionPrograms.shared(owner.blocks, rule.dialect)
+                            sectionSetup[owner.sections] = local.blocks
+                            local.problem?.let { sectionSetupProblem[owner.sections] = it }
+                            sharedSetupSkipped = sharedSetupSkipped + local.skipped
+                            // Its inserts still reach the sections after it.
+                            setupSources += owner.blocks
+                            return@forEach
+                        }
                         val assignments =
                             when {
                                 policy.layout == SectionLayout.SOURCE_ONLY ->
@@ -898,6 +936,8 @@ object ScenarioExtraction {
             rule.sections
                 .filter { it !in foundSections }
                 .forEach { problem("MISSING_SECTION", rule, "Declared section $it is absent") }
+            inheritSetup(rule, start, setupSources)
+            afterWrites(start)
             val emitted = scenarios.drop(start)
             val reference = emitted.count { it.variant == ScenarioVariant.REFERENCE }
             if (reference < rule.minimumReferenceGroups)
@@ -999,6 +1039,175 @@ object ScenarioExtraction {
                 sharedSetupBlocks = sharedSetup.size,
             )
         }
+
+        /**
+         * A read that follows a write in the same section sees the write's effect, which its own
+         * program doesn't run, whether the write sits in its section's code or in another input/
+         * output group. Such a read keeps its source and reports `AFTER_EARLIER_WRITE`.
+         */
+        fun afterWrites(start: Int) {
+            fun action(scenario: ExtractedScenario) =
+                scenario.blocks.firstOrNull { it.role == ProgramRole.ACTION }
+            fun writes(scenario: ExtractedScenario) =
+                scenario.program
+                    ?.commands
+                    ?.filter { it.role == ProgramRole.ACTION }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.any { writes(it.operation) }
+                    ?: (action(scenario)?.source?.let(write::containsMatchIn) == true)
+            fun position(scenario: ExtractedScenario) =
+                (action(scenario) ?: scenario.blocks.firstOrNull())?.locator.orEmpty()
+            val order =
+                Comparator<List<Int>> { a, b ->
+                    a.zip(b).firstOrNull { (x, y) -> x != y }?.let { (x, y) -> x.compareTo(y) }
+                        ?: a.size.compareTo(b.size)
+                }
+            val written = mutableSetOf<List<String?>>()
+            (start until scenarios.size)
+                .filter { scenarios[it].variant == ScenarioVariant.REFERENCE }
+                .sortedWith(compareBy(order) { position(scenarios[it]) })
+                .forEach { index ->
+                    val scenario = scenarios[index]
+                    val section = scenario.sections.map { it.anchor ?: it.title }
+                    // A write the page shows but no scenario runs, such as a bulkWrite in a try
+                    // block, still changes what the read after it sees.
+                    val skippedWrite =
+                        scenario.skipped.any {
+                            write.containsMatchIn(it.code.source) &&
+                                order.compare(it.code.locator, position(scenario)) < 0
+                        }
+                    if (
+                        (section in written || skippedWrite) &&
+                            !writes(scenario) &&
+                            action(scenario) != null
+                    )
+                        scenarios[index] =
+                            scenario.copy(
+                                program = null,
+                                normalizationProblem = "AFTER_EARLIER_WRITE",
+                            )
+                    if (writes(scenario)) written += section
+                }
+        }
+
+        fun program(rule: ScenarioPageRule, blocks: List<ScenarioCode>) =
+            ShellPrograms.normalize(
+                ShellProgramRequest(
+                    dialect = rule.dialect,
+                    blocks =
+                        blocks.mapIndexed { i, b ->
+                            ProgramBlock(
+                                "block-$i",
+                                b.source,
+                                requireNotNull(b.role),
+                                format =
+                                    b.format
+                                        ?: if (b.role == ProgramRole.EXPECTED)
+                                            ProgramFormat.SHELL_RESULTS
+                                        else ProgramFormat.SHELL,
+                                namespace = b.namespace,
+                            )
+                        },
+                    resultOrder = rule.resultOrder,
+                )
+            )
+
+        /**
+         * A scenario that inserts nothing into its action's collection runs against the documents
+         * the page inserted there most recently: a later section's query on "the survey collection
+         * above" gets that section's inserts. Only inserts carry over, never another example's
+         * action.
+         */
+        fun inheritSetup(
+            rule: ScenarioPageRule,
+            start: Int,
+            sources: List<List<ScenarioCode>> = emptyList(),
+        ) {
+            fun position(blocks: List<ScenarioCode>) =
+                (blocks.firstOrNull { it.role == ProgramRole.ACTION } ?: blocks.firstOrNull())
+                    ?.locator
+                    .orEmpty()
+            val inserted = mutableMapOf<LogicalNamespace, List<ScenarioCode>>()
+            // Setup the page loads but no example runs: its inserts carry on, and one the grammar
+            // can't read leaves no older data to inherit, since it may have replaced it.
+            fun load(blocks: List<ScenarioCode>) {
+                if (SectionPrograms.shared(blocks, rule.dialect).problem != null) inserted.clear()
+                else inserted.putAll(SectionPrograms.inserts(blocks, rule.dialect))
+            }
+            val events =
+                (start until scenarios.size)
+                    .filter { scenarios[it].variant == ScenarioVariant.REFERENCE }
+                    .map { index -> position(scenarios[index].blocks) to index } +
+                    sources.mapIndexed { i, source -> position(source) to -1 - i }
+            events.sortedWith(compareBy(locatorOrder) { it.first }).forEach { (_, event) ->
+                if (event < 0) return@forEach load(sources[-1 - event])
+                val index = event
+                val scenario = scenarios[index]
+                if (scenario.normalizationProblem == "MISSING_COMMAND_OR_RESULT")
+                    return@forEach load(scenario.blocks)
+                if (scenario.normalizationProblem == "UNSUPPORTED_SETUP")
+                    return@forEach inserted.clear()
+                val program =
+                    scenario.program?.takeIf { it.state == ShellLiteralState.NORMALIZED }
+                        ?: return@forEach
+                // The setup through the last insert into each collection: an insert's
+                // declarations come before it.
+                val inserts =
+                    program.commands
+                        .filter { it.operation.kind == ShellOperationKind.INSERT }
+                        .groupBy({ it.namespace }) { block(it.id.block) }
+                        .mapValues { (_, indexes) ->
+                            scenario.blocks.take(indexes.max() + 1).filter {
+                                it.role == ProgramRole.SETUP
+                            }
+                        }
+                val namespace =
+                    program.commands.lastOrNull { it.role == ProgramRole.ACTION }?.namespace
+                val inherited = namespace?.let { inserted[it] }
+                if (namespace != null && namespace !in inserts && inherited != null) {
+                    // The copied setup counts against the budgets like any other.
+                    chargeSetup(inherited)
+                    val blocks = inherited + scenario.blocks
+                    val replaced = program(rule, blocks)
+                    programBytes +=
+                        AuditJson.requireMaximumSize(replaced, limits.maximumReportBytes)
+                    require(programBytes <= limits.maximumReportBytes) {
+                        "Embedded programs exceed scenario report budget"
+                    }
+                    scenarios[index] =
+                        if (replaced.state == ShellLiteralState.NORMALIZED)
+                            scenario.copy(blocks = blocks, program = replaced)
+                        // Without its data the example can't run as documented.
+                        else
+                            scenario.copy(
+                                program = null,
+                                normalizationProblem = "UNSUPPORTED_INHERITED_SETUP",
+                            )
+                }
+                inserted.putAll(inserts)
+            }
+        }
+
+        private fun block(id: String) = id.removePrefix("block-").toInt()
+
+        /** An update, or a pipeline whose last stage writes its output. */
+        private fun writes(operation: ShellOperation) =
+            when (operation) {
+                is UpdateOperation -> true
+                is AggregateOperation ->
+                    operation.pipeline.value().asArray().lastOrNull()?.let { stage ->
+                        stage.isDocument &&
+                            stage.asDocument().keys.firstOrNull() in setOf("\$merge", "\$out")
+                    } == true
+                else -> false
+            }
+
+        /** Page order of two locators. */
+        val locatorOrder =
+            Comparator<List<Int>> { a, b ->
+                a.zip(b).firstOrNull { (x, y) -> x != y }?.let { (x, y) -> x.compareTo(y) }
+                    ?: a.size.compareTo(b.size)
+            }
 
         fun chargeSetup(blocks: List<ScenarioCode>) {
             characters += blocks.sumOf { it.source.length.toLong() }
@@ -1154,42 +1363,28 @@ object ScenarioExtraction {
                                     rule.sectionAssembly?.additionalShellLanguages.orEmpty() +
                                     listOf(null, "json", "none")
                         }
-            fun normalize(blocks: List<ScenarioCode>) =
-                ShellPrograms.normalize(
-                    ShellProgramRequest(
-                        dialect = rule.dialect,
-                        blocks =
-                            blocks.mapIndexed { i, b ->
-                                ProgramBlock(
-                                    "block-$i",
-                                    b.source,
-                                    requireNotNull(b.role),
-                                    format =
-                                        b.format
-                                            ?: if (b.role == ProgramRole.EXPECTED)
-                                                ProgramFormat.SHELL_RESULTS
-                                            else ProgramFormat.SHELL,
-                                    namespace = b.namespace,
-                                )
-                            },
-                        resultOrder = rule.resultOrder,
-                    )
-                )
+            fun normalize(blocks: List<ScenarioCode>) = program(rule, blocks)
             var program = if (canNormalize) normalize(blocks) else null
             // A printed result the grammar can't read (a truncated `...` listing) leaves the
-            // example serialization-only rather than losing it.
+            // example serialization-only rather than losing it. What an update prints, its
+            // acknowledgement or a later read's documents, isn't a read result either.
             val result = blocks.lastOrNull()?.takeIf { it.role == ProgramRole.EXPECTED }
             if (
-                sectionOwned &&
-                    result != null &&
-                    program != null &&
-                    program.state != ShellLiteralState.NORMALIZED
+                result != null && program != null && program.state != ShellLiteralState.NORMALIZED
             ) {
-                val without = normalize(blocks.dropLast(1))
-                if (without.state == ShellLiteralState.NORMALIZED) {
-                    program = without
-                    blocks = blocks.dropLast(1)
-                    skippedCode = skippedCode + SkippedCode(result, "UNREADABLE_RESULT")
+                val update = program.problems.any { it.code == "PUBLISHED_PROFILE" }
+                if (sectionOwned || update) {
+                    val without = normalize(blocks.dropLast(1))
+                    if (without.state == ShellLiteralState.NORMALIZED) {
+                        program = without
+                        blocks = blocks.dropLast(1)
+                        skippedCode =
+                            skippedCode +
+                                SkippedCode(
+                                    result,
+                                    if (update) "UPDATE_RESULT" else "UNREADABLE_RESULT",
+                                )
+                    }
                 }
             }
             program?.let {

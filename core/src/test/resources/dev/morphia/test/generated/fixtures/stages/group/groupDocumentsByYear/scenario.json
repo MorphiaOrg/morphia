@@ -2,8 +2,8 @@
   "schemaVersion": {
     "$numberInt": "1"
   },
-  "name": "aggregation/stages/group/calculateCountSumAndAverage",
-  "title": "Calculate Count, Sum, and Average",
+  "name": "aggregation/stages/group/groupDocumentsByYear",
+  "title": "Group Documents by Year",
   "context": "STAGE",
   "source": {
     "repository": "mongodb/docs",
@@ -30,23 +30,22 @@
       {
         "$group": {
           "_id": "$year",
+          "movies": {
+            "$push": "$$ROOT"
+          }
+        }
+      },
+      {
+        "$addFields": {
           "totalRuntime": {
-            "$sum": "$runtime"
-          },
-          "averageRuntime": {
-            "$avg": "$runtime"
-          },
-          "count": {
-            "$sum": {
-              "$numberInt": "1"
-            }
+            "$sum": "$movies.runtime"
           }
         }
       },
       {
         "$sort": {
-          "totalRuntime": {
-            "$numberInt": "-1"
+          "_id": {
+            "$numberInt": "1"
           }
         }
       }
@@ -60,31 +59,21 @@
             "name": "_id",
             "value": {
               "whole": {
-                "$numberInt": "1909"
+                "$numberInt": "1896"
               }
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "text": "..."
             }
           },
           {
             "name": "totalRuntime",
             "value": {
               "whole": {
-                "$numberInt": "14"
-              }
-            }
-          },
-          {
-            "name": "averageRuntime",
-            "value": {
-              "whole": {
-                "$numberInt": "14"
-              }
-            }
-          },
-          {
-            "name": "count",
-            "value": {
-              "whole": {
-                "$numberInt": "1"
+                "$numberInt": "2"
               }
             }
           }
@@ -101,26 +90,16 @@
             }
           },
           {
+            "name": "movies",
+            "value": {
+              "text": "..."
+            }
+          },
+          {
             "name": "totalRuntime",
             "value": {
               "whole": {
                 "$numberInt": "11"
-              }
-            }
-          },
-          {
-            "name": "averageRuntime",
-            "value": {
-              "whole": {
-                "$numberInt": "11"
-              }
-            }
-          },
-          {
-            "name": "count",
-            "value": {
-              "whole": {
-                "$numberInt": "1"
               }
             }
           }
@@ -132,31 +111,21 @@
             "name": "_id",
             "value": {
               "whole": {
-                "$numberInt": "1896"
+                "$numberInt": "1909"
               }
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "text": "..."
             }
           },
           {
             "name": "totalRuntime",
             "value": {
               "whole": {
-                "$numberInt": "2"
-              }
-            }
-          },
-          {
-            "name": "averageRuntime",
-            "value": {
-              "whole": {
-                "$numberInt": "1"
-              }
-            }
-          },
-          {
-            "name": "count",
-            "value": {
-              "whole": {
-                "$numberInt": "2"
+                "$numberInt": "14"
               }
             }
           }

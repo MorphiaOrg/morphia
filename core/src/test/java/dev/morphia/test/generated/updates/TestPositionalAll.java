@@ -15,6 +15,15 @@ public class TestPositionalAll extends TestBase {
     private final OperatorCaseRunner runner = new OperatorCaseRunner(this);
 
     @Test
+    @DisplayName("Update All Documents in an Array")
+    public void updateAllDocumentsInAnArray() {
+        runner.update(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/updates/positional-all/updateAllDocumentsInAnArray/scenario.json"),
+                (query) -> query,
+                inc("grades.$[].std", -2));
+    }
+
+    @Test
     @DisplayName("Update All Elements in an Array")
     public void updateAllElementsInAnArray() {
         runner.update(

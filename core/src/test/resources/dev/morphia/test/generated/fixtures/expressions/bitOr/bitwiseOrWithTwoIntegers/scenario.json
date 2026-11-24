@@ -3,7 +3,7 @@
     "$numberInt": "1"
   },
   "name": "aggregation/expressions/bitOr/bitwiseOrWithTwoIntegers",
-  "title": "Bitwise ``OR`` with Two Integers ",
+  "title": "Bitwise OR with Two Integers",
   "context": "EXPRESSION",
   "source": {
     "repository": "mongodb/docs",

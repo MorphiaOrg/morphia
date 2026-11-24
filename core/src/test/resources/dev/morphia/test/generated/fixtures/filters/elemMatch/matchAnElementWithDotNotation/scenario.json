@@ -1,0 +1,328 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/elemMatch/matchAnElementWithDotNotation",
+  "title": "Match an Element with Dot Notation",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/elemMatch.txt",
+    "blob": "dad451e32460ad48e14e220c45c4c4cf2475eaf0"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "5"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "7"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "def",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "results": {
+          "product": "xyz",
+          "score": {
+            "$numberInt": "7"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "survey",
+    "filter": {
+      "results.product": "xyz"
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "abc"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "10"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "xyz"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "5"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "abc"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "xyz"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "7"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "abc"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "7"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "xyz"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "document": [
+                {
+                  "name": "product",
+                  "value": {
+                    "text": "xyz"
+                  }
+                },
+                {
+                  "name": "score",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "7"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

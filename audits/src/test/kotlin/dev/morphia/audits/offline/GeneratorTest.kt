@@ -5,8 +5,6 @@ import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.generate.BindingForm
 import dev.morphia.audits.generate.BindingPosition
 import dev.morphia.audits.generate.CaseGenerator
-import dev.morphia.audits.generate.CurrentPage
-import dev.morphia.audits.generate.CurrentPages
 import dev.morphia.audits.generate.DocumentedExamples
 import dev.morphia.audits.generate.DslBinding
 import dev.morphia.audits.generate.DslBindingCatalog
@@ -19,9 +17,9 @@ import dev.morphia.audits.generate.GenerationReview
 import dev.morphia.audits.generate.MethodRef
 import dev.morphia.audits.generate.ReviewedExample
 import dev.morphia.audits.generate.ReviewedExamples
+import dev.morphia.audits.generate.ScenarioPlans
 import dev.morphia.audits.repairs.BlockRole
 import dev.morphia.audits.repairs.FixtureMigrationLedger
-import dev.morphia.audits.repairs.FormSource
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
@@ -30,43 +28,40 @@ import org.bson.BsonDocument
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
 class GeneratorTest {
     @TempDir lateinit var directory: Path
 
-    private val commit = "c".repeat(40)
-    private val folder = "content/manual/manual/source/reference/operator/aggregation"
-
     private fun write(path: Path, text: String) {
         path.parent.createDirectories()
         path.writeText(text)
     }
 
-    private fun page(operator: String, directive: String, examples: String) {
-        write(
-            directory.resolve("pages/$commit/$folder/$operator.txt"),
-            """
-            |=======
-            |$operator
-            |=======
-            |
-            |.. $directive:: ${'$'}$operator
-            |
-            |$examples
-            |"""
-                .trimMargin(),
+    private lateinit var pages: ParsedPages
+
+    @BeforeEach
+    fun pages() {
+        pages = ParsedPages(directory)
+    }
+
+    /** The inventory of [pages] under the plan drafted from them. */
+    private fun capture(root: Path): ExampleInventory {
+        val (bundle, document) = pages.build()
+        return DocumentedExamples.capture(
+            root,
+            bundle,
+            document,
+            ScenarioPlans.draft(document, "a".repeat(64)),
         )
     }
 
-    private fun block(code: String) =
-        ".. code-block:: javascript\n\n" + code.trimIndent().prependIndent("   ") + "\n"
-
-    private val data = block("db.switches.insertMany( [ { _id: 0, a: Int32(3) } ] )")
+    private val data = "db.switches.insertMany( [ { _id: 0, a: Int32(3) } ] )"
 
     private fun aggregate(expression: String) =
-        block("db.switches.aggregate( [ { \$project: { result: $expression } } ] )")
+        "db.switches.aggregate( [ { \$project: { result: $expression } } ] )"
 
     /**
      * A repository with two legacy `$bitOr` fixtures, one owning its example by title and one by
@@ -86,62 +81,47 @@ class GeneratorTest {
             legacy.resolve("moved/action.json"),
             "{ \$project: {\n result: { \$bitOr: [ \"\$a\", 7 ] } } }",
         )
-        page(
-            "bitOr",
-            "expression",
-            """
-            |Examples
-            |--------
-            |
-            |$data
-            |Bitwise ``OR`` with Two Integers
-            |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${aggregate("{ \$bitOr: [ \"\$a\", \"\$a\" ] }")}
-            |Renamed Since the Fixture
-            |~~~~~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${aggregate("{ \$bitOr: [ \"\$a\", 7 ] }")}
-            |Bitwise ``OR`` with a Long and Integer
-            |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${aggregate("{ \$bitOr: [ \"\$a\", Long(\"63\") ] }")}
-            |${block("[ { _id: 0, result: Long(\"63\") } ]")}"""
-                .trimMargin(),
-        )
-        page(
-            "bitAnd",
-            "expression",
-            "Example\n-------\n\n$data\n${aggregate("{ \$bitAnd: [ \"\$a\", 1 ] }")}",
-        )
-        page(
-            "bitXor",
-            "expression",
-            """
-            |Examples
-            |--------
-            |
-            |$data
-            |Use Two
-            |~~~~~~~
-            |
-            |${aggregate("{ \$bitXor: [ \"\$a\", 1 ] }")}
-            |Use two
-            |~~~~~~~
-            |
-            |${aggregate("{ \$bitXor: [ \"\$a\", 2 ] }")}"""
-                .trimMargin(),
-        )
-        write(directory.resolve("pages/$commit/$folder/interface.txt"), "No directive here.\n")
-        val sources =
-            CurrentPages(
-                commit = commit,
-                pages =
-                    listOf("bitAnd", "bitOr", "bitXor", "interface").map {
-                        CurrentPage(FormSource(commit, "$folder/$it.txt"))
-                    },
+        pages.operator("bitOr", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(data),
+                    section(
+                        "Bitwise ``OR`` with Two Integers",
+                        code(aggregate("{ \$bitOr: [ \"\$a\", \"\$a\" ] }")),
+                    ),
+                    section(
+                        "Renamed Since the Fixture",
+                        code(aggregate("{ \$bitOr: [ \"\$a\", 7 ] }")),
+                    ),
+                    section(
+                        "Bitwise ``OR`` with a Long and Integer",
+                        code(aggregate("{ \$bitOr: [ \"\$a\", Long(\"63\") ] }")),
+                        code("[ { _id: 0, result: Long(\"63\") } ]"),
+                    ),
+                )
             )
-        return DocumentedExamples.capture(root, directory.resolve("pages"), sources)
+        }
+        pages.operator("bitAnd", "expression") {
+            listOf(section("Example", code(data), code(aggregate("{ \$bitAnd: [ \"\$a\", 1 ] }"))))
+        }
+        pages.operator("bitXor", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(data),
+                    section("Use Two", code(aggregate("{ \$bitXor: [ \"\$a\", 1 ] }"))),
+                    section("Use two", code(aggregate("{ \$bitXor: [ \"\$a\", 2 ] }"))),
+                )
+            )
+        }
+        pages.page("aggregation", "interface") {
+            node(
+                "root",
+                children = listOf(section("Interface", node("text", text = "No directive here."))),
+            )
+        }
+        return capture(root)
     }
 
     @Test
@@ -188,57 +168,43 @@ class GeneratorTest {
             root.resolve("audits/catalog/fixture-migration.json"),
             AuditJson.write(FixtureMigrationLedger()),
         )
-        val seed =
-            block("db.inventory.insertMany( [ { _id: 1, qty: Int32(25), tags: [ \"a\" ] } ] )")
-        page(
-            "gt",
-            "query",
-            """
-            |Examples
-            |--------
-            |
-            |$seed
-            |Match Larger Quantities
-            |~~~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${block("db.inventory.createIndex( { qty: 1 }, { name: \"byQty\" } )")}
-            |${block("db.inventory.find( { qty: { ${'$'}gt: 20 } } )")}
-            |Project the Quantity
-            |~~~~~~~~~~~~~~~~~~~~
-            |
-            |${block("db.inventory.find( { qty: { ${'$'}gt: 20 } }, { qty: 1 } )")}"""
-                .trimMargin(),
-        )
-        page(
-            "inc",
-            "update",
-            """
-            |Examples
-            |--------
-            |
-            |$seed
-            |Increment and Tag
-            |~~~~~~~~~~~~~~~~~
-            |
-            |${block("db.inventory.updateOne( { _id: 1 }, { ${'$'}inc: { qty: 2 }, ${'$'}set: { tags: [ \"b\" ] } } )")}
-            |Increment in a Pipeline
-            |~~~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${block("db.inventory.updateOne( { _id: 1 }, [ { ${'$'}set: { qty: 2 } } ] )")}"""
-                .trimMargin(),
-        )
-        val inventory =
-            DocumentedExamples.capture(
-                root,
-                directory.resolve("pages"),
-                CurrentPages(
-                    commit = commit,
-                    pages =
-                        listOf("gt", "inc").map {
-                            CurrentPage(FormSource(commit, "$folder/$it.txt"))
-                        },
-                ),
+        val seed = "db.inventory.insertMany( [ { _id: 1, qty: Int32(25), tags: [ \"a\" ] } ] )"
+        pages.operator("gt", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    section(
+                        "Match Larger Quantities",
+                        code("db.inventory.createIndex( { qty: 1 }, { name: \"byQty\" } )"),
+                        code("db.inventory.find( { qty: { \$gt: 20 } } )"),
+                    ),
+                    section(
+                        "Project the Quantity",
+                        code("db.inventory.find( { qty: { \$gt: 20 } }, { qty: 1 } )"),
+                    ),
+                )
             )
+        }
+        pages.operator("inc", "update", "update") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    section(
+                        "Increment and Tag",
+                        code(
+                            "db.inventory.updateOne( { _id: 1 }, { \$inc: { qty: 2 }, \$set: { tags: [ \"b\" ] } } )"
+                        ),
+                    ),
+                    section(
+                        "Increment in a Pipeline",
+                        code("db.inventory.updateOne( { _id: 1 }, [ { \$set: { qty: 2 } } ] )"),
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
         val repository =
             generateSequence(Path.of("").toAbsolutePath()) { it.parent }
                 .first { Files.isDirectory(it.resolve("audits/catalog")) }
@@ -313,6 +279,139 @@ class GeneratorTest {
                 "matched by name",
             ),
             Triple(example.status, example.owner, example.detail),
+        )
+    }
+
+    /** A page that repeats an example shows it once; the same action on other data is another. */
+    @Test
+    fun onlyIdenticalExamplesCollapse() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val query = aggregate("{ \$bitOr: [ \"\$a\", 1 ] }")
+        pages.operator("bitOr", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    section("Same Name", code(data), code(query)),
+                    section("Same Name", code(data), code(query)),
+                    section(
+                        "Same Name",
+                        code("db.switches.insertMany( [ { _id: 1, a: Int32(5) } ] )"),
+                        code(query),
+                    ),
+                )
+            )
+        }
+        assertEquals(2, capture(root).pages.single().examples.size)
+    }
+
+    /** A drafted plan reads each operator page's examples section, tabs and highlighting. */
+    @Test
+    fun theDraftedPlanFollowsEachPage() {
+        pages.operator("acos", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(data),
+                    section(
+                        "Inverse Cosine",
+                        node(
+                            "directive",
+                            name = "tab",
+                            options = mapOf("tabid" to "\"degrees\""),
+                            children = listOf(code(aggregate("{ \$acos: \"\$a\" }"), "bash")),
+                        ),
+                    ),
+                )
+            )
+        }
+        pages.operator("abs", "expression") {
+            listOf(section("Example", code(data), code(aggregate("{ \$abs: \"\$a\" }"))))
+        }
+        pages.operator("cos", "expression") { listOf(section("Behavior", code(data))) }
+        val (_, document) = pages.build()
+        val plan = ScenarioPlans.draft(document, "a".repeat(64))
+        val rules = plan.pages.associateBy { it.id }
+        assertEquals(
+            setOf("aggregation/expressions/acos", "aggregation/expressions/abs"),
+            rules.keys,
+        )
+        val acos = rules.getValue("aggregation/expressions/acos")
+        assertEquals("\$acos", acos.scope.capability.key.token)
+        assertEquals(listOf("examples"), acos.sections)
+        val policy = acos.sectionAssembly!!
+        // The examples section's own code is shared setup only when subsections follow it.
+        assertEquals(listOf("examples"), policy.sharedSetupSections)
+        assertEquals(listOf("degrees"), policy.scenarioTabs)
+        assertEquals(listOf("bash"), policy.additionalShellLanguages)
+        val abs = rules.getValue("aggregation/expressions/abs")
+        assertEquals(listOf("example"), abs.sections)
+        assertTrue(abs.sectionAssembly!!.sharedSetupSections.isEmpty())
+    }
+
+    /**
+     * Examples that share their section's title take reviewed names; the title then names no owner,
+     * so a fixture with that title owns neither of them.
+     */
+    @Test
+    fun siblingsSharingATitleTakeReviewedNames() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        write(
+            root.resolve(
+                "core/src/test/resources/dev/morphia/test/aggregation/expressions/bitOr/twoWays/name"
+            ),
+            "Two Ways\n",
+        )
+        pages.operator("bitOr", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(data),
+                    section(
+                        "Two Ways",
+                        code(aggregate("{ \$bitOr: [ \"\$a\", 1 ] }")),
+                        code(aggregate("{ \$bitOr: [ \"\$a\", 2 ] }")),
+                    ),
+                )
+            )
+        }
+        val shared = capture(root).pages.single().examples
+        assertEquals(
+            listOf(ExampleStatus.AMBIGUOUS, ExampleStatus.AMBIGUOUS),
+            shared.map { it.status },
+        )
+        write(
+            directory.resolve("repository/${DocumentedExamples.REVIEWED}"),
+            AuditJson.write(
+                ReviewedExamples(
+                    examples =
+                        shared.mapIndexed { index, example ->
+                            ReviewedExample(
+                                "aggregation/expressions/bitOr",
+                                "Two Ways",
+                                example.blocks.single { it.role == BlockRole.ACTION }.sha256,
+                                name = listOf("OR with One", "OR with Two")[index],
+                                reason = "the section shows two examples",
+                            )
+                        }
+                )
+            ),
+        )
+        val named = capture(root).pages.single().examples
+        assertEquals(
+            listOf(
+                Triple(ExampleStatus.UNOWNED, "orWithOne", null),
+                Triple(ExampleStatus.UNOWNED, "orWithTwo", null),
+            ),
+            named.map { Triple(it.status, it.stem, it.owner) },
+            named.toString(),
         )
     }
 
@@ -529,44 +628,37 @@ class GeneratorTest {
             root.resolve("audits/catalog/fixture-migration.json"),
             AuditJson.write(FixtureMigrationLedger()),
         )
-        fun movies(pipeline: String) = block("db.movies.aggregate( [ $pipeline ] )")
-        page(
-            "top",
-            "group",
-            """
-            |Examples
-            |--------
-            |
-            |Top Rated by Year
-            |~~~~~~~~~~~~~~~~~
-            |
-            |${movies("""{ ${'$'}match: { genres: "Comedy", year: { ${'$'}gte: 2010, ${'$'}lte: 2012 }, rated: { ${'$'}in: [ "G", "PG" ] }, "imdb.rating": { ${'$'}exists: true } } },
-            |  { ${'$'}group: { _id: "${'$'}year", best: { ${'$'}top: { output: [ "${'$'}title", "${'$'}imdb.rating" ], sortBy: { "imdb.rating": -1, title: 1 } } } } },
-            |  { ${'$'}sort: { _id: 1 } }""")}
-            |${block("[ { _id: 2010, best: [ 'A', 9 ] } ]")}
-            |Grouped by Two Fields
-            |~~~~~~~~~~~~~~~~~~~~~
-            |
-            |${movies("""{ ${'$'}group: { _id: { y: "${'$'}year" }, best: { ${'$'}top: { output: "${'$'}title", sortBy: { year: 1 } } } } }""")}
-            |Without a Rating
-            |~~~~~~~~~~~~~~~~
-            |
-            |${movies("""{ ${'$'}match: { "imdb.rating": { ${'$'}exists: false } } }""")}
-            |Typed Years
-            |~~~~~~~~~~~
-            |
-            |${movies("""{ ${'$'}match: { year: { ${'$'}type: "int" } } }""")}"""
-                .trimMargin(),
-        )
-        val inventory =
-            DocumentedExamples.capture(
-                root,
-                directory.resolve("pages"),
-                CurrentPages(
-                    commit = commit,
-                    pages = listOf(CurrentPage(FormSource(commit, "$folder/top.txt"))),
-                ),
+        fun ParsedPages.Page.movies(pipeline: String) = code("db.movies.aggregate( [ $pipeline ] )")
+        val topRated =
+            "{ \$match: { genres: \"Comedy\", year: { \$gte: 2010, \$lte: 2012 }, " +
+                "rated: { \$in: [ \"G\", \"PG\" ] }, \"imdb.rating\": { \$exists: true } } },\n" +
+                "  { \$group: { _id: \"\$year\", best: { \$top: { output: [ \"\$title\", " +
+                "\"\$imdb.rating\" ], sortBy: { \"imdb.rating\": -1, title: 1 } } } } },\n" +
+                "  { \$sort: { _id: 1 } }"
+        pages.operator("top", "group") {
+            listOf(
+                section(
+                    "Examples",
+                    section(
+                        "Top Rated by Year",
+                        movies(topRated),
+                        code("[ { _id: 2010, best: [ 'A', 9 ] } ]"),
+                    ),
+                    section(
+                        "Grouped by Two Fields",
+                        movies(
+                            "{ \$group: { _id: { y: \"\$year\" }, best: { \$top: { output: \"\$title\", sortBy: { year: 1 } } } } }"
+                        ),
+                    ),
+                    section(
+                        "Without a Rating",
+                        movies("{ \$match: { \"imdb.rating\": { \$exists: false } } }"),
+                    ),
+                    section("Typed Years", movies("{ \$match: { year: { \$type: \"int\" } } }")),
+                )
             )
+        }
+        val inventory = capture(root)
         val repository =
             generateSequence(Path.of("").toAbsolutePath()) { it.parent }
                 .first { Files.isDirectory(it.resolve("audits/catalog")) }

@@ -16,7 +16,7 @@ public class TestBitOr extends TestBase {
     private final OperatorCaseRunner runner = new OperatorCaseRunner(this);
 
     @Test
-    @DisplayName("Bitwise ``OR`` with Two Integers ")
+    @DisplayName("Bitwise OR with Two Integers")
     public void bitwiseOrWithTwoIntegers() {
         runner.aggregate(
                 OperatorCase.of("/dev/morphia/test/generated/fixtures/expressions/bitOr/bitwiseOrWithTwoIntegers/scenario.json"),

@@ -1,0 +1,180 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/group/groupByYear",
+  "title": "Group by Year",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/group.txt",
+    "blob": "8a18fc90e2df0775fccd5531514e665a1a131341"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$lt": {
+              "$numberInt": "1910"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "totalRuntime": {
+            "$sum": "$runtime"
+          },
+          "averageRuntime": {
+            "$avg": "$runtime"
+          },
+          "count": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "totalRuntime": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1909"
+              }
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "averageRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1903"
+              }
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "11"
+              }
+            }
+          },
+          {
+            "name": "averageRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "11"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1896"
+              }
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "averageRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

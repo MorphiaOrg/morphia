@@ -2,7 +2,8 @@
 # Usage: audits/discover.sh <docs-checkout> <out-dir> [--integrate]
 #
 # Report-only discovery of documented operator examples. In a throwaway worktree of HEAD it
-# inventories the checkout's operator pages, diffs that inventory against the committed one,
+# parses the checkout's operator pages with the pinned parser, inventories them under the committed
+# scenario plan, diffs that inventory and a freshly drafted plan against the committed ones,
 # generates a candidate with its gaps and, with --integrate, runs the candidate's tests under both
 # mappers. It then compares the manual's capabilities with the accepted baseline (coverage.json).
 # Everything lands in <out-dir>, with summary.md on top; nothing in this checkout changes and
@@ -28,12 +29,46 @@ generate() {
         -Dexec.args="$*"
 }
 
-python3 audits/probes/form-sources/fetch.py local "$docs" "$out/current.json" "$out/pages"
 mvn install -pl :morphia-core -am -DskipTests -Ddeploy.skip=true -Dinvoker.skip=true
 mvn -Daudits -pl :morphia-audits compile
-generate inventory "$tree" "$out/pages" "$out/current.json"
-cp audits/catalog/documented-examples.json "$out/"
+uv sync --frozen --project audits/parser -q
+audit() { mvn -Daudits -pl :morphia-audits exec:java -Daudits.mainClass="$1" -Dexec.args="$2"; }
+export MAVEN_OPTS=-Xmx8g
+
+# The pinned source bundle of the checkout's manual, shared by the inventory and the coverage.
+python3 -I - "$docs" "$out/sources-request.json" <<'EOF'
+import json, subprocess, sys
+request = json.load(open("audits/config/manual-baseline-sources.json"))
+request["revision"] = subprocess.run(["git", "-C", sys.argv[1], "rev-parse", "HEAD"], check=True,
+                                     capture_output=True, text=True).stdout.strip()
+request["id"] = "manual-weekly"
+request["label"] = "weekly"
+json.dump(request, open(sys.argv[2], "w"), indent=2)
+EOF
+audit dev.morphia.audits.sources.SourcesMainKt "$out/sources-request.json $out/bundle --repository $docs" \
+    > "$out/sources.json"
+content=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["manifest"]["contentSha256"])' "$out/sources.json")
+
+# The operator pages, parsed, then inventoried under the committed plan. A drafted plan that
+# differs names pages the committed one lacks or reads differently.
+pages=$(python3 -I - "$out/sources.json" <<'EOF'
+import json, re, sys
+manifest = json.load(open(sys.argv[1]))["manifest"]
+source = manifest["request"]["projectRoot"] + "/source/"
+print(" ".join(sorted(r["path"][len(source):] for r in manifest["resources"]
+                      if re.fullmatch(re.escape(source) + r"reference/operator/(aggregation|query|update)/[^/]+\.txt", r["path"]))))
+EOF
+)
+partial() { "$@" || [ $? -eq 3 ]; }
+# shellcheck disable=SC2086
+partial audit dev.morphia.audits.documents.DocumentsMainKt \
+    "$out/bundle $content $tree/audits/parser/.venv/bin/python $tree/audits/parser/adapter.py $pages" \
+    > "$out/documents.json"
+generate inventory "$tree" "$out/bundle" "$content" "$out/documents.json"
+generate plan "$tree" "$out/bundle" "$content" "$out/documents.json"
+cp audits/catalog/documented-examples.json audits/catalog/scenario-plan.json "$out/"
 git diff -- audits/catalog/documented-examples.json > "$out/inventory.diff"
+git diff -- audits/catalog/scenario-plan.json > "$out/plan.diff"
 
 mvn dependency:build-classpath -pl :morphia-core -Dmdep.outputFile="$out/core-classpath.txt"
 generate candidate "$tree" "$out/candidate" "$out/core-classpath.txt"
@@ -45,22 +80,6 @@ fi
 # Capability coverage against the accepted baseline: the operators, contexts and versions the
 # manual declares at the checkout's commit, compared with audits/catalog/coverage-plan.json and
 # core's API. Exit status 3 (PARTIAL) still writes a report; discovery problems are in it.
-partial() { "$@" || [ $? -eq 3 ]; }
-python3 -I - "$docs" "$out/sources-request.json" <<'EOF'
-import json, subprocess, sys
-request = json.load(open("audits/config/manual-baseline-sources.json"))
-request["revision"] = subprocess.run(["git", "-C", sys.argv[1], "rev-parse", "HEAD"], check=True,
-                                     capture_output=True, text=True).stdout.strip()
-request["id"] = "manual-weekly"
-request["label"] = "weekly"
-json.dump(request, open(sys.argv[2], "w"), indent=2)
-EOF
-uv sync --frozen --project audits/parser -q
-audit() { mvn -Daudits -pl :morphia-audits exec:java -Daudits.mainClass="$1" -Dexec.args="$2"; }
-audit dev.morphia.audits.sources.SourcesMainKt "$out/sources-request.json $out/bundle --repository $docs" \
-    > "$out/sources.json"
-content=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["manifest"]["contentSha256"])' "$out/sources.json")
-export MAVEN_OPTS=-Xmx6g
 partial audit dev.morphia.audits.discovery.DiscoveryMainKt \
     "$out/bundle $content --parse $tree/audits/parser/.venv/bin/python $tree/audits/parser/adapter.py $tree/audits/catalog/discovery-plan.json" \
     > "$out/discovery.json"
@@ -91,6 +110,9 @@ lines += [f"| {key} | {value} |" for key, value in sorted(inventory["summary"].i
 changed = os.path.getsize(os.path.join(out, "inventory.diff")) > 0
 lines += ["", "The inventory " + ("**differs** from the committed one; see `inventory.diff`."
                                    if changed else "matches the committed one.")]
+drafted = os.path.getsize(os.path.join(out, "plan.diff")) > 0
+lines += ["", "A drafted scenario plan " + ("**differs** from the committed one; see `plan.diff`."
+                                          if drafted else "matches the committed one.")]
 skipped = collections.Counter(page["detail"].split(":")[0] for page in inventory["skipped"])
 lines += ["", "## Skipped pages", ""] + [f"- {count}: {reason}" for reason, count in skipped.most_common()]
 lines += ["", "## Gaps", ""]

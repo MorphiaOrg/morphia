@@ -19,10 +19,10 @@ public class TestProject extends TestBase {
     private final OperatorCaseRunner runner = new OperatorCaseRunner(this);
 
     @Test
-    @DisplayName("Exclude Fields from Embedded Documents")
-    public void excludeFieldsFromEmbeddedDocuments() {
+    @DisplayName("Exclude an Embedded Field with Dot Notation")
+    public void excludeAnEmbeddedFieldWithDotNotation() {
         runner.aggregate(
-                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/excludeFieldsFromEmbeddedDocuments/scenario.json"),
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/excludeAnEmbeddedFieldWithDotNotation/scenario.json"),
                 (aggregation) -> aggregation.pipeline(
                         match(eq("title", "The Great Train Robbery")),
                         project().exclude("imdb.id").exclude("type"),
@@ -41,13 +41,35 @@ public class TestProject extends TestBase {
     }
 
     @Test
-    @DisplayName("Project New Array Fields")
-    public void projectNewArrayFields() {
+    @DisplayName("Include an Embedded Field with Dot Notation")
+    public void includeAnEmbeddedFieldWithDotNotation() {
         runner.aggregate(
-                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/projectNewArrayFields/scenario.json"),
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithDotNotation/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("title", "The Great Train Robbery")),
+                        project().include("imdb.rating"),
+                        limit(1)));
+    }
+
+    @Test
+    @DisplayName("Project an Array of Fields")
+    public void projectAnArrayOfFields() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/projectAnArrayOfFields/scenario.json"),
                 (aggregation) -> aggregation.pipeline(
                         match(eq("title", "The Great Train Robbery")),
                         project().include("myArray", array("$year", "$runtime")),
+                        limit(1)));
+    }
+
+    @Test
+    @DisplayName("Project an Array with a Missing Field")
+    public void projectAnArrayWithAMissingField() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/projectAnArrayWithAMissingField/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("title", "The Great Train Robbery")),
+                        project().include("myArray", array("$year", "$runtime", "$someField")),
                         limit(1)));
     }
 }

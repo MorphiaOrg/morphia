@@ -2,8 +2,8 @@
   "schemaVersion": {
     "$numberInt": "1"
   },
-  "name": "aggregation/stages/project/projectNewArrayFields",
-  "title": "Project New Array Fields",
+  "name": "aggregation/stages/project/projectAnArrayWithAMissingField",
+  "title": "Project an Array with a Missing Field",
   "context": "STAGE",
   "source": {
     "repository": "mongodb/docs",
@@ -27,7 +27,8 @@
         "$project": {
           "myArray": [
             "$year",
-            "$runtime"
+            "$runtime",
+            "$someField"
           ]
         }
       },
@@ -63,6 +64,9 @@
                   "whole": {
                     "$numberInt": "11"
                   }
+                },
+                {
+                  "exact": null
                 }
               ]
             }

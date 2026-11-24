@@ -1110,12 +1110,16 @@ class ScenarioExtractionTest {
             )
             assertEquals("const n=2;", it.blocks.first().source)
         }
+        // Without a declared share, a query inherits only the inserts an earlier section made
+        // into its collection, with the declarations they read.
         val without = extract(root(setup, first, second), assembledRule())
-        assertTrue(
+        assertEquals(
+            listOf("const n=2;", "db.items.insertOne({v:n});"),
             without.scenarios
                 .single { it.sections.last().anchor == "second" }
                 .blocks
-                .none { it.source.contains("insertOne") }
+                .filter { it.role == ProgramRole.SETUP }
+                .map { it.source },
         )
         assertNull(without.scenarios.single { it.sections.last().anchor == "first" }.program)
     }
@@ -1324,6 +1328,24 @@ class ScenarioExtractionTest {
         val read = reads.single { it.blocks.any { b -> b.source == "db.items.find({});" } }
         assertEquals("AFTER_EARLIER_WRITE", read.normalizationProblem)
         assertNull(read.program)
+        // So does a read in another input/output group after a write in an earlier one.
+        val groups =
+            extract(
+                    root(
+                        section(
+                            "Merge Totals",
+                            "merge",
+                            io("db.items.aggregate([{${'$'}merge: {into: \"totals\"}}]);", "[]"),
+                            io("db.totals.find({});", "[{v:1}]"),
+                        )
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+        assertEquals(
+            setOf(null, "AFTER_EARLIER_WRITE"),
+            groups.map { it.normalizationProblem }.toSet(),
+        )
     }
 
     @Test
@@ -1386,6 +1408,184 @@ class ScenarioExtractionTest {
                 .single()
         assertEquals("items", seeds(native).single().namespace!!.collection)
         assertEquals(ShellLiteralState.NORMALIZED, native.program!!.state)
+        // A section that inserts in plain code and queries in an input/output group runs its
+        // insert before that query, and leaves no insert-only scenario behind.
+        val inSection =
+            extracted(section("Match Values", "values", code("db.items.insertOne({v:1});"), io()))
+                .scenarios
+                .single()
+        assertEquals(
+            listOf(ProgramRole.SETUP, ProgramRole.ACTION, ProgramRole.EXPECTED),
+            inSection.blocks.map { it.role },
+        )
+        assertEquals(ShellLiteralState.NORMALIZED, inSection.program!!.state)
+        // Setup the section shows after the group isn't the group's.
+        val after =
+            extracted(section("Match Values", "values", io(), code("db.items.insertOne({v:1});")))
+                .scenarios
+                .single { it.blocks.any { b -> b.role == ProgramRole.ACTION } }
+        assertTrue(after.blocks.none { it.role == ProgramRole.SETUP }, after.blocks.toString())
+    }
+
+    @Test
+    fun aQueryOnAnEarlierSectionsCollectionRunsAgainstItsInserts() {
+        val scenarios =
+            extract(
+                    root(
+                        standalone(
+                            "Seed Items",
+                            "seed",
+                            "db.items.insertOne({v:1});",
+                            "db.items.find({v:1});",
+                        ),
+                        standalone("Match Again", "again", "db.items.find({});", "[{v:1}]"),
+                        standalone("Other Data", "other", "db.others.find({});"),
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+        fun setup(action: String) =
+            scenarios
+                .single {
+                    it.blocks.any { b -> b.role == ProgramRole.ACTION && b.source == action }
+                }
+                .let { it.blocks.filter { b -> b.role == ProgramRole.SETUP }.map { b -> b.source } }
+        // The later section's query gets the earlier section's insert, but not its action.
+        assertEquals(listOf("db.items.insertOne({v:1});"), setup("db.items.find({});"))
+        // A query on another collection inherits nothing.
+        assertEquals(emptyList<String>(), setup("db.others.find({});"))
+        // A write the page shows but no scenario runs still changes what the next read sees.
+        val bulk =
+            extract(
+                    root(
+                        standalone(
+                            "Bulk",
+                            "bulk",
+                            "db.items.insertOne({v:1});",
+                            "try { db.items.bulkWrite([]) } catch (e) { print(e) }",
+                            "db.items.find({});",
+                            "[]",
+                        )
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+                .single()
+        assertEquals("AFTER_EARLIER_WRITE", bulk.normalizationProblem)
+        // An inherited insert brings the declarations it reads.
+        val declared =
+            extract(
+                    root(
+                        standalone(
+                            "Seed Items",
+                            "seed",
+                            "const docs = [{v:1}];",
+                            "db.items.insertMany(docs);",
+                            "db.items.find({v:1});",
+                        ),
+                        standalone("Match Again", "again", "db.items.find({});"),
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+                .single { it.blocks.any { b -> b.source == "db.items.find({});" } }
+        assertEquals(ShellLiteralState.NORMALIZED, declared.program!!.state)
+        assertEquals(
+            listOf("const docs = [{v:1}];", "db.items.insertMany(docs);"),
+            declared.blocks.filter { it.role == ProgramRole.SETUP }.map { it.source },
+        )
+        // A pipeline that only mentions '$out' in a string writes nothing.
+        val reads =
+            extract(
+                    root(
+                        standalone(
+                            "Project",
+                            "project",
+                            "db.items.insertOne({v:1});",
+                            "db.items.aggregate([{${'$'}project: {v: '${'$'}out'}}]);",
+                            "db.items.find({});",
+                        )
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+        assertTrue(
+            reads.none { it.normalizationProblem == "AFTER_EARLIER_WRITE" },
+            reads.toString(),
+        )
+    }
+
+    @Test
+    fun inheritedDataFollowsWhatThePageLastLoaded() {
+        fun query(vararg nodes: DocumentNode) =
+            extract(root(*nodes), assembledRule()).scenarios.single {
+                it.blocks.any { b -> b.source == "db.items.find({});" }
+            }
+        // An insert the grammar can't read may have replaced the older data: nothing carries over.
+        val replaced =
+            query(
+                standalone("First", "first", "db.items.insertOne({v:1});", "db.items.find({v:1});"),
+                standalone("Second", "second", "db.items.insertMany(makeDocuments());"),
+                standalone("Third", "third", "db.items.find({});"),
+            )
+        assertTrue(
+            replaced.blocks.none { it.role == ProgramRole.SETUP },
+            replaced.blocks.toString(),
+        )
+        // An insert after a section's last input/output group still reaches the next section.
+        val later =
+            query(
+                section(
+                    "Group",
+                    "group",
+                    io("db.others.find({});", "[]"),
+                    code("db.items.insertOne({v:1});"),
+                ),
+                standalone("Third", "third", "db.items.find({});"),
+            )
+        assertEquals(
+            listOf("db.items.insertOne({v:1});"),
+            later.blocks.filter { it.role == ProgramRole.SETUP }.map { it.source },
+        )
+        // A group after setup of its own the grammar can't read doesn't run without its data.
+        val group =
+            extract(
+                    root(
+                        section(
+                            "Group",
+                            "group",
+                            code("db.items.insertMany(makeDocuments());"),
+                            io(),
+                        )
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+                .single { it.blocks.any { b -> b.role == ProgramRole.ACTION } }
+        assertNull(group.program)
+        // Inherited setup counts against the source budget.
+        val (bundle, document) =
+            fixture(
+                root(
+                    standalone(
+                        "Seed",
+                        "seed",
+                        "db.items.insertOne({v:1});",
+                        "db.items.find({v:1});",
+                    ),
+                    *(1..5)
+                        .map { standalone("Query $it", "q$it", "db.items.find({});") }
+                        .toTypedArray(),
+                )
+            )
+        assertThrows(IllegalArgumentException::class.java) {
+            ScenarioExtraction.extract(
+                bundle,
+                document,
+                plan(assembledRule()),
+                ScenarioExtractionLimits(maximumCodeCharacters = 150),
+            )
+        }
     }
 
     @Test
@@ -1702,7 +1902,7 @@ class ScenarioExtractionTest {
             )
         // In the other order the insert reads a binding not yet declared, so it isn't setup.
         assertEquals(
-            listOf("db.items.insertOne({v:n});" to "UNSUPPORTED_SOURCE"),
+            listOf("db.items.insertOne({v:n});" to "UNSUPPORTED_SETUP"),
             reversed.pages.single().sharedSetupSkipped.map { it.code.source to it.reason },
         )
     }

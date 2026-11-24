@@ -2766,3 +2766,8 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   inserts, each action is its own scenario, and skipped source is recorded with a reason. Over all
   297 operator pages (docs e4b0c153) with a draft plan, 605 scenarios normalize, against 582
   examples in the legacy inventory; 508 of those match by title.
+- Parser retirement, step 2 (structured inventory): `GenerateMainKt plan` drafts the committed
+  `scenario-plan.json` and `inventory` extracts the planned pages with the structured extractor;
+  discovery parses the operator pages instead of running `fetch.py`. At docs e4b0c153: 290 pages,
+  307 owned, 291 unowned, 101 unsupported, none ambiguous or unnamed. 60 sibling examples got
+  proposed names; 19 reviews whose examples have no action any more were dropped.

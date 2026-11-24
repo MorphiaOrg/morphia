@@ -183,9 +183,9 @@ methods or fixture directories disagree with it.
 | `api` | Inventories Morphia's public API with the JDK compiler, used to verify bindings. | Yes |
 | `bindings` | Captures which legacy test owns which fixture, and the descriptive-name backport. | Yes |
 | `naming` | Descriptive example names, and the name registry reconciler. | Names: yes. Reconciler: not yet. |
-| `rst`, `model` | The legacy line-based RST extractor. | Yes, until the structured parser replaces it |
+| `rst`, `model` | The legacy line-based RST extractor. | Only by the retired conversion commands |
 | `sources`, `documents`, `discovery` | Pinned Git source bundles, the Snooty parser adapter, capability discovery. | Yes, weekly |
-| `scenarios` | Structured scenario extraction: native input/output groups, and section assembly, which gives each block a role by what the shell grammar makes of it. | Not yet; it replaces `rst` next |
+| `scenarios` | Structured scenario extraction: native input/output groups, and section assembly, which gives each block a role by what the shell grammar makes of it. | Yes: the example inventory, weekly |
 | `coverage` | Capability catalog and plan contracts, coverage comparison, and `AuditJson`, the strict JSON codec every package uses. | Yes, weekly |
 
 Each package with a command has a `*Main.kt` entry point, run through the exec plugin with
@@ -198,6 +198,7 @@ every file. The ones the running system depends on:
 
 | File | Written by | Read by |
 | --- | --- | --- |
+| `scenario-plan.json` | `GenerateMainKt plan`, reviewed | The inventory: which pages to extract, and how. |
 | `documented-examples.json` | `GenerateMainKt inventory` | The generator, discovery's diff, the publisher's new-example check. |
 | `dsl-bindings.json` | Hand, reviewed | The generator, after verification against core's API. |
 | `generation-review.json` | Hand, reviewed | The generator: which families to generate, and the exclusions. |
@@ -210,13 +211,20 @@ every file. The ones the running system depends on:
 
 Every example on the current operator pages, with its owner, lives in `documented-examples.json`.
 
-1. `fetch.py local` collects the operator pages and their includes at one mongodb/docs commit
-   from a sparse Git clone. `fetch.py current` followed by `fetch.py pages` does the same through
-   the GitHub API, which rate-limits.
-2. `GenerateMainKt inventory` extracts each page's examples and matches each one to an existing
-   fixture: by title, or, if the title changed, by its action text, or else by its descriptive name
-   (the backport named every fixture for its example). The matching uses the legacy RST
-   extractor, which is also how the fixtures were made.
+1. `SourcesMainKt` pins one mongodb/docs commit's manual into a source bundle, from a sparse Git
+   clone, and `DocumentsMainKt` parses its operator pages with the pinned Snooty parser.
+2. `GenerateMainKt plan` drafts `scenario-plan.json` from the parsed pages: a rule for each page
+   that declares one operator (`.. expression:: $add`) and has an examples section. The rule names
+   that section, shares its own code as setup when it has subsections, lists the page's
+   non-driver tabs as scenario variants and its `bash` highlighting as shell, and reads
+   unlabeled code as JavaScript. The plan is reviewed policy: a draft is committed only after its
+   diff is read.
+3. `GenerateMainKt inventory` extracts the planned pages with the structured scenario extraction
+   (see [section assembly](operator-audits-section-assembly.md)) and matches each example to an
+   existing fixture: by title, or, if the title changed, by its action text, or else by its
+   descriptive name (the backport named every fixture for its example). An example's title is its
+   section's, `main` for a generic one, and `<section> :: <tab>` for a scenario tab, as the legacy
+   inventory spelled them. A page that shows an identical example twice (the same title, source and state) lists it once.
 
 Each example gets one status:
 
@@ -225,6 +233,12 @@ Each example gets one status:
   the page again.
 - **UNNAMED**: it has no usable title, so it needs a reviewed name.
 - **AMBIGUOUS**: its name collides with another, or several fixtures match it.
+- **UNSUPPORTED**: nothing covers it, and the extraction found no program for it; the detail is the
+  reason, such as `AFTER_EARLIER_WRITE` or a result the grammar can't read.
+
+A section can hold several examples under one title, such as a query written with dot notation
+and again with an embedded document. Such a title names no owner, and the examples need reviewed
+names. An example without a program yields a shared title to any example that has one.
 
 `example-names.json` holds the reviews that resolve the last two: a descriptive name for a generic
 title, or the owner among several matching fixtures, each with its reason. A review is keyed by page,
@@ -235,14 +249,15 @@ generated case's title and display name.
 Generated cases never count as owners: generation derives them from the unowned examples on
 every run.
 
-Before extraction, a page is reduced to its mongosh content. Of a `.. tabs-drivers::` set only
-the `shell` tab is kept, and of a composable tutorial only the `.. selected-content::` selected for
-`shell`; the other drivers' content holds their own code and remote shared includes. The files that
-`.. input::`, `.. output::` and `.. literalinclude::` name are then spliced in as inline blocks:
-MongoDB's tested snippets (`/code-examples/tested/...`, read from `content/code-examples`) and
-include files. Each is recorded with its blob, like an include. Many tested snippets query MongoDB's
-sample datasets (`db.movies`) and print elided results; they extract like any other example and
-then show up as generation gaps.
+Only the mongosh content becomes examples: a driver tab or a composable tutorial's driver
+selection is a foreign group, and a selection or tab for the shell is a reference group. Tested
+snippets (`/code-examples/tested/...`) and include files are resolved through the bundle, each
+with its blob. Many tested snippets query MongoDB's sample datasets (`db.movies`) and print elided
+results; they extract like any other example and then show up as generation gaps.
+
+Until an update's case runs the read the page shows after it, what a page prints after an update
+(an acknowledgement, or the documents its filter matches) goes to generation as that update's
+printed result, the convention the converted cases use.
 
 ### Generation
 
@@ -360,8 +375,10 @@ differently in a way a rule covers.
 1. It clones mongodb/docs sparsely and without blobs, limited to the operator pages and includes,
    which avoids the API rate limit.
 2. `audits/discover.sh` runs in a throwaway worktree of HEAD:
-   - it reinventories the pages, and `inventory.diff` shows the changes against the committed
-     inventory;
+   - it pins the manual into a source bundle and parses the operator pages;
+   - it reinventories the pages under the committed plan, and `inventory.diff` shows the changes
+     against the committed inventory; a freshly drafted plan's `plan.diff` shows pages the
+     committed plan lacks or reads differently;
    - it generates a candidate with the committed bindings and review, which writes `gaps.json`;
    - it integrates the candidate under both mappers.
 3. The job writes `summary.md` to the job summary and uploads every report.
@@ -370,7 +387,8 @@ differently in a way a rule covers.
 
 1. `PublishMainKt discovery` turns the reports into findings with `DiscoveryFindings`:
    - `MISSING_BINDING`: one per unbound node, listing every example it blocks;
-   - `NEW_EXAMPLE`: an unowned example that is not in the committed inventory;
+   - `NEW_EXAMPLE`: an unowned example that is not in the committed inventory, identified by its
+     reviewed name or title, and by its action when siblings still share one;
    - `INTEGRATION_FAILURE`: the failing tests from the log.
 2. The publisher files them in MorphiaOrg/morphia.
 
@@ -440,8 +458,7 @@ inventories core's API and writes `coverage.json`; the Publish job files its `MI
 `VERSION_ANNOTATION` findings from healthy contexts. A lost capability or a count drop makes its
 context unhealthy, and nothing is published for it.
 
-Example extraction still uses the legacy RST extractor described above; it retires once the
-structured scenario extraction resolves tested snippets and drivers' content as it does.
+The example inventory reads the same bundle; the legacy RST extractor no longer feeds it.
 
 ## Testing the audits
 
@@ -463,7 +480,7 @@ audits module or core's operator tests.
 
 These exist only until the migration finishes. The plan says what retires each one.
 
-- **The legacy RST extractor** (`rst/`, `model/`), which the example inventory and conversion use.
+- **The legacy RST extractor** (`rst/`, `model/`), which only the retired conversion commands still use.
 - **`FormMainKt` conversion commands and their review files**, needed while legacy fixtures remain.
 
 ## Keeping this document current

@@ -22,7 +22,6 @@ import dev.morphia.audits.discovery.DiscoveryReport
 import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.generate.Attestation
 import dev.morphia.audits.generate.Candidate
-import dev.morphia.audits.generate.CurrentPages
 import dev.morphia.audits.generate.DslBindingCatalog
 import dev.morphia.audits.generate.ExampleInventory
 import dev.morphia.audits.generate.GenerationGaps
@@ -194,8 +193,6 @@ object AuditJson {
     fun candidate(json: String): Candidate = read(json, Candidate::class.java)
 
     fun attestation(json: String): Attestation = read(json, Attestation::class.java)
-
-    fun currentPages(json: String): CurrentPages = read(json, CurrentPages::class.java)
 
     fun dslBindings(json: String): DslBindingCatalog = read(json, DslBindingCatalog::class.java)
 
