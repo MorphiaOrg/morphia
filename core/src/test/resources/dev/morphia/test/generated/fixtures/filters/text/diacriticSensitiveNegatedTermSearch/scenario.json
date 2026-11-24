@@ -1,0 +1,179 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/text/diacriticSensitiveNegatedTermSearch",
+  "title": "Diacritic-Sensitive Negated Term Search",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/text.txt",
+    "blob": "e852e8a20ef2b64a293852991fb69d879a5b8f7d"
+  },
+  "dataset": null,
+  "collections": {
+    "articles": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "subject": "coffee",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "subject": "Coffee Shopping",
+        "author": "efg",
+        "views": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "subject": "Baking a cake",
+        "author": "abc",
+        "views": {
+          "$numberInt": "90"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "subject": "baking",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "subject": "Café Con Leche",
+        "author": "abc",
+        "views": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "subject": "Сырники",
+        "author": "jkl",
+        "views": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "subject": "coffee and cream",
+        "author": "efg",
+        "views": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "subject": "Cafe con Leche",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "10"
+        }
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "movies",
+      "keys": {
+        "title": "text",
+        "fullplot": "text"
+      }
+    },
+    {
+      "collection": "articles",
+      "keys": {
+        "subject": "text"
+      }
+    },
+    {
+      "collection": "movies",
+      "keys": {
+        "title": "text",
+        "fullplot": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "articles",
+    "filter": {
+      "$text": {
+        "$search": "leches -cafés",
+        "$diacriticSensitive": true
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "subject",
+            "value": {
+              "text": "Cafe con Leche"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "text": "xyz"
+            }
+          },
+          {
+            "name": "views",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

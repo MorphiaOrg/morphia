@@ -51,8 +51,14 @@ enum class FormRule(val description: String) {
             "holds one of them. The tool does not prove the alternatives equivalent: each use needs " +
             "a reviewed justification in its declaration."
     ),
+    REGEX_OPTIONS(
+        "In \$regexFind, \$regexFindAll and \$regexMatch, regex: /p/o, regex: \"p\", options: " +
+            "\"o\" and regex: /p/, options: \"o\" are the same match; a string pattern with " +
+            "sorted options, and no options key when there are none, is canonical."
+    ),
     NAMED_ARGUMENTS(
         "The top-level keys of an operator that takes only named arguments (for example \$filter, " +
+            "\$text, " +
             "\$map, \$dateToString, \$bottomN, \$fill, \$graphLookup) may appear in any order; sorted " +
             "keys are canonical. Nested values, including sort specifications, keep their order."
     ),
@@ -98,11 +104,15 @@ object FormEquivalence {
             "\$regexFindAll",
             "\$regexMatch",
             "\$sortArray",
+            "\$text",
             "\$top",
             "\$topN",
             "\$unwind",
             "\$zip",
         )
+
+    /** Expression operators whose argument takes a pattern in `regex` and flags in `options`. */
+    val regexOperators = setOf("\$regexFind", "\$regexFindAll", "\$regexMatch")
 
     /** Expression operators that take exactly one argument. */
     val singleArgumentOperators =
@@ -256,7 +266,7 @@ object FormEquivalence {
                     when {
                         field in setOf("\$and", "\$or", "\$nor") && predicate is BsonArray ->
                             BsonArray(predicate.values.map { filter(it) })
-                        field.startsWith("$") -> expression(predicate)
+                        field.startsWith("$") -> named(field, expression(predicate))
                         else -> predicate(predicate)
                     }
             }
@@ -338,12 +348,52 @@ object FormEquivalence {
                             ) {
                                 converted = converted[0]
                             }
+                            if (FormRule.REGEX_OPTIONS in rules && key in regexOperators) {
+                                converted = regexOptions(converted)
+                            }
                             result[key] = named(key, converted)
                         }
                     }
                 is BsonArray -> BsonArray(value.values.map { expression(it, query) })
                 else -> value
             }
+
+        /**
+         * A regex expression's argument with its pattern as a string and its flags, from the
+         * pattern and the `options` key, sorted in `options`. Flags in both places are left alone,
+         * since the server rejects them.
+         */
+        private fun regexOptions(value: BsonValue): BsonValue {
+            if (value !is BsonDocument) return value
+            val (pattern, inline) =
+                when (val regex = value["regex"]) {
+                    is BsonRegularExpression -> regex.pattern to regex.options
+                    // A `$` string is a field path the server evaluates, not a pattern.
+                    is BsonString ->
+                        if (regex.value.startsWith("$")) return value else regex.value to ""
+                    else -> return value
+                }
+            val separate =
+                when (val options = value["options"]) {
+                    null -> ""
+                    is BsonString ->
+                        if (options.value.startsWith("$")) return value else options.value
+                    else -> return value
+                }
+            if (inline.isNotEmpty() && separate.isNotEmpty()) return value
+            val options = (inline + separate).toCharArray().sorted().joinToString("")
+            return BsonDocument().also { result ->
+                value.forEach { (name, field) ->
+                    when (name) {
+                        "regex" -> result[name] = BsonString(pattern)
+                        "options" -> if (options.isNotEmpty()) result[name] = BsonString(options)
+                        else -> result[name] = field
+                    }
+                }
+                if (options.isNotEmpty() && "options" !in result)
+                    result["options"] = BsonString(options)
+            }
+        }
 
         private fun condition(value: BsonValue): BsonValue =
             if (value is BsonDocument && value.keys == setOf("if", "then", "else"))

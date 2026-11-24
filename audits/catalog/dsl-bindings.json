@@ -439,6 +439,93 @@
       "fields": {}
     },
     {
+      "operator": "$regexFind",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "regexFind",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "input"
+      ],
+      "options": {
+        "regex": {
+          "method": "pattern",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "options": {
+          "method": "options",
+          "parameters": [
+            "java.lang.String"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$regexFindAll",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "regexFindAll",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "input"
+      ],
+      "options": {
+        "regex": {
+          "method": "pattern",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "options": {
+          "method": "options",
+          "parameters": [
+            "java.lang.String"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$regexMatch",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.StringExpressions",
+      "method": "regexMatch",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "input"
+      ],
+      "options": {
+        "regex": {
+          "method": "pattern",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "options": {
+          "method": "options",
+          "parameters": [
+            "java.lang.String"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
       "operator": "$replaceAll",
       "position": "EXPRESSION",
       "form": "NAMED",
@@ -589,6 +676,20 @@
       "fields": {}
     },
     {
+      "operator": "$expr",
+      "position": "FILTER",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "expr",
+      "parameters": [
+        "dev.morphia.aggregation.expressions.impls.Expression"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$gt",
       "position": "FILTER",
       "form": "FIELD",
@@ -664,6 +765,22 @@
       "fields": {}
     },
     {
+      "operator": "$mod",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "mod",
+      "parameters": [
+        "java.lang.String",
+        "long",
+        "long"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$ne",
       "position": "FILTER",
       "form": "FIELD",
@@ -677,6 +794,110 @@
       "arguments": [],
       "options": {},
       "fields": {}
+    },
+    {
+      "operator": "$regex",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "regex",
+      "parameters": [
+        "java.lang.String",
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {
+        "i": {
+          "method": "caseInsensitive",
+          "parameters": []
+        },
+        "m": {
+          "method": "multiline",
+          "parameters": []
+        },
+        "s": {
+          "method": "special",
+          "parameters": []
+        },
+        "x": {
+          "method": "extended",
+          "parameters": []
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$text",
+      "position": "FILTER",
+      "form": "NAMED",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "text",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [
+        "$search"
+      ],
+      "options": {
+        "$caseSensitive": {
+          "method": "caseSensitive",
+          "parameters": [
+            "java.lang.Boolean"
+          ]
+        },
+        "$diacriticSensitive": {
+          "method": "diacriticSensitive",
+          "parameters": [
+            "java.lang.Boolean"
+          ]
+        },
+        "$language": {
+          "method": "language",
+          "parameters": [
+            "java.lang.String"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$type",
+      "position": "FILTER",
+      "form": "FIELD",
+      "owner": "dev.morphia.query.filters.Filters",
+      "method": "type",
+      "parameters": [
+        "java.lang.String",
+        "dev.morphia.query.Type[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {},
+      "constants": {
+        "double": "DOUBLE",
+        "string": "STRING",
+        "object": "OBJECT",
+        "array": "ARRAY",
+        "binData": "BINARY_DATA",
+        "undefined": "UNDEFINED",
+        "objectId": "OBJECT_ID",
+        "bool": "BOOLEAN",
+        "date": "DATE",
+        "null": "NULL",
+        "regex": "REGULAR_EXPRESSION",
+        "dbPointer": "DB_POINTER",
+        "javascript": "JAVASCRIPT",
+        "symbol": "SYMBOL",
+        "int": "INTEGER_32_BIT",
+        "timestamp": "TIMESTAMP",
+        "long": "INTEGER_64_BIT",
+        "decimal": "DECIMAL_128",
+        "minKey": "MIN_KEY",
+        "maxKey": "MAX_KEY"
+      }
     },
     {
       "operator": "$addFields",

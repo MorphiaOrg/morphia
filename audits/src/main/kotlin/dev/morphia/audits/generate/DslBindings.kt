@@ -44,7 +44,14 @@ enum class BindingForm {
     /**
      * An operator on a field: a query operator, `{field: {$op: v}}`, or an update operator, `{$op:
      * {field: v}}`. The factory takes the field name and, when it has a second parameter, `v`. A
-     * one-parameter query factory (`$exists`) takes only `true`.
+     * one-parameter query factory (`$exists`) takes only `true`; a query factory of more parameters
+     * takes an array of that many values (`$mod`'s `[d, r]`). A varargs factory takes a value or an
+     * array of at least two, and [DslBinding.constants] names an enum parameter's constants. A
+     * query factory with [DslBinding.options] takes a regular expression, each of its flags an
+     * option call (`$regex`'s `/p/i` is `regex(f, "p").caseInsensitive()`).
+     *
+     * In a query, a binding of another form is a top-level operator, `{$op: v}`, read as that form
+     * reads its value (`$expr` is positional, `$text` named).
      */
     FIELD,
     /**
@@ -80,6 +87,12 @@ data class DslBinding(
     val fields: Map<String, MethodRef> = emptyMap(),
     /** A [BindingForm.NAMED] operator of one argument also takes that argument alone. */
     val shorthand: Boolean = false,
+    /**
+     * The MQL values of a [BindingForm.FIELD] factory's enum parameter and their constants, for an
+     * enum whose constants are not the values in upper snake case (`$type`'s `"int"` is
+     * `INTEGER_32_BIT`). A value it does not list has no binding.
+     */
+    val constants: Map<String, String> = emptyMap(),
 )
 
 data class DslBindingCatalog(val schemaVersion: Int = 1, val bindings: List<DslBinding>)
@@ -115,6 +128,8 @@ object DslBindings {
             val label = "${binding.operator} (${binding.owner}#${binding.method})"
             if (binding.shorthand && binding.form != BindingForm.NAMED)
                 problems += "$label: only a named binding has a shorthand"
+            if (binding.constants.isNotEmpty() && binding.form != BindingForm.FIELD)
+                problems += "$label: only a field binding has constants"
             val factory = methods[id(binding.owner, binding.method, binding.parameters)]
             if (factory == null || "static" !in factory.modifiers) {
                 problems += "$label: no public static ${binding.method}${binding.parameters}"
@@ -158,10 +173,13 @@ object DslBindings {
                         binding.position !in
                             setOf(BindingPosition.FILTER, BindingPosition.UPDATE) ||
                             binding.parameters.firstOrNull() != "java.lang.String" ||
-                            binding.parameters.size !in 1..2
+                            binding.parameters.isEmpty() ||
+                            binding.parameters.size > 2 &&
+                                (binding.varargs || binding.position != BindingPosition.FILTER)
                     )
                         problems +=
-                            "$label: a field operator takes the field name and at most a value"
+                            "$label: a field operator takes the field name and a value, or a " +
+                                "query operator's array of values"
             }
             val result = erase(factory.returnType ?: "")
             (binding.options + binding.fields).forEach { (key, call) ->

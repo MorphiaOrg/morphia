@@ -2814,3 +2814,33 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   unbound: the one example (`$currentDate`'s aggregation alternative) also needs a document
   literal. Binding `whenMatched: "keepExisting"` found that `MergeCodec` wrote `keep_existing`,
   which the server rejects; that is fixed in core separately.
+- Query bindings: `$regex`, `$type`, `$text` and `$expr` are bound as filters, and `$regexFind`,
+  `$regexFindAll` and `$regexMatch` as named expressions. A `FIELD` filter with options takes a
+  regular expression whose flags are option calls; a varargs one takes a value or an array of two or
+  more, and its `constants` map MQL aliases to Morphia's `Type` (`"int"` is `INTEGER_32_BIT`). In a
+  query, a binding of another form is a top-level operator. `{$regex: "p", $options: "o"}` becomes
+  one regular expression under `REGEX_FORM`; the new `REGEX_OPTIONS` rule equates a regex
+  expression's inline flags with its `options` key, which is where Morphia writes them. A pattern
+  `java.util.regex` rejects (`(*UCP)`) is a gap, and so is a `$type` number or an alias `Type` has
+  no constant for (`"number"`). A factory name two owners share in one class (`Filters.eq`,
+  `ComparisonExpressions.eq`) is now called through its class; before, the class was imported but
+  the call stayed bare, which would not have compiled. 32 cases generate (445 to 477): 6 `$regex`,
+  4 `$text`, 16 regex expressions, and 6 sample-dataset group examples `$type` unblocked. Four page
+  errors are reviewed exclusions: `\bline\b`'s printed results leave out a matching product, the
+  two email examples print the `$addFields` output before the pipeline's `$set`, and the `s` option
+  example prints a match with one space where the data has five. `$mod` binds its `long` overload,
+  whose codec writes a small divisor and remainder as Int32, through a query `FIELD` binding of
+  three parameters that spreads `[d, r]`; none of its examples generates yet: three show server
+  errors (one, none or four elements), and the others pass a double (`4.5`, `4.99`, `-0`), which
+  the `double` overload would write with a Double remainder where the page has an Int32.
+  Review round 1 (Codex) found eight spellings that would generate wrong or failing cases; each is
+  now a gap or covered by a rule: a regex expression's pattern or options computed by the server
+  (a field path or an expression; both rule ports also leave `$` strings alone), `$text` flags
+  written `false` (the codec omits them), `$text` keys out of Morphia's order (`$text` joins the
+  named-argument operators, which now also apply to top-level query operators), `$options` beside
+  another operator, a pattern whose own modifiers `java.util.regex` folds into its flags
+  (`(?i)abc`) or that fails to compile only with its flags (`a[ ]b` under `x`), and `$mod` operands
+  written `Long`, which Morphia writes as Int32.
+  Round 2 found four more, now gaps: `$expr` given an array (an array value, not an argument list),
+  a string `$regex` beside another operator, a repeated flag (`"ii"`, which Morphia writes once),
+  and a pattern that compiles only under its flags (`regex(f, p)` compiles it alone first).

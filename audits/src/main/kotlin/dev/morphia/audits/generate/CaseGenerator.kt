@@ -9,7 +9,12 @@ import dev.morphia.audits.repairs.FormOverride
 import dev.morphia.audits.repairs.FormRule
 import dev.morphia.audits.repairs.GENERATED
 import dev.morphia.audits.repairs.ManifestCase
+import java.util.regex.Pattern
+import java.util.regex.PatternSyntaxException
 import org.bson.BsonBoolean
+import org.bson.BsonDocument
+import org.bson.BsonRegularExpression
+import org.bson.BsonString
 import org.bson.BsonValue
 
 /** Why an example of a generated family has no generated case. */
@@ -81,6 +86,18 @@ object CaseGenerator {
     private const val STRING = "java.lang.String"
     private const val BOOLEAN = "java.lang.Boolean"
     private const val ITERABLE = "java.lang.Iterable"
+    /** The java.util.regex flag of each regular expression option a query binding takes. */
+    private val JAVA_FLAGS =
+        mapOf(
+            'i' to Pattern.CASE_INSENSITIVE,
+            'm' to Pattern.MULTILINE,
+            's' to Pattern.DOTALL,
+            'x' to Pattern.COMMENTS,
+        )
+
+    /** A static call marked by [Emitter.static]: its owner and method. */
+    private val STATIC = Regex("\u0001([^#\u0002]+)#([^\u0002]+)\u0002")
+    private const val EXPRESSION = "dev.morphia.aggregation.expressions.impls.Expression"
     private const val LIST = "java.util.List"
     private const val NUMBER = "java.lang.Number"
     private const val SORTS = "dev.morphia.query.Sort[]"
@@ -334,7 +351,11 @@ object CaseGenerator {
                             ?.joinToString("\n") { "import static $it;" }
                     ))
                 .joinToString("\n\n")
-        val methods = cases.sortedBy { it.manifest.name }.joinToString("\n") { it.method }
+        val methods =
+            STATIC.replace(cases.sortedBy { it.manifest.name }.joinToString("\n") { it.method }) {
+                val (owner, method) = it.destructured
+                if (method in shared) "${owner.substringAfterLast('.')}.$method" else method
+            }
         val simple = qualified.substringAfterLast('.')
         // Generated code keeps its own layout: the formatter would rewrap it, and the manifest
         // pins each file's bytes.
@@ -365,6 +386,16 @@ object CaseGenerator {
     ) {
         /** Owner and method of every factory called. */
         val calls = mutableSetOf<Pair<String, String>>()
+
+        /**
+         * A static factory's name, recorded and marked for the class to resolve: a name two owners
+         * share is called through its class (`Filters.eq` and `ComparisonExpressions.eq`).
+         */
+        fun static(owner: String, method: String): String {
+            calls += owner to method
+            return "\u0001$owner#$method\u0002"
+        }
+
         /** Types named in the source, such as an enum argument's. */
         val types = mutableSetOf<String>()
         /**
@@ -389,8 +420,7 @@ object CaseGenerator {
         }
 
         private fun call(binding: DslBinding, argument: BsonValue, path: String): String {
-            calls += binding.owner to binding.method
-            val factory = "${binding.method}(%s)"
+            val factory = "${static(binding.owner, binding.method)}(%s)"
             return when (binding.form) {
                 BindingForm.POSITIONAL -> {
                     val values =
@@ -426,7 +456,10 @@ object CaseGenerator {
                     // the order Morphia writes them in.
                     if (binding.operator in FormEquivalence.namedArgumentOperators)
                         rules += FormRule.NAMED_ARGUMENTS
-                    val document = argument.asDocument()
+                    val document =
+                        if (binding.operator in FormEquivalence.regexOperators)
+                            regexArgument(argument.asDocument(), path)
+                        else argument.asDocument()
                     // Without options, Morphia writes a shorthand operator in its short form.
                     if (binding.shorthand && document.keys.all { it in binding.arguments }) {
                         if (binding.operator != "\$unwind")
@@ -455,6 +488,9 @@ object CaseGenerator {
                                         ?: throw Unbound(
                                             "$path/$key: ${binding.operator} option $key has no binding"
                                         )
+                                // `TextSearchFilterCodec` writes these flags only when true.
+                                if (binding.operator == "\$text" && each == BsonBoolean.FALSE)
+                                    throw Unbound("$path/$key: Morphia omits $key: false")
                                 ".${option.method}(${arguments(option, each, "$path/$key")})"
                             }
                 }
@@ -478,8 +514,9 @@ object CaseGenerator {
                     val key = group["_id"]!!
                     if (key.isDocument && operator(key, "$path/_id") == null)
                         throw Unbound("$path/_id: a compound _id has no binding")
-                    calls += binding.owner to id.method
-                    factory.format("${id.method}(${value(key, OBJECT, "$path/_id")})") +
+                    factory.format(
+                        "${static(binding.owner, id.method)}(${value(key, OBJECT, "$path/_id")})"
+                    ) +
                         group.entries
                             .filter { it.key != "_id" }
                             .joinToString("") { (field, each) ->
@@ -535,6 +572,38 @@ object CaseGenerator {
         }
 
         /**
+         * A regex expression's argument with its pattern as a string and any flags of a regular
+         * expression in `options`, as Morphia's `pattern(String)` and `options(String)` write them.
+         */
+        private fun regexArgument(document: BsonDocument, path: String): BsonDocument {
+            val regex = document["regex"] ?: return document
+            // `pattern(String)` and `options(String)` take literals; a field path or an expression
+            // there is evaluated by the server, so it has no binding.
+            val (pattern, flags) =
+                when {
+                    regex.isRegularExpression ->
+                        regex.asRegularExpression().let { it.pattern to it.options }
+                    regex.isString && !regex.asString().value.startsWith("$") ->
+                        regex.asString().value to ""
+                    else -> throw Unbound("$path/regex: a computed pattern has no binding")
+                }
+            document["options"]?.let { options ->
+                if (!options.isString || options.asString().value.startsWith("$"))
+                    throw Unbound("$path/options: computed options have no binding")
+            }
+            if (flags.isNotEmpty() && "options" in document)
+                throw Unbound("$path/regex: the server rejects flags in both regex and options")
+            // Morphia writes the pattern as a regular expression and its flags in `options`.
+            if (regex.isString || flags.isNotEmpty()) rules += FormRule.REGEX_OPTIONS
+            return BsonDocument().also { copy ->
+                document.forEach { (key, each) ->
+                    copy[key] = if (key == "regex") BsonString(pattern) else each
+                }
+                if (flags.isNotEmpty()) copy["options"] = BsonString(flags)
+            }
+        }
+
+        /**
          * The arguments of an option call: its one parameter's value, or, when its last parameter
          * is an array (`on(String, String...)`), a single value or an array's items in order.
          */
@@ -576,14 +645,13 @@ object CaseGenerator {
                             "$path/$operator: update operator $operator has no binding"
                         )
                 if (!fields.isDocument) throw Unbound("$path/$operator: $operator takes a document")
-                calls += binding.owner to binding.method
+                val name = static(binding.owner, binding.method)
                 fields.asDocument().entries.map { (field, value) ->
                     // A field-only factory (`$unset`'s `unset(String, String...)`) ignores the
                     // value.
-                    if (binding.parameters.size == 1 || binding.varargs)
-                        "${binding.method}(${literal(field)})"
+                    if (binding.parameters.size == 1 || binding.varargs) "$name(${literal(field)})"
                     else
-                        "${binding.method}(${literal(field)}, " +
+                        "$name(${literal(field)}, " +
                             "${value(value, binding.parameters[1], "$path/$operator/$field", plain = true)})"
                 }
             }
@@ -591,7 +659,16 @@ object CaseGenerator {
 
         /** The filters of one field's predicate: one per operator, or `$eq` for a plain value. */
         private fun predicates(field: String, predicate: BsonValue, path: String): List<String> {
-            if (field.startsWith("$")) throw Unbound("$path: query operator $field has no binding")
+            if (field.startsWith("$")) {
+                // A top-level operator (`$expr`, `$text`) reads its value as its binding's form.
+                val binding =
+                    filters[field]?.takeIf { it.form != BindingForm.FIELD }
+                        ?: throw Unbound("$path: query operator $field has no binding")
+                // `{$expr: [e]}` is an array value, which is truthy, not an argument list.
+                if (binding.form == BindingForm.POSITIONAL && predicate.isArray)
+                    throw Unbound("$path: $field takes one expression, not an array")
+                return listOf(call(binding, predicate, path))
+            }
             val operators =
                 predicate
                     .takeIf { it.isDocument }
@@ -601,9 +678,49 @@ object CaseGenerator {
                 rules += FormRule.EQ_SHORTHAND
                 return listOf(filter("\$eq", field, predicate, path))
             }
-            if (operators.size > 1) rules += FormRule.FIELD_OPERATORS_AND
-            return operators.entries.map { (operator, value) ->
+            val entries = regexOptions(operators, path)
+            // REGEX_FORM equates a string pattern only in a predicate of `$regex` alone.
+            if (entries.size > 1 && entries["\$regex"]?.isString == true)
+                throw Unbound("$path/\$regex: a string \$regex beside other operators")
+            if (entries.size > 1) rules += FormRule.FIELD_OPERATORS_AND
+            return entries.entries.map { (operator, value) ->
                 filter(operator, field, value, "$path/$operator")
+            }
+        }
+
+        /**
+         * A predicate's operators with `{$regex: "p", $options: "o"}` or `{$regex: /p/, $options:
+         * "o"}` as the one regular expression `/p/o` that Morphia writes.
+         */
+        private fun regexOptions(operators: BsonDocument, path: String): BsonDocument {
+            val options = operators["\$options"] ?: return operators
+            // REGEX_FORM equates a predicate of only `$regex` and `$options`.
+            if (operators.size > 2)
+                throw Unbound("$path/\$options: \$options beside operators other than \$regex")
+            val regex = operators["\$regex"]
+            val pattern =
+                when {
+                    regex == null || !options.isString -> null
+                    regex.isString -> regex.asString().value
+                    // The server rejects flags in both places.
+                    regex.isRegularExpression && regex.asRegularExpression().options.isEmpty() ->
+                        regex.asRegularExpression().pattern
+                    else -> null
+                }
+                    ?: throw Unbound(
+                        "$path/\$options: \$options takes a string, with a \$regex without flags"
+                    )
+            rules += FormRule.REGEX_FORM
+            return BsonDocument().also { copy ->
+                operators.forEach { (operator, value) ->
+                    when (operator) {
+                        "\$regex" ->
+                            copy[operator] =
+                                BsonRegularExpression(pattern, options.asString().value)
+                        "\$options" -> {}
+                        else -> copy[operator] = value
+                    }
+                }
             }
         }
 
@@ -615,14 +732,135 @@ object CaseGenerator {
         ): String {
             val binding =
                 filters[operator] ?: throw Unbound("$path: query operator $operator has no binding")
-            calls += binding.owner to binding.method
+            val name = static(binding.owner, binding.method)
             if (binding.parameters.size == 1) {
                 if (value != BsonBoolean.TRUE)
                     throw Unbound("$path: $operator $value has no binding")
-                return "${binding.method}(${literal(field)})"
+                return "$name(${literal(field)})"
             }
-            return "${binding.method}(${literal(field)}, ${value(value, binding.parameters[1], path, plain = true)})"
+            if (binding.options.isNotEmpty()) return regex(binding, field, value, path)
+            if (binding.parameters.size > 2) {
+                // `{f: {$mod: [d, r]}}` spreads its array over the parameters after the field.
+                val values = if (value.isArray) value.asArray().values else emptyList()
+                if (values.size != binding.parameters.size - 1)
+                    throw Unbound(
+                        "$path: ${binding.method}${binding.parameters} takes an array of ${binding.parameters.size - 1}"
+                    )
+                // `ModFilterCodec` writes a long that fits in an int as an Int32.
+                values.forEachIndexed { index, each ->
+                    if (each.isInt64)
+                        throw Unbound(
+                            "$path/$index: Morphia writes ${each.asInt64().value}L as an Int32"
+                        )
+                }
+                return "$name(${literal(field)}, " +
+                    values
+                        .mapIndexed { index, each ->
+                            constant(binding, each, binding.parameters[index + 1], "$path/$index")
+                        }
+                        .joinToString(", ") +
+                    ")"
+            }
+            if (binding.varargs) {
+                // `type(f, Type...)` writes one value alone and several as an array.
+                val values = if (value.isArray) value.asArray().values else listOf(value)
+                if (value.isArray && values.size < 2)
+                    throw Unbound("$path: Morphia writes a ${values.size}-item $operator otherwise")
+                val component = binding.parameters[1].removeSuffix("[]")
+                return "$name(${literal(field)}, " +
+                    values
+                        .mapIndexed { index, each ->
+                            constant(
+                                binding,
+                                each,
+                                component,
+                                if (value.isArray) "$path/$index" else path,
+                            )
+                        }
+                        .joinToString(", ") +
+                    ")"
+            }
+            return "$name(${literal(field)}, ${constant(binding, value, binding.parameters[1], path)})"
         }
+
+        /** [value] as [type], through [binding]'s constants when it has them. */
+        private fun constant(
+            binding: DslBinding,
+            value: BsonValue,
+            type: String,
+            path: String,
+        ): String {
+            if (binding.constants.isEmpty()) return value(value, type, path, plain = true)
+            val name =
+                value.takeIf { it.isString }?.let { binding.constants[it.asString().value] }
+                    ?: throw Unbound(
+                        "$path: ${type.substringAfterLast('.')} has no constant for ${binding.operator} ${display(value)}"
+                    )
+            types += type
+            return "${type.substringAfterLast('.')}.$name"
+        }
+
+        /**
+         * A query regular expression: the pattern, then an option call per flag. A string pattern
+         * is the same match as a regular expression, which is what Morphia writes.
+         */
+        private fun regex(
+            binding: DslBinding,
+            field: String,
+            value: BsonValue,
+            path: String,
+        ): String {
+            val (pattern, flags) =
+                when {
+                    value.isRegularExpression ->
+                        value.asRegularExpression().let { it.pattern to it.options }
+                    value.isString -> {
+                        rules += FormRule.REGEX_FORM
+                        value.asString().value to ""
+                    }
+                    else ->
+                        throw Unbound(
+                            "$path: ${binding.operator} takes a pattern, not ${value.bsonType}"
+                        )
+                }
+            // Morphia writes each flag once.
+            if (flags.toSet().size != flags.length)
+                throw Unbound("$path: Morphia writes ${binding.operator}'s repeated flags once")
+            val options =
+                flags.map { flag ->
+                    binding.options[flag.toString()]
+                        ?: throw Unbound("$path: ${binding.operator} option $flag has no binding")
+                }
+            // Morphia compiles the pattern with java.util.regex, whose syntax is not the server's,
+            // and the driver writes the compiled pattern's flags, into which Java folds the
+            // pattern's own final modifiers (`(?i)abc` is written `/(?i)abc/i`).
+            val requested = flags.fold(0) { bits, flag -> bits or (JAVA_FLAGS[flag] ?: 0) }
+            // `regex(f, p)` compiles the pattern alone before any option call adds a flag.
+            val compiled =
+                try {
+                    Pattern.compile(pattern)
+                    Pattern.compile(pattern, requested)
+                } catch (e: PatternSyntaxException) {
+                    throw Unbound(
+                        "$path: java.util.regex rejects ${literal(pattern)}: ${e.description}"
+                    )
+                }
+            if (compiled.flags() != requested)
+                throw Unbound(
+                    "$path: java.util.regex folds ${literal(pattern)}'s modifiers into its flags"
+                )
+            return "${static(binding.owner, binding.method)}(${literal(field)}, ${literal(pattern)})" +
+                options.joinToString("") { ".${it.method}()" }
+        }
+
+        private fun display(value: BsonValue): String =
+            when {
+                value.isString -> "\"${value.asString().value}\""
+                value.isInt32 -> "${value.asInt32().value}"
+                value.isInt64 -> "${value.asInt64().value}"
+                value.isDouble -> "${value.asDouble().value}"
+                else -> "${value.bsonType}"
+            }
 
         /**
          * Whether a projection value is an inclusion (`1`, `true`) or an exclusion (`0`, `false`).
@@ -672,8 +910,7 @@ object CaseGenerator {
                             each.isNumber && each.asNumber().doubleValue() == -1.0 -> "descending"
                             else -> throw Unbound("$path/$field: a sort by $each has no binding")
                         }
-                    calls += SORTS.removeSuffix("[]") to direction
-                    "$direction(${literal(field)})"
+                    "${static(SORTS.removeSuffix("[]"), direction)}(${literal(field)})"
                 }
             }
             if (value.isArray && type == OBJECT) {
@@ -719,7 +956,7 @@ object CaseGenerator {
                     // Any other parameter type is an enum whose constants are the MQL values in
                     // upper snake case (`keepExisting` is `KEEP_EXISTING`); integration's compile
                     // step proves the constant exists.
-                    if (value.isString && enums.any { type.startsWith(it) }) {
+                    if (value.isString && type != EXPRESSION && enums.any { type.startsWith(it) }) {
                         types += type
                         "${type.substringAfterLast('.')}.${constant(value.asString().value)}"
                     } else throw Unbound("$path: ${value.bsonType} where $type is required")

@@ -276,7 +276,14 @@ a test method:
      `{$unwind: "$sizes"}` are spelled; an option whose last parameter is an array takes a single
      value or an array's items (`$merge`'s `on`). Spellings Morphia writes differently, with no
      form rule equating them, are gaps: a shorthand operator's document without options (except
-     `$unwind`, which `UNWIND_PATH` covers) and a one-item array for such an option.
+     `$unwind`, which `UNWIND_PATH` covers) and a one-item array for such an option;
+   - a `FIELD` filter with options takes a regular expression, each flag an option call
+     (`$regex`'s `/p/i` is `regex(f, "p").caseInsensitive()`); a varargs one takes a value or an
+     array of at least two, and its `constants` name an enum's constants where they are not the MQL
+     values in upper snake case (`$type`'s `"int"` is `Type.INTEGER_32_BIT`); one of more than two
+     parameters takes an array of that many values (`$mod`'s `[d, r]`);
+   - in a query, a `FILTER` binding of another form is a top-level operator read as that form
+     reads its value: `$expr` is `POSITIONAL`, `$text` is `NAMED`.
 
    The API inventory of core's current source must contain every one; a stale binding stops
    generation.
@@ -288,14 +295,19 @@ a test method:
    in a form its parameter type accepts: a sort document as `Sort` varargs, and an array as `List.of`
    where it is data (a query or update operand, an `Iterable`) or as `array(...)` where it is an
    expression. An enum parameter of Morphia's or the driver's takes the MQL value in upper snake
-   case (`keepExisting` is `KEEP_EXISTING`). The first node without a binding makes the example a
-   gap; so does a documented projection, a pipeline update, or a stage that names another database,
-   which the runner refuses because both behavior runs would share it.
+   case (`keepExisting` is `KEEP_EXISTING`). A factory name two owners share in one class
+   (`Filters.eq`, `ComparisonExpressions.eq`) is called through its class there. Morphia compiles a
+   query regex with `java.util.regex`, so a pattern that rejects (`(*UCP)`) is a gap. The first node
+   without a binding makes the example a gap; so does a documented projection, a pipeline update,
+   or a stage that names another database, which the runner refuses because both behavior runs
+   would share it.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
    case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
    plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter
-   each, and `NAMED_ARGUMENTS` when it calls an operator that takes only named arguments, whose
-   order the server ignores and Morphia chooses.
+   each, `NAMED_ARGUMENTS` when it calls an operator that takes only named arguments, whose
+   order the server ignores and Morphia chooses, `REGEX_FORM` when a query's string pattern or
+   separate `$options` became one regular expression, and `REGEX_OPTIONS` when a regex
+   expression's string pattern or inline flags became Morphia's `regex: /p/, options: "o"`.
 
 An example that seeds no data and queries a collection of MongoDB's sample datasets, as most tested
 snippets do, names that dataset (`generation-review.json`'s `sampleDatasets`). The tests do not load

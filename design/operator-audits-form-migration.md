@@ -74,6 +74,7 @@ treats the spellings alike is part of the rule (`FormRule.description`).
 | `FIELD_OPERATORS_AND` | 1 | `{f: {$gt: a, $lt: b}}` ≡ `{$and: [{f: {$gt: a}}, {f: {$lt: b}}]}` | `$elemMatch` and non-comparison operators |
 | `PROJECTION_FLAGS` | 1 | top-level projection `true`/`false` ≡ `1`/`0` | booleans inside expressions |
 | `UNWIND_PATH` | 1 | `$unwind: "$p"` ≡ `$unwind: {path: "$p"}` | |
+| `REGEX_OPTIONS` | 0 (generation only) | in `$regexFind`, `$regexFindAll` and `$regexMatch`: `regex: /p/o` ≡ `regex: "p", options: "o"` ≡ `regex: /p/, options: "o"` | flags in both `regex` and `options`, which the server rejects |
 | `ALTERNATIVE_COMMANDS` | 1 | one action block shows several commands of one kind on one collection; the fixture holds one. Not proven by the tool: each use carries a reviewed `justification` (here `$type: [2, 1]` ≡ `["string", "double"]`) | blocks that mix kinds or collections; a declaration without a justification |
 
 Three retired locks need no rule at all: the documented example already equals the fixture.

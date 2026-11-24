@@ -1,0 +1,134 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/regex/useTheDotCharacterToMatchNewLine",
+  "title": "Use the . Dot Character to Match New Line",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/regex.txt",
+    "blob": "15c439109f30b8b073365973147384da07bb16d2"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "100"
+        },
+        "sku": "abc123",
+        "description": "Single line description."
+      },
+      {
+        "_id": {
+          "$numberInt": "101"
+        },
+        "sku": "abc789",
+        "description": "First line\nSecond line"
+      },
+      {
+        "_id": {
+          "$numberInt": "102"
+        },
+        "sku": "xyz456",
+        "description": "Many spaces before     line"
+      },
+      {
+        "_id": {
+          "$numberInt": "103"
+        },
+        "sku": "xyz789",
+        "description": "Multiple\nline description"
+      },
+      {
+        "_id": {
+          "$numberInt": "104"
+        },
+        "sku": "Abc789",
+        "description": "SKU starts with A"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "products",
+    "filter": {
+      "description": {
+        "$regex": {
+          "$regularExpression": {
+            "pattern": "m.*line",
+            "options": ""
+          }
+        },
+        "$options": "si"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "102"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "xyz456"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Many spaces before     line"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "103"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "xyz789"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Multiple\nline description"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "REGEX_FORM"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

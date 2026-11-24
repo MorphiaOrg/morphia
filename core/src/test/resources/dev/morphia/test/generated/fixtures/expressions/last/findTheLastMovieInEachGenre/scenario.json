@@ -1,0 +1,203 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/last/findTheLastMovieInEachGenre",
+  "title": "Find the Last Movie in Each Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/last.txt",
+    "blob": "68c30010273c09fc939a8bc67d91676ed4c4dac4"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$type": "int"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          },
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "lastMovieTitle": {
+            "$last": "$title"
+          },
+          "lastMovieYear": {
+            "$last": "$year"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "lastMovieTitle",
+            "value": {
+              "text": "The Masked Saint"
+            }
+          },
+          {
+            "name": "lastMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "2016"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "lastMovieTitle",
+            "value": {
+              "text": "Wolf Totem"
+            }
+          },
+          {
+            "name": "lastMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "2015"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "lastMovieTitle",
+            "value": {
+              "text": "World of Tomorrow"
+            }
+          },
+          {
+            "name": "lastMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "2015"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "lastMovieTitle",
+            "value": {
+              "text": "The Masked Saint"
+            }
+          },
+          {
+            "name": "lastMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "2016"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "lastMovieTitle",
+            "value": {
+              "text": "You're Ugly Too"
+            }
+          },
+          {
+            "name": "lastMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "2015"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

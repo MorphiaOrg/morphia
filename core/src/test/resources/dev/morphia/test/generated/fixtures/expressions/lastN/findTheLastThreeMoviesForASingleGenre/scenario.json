@@ -1,0 +1,130 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/lastN/findTheLastThreeMoviesForASingleGenre",
+  "title": "Find the Last Three Movies for a Single Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/lastN.txt",
+    "blob": "98dafefa7632bb0e385d2997600ec03d4e304ae7"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "genres": "Horror",
+          "year": {
+            "$type": "int"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          },
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "Horror",
+          "lastThreeMovies": {
+            "$lastN": {
+              "input": [
+                "$title",
+                "$year"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Horror"
+            }
+          },
+          {
+            "name": "lastThreeMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "The Final Girls"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Hoarder"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Witch"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

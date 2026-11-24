@@ -640,6 +640,107 @@
         }
       ],
       "canonical": "{\"v\": [{\"f\": {}}]}"
+    },
+    {
+      "name": "regex expression flags move to options",
+      "shape": "PIPELINE",
+      "rules": [
+        "REGEX_OPTIONS"
+      ],
+      "input": [
+        {
+          "$addFields": {
+            "a": {
+              "$regexFind": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "^s",
+                    "options": "mi"
+                  }
+                }
+              }
+            },
+            "b": {
+              "$regexMatch": {
+                "input": "$d",
+                "regex": "x",
+                "options": "si"
+              }
+            },
+            "c": {
+              "$regexFindAll": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "l",
+                    "options": "i"
+                  }
+                },
+                "options": "m"
+              }
+            },
+            "e": {
+              "$regexFind": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "p",
+                    "options": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$addFields\": {\"a\": {\"$regexFind\": {\"input\": \"$d\", \"regex\": \"^s\", \"options\": \"im\"}}, \"b\": {\"$regexMatch\": {\"input\": \"$d\", \"regex\": \"x\", \"options\": \"is\"}}, \"c\": {\"$regexFindAll\": {\"input\": \"$d\", \"regex\": {\"$regularExpression\": {\"pattern\": \"l\", \"options\": \"i\"}}, \"options\": \"m\"}}, \"e\": {\"$regexFind\": {\"input\": \"$d\", \"regex\": \"p\"}}}}]}"
+    },
+    {
+      "name": "text keys sorted",
+      "shape": "FIND",
+      "rules": [
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$text": {
+            "$search": "abc",
+            "$caseSensitive": true
+          },
+          "qty": {
+            "$gt": 1
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$text\": {\"$caseSensitive\": true, \"$search\": \"abc\"}, \"qty\": {\"$gt\": {\"$numberInt\": \"1\"}}}]}"
+    },
+    {
+      "name": "regex expression field paths are kept",
+      "shape": "PIPELINE",
+      "rules": [
+        "REGEX_OPTIONS"
+      ],
+      "input": [
+        {
+          "$addFields": {
+            "a": {
+              "$regexMatch": {
+                "input": "$s",
+                "regex": "$p"
+              }
+            },
+            "b": {
+              "$regexMatch": {
+                "input": "$s",
+                "regex": "x",
+                "options": "$o"
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$addFields\": {\"a\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"$p\"}}, \"b\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"x\", \"options\": \"$o\"}}}}]}"
     }
   ]
 }

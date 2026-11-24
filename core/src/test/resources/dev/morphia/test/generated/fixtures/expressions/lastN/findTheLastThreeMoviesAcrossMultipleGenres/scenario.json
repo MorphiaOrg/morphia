@@ -1,0 +1,355 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/lastN/findTheLastThreeMoviesAcrossMultipleGenres",
+  "title": "Find the Last Three Movies Across Multiple Genres",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/lastN.txt",
+    "blob": "98dafefa7632bb0e385d2997600ec03d4e304ae7"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$type": "int"
+          }
+        }
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          },
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "movies": {
+            "$lastN": {
+              "input": [
+                "$title",
+                "$year"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "War Pigs"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Wolf Warrior"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Masked Saint"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2016"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "The SpongeBob Movie: Sponge Out of Water"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Tomorrowland"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Wolf Totem"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "The Magic Mountain"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The SpongeBob Movie: Sponge Out of Water"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "World of Tomorrow"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Twinsters"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Whitney"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Masked Saint"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2016"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Wondrous Boccaccio"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "World of Tomorrow"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "You're Ugly Too"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2015"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

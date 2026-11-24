@@ -31,6 +31,7 @@ public final class FormRules {
         PROJECT_ID_FIRST,
         PROJECTION_FLAGS,
         UNWIND_PATH,
+        REGEX_OPTIONS,
         NAMED_ARGUMENTS
     }
 
@@ -44,7 +45,9 @@ public final class FormRules {
     private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff",
             "$dateFromString", "$dateSubtract", "$dateToString", "$dateTrunc", "$densify", "$fill", "$filter", "$firstN",
             "$graphLookup", "$lastN", "$let", "$lookup", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll",
-            "$regexMatch", "$sortArray", "$top", "$topN", "$unwind", "$zip");
+            "$regexMatch", "$sortArray", "$text", "$top", "$topN", "$unwind", "$zip");
+
+    private static final Set<String> REGEX_OPERATORS = Set.of("$regexFind", "$regexFindAll", "$regexMatch");
 
     private static final Set<String> SINGLE_ARGUMENT_OPERATORS = Set.of("$abs", "$ceil", "$exp", "$floor", "$isArray",
             "$isNumber", "$ln", "$log10", "$size", "$sqrt", "$strLenBytes", "$strLenCP", "$toBool", "$toDate", "$toDecimal",
@@ -162,7 +165,7 @@ public final class FormRules {
                 clauses.forEach(clause -> copy.add(filter(clause)));
                 result.put(field, copy);
             } else if (field.startsWith("$")) {
-                result.put(field, expression(predicate, false));
+                result.put(field, named(field, expression(predicate, false)));
             } else {
                 result.put(field, predicate(predicate));
             }
@@ -247,6 +250,9 @@ public final class FormRules {
                         && converted instanceof BsonArray array && array.size() == 1 && !(array.get(0) instanceof BsonArray)) {
                     converted = array.get(0);
                 }
+                if (rules.contains(Rule.REGEX_OPTIONS) && REGEX_OPERATORS.contains(key)) {
+                    converted = regexOptions(converted);
+                }
                 result.put(key, named(key, converted));
             });
             return result;
@@ -257,6 +263,60 @@ public final class FormRules {
             return result;
         }
         return value;
+    }
+
+    /**
+     * A regex expression's argument with its pattern as a string and its flags, from the pattern and the {@code options}
+     * key, sorted in {@code options}. Flags in both places are left alone, since the server rejects them.
+     */
+    private static BsonValue regexOptions(BsonValue value) {
+        if (!(value instanceof BsonDocument document)) {
+            return value;
+        }
+        String pattern;
+        String inline;
+        BsonValue regex = document.get("regex");
+        if (regex instanceof BsonRegularExpression expression) {
+            pattern = expression.getPattern();
+            inline = expression.getOptions();
+        } else if (regex instanceof BsonString string && !string.getValue().startsWith("$")) {
+            // A $ string is a field path the server evaluates, not a pattern.
+            pattern = string.getValue();
+            inline = "";
+        } else {
+            return value;
+        }
+        BsonValue separateValue = document.get("options");
+        String separate;
+        if (separateValue == null) {
+            separate = "";
+        } else if (separateValue instanceof BsonString string && !string.getValue().startsWith("$")) {
+            separate = string.getValue();
+        } else {
+            return value;
+        }
+        if (!inline.isEmpty() && !separate.isEmpty()) {
+            return value;
+        }
+        char[] sorted = (inline + separate).toCharArray();
+        java.util.Arrays.sort(sorted);
+        String options = new String(sorted);
+        BsonDocument result = new BsonDocument();
+        document.forEach((name, field) -> {
+            if (name.equals("regex")) {
+                result.put(name, new BsonString(pattern));
+            } else if (name.equals("options")) {
+                if (!options.isEmpty()) {
+                    result.put(name, new BsonString(options));
+                }
+            } else {
+                result.put(name, field);
+            }
+        });
+        if (!options.isEmpty() && !result.containsKey("options")) {
+            result.put("options", new BsonString(options));
+        }
+        return result;
     }
 
     private static BsonValue condition(BsonValue value) {

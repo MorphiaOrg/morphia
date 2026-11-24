@@ -734,7 +734,7 @@ class GeneratorTest {
                         "Without a Rating",
                         movies("{ \$match: { \"imdb.rating\": { \$exists: false } } }"),
                     ),
-                    section("Typed Years", movies("{ \$match: { year: { \$type: \"int\" } } }")),
+                    section("Listed Years", movies("{ \$match: { year: { \$nin: [ 2010 ] } } }")),
                 )
             )
         }
@@ -782,8 +782,8 @@ class GeneratorTest {
                 "Grouped by Two Fields" to "/pipeline/0/\$group/_id: a compound _id has no binding",
                 "Without a Rating" to
                     "/pipeline/0/\$match/imdb.rating/\$exists: \$exists BsonBoolean{value=false} has no binding",
-                "Typed Years" to
-                    "/pipeline/0/\$match/year/\$type: query operator \$type has no binding",
+                "Listed Years" to
+                    "/pipeline/0/\$match/year/\$nin: query operator \$nin has no binding",
             ),
             generation.gaps.associate { it.title to it.detail },
         )
@@ -931,6 +931,227 @@ class GeneratorTest {
         // Without options, `$unwind` is written as its path, which UNWIND_PATH equates.
         val unwind = generation.cases.single { it.manifest.name.contains("/unwind/") }.scenario
         assertTrue("UNWIND_PATH" in unwind, unwind)
+    }
+
+    @Test
+    fun queryOperatorsAndRegexExpressionsTakeTheirForms() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.inventory.insertMany( [ { _id: 1, sku: \"abc\", qty: 25 } ] )"
+        fun ParsedPages.Page.find(title: String, filter: String) =
+            section(
+                title,
+                code("db.inventory.find( $filter )"),
+                code("[ { _id: 1, sku: \"abc\", qty: 25 } ]"),
+            )
+        pages.operator("regex", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    find("Regex Flags", "{ sku: { \$regex: /^ABC/i } }"),
+                    find("Separate Options", "{ sku: { \$regex: \"abc\", \$options: \"mi\" } }"),
+                    find("Flags In Both Places", "{ sku: { \$regex: /abc/i, \$options: \"m\" } }"),
+                    find("Server Syntax", "{ sku: { \$regex: \"(*UCP)abc\" } }"),
+                    find("Inline Modifier", "{ sku: { \$regex: \"(?i)abc\" } }"),
+                    find("Repeated Flag", "{ sku: { \$regex: \"abc\", \$options: \"ii\" } }"),
+                    find("Comment Only Under x", "{ sku: { \$regex: \"a#(\", \$options: \"x\" } }"),
+                    find(
+                        "String Beside Another Operator",
+                        "{ sku: { \$regex: \"abc\", \$ne: \"z\" } }",
+                    ),
+                    find("Extended Class", "{ sku: { \$regex: \"a[ ]b\", \$options: \"x\" } }"),
+                    find(
+                        "Options Beside Another Operator",
+                        "{ sku: { \$regex: \"abc\", \$options: \"i\", \$ne: \"z\" } }",
+                    ),
+                )
+            )
+        }
+        pages.operator("type", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    find("By Alias", "{ qty: { \$type: \"int\" } }"),
+                    find("By Aliases", "{ qty: { \$type: [ \"string\", \"double\" ] } }"),
+                    find("By Number", "{ qty: { \$type: 16 } }"),
+                    find("By One Alias", "{ qty: { \$type: [ \"int\" ] } }"),
+                )
+            )
+        }
+        pages.operator("mod", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    find("Divide by Five", "{ qty: { \$mod: [ 5, 0 ] } }"),
+                    find("One Element", "{ qty: { \$mod: [ 5 ] } }"),
+                    find("Fractional Divisor", "{ qty: { \$mod: [ 4.5, 0 ] } }"),
+                    find("Long Divisor", "{ qty: { \$mod: [ Long(5), Long(0) ] } }"),
+                )
+            )
+        }
+        pages.operator("text", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    find(
+                        "Case Sensitive",
+                        "{ \$text: { \$search: \"abc\", \$caseSensitive: true } }",
+                    ),
+                    find(
+                        "Options First",
+                        "{ \$text: { \$caseSensitive: true, \$search: \"abc\" } }",
+                    ),
+                    find(
+                        "Case Insensitive",
+                        "{ \$text: { \$search: \"abc\", \$caseSensitive: false } }",
+                    ),
+                )
+            )
+        }
+        pages.operator("expr", "query", "query") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    find(
+                        "Compare a Field",
+                        "{ \$expr: { \$eq: [ \"\$qty\", 25 ] }, sku: \"abc\" }",
+                    ),
+                    find("Array of Expressions", "{ \$expr: [ { \$eq: [ \"\$qty\", 25 ] } ] }"),
+                )
+            )
+        }
+        pages.operator("regexFind", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    section(
+                        "Inline Flags",
+                        code(
+                            "db.inventory.aggregate( [ { \$addFields: { m: { \$regexFind: " +
+                                "{ input: \"\$sku\", regex: /^A/i } } } } ] )"
+                        ),
+                        code("[ { _id: 1, sku: \"abc\", qty: 25, m: null } ]"),
+                    ),
+                    section(
+                        "Separate Options",
+                        code(
+                            "db.inventory.aggregate( [ { \$addFields: { m: { \$regexFind: " +
+                                "{ input: \"\$sku\", regex: /^a/, options: \"x\" } } } } ] )"
+                        ),
+                        code("[ { _id: 1, sku: \"abc\", qty: 25, m: null } ]"),
+                    ),
+                    section(
+                        "Pattern From a Field",
+                        code(
+                            "db.inventory.aggregate( [ { \$addFields: { m: { \$regexFind: " +
+                                "{ input: \"\$sku\", regex: \"\$sku\" } } } } ] )"
+                        ),
+                        code("[ { _id: 1, sku: \"abc\", qty: 25, m: null } ]"),
+                    ),
+                    section(
+                        "Flags Twice",
+                        code(
+                            "db.inventory.aggregate( [ { \$addFields: { m: { \$regexFind: " +
+                                "{ input: \"\$sku\", regex: /^a/i, options: \"x\" } } } } ] )"
+                        ),
+                        code("[ { _id: 1, sku: \"abc\", qty: 25, m: null } ]"),
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("query/filters", "aggregation/expressions")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "Flags In Both Places" to
+                    "/filter/sku/\$options: \$options takes a string, with a \$regex without flags",
+                "Server Syntax" to
+                    "/filter/sku/\$regex: java.util.regex rejects \"(*UCP)abc\": Dangling meta character '*'",
+                "By Number" to "/filter/qty/\$type: Type has no constant for \$type 16",
+                "By One Alias" to "/filter/qty/\$type: Morphia writes a 1-item \$type otherwise",
+                "One Element" to
+                    "/filter/qty/\$mod: mod[java.lang.String, long, long] takes an array of 2",
+                "Fractional Divisor" to "/filter/qty/\$mod/0: DOUBLE where long is required",
+                "Long Divisor" to "/filter/qty/\$mod/0: Morphia writes 5L as an Int32",
+                "Repeated Flag" to
+                    "/filter/sku/\$regex: Morphia writes \$regex's repeated flags once",
+                "Comment Only Under x" to
+                    "/filter/sku/\$regex: java.util.regex rejects \"a#(\": Unclosed group",
+                "String Beside Another Operator" to
+                    "/filter/sku/\$regex: a string \$regex beside other operators",
+                "Array of Expressions" to
+                    "/filter/\$expr: \$expr takes one expression, not an array",
+                "Inline Modifier" to
+                    "/filter/sku/\$regex: java.util.regex folds \"(?i)abc\"'s modifiers into its flags",
+                "Extended Class" to
+                    "/filter/sku/\$regex: java.util.regex rejects \"a[ ]b\": Unclosed character class",
+                "Options Beside Another Operator" to
+                    "/filter/sku/\$options: \$options beside operators other than \$regex",
+                "Case Insensitive" to
+                    "/filter/\$text/\$caseSensitive: Morphia omits \$caseSensitive: false",
+                "Pattern From a Field" to
+                    "/pipeline/0/\$addFields/m/\$regexFind/regex: a computed pattern has no binding",
+                "Flags Twice" to
+                    "/pipeline/0/\$addFields/m/\$regexFind/regex: the server rejects flags in both regex and options",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        fun source(type: String) =
+            generation.files.getValue("core/src/test/java/dev/morphia/test/generated/$type.java")
+        fun rules(suffix: String) =
+            generation.cases.single { it.manifest.name.endsWith(suffix) }.scenario
+        val regex = source("filters/TestRegex")
+        // A regular expression's flags are option calls; a string pattern and its separate options
+        // are the same match, which REGEX_FORM equates.
+        assertTrue("query.filter(regex(\"sku\", \"^ABC\").caseInsensitive())" in regex, regex)
+        assertTrue(
+            "query.filter(regex(\"sku\", \"abc\").caseInsensitive().multiline())" in regex,
+            regex,
+        )
+        assertTrue("REGEX_FORM" !in rules("regex/regexFlags"))
+        assertTrue("REGEX_FORM" in rules("regex/separateOptions"))
+        val type = source("filters/TestType")
+        assertTrue("query.filter(type(\"qty\", Type.INTEGER_32_BIT))" in type, type)
+        assertTrue("query.filter(type(\"qty\", Type.STRING, Type.DOUBLE))" in type, type)
+        assertTrue("import dev.morphia.query.Type;" in type, type)
+        val mod = source("filters/TestMod")
+        assertTrue("query.filter(mod(\"qty\", 5, 0))" in mod, mod)
+        val text = source("filters/TestText")
+        assertTrue("query.filter(text(\"abc\").caseSensitive(true))" in text, text)
+        // The server reads $text's keys in any order; Morphia writes $search first.
+        assertTrue("NAMED_ARGUMENTS" in rules("text/optionsFirst"))
+        // `eq` is both a filter and an expression, so each is called through its class.
+        val expr = source("filters/TestExpr")
+        assertTrue(
+            "query.filter(expr(ComparisonExpressions.eq(\"\$qty\", 25)), Filters.eq(\"sku\", \"abc\"))" in
+                expr,
+            expr,
+        )
+        assertTrue("import static dev.morphia.query.filters.Filters.expr;" in expr, expr)
+        // Morphia writes a regex expression's flags in `options`, which REGEX_OPTIONS equates.
+        val find = source("expressions/TestRegexFind")
+        assertTrue("regexFind(\"\$sku\").pattern(\"^A\").options(\"i\")" in find, find)
+        assertTrue("regexFind(\"\$sku\").pattern(\"^a\").options(\"x\")" in find, find)
+        assertTrue("REGEX_OPTIONS" in rules("regexFind/inlineFlags"))
+        assertTrue("REGEX_OPTIONS" !in rules("regexFind/separateOptions"))
     }
 
     @Test

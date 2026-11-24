@@ -24,6 +24,22 @@
       "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection."
     },
     {
+      "name": "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFindAll/sOption",
+      "reason": "The page prints the third product's match as \"Many spaces before line\", with one space; its description, and the match the server returns, has five. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "query/filters/regex/matchWholeWordsOnly",
+      "reason": "The page prints three of the four products whose description has the whole word line: it leaves out _id 103, \"Multiple\\nline description\", which /\\bline\\b/ matches and the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
       "name": "query/updates/positional-all/updateArraysSpecifiedUsingANegationQueryOperator",
       "reason": "The page prints the whole collection after the update but shows no read, so the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass. Lift once the page shows its find, which the case then runs."
     }
