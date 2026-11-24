@@ -254,9 +254,12 @@ snippets (`/code-examples/tested/...`) and include files are resolved through th
 with its blob. Many tested snippets query MongoDB's sample datasets (`db.movies`) and print elided
 results; they extract like any other example and then show up as generation gaps.
 
-Until an update's case runs the read the page shows after it, what a page prints after an update
-(an acknowledgement, or the documents its filter matches) goes to generation as that update's
-printed result, the convention the converted cases use.
+A write (an update, or a pipeline ending in `$merge` or `$out`) followed in its section by the find
+the page runs to show its effect, with that find's printed result, is one example: the find is its
+`READ` block, and the printed result is the find's. Both sides run the find after the write. Where
+the page prints after an update without showing a read, what it prints (an acknowledgement, or the
+documents its filter matches) goes to generation as that update's printed result, the convention
+the converted cases use.
 
 ### Generation
 

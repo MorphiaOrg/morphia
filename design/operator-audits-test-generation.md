@@ -121,6 +121,10 @@ canonical extended JSON (`$numberInt`, `$date`, …), so BSON types survive.
   `{kind: "update", collection, filter, update, multi}`. A find's results are the matching documents;
   an update's, as in the legacy harness, are the documents its filter matches afterwards, and every
   collection is compared too.
+- **`action.read`:** on an update or an aggregate, `{collection, filter, projection?, sort?}`, the
+  find the page runs after the write to show its effect. Both sides run it after the write, and
+  its results replace the action's own in the behavior and published checks. A page that prints
+  after an update without showing a read has none, and keeps the reading above.
 - **`expected`:** either `documents` (exact), `printed` (the published constraints of
   [published expectations](operator-audits-published-expectations.md)), or `none` with a reason.
   Each printed constraint is a one-key document naming its kind, so no published field name or

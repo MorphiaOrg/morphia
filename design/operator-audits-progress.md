@@ -2776,3 +2776,12 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `references`, `recheck-references`, `migrate`, `convert`) are deleted. Their catalogs stay frozen:
   `FormMigrationTest` checks the 136 migrated declarations and the 250 references offline, and that
   every referenced fixture is in the ledger. `FormMainKt` keeps `rescenario` and `manifest`.
+- Update results, option (c): a write's read. A find directly after a write in its section (an
+  update, or a pipeline ending in `$merge`/`$out`), with its printed result, joins the write's
+  scenario as its read, across section code and input/output groups; the inventory records it as
+  a `READ` block and the scenario as `action.read`, which `OperatorCaseRunner` runs on both sides
+  after the write. At docs e4b0c153, 8 reads pair (six `$merge`/`$out` examples, `$currentDate`'s
+  aggregation alternative, and one owned `positional` example), and unsupported examples drop
+  from 112 to 104. None generates yet: `$merge`, `$out` and pipeline updates have no binding.
+  The page-wide pass now also marks a write after a write, and no longer counts a syntax template
+  as a write.

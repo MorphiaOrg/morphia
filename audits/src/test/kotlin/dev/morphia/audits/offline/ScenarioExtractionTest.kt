@@ -1309,43 +1309,196 @@ class ScenarioExtractionTest {
             )
         assertEquals(2, charged(117).scenarios.size)
         assertThrows(IllegalArgumentException::class.java) { charged(116) }
-        // A read after an update in the same section depends on it, so it isn't run alone.
-        val reads =
+        fun updates(vararg blocks: String) =
+            extract(root(standalone("Update Items", "update", *blocks)), assembledRule()).scenarios
+        val insert = "db.items.insertOne({v:1});"
+        val update = "db.items.updateOne({}, {${'$'}set: {v: 2}});"
+        // The find a page runs right after an update is that update's read: one scenario, whose
+        // published result is the find's.
+        val paired = updates(insert, update, "db.items.find({});", "[{v:2}]").single()
+        assertEquals(
+            listOf(ProgramRole.SETUP, ProgramRole.ACTION, ProgramRole.ACTION, ProgramRole.EXPECTED),
+            paired.blocks.map { it.role },
+        )
+        val program = paired.program!!
+        assertEquals(ShellLiteralState.NORMALIZED, program.state)
+        val find = program.commands.last { it.role == ProgramRole.ACTION }
+        assertTrue(find.operation is FindOperation)
+        assertEquals(find.id, program.expectations.single().command)
+        // An acknowledgement printed between them is the update's, and skipped.
+        val acknowledged =
+            updates(insert, update, "{ acknowledged: true }", "db.items.find({});", "[{v:2}]")
+                .single()
+        assertEquals(4, acknowledged.blocks.size)
+        assertEquals(listOf("UPDATE_RESULT"), acknowledged.skipped.map { it.reason })
+        // A second read sees the write too but isn't its read, and neither is a read with
+        // nothing printed after it.
+        val second =
+            updates(
+                insert,
+                update,
+                "db.items.find({});",
+                "[{v:2}]",
+                "db.items.find({v:2});",
+                "[{v:2}]",
+            )
+        assertEquals(
+            setOf(null, "AFTER_EARLIER_WRITE"),
+            second.map { it.normalizationProblem }.toSet(),
+        )
+        val unprinted = updates(insert, update, "db.items.find({});")
+        assertEquals(
+            setOf(null, "AFTER_EARLIER_WRITE"),
+            unprinted.map { it.normalizationProblem }.toSet(),
+        )
+        // A write after a write sees its effect, so it isn't run alone either.
+        val twice = updates(insert, update, "db.items.updateOne({}, {${'$'}set: {v: 3}});")
+        assertEquals(
+            setOf(null, "AFTER_EARLIER_WRITE"),
+            twice.map { it.normalizationProblem }.toSet(),
+        )
+        // Setup between them would change what the find sees without the pair running it.
+        val reseeded =
+            updates(insert, update, "db.items.insertOne({v:5});", "db.items.find({});", "[{v:2}]")
+        assertEquals(
+            setOf(null, "AFTER_EARLIER_WRITE"),
+            reseeded.map { it.normalizationProblem }.toSet(),
+        )
+        // A write in one tab neither pairs with nor stales a read in another: tabs are separate
+        // examples under one section.
+        fun tab(id: String, vararg sources: String) =
+            node(
+                "directive",
+                name = "tab",
+                options = mapOf("tabid" to AuditJson.write(id).trim()),
+                arguments = listOf(node("text", text = id)),
+                children = sources.map { code(it) },
+            )
+        val tabbed =
             extract(
                     root(
-                        standalone(
+                        section(
                             "Update Items",
                             "update",
-                            "db.items.insertOne({v:1});",
-                            "db.items.updateOne({}, {${'$'}set: {v: 2}});",
-                            "db.items.find({});",
-                            "[{v:2}]",
+                            node(
+                                "directive",
+                                name = "tabs",
+                                children =
+                                    listOf(
+                                        tab("first", insert, update),
+                                        tab("second", insert, "db.items.find({});", "[{v:1}]"),
+                                    ),
+                            ),
                         )
+                    ),
+                    assembledRule(tabs = listOf("first", "second")),
+                )
+                .scenarios
+        assertEquals(2, tabbed.size)
+        assertTrue(tabbed.all { it.normalizationProblem == null }, tabbed.toString())
+        assertTrue(tabbed.all { s -> s.blocks.count { it.role == ProgramRole.ACTION } == 1 })
+        // A read on another collection keeps that collection's earlier inserts.
+        val merged =
+            extract(
+                    root(
+                        standalone("Seed Totals", "seed", "db.totals.insertOne({_id: 2, v: 10});"),
+                        standalone(
+                            "Merge Items",
+                            "merge-items",
+                            insert,
+                            "db.items.aggregate([{${'$'}merge: \"totals\"}]);",
+                            "db.totals.find({});",
+                            "[{_id: 2, v: 10}]",
+                        ),
                     ),
                     assembledRule(),
                 )
                 .scenarios
-        val read = reads.single { it.blocks.any { b -> b.source == "db.items.find({});" } }
-        assertEquals("AFTER_EARLIER_WRITE", read.normalizationProblem)
-        assertNull(read.program)
-        // So does a read in another input/output group after a write in an earlier one.
+                .single { it.program != null }
+        assertEquals(
+            setOf("items", "totals"),
+            merged.program!!
+                .commands
+                .filter { it.operation is InsertOperation }
+                .map { it.namespace.collection }
+                .toSet(),
+        )
+        // A write outside a tab reaches the read inside it.
+        val nested =
+            extract(
+                    root(
+                        section(
+                            "Update Items",
+                            "update",
+                            code(insert),
+                            code(update),
+                            node(
+                                "directive",
+                                name = "tabs",
+                                children = listOf(tab("nested", "db.items.find({});", "[{v:2}]")),
+                            ),
+                        )
+                    ),
+                    assembledRule(tabs = listOf("nested")),
+                )
+                .scenarios
+        assertEquals(
+            listOf(
+                listOf(
+                    ProgramRole.SETUP,
+                    ProgramRole.ACTION,
+                    ProgramRole.ACTION,
+                    ProgramRole.EXPECTED,
+                )
+            ),
+            nested.map { s -> s.blocks.map { it.role } },
+        )
+        // Setup the two share keeps page order, so a declaration still comes first.
+        val declared =
+            extract(
+                    root(
+                        standalone(
+                            "Seed Both",
+                            "seed-both",
+                            "const n = 1;",
+                            "db.items.insertOne({v: n});",
+                            "db.totals.insertOne({v: n});",
+                        ),
+                        standalone(
+                            "Merge Declared",
+                            "merge-declared",
+                            "db.items.aggregate([{${'$'}merge: \"totals\"}]);",
+                            "db.totals.find({});",
+                            "[{v: 1}]",
+                        ),
+                    ),
+                    assembledRule(),
+                )
+                .scenarios
+                .filter { it.program != null }
+        assertEquals(1, declared.size, declared.toString())
+        assertEquals(ShellLiteralState.NORMALIZED, declared.single().program!!.state)
+        // A syntax template runs nothing, so it isn't a write before the action.
+        val templated =
+            updates("db.items.updateOne({ <filter> }, { <update> });", insert, update).single()
+        assertNull(templated.normalizationProblem)
+        // A read in another input/output group after a pipeline that writes is that write's read,
+        // even on another collection.
         val groups =
             extract(
                     root(
                         section(
                             "Merge Totals",
                             "merge",
-                            io("db.items.aggregate([{${'$'}merge: {into: \"totals\"}}]);", "[]"),
+                            code("db.items.aggregate([{${'$'}merge: {into: \"totals\"}}]);"),
                             io("db.totals.find({});", "[{v:1}]"),
                         )
                     ),
                     assembledRule(),
                 )
                 .scenarios
-        assertEquals(
-            setOf(null, "AFTER_EARLIER_WRITE"),
-            groups.map { it.normalizationProblem }.toSet(),
-        )
+        assertEquals(listOf(null), groups.map { it.normalizationProblem })
+        assertEquals("totals", groups.single().program!!.commands.last().namespace.collection)
     }
 
     @Test

@@ -336,6 +336,17 @@ object FixtureMigration {
                 action["multi"] = BsonBoolean(documented.many)
             }
         }
+        // The find the page runs after a write: both sides run it, and its result is the one the
+        // page printed.
+        documented.read?.let { read ->
+            action["read"] =
+                BsonDocument("collection", BsonString(read.collection))
+                    .append("filter", read.filter)
+                    .also { spec ->
+                        read.projection?.let { spec["projection"] = it }
+                        read.sort?.let { spec["sort"] = it }
+                    }
+        }
         // The page's other spellings of the action, each in the same shape as the action.
         if (documented.alternatives.isNotEmpty()) {
             action["alternatives"] =

@@ -247,6 +247,8 @@ object DocumentedExamples {
         // Each declaration travels with the next block that runs, in page order: the insert or
         // action that reads it.
         val pending = mutableListOf<String>()
+        // A second action is the find the page runs after the first, a write, to show its effect.
+        val action = scenario.blocks.firstOrNull { it.role == ProgramRole.ACTION }
         val blocks =
             scenario.blocks
                 .filter { it.role != null }
@@ -257,7 +259,8 @@ object DocumentedExamples {
                     }
                     val role =
                         when (code.role) {
-                            ProgramRole.ACTION -> BlockRole.ACTION
+                            ProgramRole.ACTION ->
+                                if (code === action) BlockRole.ACTION else BlockRole.READ
                             ProgramRole.EXPECTED -> BlockRole.EXPECTED
                             else ->
                                 if (code.format == null && ".createIndex" in code.source)
@@ -271,14 +274,14 @@ object DocumentedExamples {
                         else code.source
                     SourceBlock(role, text, CaseManifests.sha256(text.toByteArray()))
                 }
-        // Until an update's case runs the page's own read, generation keeps the legacy reading of
-        // what the page prints after it: an acknowledgement, or the documents the filter matches.
+        // Where the page shows no read after an update, generation keeps the legacy reading of
+        // what it prints: an acknowledgement, or the documents the filter matches.
         val printed =
             scenario.skipped
                 .firstOrNull { it.reason == "UPDATE_RESULT" }
                 ?.code
                 ?.source
-                ?.takeIf { scenario.blocks.any { it.role == ProgramRole.ACTION } }
+                ?.takeIf { action != null && blocks.none { it.role == BlockRole.READ } }
                 ?.let {
                     SourceBlock(BlockRole.EXPECTED, it, CaseManifests.sha256(it.toByteArray()))
                 }

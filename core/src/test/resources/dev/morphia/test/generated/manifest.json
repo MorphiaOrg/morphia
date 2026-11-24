@@ -3622,8 +3622,20 @@
     "sha256" : "cbee0e532d5860b826a27bbddda925f621fe69033d0220da7cbdb63acc2aec56"
   }, {
     "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/filterAfterUpdate/scenario.json",
+    "sha256" : "2592cb3c9e8a42f20a3198e93ba81f408096ee296d2da08e44af35cb68367462"
+  }, {
+    "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/printedMismatch/scenario.json",
     "sha256" : "ccdec466a95e3325eecd8997cb852a14de71a815c6f6c5e4cd5b77332aab5296"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/readAfterUnset/scenario.json",
+    "sha256" : "57ea07845bfdb6bc30c4018e61ab10ac45953d4aca30a19417b4a555d0fdbced"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/readAfterUpdate/scenario.json",
+    "sha256" : "4ab0122b1d6ad999bc8438c2debfcb5d6b8677eb45c681fc0f7b1b1ba41d35d6"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupByNull/scenario.json",

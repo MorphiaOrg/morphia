@@ -30,14 +30,8 @@ internal object SectionPrograms {
     private sealed interface Kind {
         data class Setup(val inserts: Boolean) : Kind
 
-        /**
-         * [update] is an update command; [writes] also covers a pipeline that writes its output.
-         */
-        data class Action(
-            val update: Boolean,
-            val namespace: LogicalNamespace,
-            val writes: Boolean = update,
-        ) : Kind
+        /** [update] is an update command. */
+        data class Action(val update: Boolean, val namespace: LogicalNamespace) : Kind
 
         data object Document : Kind
 
@@ -130,20 +124,15 @@ internal object SectionPrograms {
                 own.getOrNull(action + 1)
                     ?.takeIf { result(action + 1) && !updated(action + 1) }
                     ?.copy(role = ProgramRole.EXPECTED)
-            // A read after an update in the same section sees the update's effect, which this
-            // scenario doesn't run; the update's own read will cover it.
-            val afterWrite = actions.any { it < action && (kinds[it] as Kind.Action).writes }
             val lostSetup = (0 until action).any { kinds[it] == Kind.Skip("UNSUPPORTED_SETUP") }
             Assignment(
                 shared +
                     setup +
                     own[action].copy(role = ProgramRole.ACTION) +
                     listOfNotNull(result),
-                when {
-                    lostSetup -> "UNSUPPORTED_SETUP"
-                    afterWrite -> "AFTER_EARLIER_WRITE"
-                    else -> null
-                },
+                // A read after a write in the same section is settled page-wide, with the reads
+                // in other input/output groups: it is the write's read, or AFTER_EARLIER_WRITE.
+                if (lostSetup) "UNSUPPORTED_SETUP" else null,
                 skipped +
                     listOfNotNull(
                         own.getOrNull(action + 1)
@@ -167,7 +156,8 @@ internal object SectionPrograms {
         if (seeds.isEmpty()) return blocks to emptyList()
         val program = blocks.filter { it.format == null && it.role != ProgramRole.EXPECTED }
         val inspection = inspect(program, dialect)
-        val action = program.indexOfLast { it.role == ProgramRole.ACTION }
+        // A write's read can name another collection; seeds belong to the write's.
+        val action = program.indexOfFirst { it.role == ProgramRole.ACTION }
         val namespace = inspection.namespaces.lastOrNull { it.first == "block-$action" }?.second
         if (
             inspection.state != ShellLiteralState.NORMALIZED ||
@@ -221,7 +211,6 @@ internal object SectionPrograms {
                             Kind.Action(
                                 update,
                                 inspection.namespaces.last { it.first == id }.second,
-                                update || output.containsMatchIn(block.source),
                             )
                         }
             }
@@ -251,10 +240,6 @@ internal object SectionPrograms {
             }
             .mapValues { (_, indexes) -> setup.take(indexes.max() + 1) }
     }
-
-    // A `$merge` or `$out` stage writes a pipeline's output for a later read; a `'$out'` string
-    // doesn't.
-    private val output = Regex("""[{,]\s*["']?\$(?:merge|out)["']?\s*:""")
 
     /** A document or document list in a data or shell language: data, not program code. */
     fun isDocument(block: ScenarioCode) =

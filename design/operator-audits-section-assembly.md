@@ -34,8 +34,9 @@ Skipped source stays visible on its scenario (`skipped`) or, for shared setup, o
 - `SYNTAX_TEMPLATE`: the block names operands in angle brackets, `{ $add: [ <expression1>, ... ] }`;
 - `SAMPLE_DOCUMENT`: a displayed document where the scenario already inserts its data;
 - `OPERATOR_EXPRESSION`: a displayed expression such as `{ $regexMatch: { ... } }`, which is neither data nor a result;
-- `UPDATE_RESULT`: the documents a page prints after an update, which come from a read it runs
-  next, not from the update; they wait for the update's own read;
+- `UPDATE_RESULT`: what a page prints directly after an update, an acknowledgement or documents
+  from a read it doesn't show; it isn't the update's result (generation still reads it the legacy
+  way when the update has no read);
 - `UNREADABLE_RESULT`: a printed result the result grammar rejects, such as a truncated `...`
   listing; the scenario keeps its action and runs serialization-only;
 - `SEVERAL_COMMANDS`: a block holding more than one action;
@@ -47,9 +48,8 @@ Skipped source stays visible on its scenario (`skipped`) or, for shared setup, o
   declared.
 
 Each action becomes its own scenario with the setup and candidate seeds before it; earlier actions
-are other scenarios. A read that follows an update in the same section depends on that update, so it
-reports `AFTER_EARLIER_WRITE` and has no program of its own; pairing an update with the read a
-page runs after it is the next step for update examples. Seeds are settled per scenario against the setup it actually runs, shared and
+are other scenarios. An action that follows a write in the same section depends on that write; the
+page-wide pass below settles it (see **Reads after writes**). Seeds are settled per scenario against the setup it actually runs, shared and
 local, for section-owned and native input/output groups alike: where that setup inserts, the
 documents only illustrate (`SAMPLE_DOCUMENT`); otherwise they seed the action's collection. The
 language check ignores documents and printed results, so the action's own label always counts. An action without a result directly after it has no published expectation. A section
@@ -91,7 +91,17 @@ scenarios are built, two page-wide passes run in page order:
   it.
 - **Reads after writes.** A read that follows a write in its section (an update, a pipeline with
   `$merge` or `$out`, or a write the page shows but no scenario runs, such as a `bulkWrite` in a
-  `try` block) reports `AFTER_EARLIER_WRITE` and has no program of its own.
+  `try` block) reports `AFTER_EARLIER_WRITE` and has no program of its own, and so does a write
+  after a write. A syntax template is not a write. The exception is the write's read: a find
+  directly after a write in its section, with its printed result, where the write runs one command
+  and prints nothing but, at most, an acknowledgement. The find and its result join the write's scenario, as a second
+  action whose result the expectation names (`expectedFor`), and the find has no scenario of its
+  own. That works across a section's code and its input/output groups, as on the `$merge` and
+  `$out` pages, and for a find on another collection. Only the first read after a write pairs.
+  Nothing may run between them: setup or a skipped write in between refuses the pair. The pair
+  keeps the setup either side needs, such as the earlier inserts into the collection the find
+  reads, in page order. A write reaches its own tab or `selected-content` branch and the
+  branches nested in it, never a sibling branch, which is a separate example.
 
 Tabs and `selected-content` branches start separate owners; a selection naming a reference tab
 reads as reference, one naming a foreign tab as foreign. A shared section with one branch per

@@ -8165,6 +8165,14 @@
         "role" : "ACTION",
         "sha256" : "3e1b19c5bba77b08ea6a2736e8d91b31e58aa4ac5fea7a9fd981133791c93752",
         "text" : "db.movies.aggregate( [\n   { $match: { metacritic: 100, rated: { $ne: null },\n     year: { $lte: 1972 } } },\n   { $group: { _id: { year: \"$year\", rated: \"$rated\" },\n     count: { $sum: 1 } } },\n   { $merge : { into: \"movieRatingSummary\", on: \"_id\",\n     whenMatched: \"replace\", whenNotMatched: \"insert\" } }\n] )\n"
+      }, {
+        "role" : "READ",
+        "sha256" : "47ab092aeefcc156ab9ace5329c7c4961d1737909dcd41025c9e781720f3a91f",
+        "text" : "db.movieRatingSummary.find().sort(\n   { _id: 1 } )\n"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "f3b220cfc7ab8849badbfc2caf62650639cab6bb5c7b0d9e8772392f49e7912d",
+        "text" : "[\n  { _id: { year: 1939, rated: 'PASSED' }, count: 1 },\n  { _id: { year: 1962, rated: 'PG' }, count: 1 },\n  { _id: { year: 1963, rated: 'PG' }, count: 1 },\n  { _id: { year: 1970, rated: 'R' }, count: 1 },\n  { _id: { year: 1972, rated: 'R' }, count: 1 }\n]\n"
       } ],
       "detail" : null,
       "name" : "Summarize Ratings into Another Collection",
@@ -8175,32 +8183,10 @@
     }, {
       "blocks" : [ {
         "role" : "ACTION",
-        "sha256" : "47ab092aeefcc156ab9ace5329c7c4961d1737909dcd41025c9e781720f3a91f",
-        "text" : "db.movieRatingSummary.find().sort(\n   { _id: 1 } )\n"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "f3b220cfc7ab8849badbfc2caf62650639cab6bb5c7b0d9e8772392f49e7912d",
-        "text" : "[\n  { _id: { year: 1939, rated: 'PASSED' }, count: 1 },\n  { _id: { year: 1962, rated: 'PG' }, count: 1 },\n  { _id: { year: 1963, rated: 'PG' }, count: 1 },\n  { _id: { year: 1970, rated: 'R' }, count: 1 },\n  { _id: { year: 1972, rated: 'R' }, count: 1 }\n]\n"
-      } ],
-      "detail" : "AFTER_EARLIER_WRITE",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "onDemandMaterializedViewInitialCreation",
-      "title" : "On-Demand Materialized View: Initial Creation"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
         "sha256" : "facc7ecfbdaa80252905a3ae66c0813ca3e1f85e525c41bb756e96f122e1c449",
         "text" : "db.movies.aggregate( [\n   { $match: { metacritic: 100, rated: { $ne: null },\n     year: { $gte: 1963 } } },\n   { $group: { _id: { year: \"$year\", rated: \"$rated\" },\n     count: { $sum: 1 } } },\n   { $merge : { into: \"movieRatingSummary\", on: \"_id\",\n     whenMatched: \"replace\", whenNotMatched: \"insert\" } }\n] )\n"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "onDemandMaterializedViewUpdateReplaceData",
-      "title" : "On-Demand Materialized View: Update/Replace Data"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
+      }, {
+        "role" : "READ",
         "sha256" : "47ab092aeefcc156ab9ace5329c7c4961d1737909dcd41025c9e781720f3a91f",
         "text" : "db.movieRatingSummary.find().sort(\n   { _id: 1 } )\n"
       }, {
@@ -8208,9 +8194,9 @@
         "sha256" : "84a4c1f0d92c84c82af7d6d803790d539bc1e53613d8b6efd7be540115465cc4",
         "text" : "[\n  { _id: { year: 1939, rated: 'PASSED' }, count: 1 },\n  { _id: { year: 1962, rated: 'PG' }, count: 1 },\n  { _id: { year: 1963, rated: 'PG' }, count: 1 },\n  { _id: { year: 1970, rated: 'R' }, count: 1 },\n  { _id: { year: 1972, rated: 'R' }, count: 1 },\n  { _id: { year: 1982, rated: 'R' }, count: 1 },\n  { _id: { year: 2014, rated: 'R' }, count: 1 }\n]\n"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "onDemandMaterializedViewUpdateReplaceData",
       "title" : "On-Demand Materialized View: Update/Replace Data"
     }, {
@@ -8233,15 +8219,8 @@
         "role" : "ACTION",
         "sha256" : "c1340aae31ddfda0474e5ad95aebac468c415f59959d9893a8cc23b67ccca715",
         "text" : "db.movies.aggregate( [\n   { $match: { metacritic: 100, rated: { $ne: null },\n     year: { $gte: 1970, $lte: 1972 } } },\n   { $group: { _id: \"$year\", movieCount: { $sum: 1 } } },\n   { $merge : { into: \"yearlyStats\", on: \"_id\",\n     whenMatched: \"merge\", whenNotMatched: \"insert\" } }\n])\n"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "mergeResultsFromMultipleCollections",
-      "title" : "Merge Results from Multiple Collections"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
+      }, {
+        "role" : "READ",
         "sha256" : "2f5d3a96ac6ad96f53765aef767cf7f978955e62abd6b00542b8139488b86fef",
         "text" : "db.yearlyStats.find().sort( { _id: 1 } )\n"
       }, {
@@ -8249,9 +8228,9 @@
         "sha256" : "1b642279507416bfc099eb7aa4970fba5b00107e259140c60ca471d8a54581de",
         "text" : "[\n  { _id: 1970, movieCount: 1 },\n  { _id: 1972, movieCount: 1 }\n]\n"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "mergeResultsFromMultipleCollections",
       "title" : "Merge Results from Multiple Collections"
     }, {
@@ -8285,15 +8264,8 @@
         "role" : "ACTION",
         "sha256" : "633643224f2d0b3e3d1d92dabf39742903db933372f4703f40be929871a69505",
         "text" : "db.comments.aggregate([\n   { $match: { date: { $gte: new Date(\"1970-01-15\"),\n     $lt: new Date(\"1970-01-16\") } } },\n   { $group: { _id: { $dateToString: { format: \"%Y-%m\",\n     date: \"$date\" } }, count: { $sum: 1 } } },\n   { $merge: {\n         into: \"monthlyCommentTotals\",\n         on: \"_id\",\n         whenMatched: [\n            { $addFields: {\n               count: { $add: [ \"$count\", \"$$new.count\" ] }\n            } }\n         ],\n         whenNotMatched: \"insert\"\n   } }\n])\n"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "useThePipelineToCustomizeTheMerge",
-      "title" : "Use the Pipeline to Customize the Merge"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
+      }, {
+        "role" : "READ",
         "sha256" : "8f9a466027791a0ef9e8d7339956ffdaac76019ff21bda623f45e1f308ef1106",
         "text" : "db.monthlyCommentTotals.find()\n"
       }, {
@@ -8301,9 +8273,9 @@
         "sha256" : "8e8576f2440a05fd0744443a297605e27be3e8f99d0dbf6f529f252e688d2338",
         "text" : "[ { _id: '1970-01', count: 71 } ]\n"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "useThePipelineToCustomizeTheMerge",
       "title" : "Use the Pipeline to Customize the Merge"
     }, {
@@ -8445,15 +8417,8 @@
         "role" : "ACTION",
         "sha256" : "ea3f05e954589b040a8b1f4ca2c77b4ddeb3d72a8ce50c374ec895deb2eb6f06",
         "text" : "db.movies.aggregate( [\n    { $match : { runtime : { $gt : 1000 } } },\n    { $group : { _id : \"$year\", movies: { $push: \"$title\" } } },\n    { $out : \"movies_by_year\" }\n] )\n"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "outputToSameDatabase",
-      "title" : "Output to Same Database"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
+      }, {
+        "role" : "READ",
         "sha256" : "7a644059d2d56e403ffd6832aa28cbee59ad576f68cf6d6b0b968b9984f7082f",
         "text" : "db.movies_by_year.find().sort( { _id: 1 } )\n"
       }, {
@@ -8461,9 +8426,9 @@
         "sha256" : "cd9a71a57747a83d1c4272d2b67caf8e4dd9bd7739d314489dcfa4ac9ce4b216",
         "text" : "[\n  { _id: 1978, movies: [ 'Centennial' ] },\n  { _id: 1994, movies: [ 'Baseball' ] }\n]\n"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "outputToSameDatabase",
       "title" : "Output to Same Database"
     }, {
@@ -8471,15 +8436,8 @@
         "role" : "ACTION",
         "sha256" : "7b40fedff6bfd426a57c2d68ce525df638a354d5549b724976765ee8e0e3c7dd",
         "text" : "db.movies.aggregate( [\n    { $match : { runtime : { $gt : 1000 } } },\n    { $group : { _id : \"$year\", movies: { $push: \"$title\" } } },\n    { $out : { db: \"reporting\", coll: \"movies_by_year\" } }\n] )\n"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "outputToADifferentDatabase",
-      "title" : "Output to a Different Database"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
+      }, {
+        "role" : "READ",
         "sha256" : "7a644059d2d56e403ffd6832aa28cbee59ad576f68cf6d6b0b968b9984f7082f",
         "text" : "db.movies_by_year.find().sort( { _id: 1 } )\n"
       }, {
@@ -8487,9 +8445,9 @@
         "sha256" : "cd9a71a57747a83d1c4272d2b67caf8e4dd9bd7739d314489dcfa4ac9ce4b216",
         "text" : "[\n  { _id: 1978, movies: [ 'Centennial' ] },\n  { _id: 1994, movies: [ 'Baseball' ] }\n]\n"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "outputToADifferentDatabase",
       "title" : "Output to a Different Database"
     } ],
@@ -12329,19 +12287,8 @@
         "role" : "ACTION",
         "sha256" : "218f2759e7c5ef1b81bfab1836e388a9dfa592278a1db738f18cc4ba431de5fa",
         "text" : "db.customers.updateOne(\n  { _id: 1 },\n  [\n   { $set: { lastModified: \"$$NOW\", cancellation: {date: \"$$CLUSTER_TIME\", reason: \"user request\"}, status: \"D\" } }\n  ]\n)"
-      } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "aggregationAlternativeToCurrentDate",
-      "title" : "Aggregation Alternative to $currentDate"
-    }, {
-      "blocks" : [ {
-        "role" : "DATA",
-        "sha256" : "52e44d3866738eb41ce921b867a3cc2506640124d3375616926c79dbf9c0a4d0",
-        "text" : "db.customers.insertOne(\n   { _id: 1, status: \"a\", lastModified: ISODate(\"2013-10-02T01:11:18.965Z\") }\n)"
       }, {
-        "role" : "ACTION",
+        "role" : "READ",
         "sha256" : "115318d98733c31505a7ee115610a8e108749542a85f3972e2e2c52f6fc59ddb",
         "text" : "db.customers.find().pretty()"
       }, {
@@ -12349,9 +12296,9 @@
         "sha256" : "4506118e7b1dd3c633a7a37cf939b43cc45a606572a8523ee33c4d5e814e7212",
         "text" : "{\n   \"_id\" : 1,\n   \"status\" : \"D\",\n   \"lastModified\" : ISODate(\"2020-01-22T21:02:18.994Z\"),\n   \"cancellation\" : {\n      \"date\" : Timestamp(1579726934, 2),\n      \"reason\" : \"user request\"\n   }\n}"
       } ],
-      "detail" : "AFTER_EARLIER_WRITE",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "aggregationAlternativeToCurrentDate",
       "title" : "Aggregation Alternative to $currentDate"
     } ],
@@ -12660,25 +12607,6 @@
       "owner" : "query/updates/positional/updateWithMultipleArrayMatches",
       "status" : "OWNED",
       "stem" : null,
-      "title" : "Update with Multiple Array Matches"
-    }, {
-      "blocks" : [ {
-        "role" : "DATA",
-        "sha256" : "093b214c82198a5913eed1a1aceeb8c9ca5eeed76b6c8d55230c7f7eb55f0b47",
-        "text" : "db.students_deans_list.insertMany( [\n   {\n      _id: 8,\n      activity_ids: [ 1, 2 ],\n      grades: [ 90, 95 ],\n      deans_list: [ 2021, 2020 ]\n   }\n] )"
-      }, {
-        "role" : "ACTION",
-        "sha256" : "a49e711e1e1887ef0aece764b95e4697555c7c7b8ef611cb166ddf80c03ce4de",
-        "text" : "db.students_deans_list.find( { _id: 8 } )"
-      }, {
-        "role" : "EXPECTED",
-        "sha256" : "c80922427104033dfb7c8a0d2280f14971504d881a73f60efee816da9a947bff",
-        "text" : "{\n   _id: 8,\n   activity_ids: [ 1, 2 ],\n   grades: [ 90, 95 ],\n   deans_list: [ 2021, 2022 ]\n}"
-      } ],
-      "detail" : "AFTER_EARLIER_WRITE",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "updateWithMultipleArrayMatches",
       "title" : "Update with Multiple Array Matches"
     } ],
     "includes" : [ ],
@@ -13334,7 +13262,7 @@
     "examples.owned" : 307,
     "examples.unnamed" : 0,
     "examples.unowned" : 281,
-    "examples.unsupported" : 112,
+    "examples.unsupported" : 104,
     "pages" : 290,
     "pages.skipped" : 7,
     "reviews.stale" : 0

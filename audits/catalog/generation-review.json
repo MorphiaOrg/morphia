@@ -25,7 +25,7 @@
     },
     {
       "name": "query/updates/positional-all/updateArraysSpecifiedUsingANegationQueryOperator",
-      "reason": "The page prints the whole collection after the update; the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass."
+      "reason": "The page prints the whole collection after the update but shows no read, so the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass. Lift once the page shows its find, which the case then runs."
     }
   ],
   "sampleDatasets": {

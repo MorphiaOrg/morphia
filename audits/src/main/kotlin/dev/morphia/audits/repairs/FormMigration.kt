@@ -10,6 +10,7 @@ import dev.morphia.audits.shell.LegacyDocuments
 import dev.morphia.audits.shell.ProgramBlock
 import dev.morphia.audits.shell.ProgramFormat
 import dev.morphia.audits.shell.ProgramRole
+import dev.morphia.audits.shell.QueryModifierKind
 import dev.morphia.audits.shell.ShellDialect
 import dev.morphia.audits.shell.ShellLiteralState
 import dev.morphia.audits.shell.ShellProgramRequest
@@ -133,6 +134,8 @@ enum class BlockRole {
     DATA,
     EXPECTED,
     INDEX,
+    /** The find a page runs after a write to show its effect; its printed result is [EXPECTED]. */
+    READ,
 }
 
 /** Source text as extracted from the page, so the claim can be rechecked without the page. */
@@ -168,6 +171,16 @@ data class DocumentedScenario(
     val indexes: List<DocumentedIndex> = emptyList(),
     /** The page's other spellings of the action, when it declares alternative commands. */
     val alternatives: List<List<BsonValue>> = emptyList(),
+    /** The find the page runs after a write, whose result is the printed one. */
+    val read: DocumentedRead? = null,
+)
+
+/** A find a page runs after a write: its collection, filter, projection and sort. */
+data class DocumentedRead(
+    val collection: String,
+    val filter: BsonDocument,
+    val projection: BsonDocument?,
+    val sort: BsonDocument?,
 )
 
 data class FormOverride(
@@ -324,11 +337,17 @@ object FormMigration {
         val action =
             if (alternatives) documented.alternatives.first() else documented.alternatives.single()
         require(shape == null || action.shape == shape) { "$label: action is ${action.shape}" }
+        val read =
+            when (val parsed = read(blocks)) {
+                is Examined.Gap -> throw IllegalArgumentException("$label: ${parsed.detail}")
+                else -> parsed as DocumentedRead?
+            }
+        require(read == null || action.shape != ActionShape.FIND) { "$label: a read after a find" }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
         val printed =
             if (expected.isEmpty()) null
             else
-                when (val read = published(documented.collection, expected)) {
+                when (val read = published(read?.collection ?: documented.collection, expected)) {
                     is Examined.Gap -> throw IllegalArgumentException("$label: ${read.detail}")
                     else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
                 }
@@ -343,7 +362,81 @@ object FormMigration {
             listed.takeIf { it.isNotEmpty() && it.all { rows -> rows != null } }?.flatMap { it!! },
             indexes = documented.indexes,
             alternatives =
-                if (alternatives) documented.alternatives.drop(1).map { it.values } else emptyList(),
+                if (alternatives) documented.alternatives.drop(1).map { it.values }
+                else emptyList(),
+            read = read,
+        )
+    }
+
+    /**
+     * The find a page runs after its write, when it shows one, or a gap. Only a filter, a
+     * projection and a sort are read; any other modifier would change what the page printed.
+     */
+    private fun read(blocks: List<SourceBlock>): Any? {
+        val reads = blocks.filter { it.role == BlockRole.READ }
+        if (reads.isEmpty()) return null
+        val block =
+            reads.singleOrNull()
+                ?: return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "${reads.size} reads")
+        // The read runs after the example's other code, so it sees the bindings declared there.
+        val before = blocks.takeWhile { it !== block }
+        val program =
+            ShellPrograms.normalize(
+                ShellProgramRequest(
+                    dialect = ShellDialect.MONGOSH,
+                    blocks =
+                        before
+                            .filter {
+                                it.role == BlockRole.INDEX ||
+                                    it.role == BlockRole.ACTION ||
+                                    it.role == BlockRole.DATA &&
+                                        (".insertOne(" in it.text || ".insertMany(" in it.text)
+                            }
+                            .mapIndexed { index, it ->
+                                ProgramBlock(
+                                    "before$index",
+                                    it.text,
+                                    if (it.role == BlockRole.ACTION) ProgramRole.ACTION
+                                    else ProgramRole.SETUP,
+                                )
+                            } + ProgramBlock("read", block.text, ProgramRole.ACTION),
+                )
+            )
+        if (program.state != ShellLiteralState.NORMALIZED) {
+            return Examined.Gap(
+                FormGap.SOURCE_UNSUPPORTED,
+                "read: " + program.problems.joinToString { it.code },
+            )
+        }
+        val command =
+            program.commands.filter { it.id.block == "read" }.singleOrNull()
+                ?: return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "a read of several commands")
+        val find =
+            command.operation as? FindOperation
+                ?: return Examined.Gap(
+                    FormGap.SOURCE_UNSUPPORTED,
+                    "a ${command.operation.kind} read",
+                )
+        if (command.namespace.database != null) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "a read outside the current database")
+        }
+        find.modifiers
+            .firstOrNull {
+                it.kind != QueryModifierKind.SORT && it.kind != QueryModifierKind.PROJECT
+            }
+            ?.let {
+                return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "a read with ${it.kind}")
+            }
+        val projections = find.modifiers.filter { it.kind == QueryModifierKind.PROJECT }
+        val sorts = find.modifiers.filter { it.kind == QueryModifierKind.SORT }
+        if (projections.size + listOfNotNull(find.projection).size > 1 || sorts.size > 1) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "a read with repeated modifiers")
+        }
+        return DocumentedRead(
+            command.namespace.collection,
+            find.filter.value().asDocument(),
+            (find.projection ?: projections.singleOrNull()?.value)?.value()?.asDocument(),
+            sorts.singleOrNull()?.value?.value()?.asDocument(),
         )
     }
 

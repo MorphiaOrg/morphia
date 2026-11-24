@@ -55,7 +55,10 @@ import static org.junit.jupiter.api.Assertions.fail;
  * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
  * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
  * and no tolerances, and a dataset only when the scenario skips its results; a scenario that needs either fails rather
- * than being checked loosely. Documented indexes are created on both databases after they are seeded.
+ * than being checked loosely. Documented indexes are created on both databases after they are seeded. A write (an
+ * update, or a pipeline that writes with {@code $merge} or {@code $out}) can carry {@code action.read}, the find the
+ * page runs afterwards to show its effect: both sides run that find after the write, and its results replace the
+ * action's own in the behavior and published checks.
  */
 public class OperatorCaseRunner {
     // Canonical extended JSON, so a failure shows BSON types: relaxed JSON prints an Int64 like an Int32.
@@ -143,8 +146,8 @@ public class OperatorCaseRunner {
     }
 
     /**
-     * Runs an update case: the results are the documents its filter matches after the update, and every collection is
-     * compared as well.
+     * Runs an update case: the results are what the page's own read returns after the update, when the scenario
+     * carries one, and otherwise the documents its filter matches afterwards. Every collection is compared as well.
      */
     public void update(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, UpdateOperator... operators) {
         run(operatorCase, "update", Shape.UPDATE, (action, collection) -> {
@@ -153,6 +156,8 @@ public class OperatorCaseRunner {
             BsonDocument filter = action.getDocument("filter");
             BsonDocument update = action.getDocument("update");
             boolean multi = action.getBoolean("multi").getValue();
+            // The page's read, when it shows one, gives the results; the filter isn't queried again.
+            boolean read = action.containsKey("read");
             return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument(), updates)),
                     reference -> {
                         var target = reference.getCollection(collection, BsonDocument.class);
@@ -161,15 +166,31 @@ public class OperatorCaseRunner {
                         } else {
                             target.updateOne(filter, update);
                         }
-                        return new ArrayList<>(target.find(filter).into(new ArrayList<>()));
+                        return read ? List.of() : new ArrayList<>(target.find(filter).into(new ArrayList<>()));
                     },
                     () -> {
                         query.update(new UpdateOptions().multi(multi), operators);
+                        if (read) {
+                            return List.of();
+                        }
                         try (var cursor = query.iterator()) {
                             return bson(cursor.toList()).getValues();
                         }
                     });
         });
+    }
+
+    /** The documents the page's read after a write returns from {@code database}. */
+    private static List<BsonValue> read(MongoDatabase database, BsonDocument read) {
+        var find = database.getCollection(read.getString("collection").getValue(), BsonDocument.class)
+                .find(read.getDocument("filter"));
+        if (read.containsKey("projection")) {
+            find = find.projection(read.getDocument("projection"));
+        }
+        if (read.containsKey("sort")) {
+            find = find.sort(read.getDocument("sort"));
+        }
+        return new ArrayList<>(find.into(new ArrayList<>()));
     }
 
     /** What one kind of action contributes to a run: Morphia's command, and each side's results. */
@@ -294,6 +315,13 @@ public class OperatorCaseRunner {
 
             List<BsonValue> referenceResults = execution.reference().apply(reference);
             List<BsonValue> morphiaResults = execution.morphia().get();
+            // The page shows a write's effect with a find of its own; both sides run it after the write, and its
+            // results are the ones compared.
+            BsonDocument read = action.getDocument("read", null);
+            if (read != null) {
+                referenceResults = read(reference, read);
+                morphiaResults = read(morphia, read);
+            }
             if (!StrictBson.equal(referenceResults, morphiaResults, ordered, unordered)) {
                 fail(operatorCase.resource() + ": behavior differs\nreference: " + json(referenceResults) + "\nmorphia:   "
                         + json(morphiaResults));
@@ -418,6 +446,14 @@ public class OperatorCaseRunner {
         };
         Set<String> present = new TreeSet<>(action.keySet());
         present.remove("alternatives");
+        // Only a write has a read after it.
+        if (present.remove("read") && (action.getString("kind").getValue().equals("find")
+                || !action.get("read").isDocument()
+                || !Set.of("collection", "filter", "projection", "sort").containsAll(action.getDocument("read").keySet())
+                || !action.getDocument("read").containsKey("collection")
+                || !action.getDocument("read").containsKey("filter"))) {
+            unsupported.add("read " + action.get("read"));
+        }
         if (!present.equals(fields)) {
             unsupported.add("action fields " + action.keySet());
         } else if (action.getString("kind").getValue().equals("aggregate")) {

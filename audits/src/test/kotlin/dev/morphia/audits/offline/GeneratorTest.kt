@@ -253,6 +253,86 @@ class GeneratorTest {
         )
     }
 
+    @Test
+    fun anUpdatesReadTravelsWithItsCase() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.inventory.insertMany( [ { _id: 1, qty: Int32(25) } ] )"
+        val update = "db.inventory.updateOne( { _id: 1 }, { \$inc: { qty: 2 } } )"
+        pages.operator("inc", "update", "update") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    section(
+                        "Increment and Read",
+                        code(update),
+                        code("db.inventory.find( { _id: 1 } ).sort( { _id: 1 } )"),
+                        code("[ { _id: 1, qty: 27 } ]"),
+                    ),
+                    section(
+                        "Increment a Declared Id",
+                        code("const id = 1"),
+                        code("db.inventory.updateOne( { _id: id }, { \$inc: { qty: 2 } } )"),
+                        code("db.inventory.find( { _id: id } )"),
+                        code("[ { _id: 1, qty: 27 } ]"),
+                    ),
+                    section(
+                        "Increment and Read One",
+                        code(update),
+                        code("db.inventory.find( { } ).limit( 1 )"),
+                        code("[ { _id: 1, qty: 27 } ]"),
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        assertEquals(
+            listOf(BlockRole.DATA, BlockRole.ACTION, BlockRole.READ, BlockRole.EXPECTED),
+            inventory.pages.single().examples.first().blocks.map { it.role },
+        )
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("query/updates")),
+                emptySet(),
+            )
+        fun scenario(name: String) =
+            BsonDocument.parse(
+                generation.files.getValue(
+                    "core/src/test/resources" +
+                        generation.cases
+                            .single { it.manifest.name.endsWith(name) }
+                            .manifest
+                            .scenario
+                )
+            )
+        val scenario = scenario("incrementAndRead")
+        // A read sees the bindings the example declared before it.
+        assertEquals(
+            BsonDocument.parse("{collection: 'inventory', filter: {_id: 1}}"),
+            scenario("incrementADeclaredId").getDocument("action").getDocument("read"),
+        )
+        // The page's find runs after the update on both sides; its result is the printed one.
+        assertEquals(
+            BsonDocument.parse("{collection: 'inventory', filter: {_id: 1}, sort: {_id: 1}}"),
+            scenario.getDocument("action").getDocument("read"),
+        )
+        assertTrue(scenario.getDocument("expected").containsKey("printed"), scenario.toJson())
+        // Any other modifier would change what the page printed.
+        assertEquals(
+            mapOf("Increment and Read One" to "a read with LIMIT"),
+            generation.gaps.associate { it.title to it.detail },
+        )
+    }
+
     /**
      * A fixture named for an example owns it even when its title and action text have changed since
      * the fixture was written.

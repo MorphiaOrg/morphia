@@ -225,11 +225,26 @@ object ScenarioExtraction {
         }
     }
 
+    // Inserts and index builds: setup that changes what a later read sees.
+    private val setupCall = Regex("""\.(?:insert\w*|createIndex\w*)\s*\(""")
+
     // Commands that change the data a later read sees.
     private val write =
         Regex(
             """\.(?:update|replace|delete|bulkWrite|findOneAnd|findAndModify)\w*\s*\(|[{,]\s*["']?\$(?:merge|out)["']?\s*:"""
         )
+
+    /**
+     * Where a scenario sits for the writes before it: its section path, and the tab or
+     * selected-content branches it is in. A write reaches its own branch and the branches nested in
+     * it, never a sibling branch, which is a separate example.
+     */
+    private data class Place(val section: List<String?>, val branches: List<List<Any?>>) {
+        fun reaches(other: Place) =
+            section == other.section &&
+                other.branches.size >= branches.size &&
+                other.branches.take(branches.size) == branches
+    }
 
     private class Run(
         val bundle: VerifiedSourceBundle,
@@ -937,7 +952,7 @@ object ScenarioExtraction {
                 .filter { it !in foundSections }
                 .forEach { problem("MISSING_SECTION", rule, "Declared section $it is absent") }
             inheritSetup(rule, start, setupSources)
-            afterWrites(start)
+            afterWrites(rule, start)
             val emitted = scenarios.drop(start)
             val reference = emitted.count { it.variant == ScenarioVariant.REFERENCE }
             if (reference < rule.minimumReferenceGroups)
@@ -1041,11 +1056,12 @@ object ScenarioExtraction {
         }
 
         /**
-         * A read that follows a write in the same section sees the write's effect, which its own
-         * program doesn't run, whether the write sits in its section's code or in another input/
-         * output group. Such a read keeps its source and reports `AFTER_EARLIER_WRITE`.
+         * An action that follows a write in the same section sees the write's effect, which its own
+         * program doesn't run, whether the write sits in its section's code or in another
+         * input/output group. Such an action keeps its source and reports `AFTER_EARLIER_WRITE`,
+         * unless it is the find the page runs to show the write's effect: see [withRead].
          */
-        fun afterWrites(start: Int) {
+        fun afterWrites(rule: ScenarioPageRule, start: Int) {
             fun action(scenario: ExtractedScenario) =
                 scenario.blocks.firstOrNull { it.role == ProgramRole.ACTION }
             fun writes(scenario: ExtractedScenario) =
@@ -1062,24 +1078,40 @@ object ScenarioExtraction {
                     a.zip(b).firstOrNull { (x, y) -> x != y }?.let { (x, y) -> x.compareTo(y) }
                         ?: a.size.compareTo(b.size)
                 }
-            val written = mutableSetOf<List<String?>>()
+            val written = mutableListOf<Place>()
+            // The scenario with an action just before this one in page order, and the reads
+            // folded into the write before them.
+            var previous: Int? = null
+            val folded = mutableListOf<Int>()
             (start until scenarios.size)
                 .filter { scenarios[it].variant == ScenarioVariant.REFERENCE }
                 .sortedWith(compareBy(order) { position(scenarios[it]) })
                 .forEach { index ->
                     val scenario = scenarios[index]
-                    val section = scenario.sections.map { it.anchor ?: it.title }
+                    val section = section(scenario)
+                    val paired = previous?.let { withRead(rule, scenarios[it], scenario) }
+                    if (paired != null) {
+                        scenarios[previous!!] = paired
+                        folded += index
+                        previous = null
+                        return@forEach
+                    }
+                    if (action(scenario) != null) previous = index
                     // A write the page shows but no scenario runs, such as a bulkWrite in a try
-                    // block, still changes what the read after it sees.
+                    // block, still changes what the read after it sees; a syntax template runs
+                    // nothing.
                     val skippedWrite =
                         scenario.skipped.any {
-                            write.containsMatchIn(it.code.source) &&
+                            it.reason != "SYNTAX_TEMPLATE" &&
+                                write.containsMatchIn(it.code.source) &&
                                 order.compare(it.code.locator, position(scenario)) < 0
                         }
+                    // A write after a write sees its effect too. A scenario that already can't
+                    // run keeps its own problem.
                     if (
-                        (section in written || skippedWrite) &&
-                            !writes(scenario) &&
-                            action(scenario) != null
+                        (written.any { it.reaches(section) } || skippedWrite) &&
+                            action(scenario) != null &&
+                            scenario.normalizationProblem == null
                     )
                         scenarios[index] =
                             scenario.copy(
@@ -1088,6 +1120,80 @@ object ScenarioExtraction {
                             )
                     if (writes(scenario)) written += section
                 }
+            folded.sortedDescending().forEach { scenarios.removeAt(it) }
+        }
+
+        /** The [Place] of [scenario]. */
+        fun section(scenario: ExtractedScenario) =
+            Place(
+                scenario.sections.map { it.anchor ?: it.title },
+                scenario.containers
+                    .filter { it.name in setOf("tab", "selected-content") }
+                    .map { listOf(it.name, it.argument, it.options, it.attributes["selections"]) },
+            )
+
+        /**
+         * [write] with [read] as the find the page runs after it, when [read] directly follows it
+         * in the same section: [write] runs one write and prints nothing of its own, and [read] is
+         * one find with its printed result. The pair is one scenario, whose published result is the
+         * find's; null when they aren't such a pair or don't normalize together.
+         */
+        fun withRead(
+            rule: ScenarioPageRule,
+            write: ExtractedScenario,
+            read: ExtractedScenario,
+        ): ExtractedScenario? {
+            fun actions(scenario: ExtractedScenario) =
+                scenario.program
+                    ?.takeIf { it.state == ShellLiteralState.NORMALIZED }
+                    ?.commands
+                    ?.filter { it.role == ProgramRole.ACTION }
+            if (!section(write).reaches(section(read))) return null
+            // Setup or a skipped write between them changes what the find sees, and the pair
+            // wouldn't run it.
+            val after = write.blocks.firstOrNull { it.role == ProgramRole.ACTION }?.locator
+            val before = read.blocks.firstOrNull { it.role == ProgramRole.ACTION }?.locator
+            if (after == null || before == null) return null
+            fun between(locator: List<Int>) =
+                locatorOrder.compare(locator, after) > 0 &&
+                    locatorOrder.compare(locator, before) < 0
+            if (
+                read.blocks.any { it.role == ProgramRole.SETUP && between(it.locator) } ||
+                    (write.skipped + read.skipped).any {
+                        it.reason != "SYNTAX_TEMPLATE" &&
+                            between(it.code.locator) &&
+                            (ScenarioExtraction.write.containsMatchIn(it.code.source) ||
+                                setupCall.containsMatchIn(it.code.source))
+                    }
+            )
+                return null
+            val writes = actions(write)?.singleOrNull() ?: return null
+            val finds = actions(read)?.singleOrNull() ?: return null
+            if (!writes(writes.operation) || finds.operation !is FindOperation) return null
+            if (write.blocks.any { it.role == ProgramRole.EXPECTED }) return null
+            val shown =
+                read.blocks.filter { it.role in setOf(ProgramRole.ACTION, ProgramRole.EXPECTED) }
+            if (shown.map { it.role } != listOf(ProgramRole.ACTION, ProgramRole.EXPECTED))
+                return null
+            // The read's own setup, such as the earlier inserts into the collection it reads,
+            // runs before the write; the write's scenario may lack it.
+            fun key(code: ScenarioCode) = code.locator to code.sha256
+            val known = write.blocks.map(::key).toSet()
+            val extra = read.blocks.filter { it.role == ProgramRole.SETUP && key(it) !in known }
+            // Setup in page order, so each declaration still comes before what reads it.
+            val setup =
+                (write.blocks.filter { it.role == ProgramRole.SETUP } + extra).sortedWith(
+                    compareBy(locatorOrder) { it.locator }
+                )
+            val blocks = setup + write.blocks.filter { it.role != ProgramRole.SETUP } + shown
+            val program = program(rule, blocks)
+            if (program.state != ShellLiteralState.NORMALIZED) return null
+            chargeSetup(extra)
+            programBytes += AuditJson.requireMaximumSize(program, limits.maximumReportBytes)
+            require(programBytes <= limits.maximumReportBytes) {
+                "Embedded programs exceed scenario report budget"
+            }
+            return write.copy(blocks = blocks, program = program)
         }
 
         fun program(rule: ScenarioPageRule, blocks: List<ScenarioCode>) =
@@ -1096,6 +1202,14 @@ object ScenarioExtraction {
                     dialect = rule.dialect,
                     blocks =
                         blocks.mapIndexed { i, b ->
+                            // With a write's read, a result belongs to the action just before it.
+                            val owner =
+                                (i - 1 downTo 0)
+                                    .firstOrNull { blocks[it].role == ProgramRole.ACTION }
+                                    ?.takeIf {
+                                        b.role == ProgramRole.EXPECTED &&
+                                            blocks.count { c -> c.role == ProgramRole.ACTION } > 1
+                                    }
                             ProgramBlock(
                                 "block-$i",
                                 b.source,
@@ -1106,6 +1220,7 @@ object ScenarioExtraction {
                                             ProgramFormat.SHELL_RESULTS
                                         else ProgramFormat.SHELL,
                                 namespace = b.namespace,
+                                expectedFor = owner?.let { CommandSelector("block-$it", 0) },
                             )
                         },
                     resultOrder = rule.resultOrder,
@@ -1162,7 +1277,7 @@ object ScenarioExtraction {
                             }
                         }
                 val namespace =
-                    program.commands.lastOrNull { it.role == ProgramRole.ACTION }?.namespace
+                    program.commands.firstOrNull { it.role == ProgramRole.ACTION }?.namespace
                 val inherited = namespace?.let { inserted[it] }
                 if (namespace != null && namespace !in inserts && inherited != null) {
                     // The copied setup counts against the budgets like any other.
