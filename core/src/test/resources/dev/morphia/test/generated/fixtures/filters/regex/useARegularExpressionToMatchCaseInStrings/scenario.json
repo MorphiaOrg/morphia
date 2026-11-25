@@ -138,7 +138,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "REGEX_FORM"
     ],

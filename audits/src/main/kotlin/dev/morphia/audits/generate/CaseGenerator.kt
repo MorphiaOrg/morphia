@@ -294,7 +294,14 @@ object CaseGenerator {
                     cases +=
                         GeneratedCase(
                             ManifestCase(name, GENERATED, resource, "$PACKAGE.$folder.$type#$stem"),
-                            FixtureMigration.scenario(override, ordered = true, dataset = dataset),
+                            FixtureMigration.scenario(
+                                override,
+                                // The serialization check proves Morphia sends the documented
+                                // sort; which order the server returns, ties included, is not
+                                // Morphia's, so results compare as a multiset.
+                                ordered = false,
+                                dataset = dataset,
+                            ),
                             method,
                         ) to emitted
                 }

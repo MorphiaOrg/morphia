@@ -76,7 +76,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [],
     "ignore": [],
     "tolerance": null

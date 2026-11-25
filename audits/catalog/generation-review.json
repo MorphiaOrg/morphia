@@ -20,10 +20,6 @@
       "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912)."
     },
     {
-      "name": "aggregation/expressions/meta/metaTextScore",
-      "reason": "The find has no sort, so the server may return its matches in any order, and two of them tie on score; the page prints one order and the server returns another. Serialization and behavior pass; the printed order is not one the query guarantees."
-    },
-    {
       "name": "aggregation/expressions/meta/returnTheIndexKeyOfAMatchedTypeInAFind",
       "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass."
     },
@@ -49,7 +45,7 @@
     },
     {
       "name": "aggregation/stages/replaceWith/pivotSalesByQuarter",
-      "reason": "The pipeline groups by quarter and never sorts, so the server returns the groups in any order; the documented run and Morphia's returned them in different orders. Serialization passes; generated scenarios compare results in order."
+      "reason": "The page prints one document, the output of the pipeline's first $addFields stage, as the result of the whole four-stage pipeline, which returns one pivoted document per quarter. Serialization and behavior pass; the page is wrong."
     },
     {
       "name": "query/filters/regex/matchWholeWordsOnly",

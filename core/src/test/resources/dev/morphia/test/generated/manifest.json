@@ -730,6 +730,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMergeObjects#testMergeObjectsAsAnAccumulator"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/meta/metaTextScore",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/meta/metaTextScore/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMeta#metaTextScore"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/millisecond/millisecondExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/millisecond/millisecondExpressionOperator/scenario.json",
@@ -2612,6 +2617,10 @@
     "sha256" : "cb41ee0b3be918fa7cd34e2621fe6edfded90ba044f9aeea5c5e1c3fef06ede4"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMeta.java",
+    "sha256" : "3558aa676c72025b59dfbd45be90c48f3b1281c1d78f884d55c0f15ba381a511"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMin.java",
     "sha256" : "bedde244a1fff70db086d1e8b9a3162d383cce0b29d0616dc099043cff621035"
   }, {
@@ -3917,187 +3926,191 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/accumulator/comparisonWithAvg/scenario.json",
-    "sha256" : "1e0f4dc214f781c67df8362058ba698d1208782ff47da47455e78056782c459d"
+    "sha256" : "a052702997400bac1e1f6baee6c48565c609edbd63ed47985791182e8a47f467"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/add/addNonIntegerValuesToADate/scenario.json",
-    "sha256" : "a8a5d9b730661bb7a2b4e5f9b8be75a967708b4d55c62737784210fbfe16ec2a"
+    "sha256" : "2d58155870064e9f7f2d219facd2cf11708f57840b12ce3eed15b4bafe5067cf"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/addToSet/collectTheGenresOfEachDirector/scenario.json",
-    "sha256" : "dc936d1af892081640343bacd13346c9246e4c8ad71619587d80567baf9cd89a"
+    "sha256" : "a0e60e867c320678f94effcabab0777afa383ab87f2ecbf331d080703104c3e7"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bitAnd/bitwiseAndWithALongAndInteger/scenario.json",
-    "sha256" : "ae017e68b3d0d8e7410488cfad3168c722607cebe89d3cb09d1c5405a9273cb8"
+    "sha256" : "a8ae15b29502d137daa17e2d1afbbb4be978e62dff987dfdd8330dd1b8616d2c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bitAnd/bitwiseAndWithTwoIntegers/scenario.json",
-    "sha256" : "473ad73a7f84ada6b5ee06277566c2b22d9b6085a8aab87c6be944bebb46cf39"
+    "sha256" : "fcedcf772de205699b4d22b8c16809b1c0a581955eb88f9553f5349e488c6f9a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bitOr/bitwiseOrWithTwoIntegers/scenario.json",
-    "sha256" : "c5e33865fc2c806d27234d87110aa6dec5dbde25b7fe4267c9de89fd47e5ea99"
+    "sha256" : "1a7df4db792a31c1fdc43ba4d0c76dce9902dc4365ed8648472a001c6ff9a84b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingAcrossMultipleYears/scenario.json",
-    "sha256" : "a0d5201577c5074deb78b21f253ca42d331adb83e59dc28885d11841e7829239"
+    "sha256" : "08895d1ff54e86af98783b1877678d585f9fd059818395510f6feb2172c8cde4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottom/findTheBottomRatingInAGenre/scenario.json",
-    "sha256" : "4128485c63db3adfac11548496f0eb6fa296f1392f2054644be532dc740cd246"
+    "sha256" : "bd66fcbd0a805f0349704e150f09c19e041c9c567f7193ec98e9e2b1a9227361"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/findTheLowestRatedMoviesForEachGenre/scenario.json",
-    "sha256" : "58d0354e0bd56a8abadc0292c4eb4905e35b0a3a1b07c5725f3370febf4927af"
+    "sha256" : "68e624dc584af75beb6789db6d4887fe34ae5c3569a93cd2dfc62881e72c6117"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/findTheThreeLowestRatedMoviesInASingleGenre/scenario.json",
-    "sha256" : "c39d5e9bf578743e5c62e1860855de6de0b16c4f97e4b7e7eb1a36d4aec8e0d0"
+    "sha256" : "e66ce33366b82bd5bf6691e46b2fa4caa091da2c7a7eee23a7245b61ecd25d11"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
-    "sha256" : "42891403bbf3e38ee8634d5d1902e1dac808fe876ac36006bfa3435cf56c677c"
+    "sha256" : "02259f7760f67c8afc393d9b6f241479222118bf69b43cce7b0c1a0a6ead4ba4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/filter/limitGreaterThanPossibleMatches/scenario.json",
-    "sha256" : "a95ed2ea08e3c2822a8f021775b955ffc78daf627ca182f139eccba4da436bc5"
+    "sha256" : "af2651536c9eb816073197c37358d455ba73db939d9234aefff2454225e9d309"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/first/findTheFirstMovieInEachGenre/scenario.json",
-    "sha256" : "8284d3ddafaced7bca0aca345578a83c36795e180b563a58ca3af712b9d2729f"
+    "sha256" : "4c2caf2d1b0b532a6cde33f6aaa3056658b7e71b41e6562875cd6c2b53e79b5f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesAcrossMultipleGenres/scenario.json",
-    "sha256" : "682fd4c173aa52cc66d01174a247e4ba8ee49ef07ae604728dcf675f9f022363"
+    "sha256" : "0147666c2f019c17552f3a9543494d152c1c2345abfcfef1c13baca7bc66af47"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesForASingleGenre/scenario.json",
-    "sha256" : "5f7e61c8328a7846714106adb205ad931964ac8fba344b5f6d7e5fbbd6b06cda"
+    "sha256" : "7dd0552b7d68d4e644a21f94d7a13ae85a6ddfd719d47004169567f4146b8678"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/setNBasedOnTheGroupKey/scenario.json",
-    "sha256" : "476add6d415ab1bd17cc18a595bcff256c289152af8bd56be5bcdb151231d53d"
+    "sha256" : "27010c6993b5666832e66c61ee1886313d991e62bd03ee498fe33045efa1c252"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/last/findTheLastMovieInEachGenre/scenario.json",
-    "sha256" : "ec7dc5a906cca37719e9b072e5c6f172b43074b49b3b7dfdd907bcf40cc166bf"
+    "sha256" : "0975ecc2876f5af16451bef6a96e6fdbd31ce5034ad38570f6d1e0fc3277c93e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/lastN/findTheLastThreeMoviesAcrossMultipleGenres/scenario.json",
-    "sha256" : "a4e2d62b464d3495e48be672d1c6730fb89a9f18ab31e5d6da50beb8a11de674"
+    "sha256" : "bb9f106195bca7d512aaa56f2191fbe16e9037006abd0d3e93f976e179312fd9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/lastN/findTheLastThreeMoviesForASingleGenre/scenario.json",
-    "sha256" : "a647c9a2ec0631816ab4e0d157f10c573be1b69fdb528522cce3513b70b1ca55"
+    "sha256" : "21d166c0a2774cc5d470b3cb0bcf236544ea45b66ca16e73e72e5797ff09e1bd"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/lastN/setNBasedOnTheGroupKey/scenario.json",
-    "sha256" : "3567207bf8c3966243433c857d573297a5b086af47e359a547330c66ec880ad7"
+    "sha256" : "26df8810e9c0ada90ab031c7c19f695db3491c293cc4677283e8e36921252bda"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/map/useIdxToAccessTheIndex/scenario.json",
-    "sha256" : "20be427ea35e627c79d25cb59998e56108627c0e071b9398ab904a14a5558652"
+    "sha256" : "639cdb7d81cfdf2d03f18a4d9aaf88f7b4bebf5061549170ec8053f835faea1e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN-array-element/findTheTopTwoCastMembers/scenario.json",
-    "sha256" : "64842f658bd4a8276dea7f2206c0b6b3c408c2a8422081eedf45a2f70027904d"
+    "sha256" : "c0b521b8f6261a0d39936a90f449541be3236619470bbb2527a9533a0bc3f4fa"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesAcrossMultipleYears/scenario.json",
-    "sha256" : "300e1f76bf307ecbbdb0c8bffba7bcfd4c211383c9041b655feece4bfadf67d1"
+    "sha256" : "bb98315f19db100f7833535422aad3ec2d79935cda7c79ee4c18ab5d051a6d2f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear/scenario.json",
-    "sha256" : "d64d3877583249c2452d3065799e494cc0e990f39f24201bd2e4f3d70b2582f5"
+    "sha256" : "9d37c3e496695dc29c55dff5df737b96765459b055a372d066e336d5105f50fc"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/setNBasedOnTheGroupKey/scenario.json",
-    "sha256" : "36ba230a7e12fa9b8f278076c764652769044aeadbc512fa696d0b6155aba800"
+    "sha256" : "5608622fda6fe4b966ad7094792e1b0ec6b11734c87bf5ab1f20d4063f56d41a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/meta/metaTextScore/scenario.json",
+    "sha256" : "c2a90b9f1a6f5f22f00b096ba1965a828569ee82134eb49689c7a3d0345726e7"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/min/useMinInAGroupStage/scenario.json",
-    "sha256" : "c7676950647fe4acf3058d9d9408c68aa9d378423d98840dcf2eef623d99fbc5"
+    "sha256" : "f5fde5dc185c79b3e3a81de8cc59aee8e724c38f2572fc882a4ee2dc2aaa2522"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsAcrossMultipleGenres/scenario.json",
-    "sha256" : "9c7aff9c83010b4df22b58be562cd0892eaa74f2fa74b3573d6aeb1f7e2efc82"
+    "sha256" : "552a725ba8fb7c35a98fc2a6e047c01a5d535f81cd4c795f03cbbc5ec19531b2"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsForASingleGenre/scenario.json",
-    "sha256" : "a256b42390db32b61d78f9017f2d1d62871ae0d1fc83547723ea437e112d2626"
+    "sha256" : "7e068928cc8fcb536fac24b602e2968b2688475386e93e1ffccd78a08652618f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
-    "sha256" : "d5978f766b1f2a2aa8057bb9fc31fd91b4903dc42b49ddf6613530afd961bcd8"
+    "sha256" : "2249b7aa001738224c2cb2b12e844c2f37373cd4d9940c838c408bfbab3c06b9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/push/collectTheFirstGenreOfEachDirectorSMovies/scenario.json",
-    "sha256" : "764fb7a4b75e1bb32ef789b102389d28232dddca2ded7fe9900bb42543670477"
+    "sha256" : "a227bab04ecfce354f75080f1780ede08f4038b684b484c8aaa16008a7b463fb"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/findTheFirstLineOrLink/scenario.json",
-    "sha256" : "5d79e257328469f90420e543074a2bd4b976f474cb510a8303ee02bf241b251c"
+    "sha256" : "ac9450b896a16facba7066eeb25b8d75740a33b16328465fb0e00429f711c250"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/findTheFirstTier/scenario.json",
-    "sha256" : "7dc50d36bf0d1c22586b38f277e988db9622462de830bfb5bef91292774429d8"
+    "sha256" : "4602e10ba2c9b84ee9cefba18258c4e01de0cfbaaa8b9ad7b1e34d65a77bc64e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/iOption/scenario.json",
-    "sha256" : "94c1d3c3e24b1fbf70391caa517becb394cbf1f781cda85c08453d69ad032a41"
+    "sha256" : "f8c05ecf177b02e7f9064b85a03903023753a12a3bf9e8d1d53bb8ebd0ebaf23"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/mOption/scenario.json",
-    "sha256" : "cbe565dbad2cae52ff83ff60670f759479679f93ca8bcf8f3567ef9ba1dd3c33"
+    "sha256" : "b13c132ae5cc0112b044473fbb6ef97c05351da67ef7f839a6dde0af28d3e9bb"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/sOption/scenario.json",
-    "sha256" : "8f232e8b37aefb051854221f7d1004747c66afc2b283d94efbdd5d01da12cc4a"
+    "sha256" : "9702fabab1d1a20a4824eb94a6102d107a695180c99e9f2e67c6dd7d44b4655e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFind/xOption/scenario.json",
-    "sha256" : "e9fc18739b00d47c5a06fa98f7cc0cee4495b99ae6cbac580a019ce6d4a15d9e"
+    "sha256" : "3c18f8d25c7397e24621102646b332bfaed3280ec970dd4dc4d4652479649729"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFindAll/findEveryLineOrLink/scenario.json",
-    "sha256" : "234d2540f8f6efc83849a65fbe3df7d1580c0725a61a9b2d8b7e2e2db782654f"
+    "sha256" : "ac9db2b9e3303be340b29c69f7bec6ea42d6cd55de17080e39c3d03fbf29c58b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFindAll/findEveryTier/scenario.json",
-    "sha256" : "b264563d942cc50c119b5f9467b583351b0ac79ff181ec7437145b39cb350b80"
+    "sha256" : "8f4c969381c5215bb5e6f2e3dad69912f0dfb319175e95ecb037aeefc3f5561e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFindAll/iOption/scenario.json",
-    "sha256" : "c271e4ee6635d6411685945fd026e9592bb78df2af91535bb10d5c9bdde8b121"
+    "sha256" : "03aed289a1b909ad034af92e13cba5e76b24f7e5cf4a7760261291640f439632"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFindAll/mOption/scenario.json",
-    "sha256" : "701a7a9d47bc5aeee6242e7bdfd7ef0847201031da21d5f02e180414d57c95c8"
+    "sha256" : "90c4e471a0df836759e20147b321fdabd835e2c8ef108c91c222466538e1cc2e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexFindAll/xOption/scenario.json",
-    "sha256" : "66c820c0f3c7c720d51dc24ff3e1945802b6116fbc9b6ac5d63a54630bb7b961"
+    "sha256" : "32964771835798bc6c644b4bd5e3039f023e6e5321fca9f343e3ae7c88b37614"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexMatch/iOption/scenario.json",
-    "sha256" : "9c1622f291d89ed0c348f19b5cfea92bba708bc9d3ecbbbc8d74b13029c7a81e"
+    "sha256" : "b3e781e2e1b7734a18f8c9d3e656de38d07ed3e61bbfbc53c4acbf4012247cf1"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexMatch/mOption/scenario.json",
-    "sha256" : "aa2b1e9c2c2396d1ba8cce3fc1c9c4061b00728f361536cea6d1dffa782e41c3"
+    "sha256" : "fb2e5d575b7e12ceb2677aebfbb0f31d3d682157af7a625e179455404863b583"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexMatch/matchLineOrLink/scenario.json",
-    "sha256" : "4d88cd214656d8cb56fd0d911aae51ecc7e7f9d681d0e386f8bc33d69de0cd72"
+    "sha256" : "0414a454c3f4915f7d61cba4897262a42bdb01adc664a82e112307526b434c5c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexMatch/sOption/scenario.json",
-    "sha256" : "5aaac30431210e57c87cb6107dd2eac151a351da313649c3eb554a3cb781e27a"
+    "sha256" : "73748709023ff61bf2c3242550667172a2d1a7c10ba989bdfaf0a47074a7e808"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/regexMatch/xOption/scenario.json",
-    "sha256" : "ca5cd6cb942d469cc057b06ab66fb6b302a7c44815c7635ec29dcad0300a4a17"
+    "sha256" : "93b9bc6099f76ed0b6b6d30c9bd8ab314eb99b67974e53faf9832886c5765ada"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
@@ -4105,159 +4118,159 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/setField/removeAFieldWithAPeriodUsingUnsetField/scenario.json",
-    "sha256" : "4896745b3bc6ad7848826f339b56f597f13c7b332d9d9d42cacc38bf5d7367c8"
+    "sha256" : "90bad55f6827f7c7f8f1ad706c803c5809904676d995f925d09f71c376f93a59"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnAField/scenario.json",
-    "sha256" : "ca73a5cc84f2236df4dac7ca4ba221e8682ef6815ab0006579ce237dd071e59e"
+    "sha256" : "1a8b0cc35647e1b0a2979e6185944463184e23a65fa64d890474aa849c4df46c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnMultipleFields/scenario.json",
-    "sha256" : "0a711c641459f098e944b5309f174c11a13f5a70dfffd374b7b5c9c151649018"
+    "sha256" : "aeea5f6e766b7a557e1699cda30612ba98a4286c0fe8275ce7d4cd615c72d8d1"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sum/totalTheVotesByRating/scenario.json",
-    "sha256" : "a6e691408afd450afb7cb054900922e37eede895c643d71d5b3efd598afc4f80"
+    "sha256" : "6897b0bf9136e5dcaba897eb9393067de5f73a2e1522b91a141653a54df6b63f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingAcrossMultipleRatings/scenario.json",
-    "sha256" : "bb74126de8c6ba5ff3a9a4048ffbaa5d6455be9407e862ad4cb1b43c04ef7077"
+    "sha256" : "6499642dd9011dca1d9fff9e2e891b19f4a28696b03181855b49a97a0515f6d3"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/top/findTheTopRatingInAGenre/scenario.json",
-    "sha256" : "49525d957d45ca1c4eda22c8c8829da59f9b983aff38b251fc1d34cb208f4bc1"
+    "sha256" : "7927f893f071c801e2750d7ec437a89f0d931c2d14bed415ed818ec9a324c44f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheHighestRatedMoviesForEachGenre/scenario.json",
-    "sha256" : "9b2450f80283414298a75e4f59bd5e055a4a56b961fe2f9325a9a8666387abfc"
+    "sha256" : "8a2da7c4245c354e952477101bd50b689ebfdcd81a101dd6994eda901e52c359"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
-    "sha256" : "c00273bdf10a7ad0ba29a9e4f603963c802b0be41588284f15a273a45343d6ba"
+    "sha256" : "30b7bf16382743149778b8ed40f0c39343c92c268ac7bc7421c8b6c6680d1e71"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
-    "sha256" : "41d6f7d0c8c7e6a079d81a312152f7bcf69a761c4f0b3aa4cf0e618c088a02e4"
+    "sha256" : "c03eea243ea7a78f1238b13bfd82b819f0c499f7377f68cbc0ca555530cfce66"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/and/combineConditionsOnOneField/scenario.json",
-    "sha256" : "724c99c1eeb7e9a577d0f2c16d12e6c49bf1619a9fe97feba1b675c3fc414f34"
+    "sha256" : "09dba77bcdcb6e932dcb10f1a38b463969d05f9fd5dc3d194e6da36e64009edd"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/and/matchEitherValueWithIn/scenario.json",
-    "sha256" : "347d08a8cbacdf7ad365945a1007114b954fa4aed1dc7648b032710a4aa000fc"
+    "sha256" : "2d59c56c5996f1c895d9f7b6eaaabdb4a03c2aa4373e11d64e84ec79470e7e34"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/elemMatch/matchAnElementWithDotNotation/scenario.json",
-    "sha256" : "cc872040b9a7769c9efa9dcdae8f99546d00d8edf4e85b90af520624e8b5413e"
+    "sha256" : "8e7a88d3e093474ce1a6c28e6b7221e2d0fcc182eeaeaaf437fbd97d0d430b10"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/elemMatch/matchWhenNoElementIsXyz/scenario.json",
-    "sha256" : "f7dcab9b6e9e6dec7786daa39a7fd210d8b7f1ef902becf9fee686ef864f6df8"
+    "sha256" : "32e98c53a37b977d5b1f7b901b0f678323cd9633d7134bc0905af7b390522a92"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/eq/matchAQuantityExactly/scenario.json",
-    "sha256" : "c55c07473f85c69affa6ae3e0431de4036882af62cb4bff2f62044f5ef32f4e7"
+    "sha256" : "dbe3187f56eee6d9ed0a52e1cd88d93d9797bbe3871e15378e1a6e02c5b7003a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/eq/matchAnArrayExactly/scenario.json",
-    "sha256" : "ca6f1382948c2f435a658181752fc94fbe3e65c7af3ba1bec334db5ce32408e5"
+    "sha256" : "fe974a4fbef6fa58ec3c3c13bb0b7535a35e110e705f9f3492206eafb04e4429"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/eq/matchAnEmbeddedFieldWithDotNotation/scenario.json",
-    "sha256" : "b8dd36fa7ff3d67e51ec50a7e280cb96dda1559ee8cc95415951d836f8738972"
+    "sha256" : "e051b9e49ef9ea14345aed03252bd25b4d5902c1c13bea6ea44ca7297ca32533"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/eq/matchOneArrayElement/scenario.json",
-    "sha256" : "413b8f879cbd46a8c25da4344dd12e1524586bc7e318ef92db8a531947872e69"
+    "sha256" : "152eb05e6e34c2b5fd189b8a5449343f007acf377a82b8d769f8098e8a6738de"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/gt/performAnUpdateBasedOnEmbeddedDocumentFields/scenario.json",
-    "sha256" : "4152b19d81e1fef5378c19d59ab0f72dcba056dc22060fa68bd5b92decf910fc"
+    "sha256" : "cf6bc8b8ef52d408d66c6783bb41966eeb0ab1ba01e1bc3d97afe1ecc06099ba"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/in/matchValues/scenario.json",
-    "sha256" : "0ecd01a9f6bf85afaf0ac351c48a23a42320b42ae46fdf4c1488b126a95618c5"
+    "sha256" : "b27b6b7aa8e03929cd85294cdc8306a76d9bcd30a8bd596d95ed9fec2def036e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/in/matchValuesInAnArray/scenario.json",
-    "sha256" : "4a83c4febc4e907c0d2cd33830e5ebb27b2c03b1ffac2d742ca106c5102697b6"
+    "sha256" : "4f079bfb337847e1d798a42c4d9f7347aab102f69428b120a3e9f5b689b4e82f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/ne/useAScalarComparison/scenario.json",
-    "sha256" : "7a0a25579cc316a5f018c43e4751b71646ae2f6304f4473ecb45dd8f8841122a"
+    "sha256" : "95a22c0c117af8b53ddd4119fb69be80d74119b27fcb40f98eb36769f19c0997"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/ne/useAnExactArrayComparison/scenario.json",
-    "sha256" : "580ba6235998c8686a33cd26160d742cb36219571379300cdab01e2656b2628b"
+    "sha256" : "2211e679b5f5ec529d9220404a1d95d217cfd37499472ba46dd709f2d2c5d3c9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/ignoreWhiteSpacesInPattern/scenario.json",
-    "sha256" : "671fca8378cf956ef56928f8bc5ece3963ead09aebb1ac9cd1c19b30f73f6240"
+    "sha256" : "b9fdd8143c1256185398ec493192a4f7d40aeb85781b7f9b4f1440fdbe8e8d07"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/matchLinesThatStartWithS/scenario.json",
-    "sha256" : "32bd2e95ea617a6d7f2e81340a8af45bef55c99a10a4bdba602553401ef82179"
+    "sha256" : "f3c1a7b278f1eafcf3f2eb5079f62b1f555615e1b81d29b2a316fc0d964d9f8a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/matchSAnywhere/scenario.json",
-    "sha256" : "90ac0bd7cd88b82b992a63f22eb61daa6e566933e351d04a66d00844279a655c"
+    "sha256" : "0c97525e6695e08ff1c7f4f620a14b700f178887fc30ddd53855602e9e23aa30"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/performCaseInsensitiveRegularExpressionMatch/scenario.json",
-    "sha256" : "b49dc3d6ccd8be51844be5449612cfcc92e109a8023ae6b6c01021be497c05e4"
+    "sha256" : "80ca64a423fb3071ac3775e881abc8e307d4f100db8a7e9bb657622e1a7e3896"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/useARegularExpressionToMatchCaseInStrings/scenario.json",
-    "sha256" : "e04798bcbc24d511707e60741bc7892a48c3856bf084e73120d639e1b6f34318"
+    "sha256" : "de161a762b778b756f754bfb629622f27096c59e10a24fc539cfb85ba0a2f4f9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/regex/useTheDotCharacterToMatchNewLine/scenario.json",
-    "sha256" : "8954089366f785f319b32e3b207821bead76f65400ec59fbd50c842b3a689cb5"
+    "sha256" : "eac58a27119322384b556a63bed1f4ec8f2c4b45f33fde1aa686de71631d8cc3"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/caseSensitiveExactStringSearch/scenario.json",
-    "sha256" : "e4a02228441f8d14e6774ca829055a420f11d7e75b0a7e6bc0b25824254a134b"
+    "sha256" : "3c492fd812d9f46f88d19fba9709177b361c22fca37f03c1ced7dcd5dbed53cf"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/caseSensitiveNegatedTermSearch/scenario.json",
-    "sha256" : "65c8eb528aa1c1c142ace8c02749ff3de6c976d3f45a9f9e08b0fc795a5a3e38"
+    "sha256" : "a0c09fb5f75cb8b89fcdb5b45e3df2ac02fb0a97070c555c9c07525ca5955028"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/diacriticSensitiveNegatedTermSearch/scenario.json",
-    "sha256" : "87414df23ce4238a5097ebe992d3f4b6789d5132899a967e811f33775f6fab6f"
+    "sha256" : "87093cda44b614cab8d8802a110d4364f8ba3428ba29d52e447a9fb4f1d6361d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/diacriticSensitiveTermSearch/scenario.json",
-    "sha256" : "150cd32258e9ec5d4a29830341605b93ba6ad4c6d8bf211893c5f9deb388ffb6"
+    "sha256" : "27c4cf816af01a921d1ec588ddcad0c6110aab31aafb2a462acdc5acadb58602"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/matchAnySearchTerm/scenario.json",
-    "sha256" : "32aa4fa5e4eec135cd3bee9c6c2de69720d180b5ba10b3ac2fe728e4450c16c4"
+    "sha256" : "158afa0e05fc9797f3bea8e1de017fcd599b8945ce2646eb504c5e6b05a98f9a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/searchForASingleWord/scenario.json",
-    "sha256" : "8b1e3366a211b4488ec3e436f4e3c36c853b00848523be795732eb16467f26a0"
+    "sha256" : "ae462581f0349aac03050b6c777cd00bc6b32c8133e700bb4112f52113c2a26e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/searchForOneExactPhrase/scenario.json",
-    "sha256" : "426c1e35c9e63445a26c83a6100779281ec762c4ddb69ecbea7df6f3ef89dca7"
+    "sha256" : "dd154428b060633aca235ea3892c8ef5e973b3c187ff6ff331619b4a73d88eae"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/text/searchForTwoExactPhrases/scenario.json",
-    "sha256" : "1cfc8e086644e52c7cfb1665cf01d62566e8c01e74a7a2fd86bc40b784743c00"
+    "sha256" : "ae4dad717efbb7e6116e4fb740d10e22f10cbcefc419710b9960884b8ae40ee4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/type/matchSeveralTypesByAlias/scenario.json",
-    "sha256" : "ec41d45dcb2e868ce50c0cccf78fc0125888ac5b24ae0307f63d87de50e1012f"
+    "sha256" : "cb62636df00ecb4238b00fee8950fc662d1428bada1a51bf19483c33617b113b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/type/matchStringRatingsByTypeAlias/scenario.json",
-    "sha256" : "2741f4823db3a89035cfd0598da9fd7d643e567ac61b84d7ecc84eba2ad36f8f"
+    "sha256" : "18799777b5f9f0acae8c0fab39d43af5896b1c3dbf3b9e2fb5746a515cd115da"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/type/queryingByArrayType/scenario.json",
-    "sha256" : "26e8a88bb193a192e2bbad6a5334ea95dceef81dc5e017b2cbc38514bec55f98"
+    "sha256" : "89cc413f8a8c01184b10a5d341ae3151db8519b185e46507443630277c1e7f9b"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",
@@ -4281,159 +4294,159 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupByNull/scenario.json",
-    "sha256" : "0cb67947c9e0defb875d7cd0e66147f2544a2d42fd9a957315246a8a7338aa95"
+    "sha256" : "72cb8b7a186d1b175b30890c6aabd0f347db97a61d5ad481555d456a17eb40f3"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupByRating/scenario.json",
-    "sha256" : "d8015deb73c4cd96f6177904c6563bac1cf4fdceb6d87a54f2afee6f1cac5aaf"
+    "sha256" : "88ea19fb1e5ba06537a4de5bee3030faa82173180f2507c2b4dddfd4f5c47f61"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupByYear/scenario.json",
-    "sha256" : "77834ac8a36d3cf7cf88b905e32dbdf99440fdbb835eeb2c259e85b7eb78efd6"
+    "sha256" : "3303851169db3736472d0882af4b9dd3dcb9d74ed4027353206f25a84f7e11be"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupDocumentsByYear/scenario.json",
-    "sha256" : "398d903111715ef7bb881b3dbfbcbfffb573499a12244c8ca05f876e9de6453e"
+    "sha256" : "64dce8c32d1059bf26c77e96c45e904c1337fd39623cb9ca27fc7c929b943adc"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/groupTitlesByYear/scenario.json",
-    "sha256" : "cb481877883fee8abc0cb42a0fb31a4f300f80090acc0b7a60691355c7c11950"
+    "sha256" : "c3d3347381d68d1be21dec319d67248b39f81d63ec3623d14a9b8cebed2d4c70"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/group/retrieveDistinctValues/scenario.json",
-    "sha256" : "df1dbd8ecdec3b466e543e2eb40bce6d2f9a25d3ff8d6ee9002e3605446808e8"
+    "sha256" : "aa2c3ad5d9370975c6c430c87fa0f59961175a96c177bc62c0b050876fed15a5"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/limit/returnTheFirstFiveMovies/scenario.json",
-    "sha256" : "d51f296e35fe693d60b58114389199606288209b092abdb4b02abc798f7f7551"
+    "sha256" : "a97be9216edf971bbc3b907b7cbab1e34a866b376e357647577796885eacd42d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithLocalAndForeignFields/scenario.json",
-    "sha256" : "752fbcfdbff22657ce1f77a32e99bed5f43a0e3645f8c30a0a5cba7b2bbe7cc2"
+    "sha256" : "c73657d697ab7e1f59061a0cee766ad2e0453ceb11de41613cac5b7387c3b336"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithVariablesOnly/scenario.json",
-    "sha256" : "4d7d2a250bc7ef2ed14aacd4a286b3a059ba777969ebeaacdd41b1bd9193acac"
+    "sha256" : "632dc2d697c75cc7bb715a40bb1637681c2e655c79975e218d3251368193e258"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/useMultipleJoinConditionsAndACorrelatedSubquery/scenario.json",
-    "sha256" : "80801e3e0b245502f97bdc9a23fa146b74f30bdd2b1994c58e466332bb5c8ddb"
+    "sha256" : "2c3e5c6337f9472d1caf560d35ff1b82348f5f1f2ae4e103a81c02aee7865e41"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/mergeResultsFromMultipleCollections/scenario.json",
-    "sha256" : "fc5d5930feaa01cc72d0242618b2e0b006355658f899c1e0ae738635bd57bf90"
+    "sha256" : "5c9827a3037be2247111e3d0ba6cbd6167337f842ad5f2eb2a7d0c63e1958f34"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/onDemandMaterializedViewUpdateReplaceData/scenario.json",
-    "sha256" : "2cc5e658cd429a4470967fa5e80553232b97aae781595c4ab8b95822850ac3f0"
+    "sha256" : "03e7bb5cfe63183c8c96d47bec76b5abae052401f8508ca1511597c79dab4985"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/onlyInsertNewData/scenario.json",
-    "sha256" : "5f064cda30cf4b0b7dc8d499322585f5eeac503811921aea3d689abc71dc487b"
+    "sha256" : "681de1fb2e8f00bb7cf1c5f9ff98b5229d58a644a8d46f964afd770b22299b9c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/summarizeRatingsIntoAnotherCollection/scenario.json",
-    "sha256" : "e90c0eb9259776d8d3dbaa80833b384f74cdef470c8e3481cb9ea2e5396ec735"
+    "sha256" : "f346bf2a648f84cdcbec09d27481a6dd623ea7a01896a74e7081daa28b35d237"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/out/outputToSameDatabase/scenario.json",
-    "sha256" : "3b32bc611754dbcc53f0632fb373a829468eaa9dd485be8b62a75b06bcf0e43d"
+    "sha256" : "a757ef308e606ce9d81bbbf8f6eb25a4586106a58e7eab5196ba123180b1c2f5"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/excludeAnEmbeddedFieldWithDotNotation/scenario.json",
-    "sha256" : "505f90a467dfd29da5cc3be75e5a1d955b4ef64a5c9ab2ca9de2fc731ba6bfb5"
+    "sha256" : "da87641757ca5a7fda38144051fd274820127169b94f5f0c6dcf82f09255d6ca"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/excludeFieldsFromOutputDocuments/scenario.json",
-    "sha256" : "ec584e58a7d14b5960225874cea9be799385de1ef00c0a20a8f4b2d36547630b"
+    "sha256" : "2c437f8fa43b45df85ad18524e6be40199725e996ae2ea1be8640b46d8dc81b5"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithANestedDocument/scenario.json",
-    "sha256" : "462c6c49f0d250e4601986d80954a3f770e19de8b2352a4b2526e2e6d68d8d96"
+    "sha256" : "863f06314a249b0ba89183d6aa694192f0dadb102ee5310c3e3060fd489e3a6b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithDotNotation/scenario.json",
-    "sha256" : "06249527af1fc1d1f01ef60213952ece93a817fc95c9df7f88a5f468d039e649"
+    "sha256" : "cc97305e91e31e51a7cbe13bf4d56adce48d4e8d6bb344d03972e5306e221d5e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/projectAnArrayOfFields/scenario.json",
-    "sha256" : "9a3887e4c20872a1bacce7dc408e3e9be134840074e3186e114d9a57b73dac10"
+    "sha256" : "dfe2267c213e8d0ae941ae840ef3059e303d1f5d1459c7a21635d70056becf7b"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/projectAnArrayWithAMissingField/scenario.json",
-    "sha256" : "33ea2e209b9ccf14498c6efafb3d438998652364843dd02fc6515aed931a0102"
+    "sha256" : "a44ea033957c44602bd7e1586395580dbc7c7421148b0f3fd2e652be2a01c1f4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithANegativeUpperBound/scenario.json",
-    "sha256" : "7a13a03ced4913c95290ecffa84aec33aac5844b9c7b1702b6172f6415da2822"
+    "sha256" : "0422388b90a93a354a8c75735cf055cd9b752868f9e3c1f7560880d17d3cc833"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithAPositiveUpperBound/scenario.json",
-    "sha256" : "9649109dcf1bce355d4eb59eea8dd4e05c84c7eb461e7a70d404754569488902"
+    "sha256" : "543096e2a1513f6aa6418c87257d3b28e3450bf85d93acd468f8591e5ccd569a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeAndMaximumRuntimeForEachYear/scenario.json",
-    "sha256" : "1fc396a5a95144527cd898547c937bb046ceea9488c1c903d81a209f8c34cb81"
+    "sha256" : "ab2001f8064438c891b3f623dd70d0260bfeab0c9b670179ed10834deccac7fc"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachRating/scenario.json",
-    "sha256" : "9d0a43e9f37c687d2ec57fd11b3ddaec6155dbc18e9549e1b70bd3d5172fe738"
+    "sha256" : "905f7adf4b06d65efa5e20e07ccabe979c8a9fc98662218cf9407c4555b0d18e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachYear/scenario.json",
-    "sha256" : "fcc1c87bac3ca93a6266a42cc02995be9fda6232d0c0c2a51e66047738c0aaa1"
+    "sha256" : "49e90fc6c3c85cae9630cf56d8d7ed7f06f02ba3c1c0b104ae0e43ba178d5651"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainMovingAverageRuntimeForEachYear/scenario.json",
-    "sha256" : "34ffaaa5945fa6df31f69c13825760856703c5b364fe47c5968d6b93ac7273cf"
+    "sha256" : "3af5441557db77081e983781c04d423042bb0959ba55f524dea93425500bb4ff"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/sort/ascendingAndDescendingSort/scenario.json",
-    "sha256" : "a78b3f0b9dc7e5ea0ea692ddef7f34526ebdffed2304dd27104c8c8bd7840959"
+    "sha256" : "583b1f85e3e766881431701abfed6fe75222cd8c74ad666b12e0c5a1678fd759"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/unwind/groupByUnwoundValues/scenario.json",
-    "sha256" : "ffcdad3c7039d14148e43a9b20ea7ed2e5e8fe9a1cab25dfe97b4ed58257e323"
+    "sha256" : "b1b82f74da61f1c7e3f7ede310580f29299466545769400245eded0a5ba8e992"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/unwind/includeArrayIndex/scenario.json",
-    "sha256" : "a8339290bd5d9956fa0f7d21f1e1dca0f923fe5c09fe54e22e91860f44ce2a83"
+    "sha256" : "875472c5feca558eb9e730136b8a6333594ad01b9eb8d704e59fdbf3258a57b8"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/unwind/preserveNullAndEmptyArrays/scenario.json",
-    "sha256" : "fc3ab79c07634e542ab8c76550ebac04ee85a39a85e082c9a48ae99531d680f6"
+    "sha256" : "78d48901d3c1d1ab424934661ed5a57e39a8df64837a5b9cf6c96a766d623154"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/unwind/unwindMultipleArrayFields/scenario.json",
-    "sha256" : "33a256dc159bf043edcbff22eb78169eab7564491e1d9c60fae6f5f4de5e5804"
+    "sha256" : "309ef4d35d09f34c66418dffdceacbba873ad73f3e302983be891e626294b9d9"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/addToSet/addToArray/scenario.json",
-    "sha256" : "62021b6871ee147b4deb5d380fcc716b243488e6d1e9424152b8239c1991a0ab"
+    "sha256" : "c65e2e1543aa205b10b209091f871c1781c67697a9526ec5356184b87a58b369"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/addToSet/valueAlreadyExists/scenario.json",
-    "sha256" : "3dd7f6afb62af2af92038a202c29aa5e0bd46841fb854ea0338bdad09c871d32"
+    "sha256" : "68bf7a790cbd4f2cc275b5165148c7570472b2dd5e50d6d08921cf12d0f209fd"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/positional-all/updateAllDocumentsInAnArray/scenario.json",
-    "sha256" : "1a435e4cf690e290a2a370f3c4e418b8a3d74411802066dd8e734ddfe6583514"
+    "sha256" : "1e7f370fb47654469b9ade2e5629a5feaef1b4d63dcbcab4108c702aa59a4e9f"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/positional-all/updateAllElementsInAnArray/scenario.json",
-    "sha256" : "1c36e64e5a860d392f99d2a786c8ab8098a51fe441001282f512845d8dfd668a"
+    "sha256" : "5af7af314ac09247a7c4580e23831197bf5708b10114ce9f0a7cfd4988400123"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/push/appendAValueToArraysInMultipleDocuments/scenario.json",
-    "sha256" : "bdb744f3563852ebb26e063980993d43f71d07061aec5158256fa1894106f0b9"
+    "sha256" : "711f40b6dbaa6c07bbc4bc2897ac9aef88ec623ddaab13f8184feed1c9c3a0b4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/rename/renameAFieldThatDoesNotExist/scenario.json",
-    "sha256" : "51ff179c1698d0f7bff284be9edbb126bdb17bbd3b47cd8c1717a1eed6af5061"
+    "sha256" : "7e5c89b01466f34feb4d594186be2b9404712cc01042ffc0e5c247613cb17b5e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/updates/unset/removeFieldsFromADocument/scenario.json",
-    "sha256" : "1652aa8ddd7e6f52c01a7e25ca78255a6e0e968bfd916ec3fc1a79186f2ad923"
+    "sha256" : "d3347e1f683fc0a7fb9ac1ade737de2308fa70926d0fae82591d5a04fe1884a6"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/printed.json",

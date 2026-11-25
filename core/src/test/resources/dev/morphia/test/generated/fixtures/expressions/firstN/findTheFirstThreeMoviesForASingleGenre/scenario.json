@@ -106,7 +106,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "EQ_SHORTHAND",
       "NAMED_ARGUMENTS"

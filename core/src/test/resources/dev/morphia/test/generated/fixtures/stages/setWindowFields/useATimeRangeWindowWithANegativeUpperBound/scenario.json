@@ -501,7 +501,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "FIELD_OPERATORS_AND",
       "NAMED_ARGUMENTS"

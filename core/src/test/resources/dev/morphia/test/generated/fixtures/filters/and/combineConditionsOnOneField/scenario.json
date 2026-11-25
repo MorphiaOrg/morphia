@@ -30,7 +30,7 @@
     "none": "the page publishes no result"
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "FIELD_OPERATORS_AND"
     ],

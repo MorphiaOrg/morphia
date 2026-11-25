@@ -265,7 +265,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "REGEX_OPTIONS",
       "NAMED_ARGUMENTS"

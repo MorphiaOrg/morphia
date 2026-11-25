@@ -122,7 +122,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "PROJECT_ID_FIRST",
       "NAMED_ARGUMENTS"

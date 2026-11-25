@@ -199,7 +199,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "COND_ARRAY",
       "REGEX_FORM",

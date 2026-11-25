@@ -314,7 +314,9 @@ a test method:
    that prints results from a collection nothing seeds. `$cond`'s `{if, then, else}` is its array,
    which Morphia writes, under `COND_ARRAY`.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
-   case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
+   case uses. Its results compare as a multiset: the serialization check already proves Morphia
+   sends the documented sort, and the order the server returns is not Morphia's, nor fixed when
+   sort keys tie, or after `$group` or `$setWindowFields`, or in a write's unsorted read. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
    plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter
    each, `NAMED_ARGUMENTS` when it calls an operator that takes only named arguments, whose
    order the server ignores and Morphia chooses, `REGEX_FORM` when a query's string pattern or

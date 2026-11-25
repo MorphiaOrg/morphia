@@ -338,7 +338,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "NAMED_ARGUMENTS"
     ],

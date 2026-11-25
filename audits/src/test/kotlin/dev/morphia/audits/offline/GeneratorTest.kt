@@ -281,6 +281,16 @@ class GeneratorTest {
         assertTrue("PROJECT_ID_FIRST" in withoutId && "PROJECTION_FLAGS" in withoutId, withoutId)
         // The page's index travels with the case; the runner creates it before the action.
         val found = generation.cases.first().manifest
+        // Generated results compare as a multiset.
+        assertEquals(
+            "UNORDERED",
+            BsonDocument.parse(
+                    generation.files.getValue("core/src/test/resources${found.scenario}")
+                )
+                .getDocument("comparison")
+                .getString("order")
+                .value,
+        )
         assertEquals(
             BsonDocument.parse(
                 "{collection: 'inventory', keys: {qty: 1}, options: {name: 'byQty'}}"
@@ -835,6 +845,8 @@ class GeneratorTest {
         val scenario =
             BsonDocument.parse(generation.files.getValue("core/src/test/resources${case.scenario}"))
         assertEquals("sample_mflix", scenario.getString("dataset").value)
+        // Even sorted, results compare as a multiset: serialization proves the sort is sent.
+        assertEquals("UNORDERED", scenario.getDocument("comparison").getString("order").value)
         assertTrue("sample_mflix" in scenario.getDocument("skipped").getString("results").value)
         assertEquals(
             // $top's named arguments may come in any order.

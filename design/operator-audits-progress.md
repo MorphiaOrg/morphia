@@ -2911,3 +2911,14 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   they write an array), a `$` key in a sort document (`$natural`, which the codec writes as
   `sortBy: 1`), and a document inside a `$lookup` variable's array, which fails in its
   `DocumentExpression` as it does in a document literal. Round 3 found an empty sort document, which emitted `sortArray(x, )`; it is now a gap.
+- Unordered results: generated scenarios compared every result list in order, though the server
+  fixes the order only when the action sorts, and not even then when sort keys tie. They now
+  compare results as a multiset: the serialization check already proves Morphia sends the
+  documented sort, so the order the server returns tests the server, not Morphia. A first rule
+  (in order after a last `$sort` that nothing regroups) was rejected in review: Codex showed tied
+  sort keys, `$sortByCount`'s equal counts, `$setWindowFields` after a sort, and a write's
+  unsorted paired read inheriting the pipeline's sort, each failing a legal order. Converted
+  legacy cases keep their own order. `$meta`'s text-score find, excluded in #4596 because it ties
+  on score, now generates (510 to 511). `$replaceWith`'s pivot passes behavior now, and stays
+  excluded for a different reason: its page prints the first stage's output as the pipeline's
+  result.

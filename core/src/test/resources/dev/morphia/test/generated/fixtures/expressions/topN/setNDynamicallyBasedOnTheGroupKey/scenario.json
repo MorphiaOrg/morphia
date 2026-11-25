@@ -289,7 +289,7 @@
     ]
   },
   "comparison": {
-    "order": "ORDERED",
+    "order": "UNORDERED",
     "rules": [
       "COND_ARRAY",
       "NAMED_ARGUMENTS"
