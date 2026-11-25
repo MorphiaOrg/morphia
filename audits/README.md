@@ -29,6 +29,14 @@ They need no MongoDB, docs checkout or token. Run them with `-Dmorphia.mapper=cr
   prints the untested scenarios by reason and writes all of them to
   `audits/target/untested-scenarios.json`, with the test each needs: the work queue.
 
+`ApiCoverageTest` reads Morphia's operator tags (`@aggregation.expression $x`,
+`@aggregation.stage`, `@query.filter`, `@update.operator`) from core's sources:
+- every run reports the documented operators with no tagged factory, with the untested scenarios
+  each blocks, in `audits/target/missing-api.json`;
+- a `NO_MORPHIA_API` baseline entry that names only an operator fails once that operator is
+  tagged: its test can be written now. An entry that names an operator and an option stays until a
+  test proves the option, since a tag says nothing about options.
+
 A docs bump: pin the new commit in `config/manual-baseline-sources.json`, bundle and parse the
 pages, run `ExtractMainKt`, then review the scenario, inventory and baseline diffs.
 
@@ -71,7 +79,7 @@ Each runs through the exec plugin from the repository root:
 | `catalog/scenario-plan.json` | The pages and example destinations extraction reads. |
 | `catalog/documented-examples.json` | Every example on the current operator pages, and the scenario that holds it; the source text of every example without one. |
 | `catalog/example-overrides.json` | Reviewed overrides, each keyed by its example's page, title and block digest: exclusions, digest-guarded patches, skips, order and rules. Also the sample datasets an example may query. |
-| `catalog/untested-examples.json` | The reviewed baseline of scenarios with no test, each with a reason: `NOT_WRITTEN`, `NO_MORPHIA_API` or `OUT_OF_SCOPE`. |
+| `catalog/untested-examples.json` | The reviewed baseline of scenarios with no test, each with a reason: `NOT_WRITTEN`, `NO_MORPHIA_API` (with the `operator`, and `option` for an option gap) or `OUT_OF_SCOPE`. |
 | `catalog/example-names.json` | The 93 reviewed names for examples whose page title is generic (`main`) or shared. |
 | `catalog/name-backport-review.json` | Reviewed stems for name collisions. |
 | `catalog/name-backport.json` | The ledger that renamed master's `testExampleN` tests and `exampleN` fixtures to descriptive names. |

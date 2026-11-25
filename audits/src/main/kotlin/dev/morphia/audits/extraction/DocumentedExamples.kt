@@ -110,7 +110,18 @@ data class ExampleInventory(
     val pages: List<DocumentedPage>,
     val skipped: List<SkippedPage>,
     val summary: Map<String, Int>,
+    /**
+     * Every operator the pages document, those without examples included: what Morphia's API
+     * coverage is checked against.
+     */
+    val operators: List<DocumentedOperator> = emptyList(),
 )
+
+/**
+ * An operator a page documents: its [context] (`aggregation/expressions`, ...), its [token]
+ * (`$maxN`, which `maxN-array-element.txt` documents), and its [page] (`<context>/<operator>`).
+ */
+data class DocumentedOperator(val context: String, val token: String, val page: String)
 
 object DocumentedExamples {
     const val PATH = "audits/catalog/documented-examples.json"
@@ -207,6 +218,11 @@ object DocumentedExamples {
             commit = commit,
             pages = documented.sortedWith(compareBy({ it.context }, { it.operator })),
             skipped = skipped.sortedBy { it.path },
+            operators =
+                operators
+                    .map { DocumentedOperator(it.context, it.token, it.id) }
+                    .distinct()
+                    .sortedWith(compareBy({ it.context }, { it.token }, { it.page })),
             summary =
                 ExampleStatus.entries.associate { status ->
                     "examples.${status.name.lowercase()}" to examples.count { it.status == status }

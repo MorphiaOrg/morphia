@@ -29,6 +29,10 @@ data class UntestedExample(
     val scenario: String,
     val reason: UntestedReason,
     @get:JsonInclude(JsonInclude.Include.NON_NULL) val detail: String? = null,
+    /** For `NO_MORPHIA_API`: the operator Morphia lacks, or whose [option] it lacks. */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val operator: String? = null,
+    /** For an option gap: the option Morphia's factory for [operator] doesn't support. */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val option: String? = null,
 )
 
 /** `audits/catalog/untested-examples.json`: the reviewed baseline of untested scenarios. */
@@ -149,10 +153,13 @@ object Coverage {
             .keys
             .forEach { problems += "$it is in the untested baseline more than once" }
         baseline.examples
-            .filter { it.reason == UntestedReason.NO_MORPHIA_API && it.detail.isNullOrBlank() }
+            .filter {
+                (it.reason == UntestedReason.NO_MORPHIA_API) != (it.operator != null) ||
+                    it.option != null && it.operator == null
+            }
             .forEach {
                 problems +=
-                    "${it.scenario}: NO_MORPHIA_API must name the missing operator or option"
+                    "${it.scenario}: NO_MORPHIA_API names the operator Morphia lacks, or that operator and its missing option; no other reason does"
             }
         val names = untested.map { it.scenario }.toSet()
         (reviewed.keys - names).sorted().forEach {

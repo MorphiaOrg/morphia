@@ -12,7 +12,7 @@
     {
       "scenario": "aggregation/expressions/createObjectId/generateIdentifiersInAView",
       "reason": "NO_MORPHIA_API",
-      "detail": "$createObjectId has no tagged Morphia factory"
+      "operator": "$createObjectId"
     },
     {
       "scenario": "aggregation/expressions/dateDiff/weeksPerMonth",
@@ -25,17 +25,17 @@
     {
       "scenario": "aggregation/expressions/deserializeEJSON/deserializeExtendedJsonDocument",
       "reason": "NO_MORPHIA_API",
-      "detail": "$deserializeEJSON has no tagged Morphia factory"
+      "operator": "$deserializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/deserializeEJSON/deserializeSpecificFields",
       "reason": "NO_MORPHIA_API",
-      "detail": "$deserializeEJSON has no tagged Morphia factory"
+      "operator": "$deserializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/deserializeEJSON/useOnErrorForErrorHandling",
       "reason": "NO_MORPHIA_API",
-      "detail": "$deserializeEJSON has no tagged Morphia factory"
+      "operator": "$deserializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/filter/accessTheIndexOfEachItemInAnArray",
@@ -44,7 +44,7 @@
     {
       "scenario": "aggregation/expressions/hexHash/hashAFieldValue",
       "reason": "NO_MORPHIA_API",
-      "detail": "$hexHash has no tagged Morphia factory"
+      "operator": "$hexHash"
     },
     {
       "scenario": "aggregation/expressions/map/accessTheIndexOfEachItemInAnArray",
@@ -93,42 +93,42 @@
     {
       "scenario": "aggregation/expressions/serializeEJSON/canonicalExtendedJsonExample",
       "reason": "NO_MORPHIA_API",
-      "detail": "$serializeEJSON has no tagged Morphia factory"
+      "operator": "$serializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/serializeEJSON/relaxedExtendedJsonExample",
       "reason": "NO_MORPHIA_API",
-      "detail": "$serializeEJSON has no tagged Morphia factory"
+      "operator": "$serializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/serializeEJSON/serializeSpecificFields",
       "reason": "NO_MORPHIA_API",
-      "detail": "$serializeEJSON has no tagged Morphia factory"
+      "operator": "$serializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/serializeEJSON/useOnErrorForErrorHandling",
       "reason": "NO_MORPHIA_API",
-      "detail": "$serializeEJSON has no tagged Morphia factory"
+      "operator": "$serializeEJSON"
     },
     {
       "scenario": "aggregation/expressions/sigmoid/scaleScoresWithASigmoid",
       "reason": "NO_MORPHIA_API",
-      "detail": "$sigmoid has no tagged Morphia factory"
+      "operator": "$sigmoid"
     },
     {
       "scenario": "aggregation/expressions/similarityCosine/computeRawAndNormalizedCosineSimilarity",
       "reason": "NO_MORPHIA_API",
-      "detail": "$similarityCosine has no tagged Morphia factory"
+      "operator": "$similarityCosine"
     },
     {
       "scenario": "aggregation/expressions/similarityDotProduct/computeRawAndNormalizedDotProducts",
       "reason": "NO_MORPHIA_API",
-      "detail": "$similarityDotProduct has no tagged Morphia factory"
+      "operator": "$similarityDotProduct"
     },
     {
       "scenario": "aggregation/expressions/similarityEuclidean/computeRawAndNormalizedEuclideanDistances",
       "reason": "NO_MORPHIA_API",
-      "detail": "$similarityEuclidean has no tagged Morphia factory"
+      "operator": "$similarityEuclidean"
     },
     {
       "scenario": "aggregation/expressions/sortArray/sortOnMixedTypeFields",
@@ -142,17 +142,17 @@
     {
       "scenario": "aggregation/expressions/toArray/convertBinDataToArray",
       "reason": "NO_MORPHIA_API",
-      "detail": "$toArray has no tagged Morphia factory"
+      "operator": "$toArray"
     },
     {
       "scenario": "aggregation/expressions/toArray/convertStringToArray",
       "reason": "NO_MORPHIA_API",
-      "detail": "$toArray has no tagged Morphia factory"
+      "operator": "$toArray"
     },
     {
       "scenario": "aggregation/expressions/toObject/convertStringToObject",
       "reason": "NO_MORPHIA_API",
-      "detail": "$toObject has no tagged Morphia factory"
+      "operator": "$toObject"
     },
     {
       "scenario": "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
