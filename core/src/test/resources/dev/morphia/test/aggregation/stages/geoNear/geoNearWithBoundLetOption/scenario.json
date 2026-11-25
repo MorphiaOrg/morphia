@@ -61,7 +61,14 @@
       }
     ]
   },
-  "indexes": [],
+  "indexes": [
+    {
+      "collection": "places",
+      "keys": {
+        "location": "2dsphere"
+      }
+    }
+  ],
   "action": {
     "kind": "aggregate",
     "collection": "places",

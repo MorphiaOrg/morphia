@@ -79,5 +79,8 @@
   "requirements": {
     "minimumServer": null,
     "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "the page prints Long(0) where the server stores Decimal128 0"
   }
 }

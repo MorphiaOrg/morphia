@@ -13553,9 +13553,9 @@
         "text" : "db.inventory.find( { qty: { $mod: [ 4 ] } } )"
       } ],
       "detail" : null,
-      "owner" : "query/filters/mod/arrayWithSingleElement",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "arrayWithSingleElement",
       "title" : "Array with Single Element"
     }, {
       "blocks" : [ {
@@ -13568,9 +13568,9 @@
         "text" : "db.inventory.find( { qty: { $mod: [ ] } } )"
       } ],
       "detail" : null,
-      "owner" : "query/filters/mod/emptyArray",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "emptyArray",
       "title" : "Empty Array"
     }, {
       "blocks" : [ {
@@ -13583,9 +13583,9 @@
         "text" : "db.inventory.find( { qty: { $mod: [ 4, 1, 2, 3 ] } } )"
       } ],
       "detail" : null,
-      "owner" : "query/filters/mod/tooManyElementsError",
-      "status" : "OWNED",
-      "stem" : null,
+      "owner" : null,
+      "status" : "UNOWNED",
+      "stem" : "tooManyElementsError",
       "title" : "Too Many Elements Error"
     }, {
       "blocks" : [ {
@@ -16347,9 +16347,9 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 533,
+    "examples.owned" : 530,
     "examples.unnamed" : 5,
-    "examples.unowned" : 50,
+    "examples.unowned" : 53,
     "examples.unsupported" : 104,
     "pages" : 290,
     "pages.skipped" : 10,

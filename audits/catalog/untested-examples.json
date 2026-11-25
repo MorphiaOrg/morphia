@@ -269,10 +269,6 @@
       "reason": "NOT_WRITTEN"
     },
     {
-      "scenario": "query/filters/mod/arrayWithSingleElement",
-      "reason": "NOT_WRITTEN"
-    },
-    {
       "scenario": "query/filters/mod/divideBy45",
       "reason": "NOT_WRITTEN"
     },
@@ -281,15 +277,7 @@
       "reason": "NOT_WRITTEN"
     },
     {
-      "scenario": "query/filters/mod/emptyArray",
-      "reason": "NOT_WRITTEN"
-    },
-    {
       "scenario": "query/filters/mod/negativeDividend",
-      "reason": "NOT_WRITTEN"
-    },
-    {
-      "scenario": "query/filters/mod/tooManyElementsError",
       "reason": "NOT_WRITTEN"
     },
     {
