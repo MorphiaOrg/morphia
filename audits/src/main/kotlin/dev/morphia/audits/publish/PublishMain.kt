@@ -9,7 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 private const val USAGE =
-    """Usage: PublishMainKt findings <tree> <committed-inventory.json> <audit.log|->
+    """Usage: PublishMainKt findings <tree> <committed-inventory.json> <audit.log|-> <extraction.txt|->
        PublishMainKt publish <findings.json> <policy.json> <journal.json> <pom.xml> <OWNER/REPO> [--publish]"""
 
 /**
@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
     fun read(path: Path) = Files.readString(path)
     when (args.firstOrNull()) {
         "findings" -> {
-            require(args.size == 4) { USAGE }
+            require(args.size == 5) { USAGE }
             val tree = Path.of(args[1]).toRealPath()
             val current = AuditJson.exampleInventory(read(tree.resolve(DocumentedExamples.PATH)))
             val overrides = AuditJson.overrides(read(tree.resolve(Overrides.PATH)))
@@ -36,10 +36,11 @@ fun main(args: Array<String>) {
                     AuditJson.exampleInventory(read(Path.of(args[2]))),
                     current,
                     ApiCoverage.missing(current, ApiCoverage.tags(tree), baseline),
-                    Coverage.missingScenarios(tree, current, overrides),
+                    Coverage.missing(tree, current, overrides),
                     args[3].takeIf { it != "-" }?.let { read(Path.of(it)) },
+                    args[4].takeIf { it != "-" }?.let { read(Path.of(it)) },
                 )
-            println(AuditJson.write(findings))
+            println(AuditJson.write(FindingsReport(findings = findings)))
         }
         "publish" -> {
             require(args.size == 6 || args.size == 7 && args.last() == "--publish") { USAGE }
@@ -64,6 +65,16 @@ fun main(args: Array<String>) {
                     )
                     .publish(findings)
             println(AuditJson.write(publications))
+            // A create that may not have happened, or an issue that differs from its finding, is
+            // left for a person; the run says so instead of passing.
+            val unsettled =
+                publications.filter {
+                    it.action == PublicationAction.UNRESOLVED || it.problems.isNotEmpty()
+                }
+            if (unsettled.isNotEmpty()) {
+                System.err.println("Unsettled publications: ${unsettled.joinToString { it.key }}")
+                kotlin.system.exitProcess(1)
+            }
         }
         else -> throw IllegalArgumentException(USAGE)
     }

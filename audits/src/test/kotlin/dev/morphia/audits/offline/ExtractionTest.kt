@@ -300,4 +300,40 @@ class ExtractionTest {
             missing,
         )
     }
+
+    @Test
+    fun aChangedExampleIsRefreshedAndKeepsItsReviewedFields() {
+        val first = Extraction.extract(repository, inventory(), ExampleOverrides())
+        val reviewed =
+            BsonDocument.parse(first.written.getValue(path)).apply {
+                getDocument("comparison")["order"] = BsonString("ORDERED")
+            }
+        Files.createDirectories(repository.resolve(path).parent)
+        Files.writeString(repository.resolve(path), reviewed.toJson())
+        val committed = first.inventory
+        val page = committed.pages[0]
+        val changed =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1, qty: 9 }])"),
+                block(BlockRole.ACTION, "db.items.find({ qty: { \$gt: 8 } })"),
+                block(BlockRole.EXPECTED, "[ { _id: 1, qty: 9 } ]"),
+            )
+        val current =
+            committed.copy(
+                pages =
+                    listOf(page.copy(examples = listOf(page.examples[0].copy(blocks = changed))))
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        val scenario = BsonDocument.parse(refreshed.written.getValue(path))
+        assertEquals(
+            BsonDocument.parse("{qty: {\$gt: 8}}"),
+            scenario.getDocument("action").getDocument("filter"),
+        )
+        assertEquals("ORDERED", scenario.getDocument("comparison").getString("order").value)
+        // An unchanged example isn't rewritten.
+        assertEquals(
+            emptyMap<String, String>(),
+            Extraction.refresh(repository, committed, committed, ExampleOverrides()).written,
+        )
+    }
 }

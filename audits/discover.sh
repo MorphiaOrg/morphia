@@ -3,7 +3,8 @@
 #
 # Report-only discovery against the head of a mongodb/docs checkout. In a throwaway worktree of
 # HEAD it bundles and parses the checkout's operator pages with the pinned parser, runs extraction
-# (which inventories the pages and writes a scenario for every new example), and, with --test, runs
+# (which inventories the pages, writes a scenario for every new example, and refreshes each scenario
+# whose example changed upstream), and, with --test, runs
 # core's operator tests under both mappers against the result. It then writes the findings the
 # Publish job files: missing Morphia API, new examples, examples with no scenario, failing tests.
 # Everything lands in <out-dir>, with summary.md on top; nothing in this checkout changes and
@@ -61,7 +62,8 @@ partial audit dev.morphia.audits.documents.DocumentsMainKt \
     "$out/bundle $content $tree/audits/parser/.venv/bin/python $tree/audits/parser/adapter.py $pages" \
     > "$out/documents.json"
 partial audit dev.morphia.audits.extraction.ExtractMainKt \
-    "$tree $out/bundle $content $out/documents.json" > "$out/extraction.txt"
+    "$tree $out/bundle $content $out/documents.json --refresh $out/committed-inventory.json" \
+    > "$out/extraction.txt"
 rm -rf "$out/bundle"
 cp audits/catalog/documented-examples.json "$out/documented-examples.json"
 git add -A -N
@@ -79,7 +81,7 @@ if [ "$test" = "--test" ]; then
             >> "$log" 2>&1 || echo "$mapper: operator tests failed" >> "$out/test-status.txt"
     done
 fi
-audit dev.morphia.audits.publish.PublishMainKt "findings $tree $out/committed-inventory.json $log" \
+audit dev.morphia.audits.publish.PublishMainKt "findings $tree $out/committed-inventory.json $log $out/extraction.txt" \
     > "$out/findings.json"
 
 python3 -I - "$out" "$tree" <<'EOF'
@@ -93,8 +95,9 @@ lines += [f"| {key} | {value} |" for key, value in sorted(inventory["summary"].i
 changed = os.path.getsize(os.path.join(out, "inventory.diff")) > 0
 lines += ["", "The inventory " + ("**differs** from the committed one; see `inventory.diff`."
                                    if changed else "matches the committed one.")]
-written = [line for line in open(os.path.join(out, "extraction.txt")) if line.startswith("Wrote ")]
-lines += ["", written[0].strip() + "; see `scenarios.diff`." if written else "Extraction wrote nothing."]
+report = [line.strip() for line in open(os.path.join(out, "extraction.txt"))
+          if line.startswith(("Wrote ", "Refreshed "))]
+lines += ["", ("; ".join(report) + "; see `scenarios.diff`.") if report else "Extraction wrote nothing."]
 lines += ["", "## Findings", ""]
 lines += [f"- **{kind}**: {count}" for kind, count in collections.Counter(f["type"] for f in findings).most_common()]
 status = os.path.join(out, "test-status.txt")

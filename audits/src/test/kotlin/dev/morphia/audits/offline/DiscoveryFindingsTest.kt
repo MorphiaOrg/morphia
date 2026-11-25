@@ -8,9 +8,9 @@ import dev.morphia.audits.extraction.ExampleInventory
 import dev.morphia.audits.extraction.ExampleStatus
 import dev.morphia.audits.extraction.FormSource
 import dev.morphia.audits.extraction.MissingApi
+import dev.morphia.audits.extraction.MissingScenario
 import dev.morphia.audits.extraction.SourceBlock
 import dev.morphia.audits.publish.DiscoveryFindings
-import dev.morphia.audits.publish.FindingType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -56,38 +56,101 @@ class DiscoveryFindingsTest {
             blocks = listOf(block("db.c.find({p: {\$gt: 1}})")),
         )
 
+    private val log =
+        """
+        [ERROR] dev.morphia.test.query.filters.TestGt.testMatchQuantities -- Time elapsed: 0.1 s <<< FAILURE!
+        [ERROR] dev.morphia.test.query.filters.TestGt.testMatchPrices -- Time elapsed: 0.1 s <<< ERROR!
+        [INFO] Tests run: 3
+        """
+            .trimIndent()
+
+    private fun findings(
+        committed: ExampleInventory,
+        current: ExampleInventory,
+        missingApi: List<MissingApi> = emptyList(),
+        missing: List<MissingScenario> = emptyList(),
+        auditLog: String? = null,
+        extraction: String? = null,
+    ) = DiscoveryFindings.findings(committed, current, missingApi, missing, auditLog, extraction)
+
     @Test
     fun anExampleNewUpstreamIsFiledOnce() {
-        val findings =
-            DiscoveryFindings.findings(
-                inventory(owned),
-                inventory(owned, added),
-                emptyList(),
-                emptyList(),
-                null,
-            )
-        assertEquals(listOf(FindingType.NEW_EXAMPLE), findings.map { it.type })
-        assertTrue(
-            findings.single().key.startsWith("NEW_EXAMPLE:query/filters/gt/Match Prices#"),
-            findings.single().key,
-        )
-        // The same inventory again files nothing new.
+        val found = findings(inventory(owned), inventory(owned, added))
+        assertEquals(listOf("NEW_EXAMPLE:query/filters/gt/Match Prices"), found.map { it.key })
+        assertEquals(emptyList<Any>(), findings(inventory(owned, added), inventory(owned, added)))
+    }
+
+    @Test
+    fun anEditUpstreamKeepsTheKey() {
+        val edited = added.copy(blocks = listOf(block("db.c.find({p: {\$gt: 2}})")))
         assertEquals(
-            emptyList<Any>(),
-            DiscoveryFindings.findings(
-                inventory(owned, added),
-                inventory(owned, added),
-                emptyList(),
-                emptyList(),
-                null,
-            ),
+            findings(inventory(owned), inventory(owned, added)).map { it.key },
+            findings(inventory(owned), inventory(owned, edited)).map { it.key },
         )
     }
 
     @Test
-    fun eachKindOfFindingHasAStableKey() {
-        val findings =
-            DiscoveryFindings.findings(
+    fun aNewlyExtractedExampleStillNeedsItsTest() {
+        val extracted =
+            added.copy(status = ExampleStatus.OWNED, owner = "query/filters/gt/matchPrices")
+        val found = findings(inventory(owned), inventory(owned, extracted)).single()
+        assertEquals("NEW_EXAMPLE:query/filters/gt/Match Prices", found.key)
+        assertTrue(found.body.contains("write its test"), found.body)
+    }
+
+    @Test
+    fun examplesSharingATitleKeepDistinctKeys() {
+        val twin = added.copy(blocks = listOf(block("db.c.find({p: {\$gt: 3}})")))
+        val keys = findings(inventory(), inventory(added, twin)).map { it.key }
+        assertEquals(
+            listOf(
+                "NEW_EXAMPLE:query/filters/gt/Match Prices",
+                "NEW_EXAMPLE:query/filters/gt/Match Prices#2",
+            ),
+            keys,
+        )
+    }
+
+    @Test
+    fun eachFailingTestIsItsOwnFinding() {
+        assertEquals(
+            listOf(
+                "FAILING_AUDIT:dev.morphia.test.query.filters.TestGt.testMatchPrices",
+                "FAILING_AUDIT:dev.morphia.test.query.filters.TestGt.testMatchQuantities",
+            ),
+            findings(inventory(owned), inventory(owned), auditLog = log).map { it.key },
+        )
+    }
+
+    @Test
+    fun aBuildThatRunsNoTestIsAFinding() {
+        assertEquals(
+            listOf("FAILING_AUDIT:build"),
+            findings(inventory(owned), inventory(owned), auditLog = "[ERROR] BUILD FAILURE").map {
+                it.key
+            },
+        )
+    }
+
+    @Test
+    fun aStaleOverrideIsAFinding() {
+        val extraction =
+            """
+            Wrote 0 scenarios
+            NOT EXTRACTED query/filters/gt "Match Prices": the override matches no example on the page
+            NOT EXTRACTED query/filters/gt "Other": find modifiers
+            """
+                .trimIndent()
+        assertEquals(
+            listOf("FAILING_AUDIT:extraction:query/filters/gt \"Match Prices\""),
+            findings(inventory(owned), inventory(owned), extraction = extraction).map { it.key },
+        )
+    }
+
+    @Test
+    fun missingApiAndScenariosHaveStableKeys() {
+        val found =
+            findings(
                 inventory(owned),
                 inventory(owned),
                 listOf(
@@ -98,37 +161,31 @@ class DiscoveryFindingsTest {
                         listOf("aggregation/expressions/sigmoid/applySigmoid"),
                     )
                 ),
-                listOf("query/filters/gt \"\$exists: false\": UNSUPPORTED (SYNTAX)"),
-                """
-                [ERROR] dev.morphia.test.query.filters.TestGt.testMatchQuantities -- Time elapsed: 0.1 s <<< FAILURE!
-                [INFO] Tests run: 3
-                """
-                    .trimIndent(),
+                listOf(
+                    MissingScenario(
+                        "query/filters/gt/\$exists: false",
+                        "query/filters/gt \"\$exists: false\": UNSUPPORTED (SYNTAX)",
+                    )
+                ),
             )
         assertEquals(
             listOf(
-                "FAILING_AUDIT",
                 "MISSING_API:aggregation/expressions/\$sigmoid",
-                "MISSING_SCENARIO:query/filters/gt \"\$exists: false\"",
+                "MISSING_SCENARIO:query/filters/gt/\$exists: false",
             ),
-            findings.map { it.key },
+            found.map { it.key },
         )
-        assertTrue(
-            findings[0].body.contains("dev.morphia.test.query.filters.TestGt.testMatchQuantities")
-        )
-        assertTrue(findings[1].body.contains("aggregation/expressions/sigmoid/applySigmoid"))
+        assertTrue(found[0].body.contains("aggregation/expressions/sigmoid/applySigmoid"))
     }
 
     @Test
     fun passingTestsFileNothing() {
         assertEquals(
             emptyList<Any>(),
-            DiscoveryFindings.findings(
+            findings(
                 inventory(owned),
                 inventory(owned),
-                emptyList(),
-                emptyList(),
-                "[INFO] Tests run: 3, Failures: 0",
+                auditLog = "[INFO] Tests run: 3, Failures: 0",
             ),
         )
     }

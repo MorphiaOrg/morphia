@@ -19,6 +19,7 @@ import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
 import dev.morphia.audits.publish.Finding
+import dev.morphia.audits.publish.FindingsReport
 import dev.morphia.audits.publish.PublicationJournal
 import dev.morphia.audits.publish.PublicationPolicy
 import dev.morphia.audits.scenarios.ScenarioExtractionPlan
@@ -136,7 +137,7 @@ object AuditJson {
     fun publicationPolicy(json: String): PublicationPolicy =
         read(json, PublicationPolicy::class.java)
 
-    fun findings(json: String): List<Finding> = read(json, Array<Finding>::class.java).toList()
+    fun findings(json: String): List<Finding> = read(json, FindingsReport::class.java).findings
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

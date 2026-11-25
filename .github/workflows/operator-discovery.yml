@@ -123,10 +123,13 @@ jobs:
           done
 
       - name: File findings
+        # pipefail: a failing publication must fail the step, not be hidden by tee.
+        shell: bash
         env:
           AUDITS_GITHUB_TOKEN: ${{ github.token }}
           PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
         run: |
+          set -o pipefail
           flag=$([ "$PUBLISH" = "true" ] && echo --publish || true)
           ./mvnw -B -ntp -q -Daudits -pl audits compile exec:java \
             -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \

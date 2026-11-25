@@ -198,6 +198,9 @@ object ScenarioWriter {
         return scenario.toJson(settings) + "\n"
     }
 
+    /** A scenario's text, as [render] writes it. */
+    fun text(scenario: BsonDocument): String = scenario.toJson(settings) + "\n"
+
     private fun kind(shape: ActionShape): String =
         when (shape) {
             ActionShape.PIPELINE -> "aggregate"
