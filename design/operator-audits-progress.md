@@ -2892,3 +2892,22 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   Round 2 found the varargs case: `{$sum: ["$runtime"]}` was emitted as `sum("$runtime")`, which
   writes the argument bare. A one-item array for a varargs factory is now a gap, except for `array`
   and `concatArrays`, which always write an array.
+- Lookups and comparisons: `$lookup` binds as a named stage (`lookup(from)` with `localField`,
+  `foreignField`, `as`, `let` and `pipeline` options). An option of a name and a value takes a
+  document, one call per field (`.let("a", x).let("b", y)`), and a `Stage[]` parameter takes a
+  subpipeline. `LookupCodec` writes `let` only beside a pipeline, so `let` without one is a gap.
+  The comparison expressions (`$cmp`, `$gt`, `$gte`, `$lt`, `$lte`, `$ne`), `$and`, `$or`,
+  `$arrayToObject`, `$replaceWith`, `$sortArray` (its `sortBy` document as `Sort` varargs),
+  `$setField` and `$unsetField` bind; the last two join the named-argument operators. `$and` and
+  `$or` write an `ExpressionList`, an array even for one argument, so a one-item array is exact
+  for them. 7 cases generate (503 to 510): the three `$lookup` subquery examples, two
+  `$sortArray`, an `$unsetField` and a `$filter` limit. `$replaceWith`'s pivot is a reviewed exclusion: it groups without sorting, and the two runs returned the groups in different orders. `$setField`'s
+  remaining examples wait on `$literal`, whose operand may itself be an array.
+  Review round 1 (Codex) found three more, now gaps: a null operand to `$cmp`, `$gt`, `$gte`, `$lt`
+  or `$lte` (their factories build a `List.of`, as `$cond`'s does), a null `$setField` or
+  `$unsetField` argument (their codecs drop it), and an expression as their `input`, which
+  `SetFieldExpressionCodec` writes without opening its document and fails on.
+  Round 2 found three more, now gaps: a bare operand to `$and` or `$or` (like `$concatArrays`,
+  they write an array), a `$` key in a sort document (`$natural`, which the codec writes as
+  `sortBy: 1`), and a document inside a `$lookup` variable's array, which fails in its
+  `DocumentExpression` as it does in a document literal. Round 3 found an empty sort document, which emitted `sortArray(x, )`; it is now a gap.

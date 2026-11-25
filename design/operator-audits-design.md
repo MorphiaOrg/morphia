@@ -276,7 +276,9 @@ a test method:
      writes a compound `$group` `_id` and a nested `$project` document;
    - a `NAMED` binding with `shorthand` also takes its one argument alone, as `{$out: "coll"}` and
      `{$unwind: "$sizes"}` are spelled; an option whose last parameter is an array takes a single
-     value or an array's items (`$merge`'s `on`). Spellings Morphia writes differently, with no
+     value or an array's items (`$merge`'s `on`), and an option of a name and a value
+     (`$lookup`'s `let(String, Object)`) takes a document, one call per field. A `Stage[]`
+     parameter (`$lookup`'s `pipeline`) takes its subpipeline's stages. Spellings Morphia writes differently, with no
      form rule equating them, are gaps: a shorthand operator's document without options (except
      `$unwind`, which `UNWIND_PATH` covers) and a one-item array for such an option;
    - a `FIELD` filter with options takes a regular expression, each flag an option call

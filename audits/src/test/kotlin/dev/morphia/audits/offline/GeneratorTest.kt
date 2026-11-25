@@ -1111,6 +1111,21 @@ class GeneratorTest {
                         "{ \$cond: [ { \$eq: [ \"\$qty\", 25 ] }, { size: null }, \"small\" ] }",
                     ),
                     addFields("Null Branch", "{ \$cond: [ true, 1, null ] }"),
+                    addFields("Null Comparison", "{ \$gte: [ \"\$qty\", null ] }"),
+                    addFields("Bare And", "{ \$and: \"\$qty\" }"),
+                    addFields("Empty Sort", "{ \$sortArray: { input: \"\$tags\", sortBy: { } } }"),
+                    addFields(
+                        "Natural Sort",
+                        "{ \$sortArray: { input: \"\$tags\", sortBy: { \$natural: 1, a: -1 } } }",
+                    ),
+                    addFields(
+                        "Computed Set Field Input",
+                        "{ \$setField: { field: \"x\", input: { \$arrayToObject: \"\$pairs\" }, value: 1 } }",
+                    ),
+                    addFields(
+                        "Null Set Field Input",
+                        "{ \$setField: { field: \"x\", input: null, value: 1 } }",
+                    ),
                     addFields("Null Array Item", "{ \$cond: [ true, { a: [ 1, null ] }, 1 ] }"),
                     addFields(
                         "Operators in a Nested Array",
@@ -1195,6 +1210,18 @@ class GeneratorTest {
                     "/pipeline/0/\$addFields/r/\$cond/1/{}/a: Morphia cannot write an array literal's null item",
                 "Operators in a Nested Array" to
                     "/pipeline/0/\$addFields/r/\$cond/1/a: Morphia cannot write a document in a document literal's array",
+                "Empty Sort" to
+                    "/pipeline/0/\$addFields/r/\$sortArray/sortBy: an empty sort has no binding",
+                "Bare And" to
+                    "/pipeline/0/\$addFields/r/\$and: Morphia writes \$and's argument as an array",
+                "Natural Sort" to
+                    "/pipeline/0/\$addFields/r/\$sortArray/sortBy/\$natural: a sort by \$natural has no binding",
+                "Null Comparison" to
+                    "/pipeline/0/\$addFields/r/\$gte: Morphia's gte() rejects a null operand",
+                "Computed Set Field Input" to
+                    "/pipeline/0/\$addFields/r/\$setField/input: Morphia cannot write an expression as \$setField's input",
+                "Null Set Field Input" to
+                    "/pipeline/0/\$addFields/r/\$setField/input: Morphia omits \$setField's null input",
                 "Null Branch" to
                     "/pipeline/0/\$addFields/r/\$cond: Morphia's condition() rejects a null operand",
                 "Operators in a Literal's Array" to
@@ -1451,6 +1478,84 @@ class GeneratorTest {
         )
         assertTrue(
             "import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;" in source,
+            source,
+        )
+    }
+
+    @Test
+    fun lookupsTakeTheirVariablesAndSubpipelines() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.orders.insertMany( [ { _id: 1, item: \"a\", qty: 5 } ] )"
+        fun ParsedPages.Page.lookup(title: String, lookup: String) =
+            section(
+                title,
+                code("db.orders.aggregate( [ { \$lookup: $lookup } ] )"),
+                code("[ { _id: 1, item: \"a\", qty: 5, stock: [ ] } ]"),
+            )
+        pages.operator("lookup", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    lookup(
+                        "Local and Foreign Fields",
+                        "{ from: \"stock\", localField: \"item\", foreignField: \"sku\", as: \"stock\" }",
+                    ),
+                    lookup(
+                        "Variables and a Subpipeline",
+                        "{ from: \"stock\", let: { wanted: \"\$qty\", name: \"\$item\" }, pipeline: [ " +
+                            "{ \$match: { \$expr: { \$and: [ { \$eq: [ \"\$sku\", \"\$\$name\" ] }, " +
+                            "{ \$gte: [ \"\$instock\", \"\$\$wanted\" ] } ] } } } ], as: \"stock\" }",
+                    ),
+                    lookup(
+                        "Expressions in a Variable's Array",
+                        "{ from: \"stock\", let: { a: [ { \$gte: [ 1, 2 ] } ] }, pipeline: [ ], as: \"stock\" }",
+                    ),
+                    lookup(
+                        "Variables Without a Subpipeline",
+                        "{ from: \"stock\", localField: \"item\", foreignField: \"sku\", " +
+                            "let: { wanted: \"\$qty\" }, as: \"stock\" }",
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("aggregation/stages")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "Expressions in a Variable's Array" to
+                    "/pipeline/0/\$lookup/let/a: Morphia cannot write a document in a variable's array",
+                "Variables Without a Subpipeline" to
+                    "/pipeline/0/\$lookup: Morphia writes \$lookup's let only with a pipeline",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/stages/TestLookup.java"
+            )
+        assertTrue(
+            "lookup(\"stock\").localField(\"item\").foreignField(\"sku\").as(\"stock\")" in source,
+            source,
+        )
+        // `let` is one call per variable, and the subpipeline its stages as varargs.
+        assertTrue(
+            "lookup(\"stock\").let(\"wanted\", \"\$qty\").let(\"name\", \"\$item\")" +
+                ".pipeline(match(expr(and(eq(\"\$sku\", \"\$\$name\"), " +
+                "gte(\"\$instock\", \"\$\$wanted\"))))).as(\"stock\")" in source,
             source,
         )
     }

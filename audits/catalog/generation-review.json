@@ -48,6 +48,10 @@
       "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
     },
     {
+      "name": "aggregation/stages/replaceWith/pivotSalesByQuarter",
+      "reason": "The pipeline groups by quarter and never sorts, so the server returns the groups in any order; the documented run and Morphia's returned them in different orders. Serialization passes; generated scenarios compare results in order."
+    },
+    {
       "name": "query/filters/regex/matchWholeWordsOnly",
       "reason": "The page prints three of the four products whose description has the whole word line: it leaves out _id 103, \"Multiple\\nline description\", which /\\bline\\b/ matches and the server returns. Serialization and behavior pass; the page is wrong."
     },

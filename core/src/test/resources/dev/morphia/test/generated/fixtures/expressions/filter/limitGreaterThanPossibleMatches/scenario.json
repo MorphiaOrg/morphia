@@ -1,0 +1,314 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/filter/limitGreaterThanPossibleMatches",
+  "title": "limit Greater than Possible Matches",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/filter.txt",
+    "blob": "e04f7d1db758fc5f0eab0cb09544bb1e6160d6a8"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "43"
+            },
+            "quantity": {
+              "$numberInt": "2"
+            },
+            "price": {
+              "$numberInt": "10"
+            },
+            "name": "pen"
+          },
+          {
+            "item_id": {
+              "$numberInt": "2"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "240"
+            },
+            "name": "briefcase"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "23"
+            },
+            "quantity": {
+              "$numberInt": "3"
+            },
+            "price": {
+              "$numberInt": "110"
+            },
+            "name": "notebook"
+          },
+          {
+            "item_id": {
+              "$numberInt": "103"
+            },
+            "quantity": {
+              "$numberInt": "4"
+            },
+            "price": {
+              "$numberInt": "5"
+            },
+            "name": "pen"
+          },
+          {
+            "item_id": {
+              "$numberInt": "38"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "300"
+            },
+            "name": "printer"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "4"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "23"
+            },
+            "name": "paper"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "items": {
+            "$filter": {
+              "input": "$items",
+              "as": "item",
+              "cond": {
+                "$gte": [
+                  "$$item.price",
+                  {
+                    "$numberInt": "100"
+                  }
+                ]
+              },
+              "limit": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "240"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "briefcase"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "23"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "110"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "notebook"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "38"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "300"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "printer"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

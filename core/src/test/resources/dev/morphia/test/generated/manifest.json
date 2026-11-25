@@ -400,6 +400,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/filter/filterExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestFilter#testFilterExpressionOperator"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/filter/limitGreaterThanPossibleMatches",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/filter/limitGreaterThanPossibleMatches/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestFilter#limitGreaterThanPossibleMatches"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/filter/useTheLimitField",
     "scenario" : "/dev/morphia/test/aggregation/expressions/filter/useTheLimitField/scenario.json",
@@ -1060,6 +1065,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/setField/addFieldsThatStartWithADollarSign/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSetField#testAddFieldsThatStartWithADollarSign"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/setField/removeAFieldWithAPeriodUsingUnsetField",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/setField/removeAFieldWithAPeriodUsingUnsetField/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestSetField#removeAFieldWithAPeriodUsingUnsetField"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/setField/removeFieldsThatContainPeriods",
     "scenario" : "/dev/morphia/test/aggregation/expressions/setField/removeFieldsThatContainPeriods/scenario.json",
@@ -1135,10 +1145,20 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/sortArray/sortAnArrayOfIntegers/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortAnArrayOfIntegers"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/sortArray/sortOnAField",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnAField/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestSortArray#sortOnAField"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/sortArray/sortOnASubfield",
     "scenario" : "/dev/morphia/test/aggregation/expressions/sortArray/sortOnASubfield/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestSortArray#testSortOnASubfield"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/sortArray/sortOnMultipleFields",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnMultipleFields/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestSortArray#sortOnMultipleFields"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/split/splitExpressionOperator",
@@ -1525,6 +1545,16 @@
     "scenario" : "/dev/morphia/test/generated/fixtures/stages/limit/returnTheFirstFiveMovies/scenario.json",
     "test" : "dev.morphia.test.generated.stages.TestLimit#returnTheFirstFiveMovies"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/lookup/correlateWithLocalAndForeignFields",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithLocalAndForeignFields/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestLookup#correlateWithLocalAndForeignFields"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/lookup/correlateWithVariablesOnly",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithVariablesOnly/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestLookup#correlateWithVariablesOnly"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
     "scenario" : "/dev/morphia/test/aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup/scenario.json",
@@ -1554,6 +1584,11 @@
     "name" : "aggregation/stages/lookup/useLookupWithMergeObjects",
     "scenario" : "/dev/morphia/test/aggregation/stages/lookup/useLookupWithMergeObjects/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestLookup#testUseLookupWithMergeObjects"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/lookup/useMultipleJoinConditionsAndACorrelatedSubquery",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/lookup/useMultipleJoinConditionsAndACorrelatedSubquery/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestLookup#useMultipleJoinConditionsAndACorrelatedSubquery"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/match/equalityMatch",
@@ -2545,6 +2580,10 @@
     "sha256" : "52bb14d573979addd204eabe83b8454c339066c7814c3ef34e1b7a8bdba2bf8a"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFilter.java",
+    "sha256" : "6f28448750271d1f4c8ff5c4eb186e308bd51efa7bfa309aa6613c595585981e"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFirst.java",
     "sha256" : "5e65af5f87ce49298ad8ef419fd051cb4972f0ac6a00f1e39f950e5de9c20c8b"
   }, {
@@ -2601,6 +2640,14 @@
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestSetField.java",
+    "sha256" : "3a0612da8187886e98725705b32cc9d964dfcc891e1d1a45b9cd1077b7340572"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestSortArray.java",
+    "sha256" : "85ebca5fa5868197c8e9189415cd6d3b59e98f27667cb694657cf36f8b8696bd"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestSum.java",
     "sha256" : "86f1c262cf1bd172032277c80da6833462f9798a26633a23ca394b693efab585"
   }, {
@@ -2655,6 +2702,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestLimit.java",
     "sha256" : "199956b8590fe2319296675f30e92f79af34fb72de71666d61581b8652c13f1d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/stages/TestLookup.java",
+    "sha256" : "fc467b8489dfd75f5ad939bd3d1e13c328d15107efd272468ef9eae58fa4104c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestMerge.java",
@@ -3909,6 +3960,10 @@
     "sha256" : "42891403bbf3e38ee8634d5d1902e1dac808fe876ac36006bfa3435cf56c677c"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/filter/limitGreaterThanPossibleMatches/scenario.json",
+    "sha256" : "a95ed2ea08e3c2822a8f021775b955ffc78daf627ca182f139eccba4da436bc5"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/first/findTheFirstMovieInEachGenre/scenario.json",
     "sha256" : "8284d3ddafaced7bca0aca345578a83c36795e180b563a58ca3af712b9d2729f"
   }, {
@@ -4047,6 +4102,18 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
     "sha256" : "250c3054a8e40ed14a0aaa36cafa2d7f8e5b324987937c61a7732e718848802d"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/setField/removeAFieldWithAPeriodUsingUnsetField/scenario.json",
+    "sha256" : "4896745b3bc6ad7848826f339b56f597f13c7b332d9d9d42cacc38bf5d7367c8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnAField/scenario.json",
+    "sha256" : "ca73a5cc84f2236df4dac7ca4ba221e8682ef6815ab0006579ce237dd071e59e"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sortArray/sortOnMultipleFields/scenario.json",
+    "sha256" : "0a711c641459f098e944b5309f174c11a13f5a70dfffd374b7b5c9c151649018"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/sum/totalTheVotesByRating/scenario.json",
@@ -4239,6 +4306,18 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/limit/returnTheFirstFiveMovies/scenario.json",
     "sha256" : "d51f296e35fe693d60b58114389199606288209b092abdb4b02abc798f7f7551"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithLocalAndForeignFields/scenario.json",
+    "sha256" : "752fbcfdbff22657ce1f77a32e99bed5f43a0e3645f8c30a0a5cba7b2bbe7cc2"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/correlateWithVariablesOnly/scenario.json",
+    "sha256" : "4d7d2a250bc7ef2ed14aacd4a286b3a059ba777969ebeaacdd41b1bd9193acac"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/lookup/useMultipleJoinConditionsAndACorrelatedSubquery/scenario.json",
+    "sha256" : "80801e3e0b245502f97bdc9a23fa146b74f30bdd2b1994c58e466332bb5c8ddb"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/mergeResultsFromMultipleCollections/scenario.json",

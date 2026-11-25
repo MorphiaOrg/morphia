@@ -100,6 +100,7 @@ object FormEquivalence {
             "\$merge",
             "\$minN",
             "\$reduce",
+            "\$setField",
             "\$setWindowFields",
             "\$regexFind",
             "\$regexFindAll",
@@ -108,6 +109,7 @@ object FormEquivalence {
             "\$text",
             "\$top",
             "\$topN",
+            "\$unsetField",
             "\$unwind",
             "\$zip",
         )

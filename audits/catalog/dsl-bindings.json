@@ -31,6 +31,35 @@
       "fields": {}
     },
     {
+      "operator": "$and",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.BooleanExpressions",
+      "method": "and",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$arrayToObject",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "arrayToObject",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$avg",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -110,6 +139,21 @@
         "output",
         "sortBy"
       ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$cmp",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "cmp",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
       "options": {},
       "fields": {}
     },
@@ -283,6 +327,36 @@
       "fields": {}
     },
     {
+      "operator": "$gt",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "gt",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$gte",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "gte",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$last",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -311,6 +385,36 @@
         "n",
         "input"
       ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$lt",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "lt",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$lte",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "lte",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
       "options": {},
       "fields": {}
     },
@@ -426,6 +530,36 @@
       "form": "POSITIONAL",
       "owner": "dev.morphia.aggregation.expressions.MathExpressions",
       "method": "multiply",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$ne",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ComparisonExpressions",
+      "method": "ne",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$or",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.BooleanExpressions",
+      "method": "or",
       "parameters": [
         "java.lang.Object",
         "java.lang.Object[]"
@@ -597,6 +731,44 @@
       "fields": {}
     },
     {
+      "operator": "$setField",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.Miscellaneous",
+      "method": "setField",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "field",
+        "input",
+        "value"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$sortArray",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "sortArray",
+      "parameters": [
+        "java.lang.Object",
+        "dev.morphia.query.Sort[]"
+      ],
+      "varargs": true,
+      "arguments": [
+        "input",
+        "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$sum",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -659,6 +831,24 @@
         "n",
         "output",
         "sortBy"
+      ],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$unsetField",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.Miscellaneous",
+      "method": "unsetField",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [
+        "field",
+        "input"
       ],
       "options": {},
       "fields": {}
@@ -1041,6 +1231,54 @@
       "fields": {}
     },
     {
+      "operator": "$lookup",
+      "position": "STAGE",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.stages.Lookup",
+      "method": "lookup",
+      "parameters": [
+        "java.lang.String"
+      ],
+      "varargs": false,
+      "arguments": [
+        "from"
+      ],
+      "options": {
+        "localField": {
+          "method": "localField",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "foreignField": {
+          "method": "foreignField",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "as": {
+          "method": "as",
+          "parameters": [
+            "java.lang.String"
+          ]
+        },
+        "let": {
+          "method": "let",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        },
+        "pipeline": {
+          "method": "pipeline",
+          "parameters": [
+            "dev.morphia.aggregation.stages.Stage[]"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
       "operator": "$match",
       "position": "STAGE",
       "form": "FILTERS",
@@ -1143,6 +1381,20 @@
       "varargs": false,
       "arguments": [],
       "options": {}
+    },
+    {
+      "operator": "$replaceWith",
+      "position": "STAGE",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.stages.ReplaceWith",
+      "method": "replaceWith",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
     },
     {
       "operator": "$set",

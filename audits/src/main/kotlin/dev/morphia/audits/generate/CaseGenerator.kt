@@ -104,6 +104,13 @@ object CaseGenerator {
     private const val LIST = "java.util.List"
     private const val NUMBER = "java.lang.Number"
     private const val SORTS = "dev.morphia.query.Sort[]"
+    private const val STAGES = "dev.morphia.aggregation.stages.Stage[]"
+    /** Factories whose operands go into a `List.of`, which rejects null. */
+    private val LIST_OF = setOf("\$cmp", "\$cond", "\$gt", "\$gte", "\$lt", "\$lte")
+    /** `$setField` and `$unsetField`, whose codecs drop nulls and mis-write an expression input. */
+    private val FIELD_EXPRESSIONS = setOf("\$setField", "\$unsetField")
+    /** Varargs factories that write an array even for one argument (`ExpressionList`, `array`). */
+    private val ALWAYS_ARRAYS = setOf(ARRAY, "\$and", "\$concatArrays", "\$or")
     /** `$setWindowFields`' outputs, each `output(name).operator(op)` with an optional window. */
     private const val OUTPUTS = "dev.morphia.aggregation.stages.SetWindowFields.Output[]"
     private const val OUTPUT = "dev.morphia.aggregation.stages.SetWindowFields.Output"
@@ -474,26 +481,29 @@ object CaseGenerator {
                         rules += FormRule.SINGLE_ARGUMENT_ARRAY
                     }
                     // A varargs factory given one argument writes it bare (`sum("$a")` is
-                    // `$sum: "$a"`), so a one-item array has no binding; `array` and
-                    // `concatArrays` always write an array.
+                    // `$sum: "$a"`), so a one-item array has no binding; ALWAYS_ARRAYS' factories
+                    // write an array even then.
                     if (
                         binding.varargs &&
-                            binding.operator !in setOf(ARRAY, "\$concatArrays") &&
+                            binding.operator !in ALWAYS_ARRAYS &&
                             argument.isArray &&
                             argument.asArray().size == 1
                     )
                         throw Unbound(
                             "$path: Morphia writes ${binding.operator}'s lone argument bare"
                         )
-                    // `concatArrays` always writes an array; its accumulator form takes one bare.
-                    if (binding.operator == "\$concatArrays" && !argument.isArray)
-                        throw Unbound("$path: Morphia writes \$concatArrays' argument as an array")
+                    // ALWAYS_ARRAYS' factories write an array even for one bare operand
+                    // (`$concatArrays`' accumulator form, `{$and: "$flag"}`).
+                    if (binding.operator in ALWAYS_ARRAYS && !argument.isArray)
+                        throw Unbound(
+                            "$path: Morphia writes ${binding.operator}'s argument as an array"
+                        )
                     val values =
                         condition
                             ?: if (argument.isArray) argument.asArray().values else listOf(argument)
-                    // `condition` builds a `List.of`, which rejects null.
-                    if (binding.operator == "\$cond" && values.any { it.isNull })
-                        throw Unbound("$path: Morphia's condition() rejects a null operand")
+                    // These factories build a `List.of`, which rejects null.
+                    if (binding.operator in LIST_OF && values.any { it.isNull })
+                        throw Unbound("$path: Morphia's ${binding.method}() rejects a null operand")
                     val fixed =
                         if (binding.varargs) binding.parameters.size - 1
                         else binding.parameters.size
@@ -539,6 +549,31 @@ object CaseGenerator {
                                 "$path: Morphia writes ${binding.operator} without options as its shorthand"
                             )
                         rules += FormRule.UNWIND_PATH
+                    }
+                    // `LookupCodec` writes `let` only beside a pipeline.
+                    if (
+                        binding.operator == "\$lookup" &&
+                            "let" in document &&
+                            "pipeline" !in document
+                    )
+                        throw Unbound("$path: Morphia writes \$lookup's let only with a pipeline")
+                    if (binding.operator in FIELD_EXPRESSIONS) {
+                        // Their codecs drop a null argument, and write an expression `input`
+                        // without opening its document, which fails.
+                        document.entries
+                            .firstOrNull { it.value.isNull }
+                            ?.let {
+                                throw Unbound(
+                                    "$path/${it.key}: Morphia omits ${binding.operator}'s null ${it.key}"
+                                )
+                            }
+                        document["input"]
+                            ?.takeIf { operator(it, path) != null }
+                            ?.let {
+                                throw Unbound(
+                                    "$path/input: Morphia cannot write an expression as ${binding.operator}'s input"
+                                )
+                            }
                     }
                     val missing = binding.arguments.filter { it !in document }
                     if (missing.isNotEmpty())
@@ -691,6 +726,21 @@ object CaseGenerator {
          */
         private fun arguments(option: MethodRef, value: BsonValue, path: String): String {
             val parameters = option.parameters
+            // An option of a name and a value (`$lookup`'s `let(String, Object)`) takes a document,
+            // one call per field; the caller writes the first call's name.
+            if (parameters == listOf(STRING, OBJECT)) {
+                if (!value.isDocument || value.asDocument().isEmpty())
+                    throw Unbound("$path: ${option.method} takes a document of fields")
+                return value.asDocument().entries.joinToString(").${option.method}(") { (name, each)
+                    ->
+                    // The variables are a `DocumentExpression`, whose arrays fail on documents.
+                    if (holdsADocument(each))
+                        throw Unbound(
+                            "$path/$name: Morphia cannot write a document in a variable's array"
+                        )
+                    "${literal(name)}, ${value(each, OBJECT, "$path/$name")}"
+                }
+            }
             if (parameters.size == 1) return value(value, parameters.single(), path)
             if (!parameters.last().endsWith("[]"))
                 throw Unbound("$path: ${option.method}$parameters takes no single value")
@@ -1099,8 +1149,24 @@ object CaseGenerator {
                     .joinToString(", ", "List.of(", ")")
             }
             if (value.isDocument && type == OUTPUTS) return outputs(value.asDocument(), path)
+            if (type == STAGES) {
+                // A subpipeline (`$lookup`'s `pipeline`) is its stages as `Stage` varargs.
+                if (!value.isArray) throw Unbound("$path: a pipeline takes an array of stages")
+                return value
+                    .asArray()
+                    .values
+                    .mapIndexed { index, each -> stage(each, "$path/$index") }
+                    .joinToString(", ")
+            }
             if (value.isDocument && type == SORTS) {
-                // `{f: -1, g: 1}` as `Sort` varargs, in order.
+                // `{f: -1, g: 1}` as `Sort` varargs, in order. A `$` key (`$natural`) is no field.
+                if (value.asDocument().isEmpty())
+                    throw Unbound("$path: an empty sort has no binding")
+                value
+                    .asDocument()
+                    .keys
+                    .firstOrNull { it.startsWith("$") }
+                    ?.let { throw Unbound("$path/$it: a sort by $it has no binding") }
                 return value.asDocument().entries.joinToString(", ") { (field, each) ->
                     val direction =
                         when {
