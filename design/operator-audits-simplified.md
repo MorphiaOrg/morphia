@@ -595,3 +595,34 @@ string.
 
 On the stack today the behavior and published skips are one key, `results`. The migration splits it
 (section 3).
+
+## Implementation plan
+
+The `audits-*` stack (#4512–#4602) is about 90 PRs deep, with generator work threaded through most
+of them. Cherry-picking would mean splitting nearly every commit. Instead, the new design starts
+from master and copies the final state of what it keeps from the stack's tip, then removes or
+reworks what it drops. Each step is a PR stacked on the one before:
+
+1. **Design** (this document).
+2. **Reader.** The `audits` module with the packages the reader needs and their tests: `sources`,
+   `documents`, `shell`, `scenarios`, `naming`, `published`, `semantics`, and the contracts and
+   JSON parts of `coverage`. No generator, bindings, API inventory, discovery, repairs or publish
+   yet.
+3. **Scenario runner.** In core's tests:
+   - `OperatorCaseRunner`'s three checks, `FormRules` with its vectors, `PrintedResults` and
+     `StrictBson`;
+   - fixture lookup through JUnit's invocation context;
+   - the orphan and title checks.
+4. **Scenarios and tests.**
+   - Master's tests are renamed (#4530's ledger), their fixtures become `<stem>/scenario.json`, and
+     `ActionTestOptions` facts move into the scenarios.
+   - The generated cases are frozen into the operator classes.
+   - The legacy `exampleN` loader goes.
+5. **Extraction to scenarios.** The writer, digest-guarded overrides, the inventory, the
+   missing-scenario failure, the untested baseline and the work queue.
+6. **API check** from javadoc tags.
+7. **Issue filing.** `publish`, adapted, and the scheduled job.
+
+Separately, the stack's four fixes to Morphia itself go to master as their own small PRs: the
+ranked-accumulator `sortBy` encoding, whole-number parameters written as Int32, the `$toUUID` and
+`$documents` releases, and the capability fixes. The old stack's PRs are closed once these land.
