@@ -8,12 +8,24 @@
   ],
   "excluded": [
     {
+      "name": "aggregation/expressions/binarySize/findLargestBinaryData",
+      "reason": "The pipeline sorts by imageSize and keeps one document, but the page prints every image's size from the $project stage alone. The server returns concert.jpg (269), which Morphia matches. Serialization passes; the page is wrong."
+    },
+    {
       "name": "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
       "reason": "The page prints $bitAnd's results: it shows Long(\"0\"), Long(\"2\") and Long(\"3\"), but a | 63 is 63 for each document, which is what the server returns. Serialization and behavior pass; the page is wrong."
     },
     {
+      "name": "aggregation/expressions/bsonSize/returnDocumentWithLargestSpecifiedField",
+      "reason": "The pipeline sorts by task_object_size and keeps one document, but the page prints every employee's size from the $project stage alone, and its sizes are off (152 for Bob, where the server returns 140). Serialization passes; the page is wrong."
+    },
+    {
       "name": "aggregation/expressions/dateDiff/yearBoundaryCrossing",
       "reason": "$dateDiff returns a long, which mongosh prints as Long('1'); the page prints 1, which only an Int32 or a Double prints as. Serialization and behavior pass."
+    },
+    {
+      "name": "aggregation/expressions/divide/divideHoursIntoWorkdays",
+      "reason": "The page inserts into conferencePlanning but aggregates planning, so the server returns nothing. Serialization passes; the page is wrong."
     },
     {
       "name": "aggregation/expressions/filter/useIdxToAccessTheIndex",
@@ -24,8 +36,16 @@
       "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass."
     },
     {
+      "name": "aggregation/expressions/reduce/discountedMerchandise",
+      "reason": "The page prints ObjectId _ids, but its seed inserts integer _ids 1 to 5. The computed discountedPrice values match. Serialization passes; the page is wrong."
+    },
+    {
       "name": "aggregation/expressions/reduce/probability",
       "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection."
+    },
+    {
+      "name": "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
+      "reason": "The page prints the $addFields stage's output (the whole $regexFind match), not the pipeline's, whose $set replaces username with its first capture. Serialization passes; the page is wrong."
     },
     {
       "name": "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",

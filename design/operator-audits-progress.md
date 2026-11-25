@@ -2922,3 +2922,29 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   on score, now generates (510 to 511). `$replaceWith`'s pivot passes behavior now, and stays
   excluded for a different reason: its page prints the first stage's output as the pipeline's
   result.
+- More expressions: `$allElementsTrue`, `$anyElementTrue`, `$arrayElemAt` (`elementAt`),
+  `$binarySize`, `$bsonSize`, `$divide`, `$literal`, `$ltrim`, `$not`, `$range`, `$rtrim`,
+  `$setIntersection`, `$size`, `$stdDevPop`, `$stdDevSamp`, `$strLenCP`, `$subtract`, `$trim`,
+  `$tsIncrement`, `$type` and `$zip` bind. A named argument whose parameter is the factory's
+  `Object` varargs spreads its array (`$zip`'s `inputs: [a, b]` is `zip(a, b)`); an empty one is a
+  gap, as is a lone null, which Java reads as the varargs array. `$allElementsTrue`,
+  `$anyElementTrue` and `$not` take one argument, and their factories always write an array: a
+  one-item array is exact, and a bare operand takes `SINGLE_ARGUMENT_ARRAY`, which now lists them.
+  `$trim`, `$ltrim` and `$rtrim` join the named-argument operators. A `$literal` whose operand holds
+  a `$` key is a gap, since the generator would translate it as an operator. 14 cases generate
+  (511 to 525). Five more examples generate but fail on page errors and are reviewed exclusions:
+  `$divide`'s page aggregates a collection it never seeds, `$binarySize`'s and `$bsonSize`'s print
+  their first stage's output though the pipelines sort and limit, `$reduce`'s prints ObjectId
+  `_id`s for integer seeds, and `$regexFind`'s captured groupings print the stage before `$set`.
+  Review round 1 (Codex) found four, fixed above: a lone null `$zip` input passed as the varargs
+  array, a `$literal` payload translated as an operator, a bare set operand without
+  `SINGLE_ARGUMENT_ARRAY` (the first draft had the factories' direction backwards), and `$trim`'s
+  key order. It also noted that `SINGLE_ARGUMENT_ARRAY` would reach a query `$not` nested in
+  `$graphLookup`'s `restrictSearchWithMatch`, as it already would `$size`; neither has a binding to
+  reach that position, so it is deferred.
+  Round 2 found two more, now gaps: a null operand to `$arrayElemAt`, `$divide` or `$subtract`,
+  whose factories build a `List.of`, and an expression where Morphia takes a Java value, such as
+  `$trim`'s `chars`, which `chars(String)` cannot take though the server can. Round 3 found the
+  same for an enum parameter (`$convert`'s `to`, `$dateDiff`'s `unit`), so the guard is now an
+  allowlist of the types that take an expression (`Object`, `Expression`, and the DSL types built
+  from operators: stages, sorts, window outputs, filters and group ids). No generated file changed.

@@ -106,11 +106,47 @@ object CaseGenerator {
     private const val SORTS = "dev.morphia.query.Sort[]"
     private const val STAGES = "dev.morphia.aggregation.stages.Stage[]"
     /** Factories whose operands go into a `List.of`, which rejects null. */
-    private val LIST_OF = setOf("\$cmp", "\$cond", "\$gt", "\$gte", "\$lt", "\$lte")
+    private val LIST_OF =
+        setOf(
+            "\$arrayElemAt",
+            "\$cmp",
+            "\$cond",
+            "\$divide",
+            "\$gt",
+            "\$gte",
+            "\$lt",
+            "\$lte",
+            "\$subtract",
+        )
+    /**
+     * Parameter types that can take an operator: an expression, or a DSL type the generator builds
+     * from one. Any other (`chars(String)`, `convert(x, ConvertType)`, a `List`) takes a Java
+     * value.
+     */
+    private val EXPRESSION_TYPES =
+        setOf(
+            OBJECT,
+            "$OBJECT[]",
+            EXPRESSION,
+            STAGES,
+            SORTS,
+            OUTPUTS,
+            "dev.morphia.aggregation.stages.Group.GroupId",
+            "dev.morphia.query.filters.Filter[]",
+        )
     /** `$setField` and `$unsetField`, whose codecs drop nulls and mis-write an expression input. */
     private val FIELD_EXPRESSIONS = setOf("\$setField", "\$unsetField")
     /** Varargs factories that write an array even for one argument (`ExpressionList`, `array`). */
-    private val ALWAYS_ARRAYS = setOf(ARRAY, "\$and", "\$concatArrays", "\$or")
+    private val ALWAYS_ARRAYS =
+        setOf(
+            ARRAY,
+            "\$allElementsTrue",
+            "\$and",
+            "\$anyElementTrue",
+            "\$concatArrays",
+            "\$not",
+            "\$or",
+        )
     /** `$setWindowFields`' outputs, each `output(name).operator(op)` with an optional window. */
     private const val OUTPUTS = "dev.morphia.aggregation.stages.SetWindowFields.Output[]"
     private const val OUTPUT = "dev.morphia.aggregation.stages.SetWindowFields.Output"
@@ -447,6 +483,16 @@ object CaseGenerator {
             return call(binding, argument, "$path/$operator")
         }
 
+        private fun holdsAnOperatorKey(value: BsonValue): Boolean =
+            when {
+                value.isDocument ->
+                    value.asDocument().entries.any { (key, each) ->
+                        key.startsWith("$") || holdsAnOperatorKey(each)
+                    }
+                value.isArray -> value.asArray().any { holdsAnOperatorKey(it) }
+                else -> false
+            }
+
         private fun operator(value: BsonValue, path: String): Pair<String, BsonValue>? {
             if (!value.isDocument) return null
             val document = value.asDocument()
@@ -474,6 +520,7 @@ object CaseGenerator {
                     // writes bare; SINGLE_ARGUMENT_ARRAY equates them unless `a` is an array.
                     if (
                         !binding.varargs &&
+                            binding.operator !in ALWAYS_ARRAYS &&
                             binding.parameters.size == 1 &&
                             argument.isArray &&
                             argument.asArray().size == 1
@@ -500,11 +547,20 @@ object CaseGenerator {
                             "$path: Morphia writes ${binding.operator}'s lone argument bare"
                         )
                     // ALWAYS_ARRAYS' factories write an array even for one bare operand
-                    // (`$concatArrays`' accumulator form, `{$and: "$flag"}`).
-                    if (binding.operator in ALWAYS_ARRAYS && !argument.isArray)
-                        throw Unbound(
-                            "$path: Morphia writes ${binding.operator}'s argument as an array"
-                        )
+                    // (`$concatArrays`' accumulator form, `{$and: "$flag"}`); for `$not`,
+                    // `$allElementsTrue` and `$anyElementTrue`, which take one argument,
+                    // SINGLE_ARGUMENT_ARRAY equates the two.
+                    if (binding.operator in ALWAYS_ARRAYS && !argument.isArray) {
+                        if (binding.operator !in FormEquivalence.singleArgumentOperators)
+                            throw Unbound(
+                                "$path: Morphia writes ${binding.operator}'s argument as an array"
+                            )
+                        rules += FormRule.SINGLE_ARGUMENT_ARRAY
+                    }
+                    // `$literal`'s operand is data, but the generator would translate a `$` key
+                    // inside it as an operator.
+                    if (binding.operator == "\$literal" && holdsAnOperatorKey(argument))
+                        throw Unbound("$path: \$literal's operand holds an operator-like key")
                     val values =
                         condition
                             ?: if (argument.isArray) argument.asArray().values else listOf(argument)
@@ -589,7 +645,33 @@ object CaseGenerator {
                         factory.format(
                             binding.arguments
                                 .mapIndexed { index, key ->
-                                    value(document[key]!!, binding.parameters[index], "$path/$key")
+                                    val type = binding.parameters[index]
+                                    val each = document[key]!!
+                                    // A varargs argument's array spreads into the varargs, as
+                                    // `$zip`'s inputs do into `zip(a, b)`.
+                                    if (
+                                        binding.varargs &&
+                                            index == binding.parameters.lastIndex &&
+                                            type == "$OBJECT[]" &&
+                                            each.isArray
+                                    ) {
+                                        if (each.asArray().isEmpty())
+                                            throw Unbound(
+                                                "$path/$key: ${binding.method}() without arguments"
+                                            )
+                                        // Java reads a lone null as the varargs array itself.
+                                        if (each.asArray().size == 1 && each.asArray()[0].isNull)
+                                            throw Unbound(
+                                                "$path/$key: Java passes a lone null as the varargs array"
+                                            )
+                                        each
+                                            .asArray()
+                                            .values
+                                            .mapIndexed { item, it ->
+                                                value(it, OBJECT, "$path/$key/$item")
+                                            }
+                                            .joinToString(", ")
+                                    } else value(each, type, "$path/$key")
                                 }
                                 .joinToString(", ")
                         )
@@ -1143,6 +1225,10 @@ object CaseGenerator {
             plain: Boolean = false,
         ): String {
             operator(value, path)?.let { (operator, argument) ->
+                if (type !in EXPRESSION_TYPES)
+                    throw Unbound(
+                        "$path: Morphia takes a ${type.substringAfterLast('.')} here, not $operator"
+                    )
                 val binding =
                     expressions[operator] ?: throw Unbound("$path: $operator has no binding")
                 return call(binding, argument, "$path/$operator")

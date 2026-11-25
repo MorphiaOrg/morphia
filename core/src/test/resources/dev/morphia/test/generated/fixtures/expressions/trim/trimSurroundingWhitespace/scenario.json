@@ -1,0 +1,150 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/trim/trimSurroundingWhitespace",
+  "title": "Trim Surrounding Whitespace",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/trim.txt",
+    "blob": "a3fd2aac7b3ffb8cf9cd8cff113c7842549c7c06"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "quarter": "13Q1",
+        "description": " product 1"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "quarter": "13Q4",
+        "description": "product 2 \n The product is in stock.  \n\n  "
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "XYZ1",
+        "quarter": "14Q2",
+        "description": null
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "description": {
+            "$trim": {
+              "input": "$description"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC1"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "product 1"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "XYZ1"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC2"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "product 2 \n The product is in stock."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

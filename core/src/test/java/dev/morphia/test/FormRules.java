@@ -42,15 +42,16 @@ public final class FormRules {
         UPDATE
     }
 
-    private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff",
-            "$dateFromString", "$dateSubtract", "$dateToString", "$dateTrunc", "$densify", "$fill", "$filter", "$firstN",
-            "$graphLookup", "$lastN", "$let", "$lookup", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll",
-            "$regexMatch", "$setField", "$setWindowFields", "$sortArray", "$text", "$top", "$topN", "$unsetField", "$unwind", "$zip");
+    private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff", "$dateFromString",
+            "$dateSubtract", "$dateToString", "$dateTrunc", "$densify", "$fill", "$filter", "$firstN", "$graphLookup", "$lastN", "$let",
+            "$lookup", "$ltrim", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll", "$regexMatch", "$rtrim",
+            "$setField", "$setWindowFields", "$sortArray", "$text", "$top", "$topN", "$trim", "$unsetField", "$unwind", "$zip");
 
     private static final Set<String> REGEX_OPERATORS = Set.of("$regexFind", "$regexFindAll", "$regexMatch");
 
-    private static final Set<String> SINGLE_ARGUMENT_OPERATORS = Set.of("$abs", "$ceil", "$exp", "$floor", "$isArray",
-            "$isNumber", "$ln", "$log10", "$size", "$sqrt", "$strLenBytes", "$strLenCP", "$toBool", "$toDate", "$toDecimal",
+    private static final Set<String> SINGLE_ARGUMENT_OPERATORS = Set.of("$abs", "$allElementsTrue", "$anyElementTrue", "$ceil", "$exp",
+            "$floor", "$isArray",
+            "$isNumber", "$ln", "$log10", "$not", "$size", "$sqrt", "$strLenBytes", "$strLenCP", "$toBool", "$toDate", "$toDecimal",
             "$toDouble", "$toInt", "$toLong", "$toLower", "$toObjectId", "$toString", "$toUpper", "$year");
 
     private static final Set<String> COMPARISON_OPERATORS = Set.of("$all", "$eq", "$exists", "$gt", "$gte", "$in", "$lt",

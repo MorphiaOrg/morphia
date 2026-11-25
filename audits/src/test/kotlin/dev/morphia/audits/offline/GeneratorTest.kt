@@ -1573,6 +1573,99 @@ class GeneratorTest {
     }
 
     @Test
+    fun singleArgumentsAndNamedVarargsTakeTheirForms() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.inventory.insertMany( [ { _id: 1, a: [ 1 ], b: [ 2 ] } ] )"
+        fun ParsedPages.Page.addFields(title: String, value: String) =
+            section(
+                title,
+                code("db.inventory.aggregate( [ { \$addFields: { r: $value } } ] )"),
+                code("[ { _id: 1, a: [ 1 ], b: [ 2 ], r: 1 } ]"),
+            )
+        pages.operator("allElementsTrue", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    addFields("One Array", "{ \$allElementsTrue: [ \"\$a\" ] }"),
+                    addFields("Bare Not", "{ \$not: { \$gt: [ \"\$a\", 1 ] } }"),
+                    addFields("Not In An Array", "{ \$not: [ \"\$a\" ] }"),
+                    addFields(
+                        "Zipped",
+                        "{ \$zip: { inputs: [ \"\$a\", \"\$b\" ], useLongestLength: true } }",
+                    ),
+                    addFields("Nothing Zipped", "{ \$zip: { inputs: [ ] } }"),
+                    addFields("Null Zipped", "{ \$zip: { inputs: [ null ] } }"),
+                    addFields(
+                        "Computed Conversion Type",
+                        "{ \$convert: { input: \"\$a\", to: { \$literal: \"string\" } } }",
+                    ),
+                    addFields("Null Divisor", "{ \$divide: [ \"\$a\", null ] }"),
+                    addFields(
+                        "Computed Trim Characters",
+                        "{ \$trim: { input: \"\$a\", chars: { \$literal: \"x\" } } }",
+                    ),
+                    addFields("Bare Set Operand", "{ \$anyElementTrue: \"\$a\" }"),
+                    addFields("Operator In A Literal", "{ \$literal: { \$not: false } }"),
+                    addFields("Sum In An Array", "{ \$stdDevPop: [ \"\$a\" ] }"),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("aggregation/expressions")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "Nothing Zipped" to
+                    "/pipeline/0/\$addFields/r/\$zip/inputs: zip() without arguments",
+                "Computed Conversion Type" to
+                    "/pipeline/0/\$addFields/r/\$convert/to: Morphia takes a ConvertType here, not \$literal",
+                "Null Divisor" to
+                    "/pipeline/0/\$addFields/r/\$divide: Morphia's divide() rejects a null operand",
+                "Computed Trim Characters" to
+                    "/pipeline/0/\$addFields/r/\$trim/chars: Morphia takes a String here, not \$literal",
+                "Null Zipped" to
+                    "/pipeline/0/\$addFields/r/\$zip/inputs: Java passes a lone null as the varargs array",
+                "Operator In A Literal" to
+                    "/pipeline/0/\$addFields/r/\$literal: \$literal's operand holds an operator-like key",
+                "Sum In An Array" to
+                    "/pipeline/0/\$addFields/r/\$stdDevPop: Morphia writes \$stdDevPop's lone argument bare",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        fun rules(suffix: String) =
+            generation.cases.single { it.manifest.name.endsWith(suffix) }.scenario
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/expressions/TestAllElementsTrue.java"
+            )
+        // These factories always write an array, which SINGLE_ARGUMENT_ARRAY equates with the
+        // page's bare argument.
+        assertTrue("allElementsTrue(\"\$a\")" in source, source)
+        assertTrue("SINGLE_ARGUMENT_ARRAY" !in rules("allElementsTrue/oneArray"))
+        assertTrue("anyElementTrue(\"\$a\")" in source, source)
+        assertTrue("SINGLE_ARGUMENT_ARRAY" in rules("allElementsTrue/bareSetOperand"))
+        assertTrue("not(gt(\"\$a\", 1))" in source, source)
+        assertTrue("SINGLE_ARGUMENT_ARRAY" in rules("allElementsTrue/bareNot"))
+        assertTrue("not(\"\$a\")" in source, source)
+        assertTrue("SINGLE_ARGUMENT_ARRAY" !in rules("allElementsTrue/notInAnArray"))
+        // A named varargs argument's array spreads into the factory's varargs.
+        assertTrue("zip(\"\$a\", \"\$b\").useLongestLength(true)" in source, source)
+    }
+
+    @Test
     fun bindingsAreCheckedAgainstTheCurrentSource() {
         val root = directory.resolve("api")
         fun java(name: String, text: String) =

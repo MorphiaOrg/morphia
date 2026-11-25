@@ -69,7 +69,7 @@ treats the spellings alike is part of the rule (`FormRule.description`).
 | `PROJECT_ID_FIRST` | 12 | position of `_id` in a projection | other projected fields, whose order is output order |
 | `NAMED_ARGUMENTS` | 14 | top-level key order of an allowlisted named-argument operator (`$filter`, `$map`, `$dateToString`, `$bottomN`, `$fill`, `$graphLookup`, ...) | nested values such as `sortBy`, and every operator outside the allowlist |
 | `EQ_SHORTHAND` | 4 | `{f: {$eq: v}}` ≡ `{f: v}` in a query predicate | a regex `v`, an operator-document `v`, the aggregation `$eq` expression |
-| `SINGLE_ARGUMENT_ARRAY` | 2 | `{$isArray: ["$a"]}` ≡ `{$isArray: "$a"}` for single-argument expression operators | an argument that is itself an array literal (`[[1]]`); query predicates, where `$size` is the query operator |
+| `SINGLE_ARGUMENT_ARRAY` | 2 | `{$isArray: ["$a"]}` ≡ `{$isArray: "$a"}` for single-argument expression operators, including `$allElementsTrue`, `$anyElementTrue` and `$not`, whose factories always write an array | an argument that is itself an array literal (`[[1]]`); query predicates, where `$size` is the query operator |
 | `REGEX_FORM` | 1 | `f: /p/o`, `{$regex: /p/o}`, `{$regex: "p", $options: "o"}`, `{$regex: /p/, $options: "o"}` | options given in both places |
 | `FIELD_OPERATORS_AND` | 1 | `{f: {$gt: a, $lt: b}}` ≡ `{$and: [{f: {$gt: a}}, {f: {$lt: b}}]}` | `$elemMatch` and non-comparison operators |
 | `PROJECTION_FLAGS` | 1 | top-level projection `true`/`false` ≡ `1`/`0` | booleans inside expressions |
