@@ -45,7 +45,7 @@ class ScenarioCoverageTest {
     fun everyExampleHasAScenario() {
         val inventory =
             AuditJson.exampleInventory(Files.readString(root.resolve(DocumentedExamples.PATH)))
-        val missing = Coverage.missingScenarios(inventory, overrides)
+        val missing = Coverage.missingScenarios(root, inventory, overrides)
         assertEquals(
             emptyList<String>(),
             missing,

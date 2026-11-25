@@ -370,12 +370,14 @@ object DocumentedExamples {
                                 ExampleStatus.OWNED,
                                 owner = review.owner,
                                 detail = "reviewed owner: ${review.reason}",
+                                blocks = blocks,
                             )
                         else
                             DocumentedExample(
                                 title,
                                 ExampleStatus.AMBIGUOUS,
                                 detail = "the reviewed owner ${review.owner} no longer exists",
+                                blocks = blocks,
                             )
                     matched.size > 1 ->
                         DocumentedExample(
@@ -390,6 +392,8 @@ object DocumentedExamples {
                             ExampleStatus.OWNED,
                             owner = matched.single().fixture,
                             detail = if (byTitle.isNotEmpty()) null else "matched by name",
+                            // Kept for the example's identity, which an override's digest names.
+                            blocks = blocks,
                             name = name,
                         )
                     example.problem != null ->
@@ -423,6 +427,7 @@ object DocumentedExamples {
                             ExampleStatus.AMBIGUOUS,
                             stem,
                             detail = "another example on the page has the name $stem",
+                            blocks = blocks,
                             name = name,
                         )
                     else ->
@@ -435,23 +440,27 @@ object DocumentedExamples {
                         )
                 }
             }
-        // One fixture can't own two examples; the review decides which, as for any other match.
-        val claimed =
+        // One scenario can't own two examples. A reviewed owner keeps its claim; every other
+        // example claiming the same scenario goes back for review.
+        val counts = matched.mapNotNull { it.owner }.groupingBy { it }.eachCount()
+        val reviewedClaims =
             matched
-                .filter { it.detail?.startsWith("reviewed owner") != true }
+                .filter { it.detail?.startsWith("reviewed owner") == true }
                 .mapNotNull { it.owner }
-                .groupingBy { it }
-                .eachCount()
-                .filterValues { it > 1 }
-                .keys
         return matched.mapIndexed { index, example ->
-            if (example.owner !in claimed || example.detail?.startsWith("reviewed owner") == true)
+            val owner = example.owner
+            val reviewed = example.detail?.startsWith("reviewed owner") == true
+            if (
+                owner == null ||
+                    (counts.getValue(owner) == 1) ||
+                    (reviewed && reviewedClaims.count { it == owner } == 1)
+            )
                 example
             else
                 DocumentedExample(
                     example.title,
                     ExampleStatus.AMBIGUOUS,
-                    detail = "${example.owner} matches several examples",
+                    detail = "$owner matches several examples",
                     blocks = read[index].second.blocks,
                 )
         }

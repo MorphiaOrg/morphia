@@ -2,7 +2,9 @@ package dev.morphia.audits.extraction
 
 import java.nio.file.Files
 import java.nio.file.Path
+import org.bson.BsonArray
 import org.bson.BsonDocument
+import org.bson.BsonValue
 
 /** An example extraction couldn't write a scenario for, and why. */
 data class ExtractionFailure(val page: String, val title: String, val detail: String)
@@ -52,14 +54,21 @@ object Extraction {
                                         Overrides.identity(example.blocks),
                                     )]
                             override?.let { used += it }
-                            if (
-                                example.status != ExampleStatus.UNOWNED || override?.exclude == true
-                            ) {
-                                return@examples example
-                            }
                             fun fail(detail: String): DocumentedExample {
                                 failures += ExtractionFailure(page.id, example.title, detail)
                                 return example
+                            }
+                            if (override?.exclude == true) return@examples example
+                            // An override for an example that has a scenario was applied when it
+                            // was written; one for an example extraction can't read applies to
+                            // nothing.
+                            if (example.status != ExampleStatus.UNOWNED) {
+                                if (override != null && example.status != ExampleStatus.OWNED) {
+                                    fail(
+                                        "the override can't apply: the example is ${example.status}"
+                                    )
+                                }
+                                return@examples example
                             }
                             val stem = example.stem ?: return@examples fail("no descriptive name")
                             val path = ScenarioWriter.path(page, stem)
@@ -109,6 +118,17 @@ object Extraction {
                                 } catch (failure: IllegalArgumentException) {
                                     return@examples fail(failure.message!!)
                                 }
+                            // The runner refuses a stage that reads or writes another database,
+                            // since its two behavior runs would share it.
+                            if (documented.shape == ActionShape.PIPELINE) {
+                                (documented.action + documented.alternatives.flatten())
+                                    .firstOrNull(::namesADatabase)
+                                    ?.let {
+                                        return@examples fail(
+                                            "a stage naming another database: ${it.asDocument().firstKey}"
+                                        )
+                                    }
+                            }
                             // A page that retitles an example would otherwise get a second
                             // scenario beside the one its test reads.
                             twin(repository, path, text)?.let { existing ->
@@ -117,11 +137,10 @@ object Extraction {
                                 )
                             }
                             written[path] = text
-                            DocumentedExample(
-                                example.title,
-                                ExampleStatus.OWNED,
+                            example.copy(
+                                status = ExampleStatus.OWNED,
                                 owner = ScenarioWriter.name(page, stem),
-                                name = example.name,
+                                stem = null,
                             )
                         }
                 )
@@ -163,4 +182,24 @@ object Extraction {
                 ?.let { BsonDocument.parse(Files.readString(it)).getString("name").value }
         }
     }
+
+    private val NAMESPACED = setOf("\$out", "\$merge", "\$lookup", "\$graphLookup", "\$unionWith")
+
+    /** Whether a stage names another database, by the rule core's `OperatorCaseRunner` applies. */
+    private fun namesADatabase(value: BsonValue): Boolean =
+        when (value) {
+            is BsonDocument ->
+                value.entries.any { (key, argument) ->
+                    key != "\$literal" &&
+                        (key in NAMESPACED &&
+                            argument is BsonDocument &&
+                            (argument.containsKey("db") ||
+                                hasDb(argument["into"]) ||
+                                hasDb(argument["from"])) || namesADatabase(argument))
+                }
+            is BsonArray -> value.any(::namesADatabase)
+            else -> false
+        }
+
+    private fun hasDb(value: BsonValue?): Boolean = value is BsonDocument && value.containsKey("db")
 }

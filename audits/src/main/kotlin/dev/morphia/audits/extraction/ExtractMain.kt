@@ -39,7 +39,9 @@ fun main(args: Array<String>) {
         result.failures.forEach {
             println("NOT EXTRACTED ${it.page} \"${it.title}\": ${it.detail}")
         }
-        if (result.failures.isNotEmpty()) exitProcess(3)
+        val missing = Coverage.missingScenarios(repository, result.inventory, overrides)
+        println("${missing.size} documented examples have no scenario or exclusion")
+        if (result.failures.isNotEmpty() || missing.isNotEmpty()) exitProcess(3)
     } catch (failure: IllegalArgumentException) {
         System.err.println("EXTRACT_INVALID: ${failure.message}")
         exitProcess(2)

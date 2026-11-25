@@ -223,10 +223,6 @@
       "detail": "an admin function and not generally suited for morphia"
     },
     {
-      "scenario": "aggregation/stages/out/outputToADifferentDatabase",
-      "reason": "NOT_WRITTEN"
-    },
-    {
       "scenario": "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
       "reason": "OUT_OF_SCOPE",
       "detail": "a diagnostic stage: it reports the query plan cache"

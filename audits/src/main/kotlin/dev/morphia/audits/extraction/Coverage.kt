@@ -62,7 +62,11 @@ object Coverage {
      * baseline: an example the reader can't extract is a failure until it learns it, or a reviewer
      * excludes the example.
      */
-    fun missingScenarios(inventory: ExampleInventory, overrides: ExampleOverrides): List<String> {
+    fun missingScenarios(
+        repository: Path,
+        inventory: ExampleInventory,
+        overrides: ExampleOverrides,
+    ): List<String> {
         val excluded =
             overrides.overrides
                 .filter { it.exclude }
@@ -72,7 +76,13 @@ object Coverage {
             .filter { it.context in Extraction.FAMILIES }
             .flatMap { page ->
                 page.examples
-                    .filter { it.status != ExampleStatus.OWNED }
+                    // An owned example must still have its scenario.
+                    .filter {
+                        it.status != ExampleStatus.OWNED ||
+                            !Files.isRegularFile(
+                                repository.resolve("$RESOURCES/${it.owner}/scenario.json")
+                            )
+                    }
                     .filter {
                         Triple(page.id, it.title, Overrides.identity(it.blocks)) !in excluded
                     }

@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.extraction.BlockRole
+import dev.morphia.audits.extraction.Coverage
 import dev.morphia.audits.extraction.Documented
 import dev.morphia.audits.extraction.DocumentedExample
 import dev.morphia.audits.extraction.DocumentedPage
@@ -155,5 +156,79 @@ class ExtractionTest {
         val result = Extraction.extract(repository, inventory(), ExampleOverrides())
         assertEquals(emptyMap<String, String>(), result.written)
         assertTrue(result.failures.single().detail.contains("exists"), result.failures.toString())
+    }
+
+    @Test
+    fun aPipelineNamingAnotherDatabaseIsRefused() {
+        val crossDatabase =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1 }])"),
+                block(
+                    BlockRole.ACTION,
+                    "db.items.aggregate([{ \$out: { db: \"reporting\", coll: \"copy\" } }])",
+                ),
+            )
+        val page = inventory().pages[0]
+        val result =
+            Extraction.extract(
+                repository,
+                inventory()
+                    .copy(
+                        pages =
+                            listOf(
+                                page.copy(
+                                    examples = listOf(page.examples[0].copy(blocks = crossDatabase))
+                                )
+                            )
+                    ),
+                ExampleOverrides(),
+            )
+        assertEquals(
+            listOf("a stage naming another database: \$out"),
+            result.failures.map { it.detail },
+        )
+    }
+
+    @Test
+    fun anOverrideOnAnUnreadableExampleIsReported() {
+        val page = inventory().pages[0]
+        val unsupported =
+            page.examples[0].copy(status = ExampleStatus.UNSUPPORTED, detail = "SYNTAX")
+        val override =
+            ExampleOverride(
+                "query/filters/gt",
+                unsupported.title,
+                Overrides.identity(blocks),
+                "reason",
+                order = "ORDERED",
+            )
+        val result =
+            Extraction.extract(
+                repository,
+                inventory().copy(pages = listOf(page.copy(examples = listOf(unsupported)))),
+                ExampleOverrides(overrides = listOf(override)),
+            )
+        assertEquals(
+            listOf("the override can't apply: the example is UNSUPPORTED"),
+            result.failures.map { it.detail },
+        )
+    }
+
+    @Test
+    fun anOwnedExampleNeedsItsScenario() {
+        val page = inventory().pages[0]
+        val owned =
+            page.examples[0].copy(
+                status = ExampleStatus.OWNED,
+                owner = "query/filters/gt/matchGreaterQuantities",
+            )
+        val inventory = inventory().copy(pages = listOf(page.copy(examples = listOf(owned))))
+        assertEquals(1, Coverage.missingScenarios(repository, inventory, ExampleOverrides()).size)
+        Files.createDirectories(repository.resolve(path).parent)
+        Files.writeString(repository.resolve(path), "{}")
+        assertEquals(
+            emptyList<String>(),
+            Coverage.missingScenarios(repository, inventory, ExampleOverrides()),
+        )
     }
 }
