@@ -126,9 +126,12 @@ class DiscoveryFindingsTest {
     fun aBuildThatRunsNoTestIsAFinding() {
         assertEquals(
             listOf("FAILING_AUDIT:build"),
-            findings(inventory(owned), inventory(owned), auditLog = "[ERROR] BUILD FAILURE").map {
-                it.key
-            },
+            findings(
+                    inventory(owned),
+                    inventory(owned),
+                    auditLog = "[DISCOVERY] critter: the operator tests exited non-zero",
+                )
+                .map { it.key },
         )
     }
 
@@ -137,12 +140,17 @@ class DiscoveryFindingsTest {
         val extraction =
             """
             Wrote 0 scenarios
+            NOT EXTRACTED query/filters/gt "Match Prices": its source changed, and find modifiers
+            NOT EXTRACTED query/filters/gt "Match Prices": its source changed, and data syntax
             NOT EXTRACTED query/filters/gt "Match Prices": the override matches no example on the page
             NOT EXTRACTED query/filters/gt "Other": find modifiers
             """
                 .trimIndent()
         assertEquals(
-            listOf("FAILING_AUDIT:extraction:query/filters/gt \"Match Prices\""),
+            listOf(
+                "FAILING_AUDIT:extraction:refresh:query/filters/gt \"Match Prices\"",
+                "FAILING_AUDIT:extraction:stale-override:query/filters/gt \"Match Prices\"",
+            ),
             findings(inventory(owned), inventory(owned), extraction = extraction).map { it.key },
         )
     }

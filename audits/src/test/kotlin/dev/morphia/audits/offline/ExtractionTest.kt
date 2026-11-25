@@ -336,4 +336,22 @@ class ExtractionTest {
             Extraction.refresh(repository, committed, committed, ExampleOverrides()).written,
         )
     }
+
+    @Test
+    fun anExampleWhoseCodeVanishedIsAFailure() {
+        val committed = Extraction.extract(repository, inventory(), ExampleOverrides()).inventory
+        val page = committed.pages[0]
+        val current =
+            committed.copy(
+                pages =
+                    listOf(
+                        page.copy(examples = listOf(page.examples[0].copy(blocks = emptyList())))
+                    )
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        assertEquals(
+            listOf("its source changed, and the reader no longer finds the example's code"),
+            refreshed.failures.map { it.detail },
+        )
+    }
 }

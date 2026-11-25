@@ -200,6 +200,22 @@ object Extraction {
                 page.examples.zip(Coverage.exampleKeys(page)).forEach { (example, key) ->
                     val owner = example.owner
                     val was = before[key]
+                    // A page edit that leaves the reader nothing to extract would otherwise keep
+                    // the
+                    // old scenario passing silently.
+                    if (
+                        example.status == ExampleStatus.OWNED &&
+                            example.blocks.isEmpty() &&
+                            was?.blocks.orEmpty().isNotEmpty()
+                    ) {
+                        failures +=
+                            ExtractionFailure(
+                                page.id,
+                                example.title,
+                                "its source changed, and the reader no longer finds the example's code",
+                            )
+                        return@forEach
+                    }
                     if (
                         example.status != ExampleStatus.OWNED ||
                             owner == null ||

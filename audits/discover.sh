@@ -78,7 +78,11 @@ if [ "$test" = "--test" ]; then
         mvn test -pl :morphia-core -Dmorphia.mapper=$mapper -Ddeploy.skip=true -Dinvoker.skip=true \
             -Dsurefire.failIfNoSpecifiedTests=false \
             -Dtest='dev.morphia.test.aggregation.expressions.*,dev.morphia.test.aggregation.stages.*,dev.morphia.test.query.filters.*,dev.morphia.test.query.updates.*,ExampleOwnersTest' \
-            >> "$log" 2>&1 || echo "$mapper: operator tests failed" >> "$out/test-status.txt"
+            >> "$log" 2>&1 || {
+            # -q hides Maven's own failure banner; the findings read this marker instead.
+            echo "[DISCOVERY] $mapper: the operator tests exited non-zero" >> "$log"
+            echo "$mapper: operator tests failed" >> "$out/test-status.txt"
+        }
     done
 fi
 audit dev.morphia.audits.publish.PublishMainKt "findings $tree $out/committed-inventory.json $log $out/extraction.txt" \
@@ -88,7 +92,7 @@ python3 -I - "$out" "$tree" <<'EOF'
 import collections, json, os, sys
 out, tree = sys.argv[1], sys.argv[2]
 inventory = json.load(open(os.path.join(out, "documented-examples.json")))
-findings = json.load(open(os.path.join(out, "findings.json")))
+findings = json.load(open(os.path.join(out, "findings.json")))["findings"]
 lines = [f"# Operator example discovery at mongodb/docs `{inventory['commit'][:10]}`", ""]
 lines += ["| Measure | Count |", "| --- | --- |"]
 lines += [f"| {key} | {value} |" for key, value in sorted(inventory["summary"].items())]

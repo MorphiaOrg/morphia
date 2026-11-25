@@ -27,7 +27,11 @@ object DiscoveryFindings {
      */
     private val unextracted = Regex("""^NOT EXTRACTED (\S+) "(.*)": (.*)$""")
     private val ownFailures =
-        listOf("the override matches no example", "the override can't apply", "its source changed")
+        mapOf(
+            "the override matches no example" to "stale-override",
+            "the override can't apply" to "unapplied-override",
+            "its source changed" to "refresh",
+        )
 
     fun findings(
         committed: ExampleInventory,
@@ -122,7 +126,8 @@ object DiscoveryFindings {
                 )
             }
         // A build that fails before any test runs names no test, and would otherwise file nothing.
-        if (tests.isEmpty() && "BUILD FAILURE" in log) {
+        // Maven runs quietly, so discover.sh marks a run that exited non-zero itself.
+        if (tests.isEmpty() && ("[DISCOVERY]" in log || "BUILD FAILURE" in log)) {
             return listOf(
                 Finding(
                     "${FindingType.FAILING_AUDIT}:build",
@@ -141,11 +146,19 @@ object DiscoveryFindings {
             .orEmpty()
             .lines()
             .mapNotNull { unextracted.find(it.trim()) }
-            .filter { match -> ownFailures.any { match.groupValues[3].startsWith(it) } }
-            .map { match ->
+            .mapNotNull { match ->
+                ownFailures.entries
+                    .firstOrNull { match.groupValues[3].startsWith(it.key) }
+                    ?.let { match to it.value }
+            }
+            // One example can fail more than one way; each way is its own finding, once.
+            .distinctBy { (match, kind) ->
+                Triple(match.groupValues[1], match.groupValues[2], kind)
+            }
+            .map { (match, kind) ->
                 val subject = "${match.groupValues[1]} \"${match.groupValues[2]}\""
                 Finding(
-                    "${FindingType.FAILING_AUDIT}:extraction:$subject",
+                    "${FindingType.FAILING_AUDIT}:extraction:$kind:$subject",
                     FindingType.FAILING_AUDIT,
                     "Extraction fails for $subject",
                     "At mongodb/docs `${current.commit.take(10)}`, extraction reports for $subject: " +
