@@ -1,0 +1,274 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/mergeObjects/mergeTheRatingsOfEachMovie",
+  "title": "Merge the Ratings of Each Movie",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/mergeObjects.txt",
+    "blob": "ed8ed3a9efc92b5bd03a79a73226f54b75da532c"
+  },
+  "dataset": null,
+  "collections": {
+    "movieReviews": [
+      {
+        "title": "Galactic Odyssey",
+        "source": "filmCritic",
+        "data": {
+          "rating": {
+            "$numberDouble": "8.1"
+          },
+          "votes": {
+            "$numberInt": "1482903"
+          }
+        }
+      },
+      {
+        "title": "Galactic Odyssey",
+        "source": "viewerVault",
+        "data": {
+          "tomatometer": {
+            "$numberInt": "79"
+          },
+          "audienceScore": {
+            "$numberInt": "85"
+          }
+        }
+      },
+      {
+        "title": "Neon Horizon",
+        "source": "filmCritic",
+        "data": {
+          "rating": {
+            "$numberDouble": "7.4"
+          },
+          "votes": {
+            "$numberInt": "983201"
+          }
+        }
+      },
+      {
+        "title": "Neon Horizon",
+        "source": "viewerVault",
+        "data": {
+          "tomatometer": {
+            "$numberInt": "68"
+          },
+          "audienceScore": {
+            "$numberInt": "74"
+          }
+        }
+      },
+      {
+        "title": "The Last Protocol",
+        "source": "filmCritic",
+        "data": {
+          "rating": {
+            "$numberDouble": "8.7"
+          },
+          "votes": {
+            "$numberInt": "2104567"
+          }
+        }
+      },
+      {
+        "title": "The Last Protocol",
+        "source": "viewerVault",
+        "data": {
+          "tomatometer": {
+            "$numberInt": "91"
+          },
+          "audienceScore": {
+            "$numberInt": "88"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movieReviews",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$title",
+          "allRatings": {
+            "$mergeObjects": "$data"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Galactic Odyssey"
+            }
+          },
+          {
+            "name": "allRatings",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "8.1"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1482903"
+                    }
+                  }
+                },
+                {
+                  "name": "tomatometer",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "79"
+                    }
+                  }
+                },
+                {
+                  "name": "audienceScore",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "85"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Neon Horizon"
+            }
+          },
+          {
+            "name": "allRatings",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "7.4"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "983201"
+                    }
+                  }
+                },
+                {
+                  "name": "tomatometer",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "68"
+                    }
+                  }
+                },
+                {
+                  "name": "audienceScore",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "74"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "The Last Protocol"
+            }
+          },
+          {
+            "name": "allRatings",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "8.7"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2104567"
+                    }
+                  }
+                },
+                {
+                  "name": "tomatometer",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "91"
+                    }
+                  }
+                },
+                {
+                  "name": "audienceScore",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "88"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

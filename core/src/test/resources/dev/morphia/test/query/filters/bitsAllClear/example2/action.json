@@ -1,1 +1,0 @@
-db.collection.find( { a: { $bitsAllClear: 35 } } )

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/regex/matchSAnywhere",
+  "title": "Match S Anywhere",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/regex.txt",
+    "blob": "15c439109f30b8b073365973147384da07bb16d2"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "100"
+        },
+        "sku": "abc123",
+        "description": "Single line description."
+      },
+      {
+        "_id": {
+          "$numberInt": "101"
+        },
+        "sku": "abc789",
+        "description": "First line\nSecond line"
+      },
+      {
+        "_id": {
+          "$numberInt": "102"
+        },
+        "sku": "xyz456",
+        "description": "Many spaces before     line"
+      },
+      {
+        "_id": {
+          "$numberInt": "103"
+        },
+        "sku": "xyz789",
+        "description": "Multiple\nline description"
+      },
+      {
+        "_id": {
+          "$numberInt": "104"
+        },
+        "sku": "Abc789",
+        "description": "SKU starts with A"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "products",
+    "filter": {
+      "description": {
+        "$regex": {
+          "$regularExpression": {
+            "pattern": "S",
+            "options": ""
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "abc123"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Single line description."
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "101"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "abc789"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "First line\nSecond line"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "104"
+              }
+            }
+          },
+          {
+            "name": "sku",
+            "value": {
+              "text": "Abc789"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "SKU starts with A"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

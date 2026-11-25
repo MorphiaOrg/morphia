@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/geoWithin/withinAPolygon",
+  "title": "Within a Polygon",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+    "path": "source/reference/operator/query/geoWithin.txt",
+    "blob": "c70a796f45bce5f20490061be29beabaf7513e9a"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$geoWithin": {
+          "$geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  {
+                    "$numberDouble": "0.0"
+                  },
+                  {
+                    "$numberDouble": "0.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "3.0"
+                  },
+                  {
+                    "$numberDouble": "6.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "6.0"
+                  },
+                  {
+                    "$numberDouble": "1.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "0.0"
+                  },
+                  {
+                    "$numberDouble": "0.0"
+                  }
+                ]
+              ]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

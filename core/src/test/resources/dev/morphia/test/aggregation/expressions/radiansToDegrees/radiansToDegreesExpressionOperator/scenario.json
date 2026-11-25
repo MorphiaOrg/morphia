@@ -1,0 +1,114 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8562c94b38de3e8c83552bcd41558548e5220eef",
+    "path": "source/reference/operator/aggregation/radiansToDegrees.txt",
+    "blob": "eefa0c4a36ad50621ec3034aab0e63511b748996"
+  },
+  "dataset": null,
+  "collections": {
+    "trigangles": [
+      {
+        "angle_a": {
+          "$numberDecimal": "0.9272952180016122324285124629224290"
+        },
+        "angle_b": {
+          "$numberDecimal": "0.6435011087932843868028092287173227"
+        },
+        "angle_c": {
+          "$numberDecimal": "1.570796326794896619231321691639752"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigangles",
+    "pipeline": [
+      {
+        "$addFields": {
+          "angle_a_deg": {
+            "$radiansToDegrees": "$angle_a"
+          },
+          "angle_b_deg": {
+            "$radiansToDegrees": "$angle_b"
+          },
+          "angle_c_deg": {
+            "$radiansToDegrees": "$angle_c"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50aec71c75c59232b3ede4"
+              }
+            }
+          },
+          {
+            "name": "angle_a",
+            "value": {
+              "decimal": "0.9272952180016122324285124629224290"
+            }
+          },
+          {
+            "name": "angle_b",
+            "value": {
+              "decimal": "0.6435011087932843868028092287173227"
+            }
+          },
+          {
+            "name": "angle_c",
+            "value": {
+              "decimal": "1.570796326794896619231321691639752"
+            }
+          },
+          {
+            "name": "angle_a_deg",
+            "value": {
+              "decimal": "53.13010235415597870314438744090660"
+            }
+          },
+          {
+            "name": "angle_b_deg",
+            "value": {
+              "decimal": "36.86989764584402129685561255909341"
+            }
+          },
+          {
+            "name": "angle_c_deg",
+            "value": {
+              "decimal": "90.00000000000000000000000000000003"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

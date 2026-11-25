@@ -1,0 +1,153 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/ln/lnExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/ln.txt",
+    "blob": "30f39f34a2ba78315585b8361a2541091738d476"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "year": "2000",
+        "sales": {
+          "$numberInt": "8700000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "year": "2005",
+        "sales": {
+          "$numberInt": "5000000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "year": "2010",
+        "sales": {
+          "$numberInt": "6250000"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "x": "$year",
+          "y": {
+            "$ln": "$sales"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "x",
+            "value": {
+              "text": "2000"
+            }
+          },
+          {
+            "name": "y",
+            "value": {
+              "exact": {
+                "$numberDouble": "15.978833583624812"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "x",
+            "value": {
+              "text": "2005"
+            }
+          },
+          {
+            "name": "y",
+            "value": {
+              "exact": {
+                "$numberDouble": "15.424948470398375"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "x",
+            "value": {
+              "text": "2010"
+            }
+          },
+          {
+            "name": "y",
+            "value": {
+              "exact": {
+                "$numberDouble": "15.648092021712584"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

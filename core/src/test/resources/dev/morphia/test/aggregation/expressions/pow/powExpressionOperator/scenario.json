@@ -1,0 +1,147 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/pow/powExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/pow.txt",
+    "blob": "1df0a952cf69af232d3237d5308f6ea436e5b916"
+  },
+  "dataset": null,
+  "collections": {
+    "quizzes": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "name": "dave123",
+            "score": {
+              "$numberInt": "85"
+            }
+          },
+          {
+            "name": "dave2",
+            "score": {
+              "$numberInt": "90"
+            }
+          },
+          {
+            "name": "ahn",
+            "score": {
+              "$numberInt": "71"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "scores": [
+          {
+            "name": "li",
+            "quiz": {
+              "$numberInt": "2"
+            },
+            "score": {
+              "$numberInt": "96"
+            }
+          },
+          {
+            "name": "annT",
+            "score": {
+              "$numberInt": "77"
+            }
+          },
+          {
+            "name": "ty",
+            "score": {
+              "$numberInt": "82"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "quizzes",
+    "pipeline": [
+      {
+        "$project": {
+          "variance": {
+            "$pow": [
+              {
+                "$stdDevPop": "$scores.score"
+              },
+              {
+                "$numberInt": "2"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "variance",
+            "value": {
+              "exact": {
+                "$numberDouble": "64.66666666666667"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "variance",
+            "value": {
+              "exact": {
+                "$numberDouble": "64.66666666666667"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

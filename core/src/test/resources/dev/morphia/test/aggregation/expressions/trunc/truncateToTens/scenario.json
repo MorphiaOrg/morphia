@@ -1,0 +1,164 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/trunc/truncateToTens",
+  "title": "Truncate to Tens",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/trunc.txt",
+    "blob": "cc1d9b8f1c7193a3cd36f4e6a726657c446cfccc"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "value": {
+          "$numberDouble": "19.25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "value": {
+          "$numberDouble": "28.73"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "value": {
+          "$numberDouble": "34.32"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "value": {
+          "$numberDouble": "-45.34"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "truncatedValue": {
+            "$trunc": [
+              "$value",
+              {
+                "$numberInt": "-1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "whole": {
+                "$numberInt": "-40"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

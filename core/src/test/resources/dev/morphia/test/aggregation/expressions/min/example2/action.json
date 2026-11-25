@@ -1,1 +1,0 @@
-{ $project: { quizMin: { $min: "$quizzes"}, labMin: { $min: "$labs" }, examMin: { $min: [ "$final", "$midterm" ] } } }

@@ -1,1 +1,0 @@
-{ $project: { items: { $concatArrays: [ "$instock", "$ordered" ] } } }

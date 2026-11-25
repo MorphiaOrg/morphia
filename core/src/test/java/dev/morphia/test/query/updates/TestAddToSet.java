@@ -13,30 +13,26 @@ import static dev.morphia.query.updates.UpdateOperators.addToSet;
 public class TestAddToSet extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/addToSet/example1
-     */
-    @Test
-    @DisplayName("Add to Array")
-    public void testExample1() {
-        testUpdate((query) -> query.filter(eq("_id", 1)), addToSet("tags", "accessories"));
-    }
-
-    /**
-     * test data: dev/morphia/test/query/updates/addToSet/example2
-     */
-    @Test
-    @DisplayName("Value Already Exists")
-    public void testExample2() {
-        testUpdate((query) -> query.filter(eq("_id", 1)), addToSet("tags", "camera"));
-    }
-
-    /**
-     * test data: dev/morphia/test/query/updates/addToSet/example3
+     * test data: dev/morphia/test/query/updates/addToSet/eachModifier
      */
     @Test
     @DisplayName("``$each`` Modifier")
-    public void testExample3() {
+    public void testEachModifier() {
         testUpdate((query) -> query.filter(eq("_id", 2)),
                 addToSet("tags", List.of("camera", "electronics", "accessories")));
+    }
+
+    @Test
+    @DisplayName("Add to Array")
+    public void testAddToArray() {
+        testUpdate((query) -> query.filter(eq("_id", 1)),
+                addToSet("tags", "accessories"));
+    }
+
+    @Test
+    @DisplayName("Value Already Exists")
+    public void testValueAlreadyExists() {
+        testUpdate((query) -> query.filter(eq("_id", 1)),
+                addToSet("tags", "camera"));
     }
 }

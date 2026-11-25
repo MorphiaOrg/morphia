@@ -1,0 +1,177 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/map/addToEachElementOfAnArray",
+  "title": "Add to Each Element of an Array",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/map.txt",
+    "blob": "42cd94292518bce21ea6a17604a49007ddd649b2"
+  },
+  "dataset": null,
+  "collections": {
+    "grades": [
+      {
+        "quizzes": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "7"
+          }
+        ]
+      },
+      {
+        "quizzes": []
+      },
+      {
+        "quizzes": [
+          {
+            "$numberInt": "3"
+          },
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "9"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "grades",
+    "pipeline": [
+      {
+        "$project": {
+          "adjustedGrades": {
+            "$map": {
+              "input": "$quizzes",
+              "as": "grade",
+              "in": {
+                "$add": [
+                  "$$grade",
+                  {
+                    "$numberInt": "2"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b8f7237da390c6869a62"
+              }
+            }
+          },
+          {
+            "name": "adjustedGrades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "7"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "8"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "9"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b8f7237da390c6869a63"
+              }
+            }
+          },
+          {
+            "name": "adjustedGrades",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b8f7237da390c6869a64"
+              }
+            }
+          },
+          {
+            "name": "adjustedGrades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "11"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

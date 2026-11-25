@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.query.Sort;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,17 +20,16 @@ public class TestIntegral extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/integral/example1
+     * test data: dev/morphia/test/aggregation/expressions/integral/integralExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().removeIds(true),
-                (aggregation) -> aggregation
-                        .pipeline(setWindowFields().partitionBy("$powerMeterID").sortBy(Sort.ascending("timeStamp"))
-                                .output(output("powerMeterKilowattHours").operator(integral("$kilowatts").unit(HOUR))
-                                        .window().range("unbounded", "current", HOUR))));
+    public void testIntegralExpressionOperator() {
+        testPipeline((aggregation) -> aggregation
+                .pipeline(setWindowFields().partitionBy("$powerMeterID").sortBy(Sort.ascending("timeStamp"))
+                        .output(output("powerMeterKilowattHours").operator(integral("$kilowatts").unit(HOUR))
+                                .window().range("unbounded", "current", HOUR))));
     }
 
 }

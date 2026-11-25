@@ -12,12 +12,12 @@ import static dev.morphia.query.filters.Filters.gt;
 
 public class TestCount extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/count/example1
+     * test data: dev/morphia/test/aggregation/stages/count/countAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCountAggregationStage() {
         testPipeline((aggregation) -> aggregation.pipeline(match(gt("score", 80)), Count.count("passing_scores")));
     }
 

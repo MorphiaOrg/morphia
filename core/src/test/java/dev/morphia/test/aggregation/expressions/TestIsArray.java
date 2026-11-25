@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIsArray extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isArray/example1
+     * test data: dev/morphia/test/aggregation/expressions/isArray/isArrayExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIsArrayExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("items", condition(and(isArray("$instock"), isArray("$ordered")),
                         concatArrays("$instock", "$ordered"), "One or more fields is not an array."))));

@@ -1,0 +1,238 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/eq/equalsASpecifiedValue",
+  "title": "Equals a Specified Value",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/eq.txt",
+    "blob": "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": {
+          "name": "ab",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "15"
+        },
+        "tags": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": {
+          "name": "cd",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": {
+          "name": "ij",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "25"
+        },
+        "tags": [
+          "A",
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": {
+          "name": "xy",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "30"
+        },
+        "tags": [
+          "B",
+          "A"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": {
+          "name": "mn",
+          "code": "000"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          [
+            "A",
+            "B"
+          ],
+          "C"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "qty": {
+        "$eq": {
+          "$numberInt": "20"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "cd"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "123"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "B"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "mn"
+                  }
+                },
+                {
+                  "name": "code",
+                  "value": {
+                    "text": "000"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "A"
+                    },
+                    {
+                      "text": "B"
+                    }
+                  ]
+                },
+                {
+                  "text": "C"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

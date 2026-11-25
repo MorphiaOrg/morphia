@@ -1,0 +1,691 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields",
+  "title": "Use $bucket with $facet to Bucket by Multiple Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "656745d0dadc40e2bb112266343d0756b128a3fb",
+    "path": "source/reference/operator/aggregation/bucket.txt",
+    "blob": "8f6d5a724b5f9b66774c64e1ab676a001d0ba62b"
+  },
+  "dataset": null,
+  "collections": {
+    "artwork": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "The Pillars of Society",
+        "artist": "Grosz",
+        "year": {
+          "$numberInt": "1926"
+        },
+        "price": {
+          "$numberDecimal": "199.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "Melancholy III",
+        "artist": "Munch",
+        "year": {
+          "$numberInt": "1902"
+        },
+        "price": {
+          "$numberDecimal": "280.00"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "Dancer",
+        "artist": "Miro",
+        "year": {
+          "$numberInt": "1925"
+        },
+        "price": {
+          "$numberDecimal": "76.04"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "title": "The Great Wave off Kanagawa",
+        "artist": "Hokusai",
+        "price": {
+          "$numberDecimal": "167.30"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "title": "The Persistence of Memory",
+        "artist": "Dali",
+        "year": {
+          "$numberInt": "1931"
+        },
+        "price": {
+          "$numberDecimal": "483.00"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "title": "Composition VII",
+        "artist": "Kandinsky",
+        "year": {
+          "$numberInt": "1913"
+        },
+        "price": {
+          "$numberDecimal": "385.00"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "title": "The Scream",
+        "artist": "Munch",
+        "year": {
+          "$numberInt": "1893"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "title": "Blue Flower",
+        "artist": "O'Keefe",
+        "year": {
+          "$numberInt": "1918"
+        },
+        "price": {
+          "$numberDecimal": "118.42"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "artwork",
+    "pipeline": [
+      {
+        "$facet": {
+          "price": [
+            {
+              "$bucket": {
+                "groupBy": "$price",
+                "boundaries": [
+                  {
+                    "$numberInt": "0"
+                  },
+                  {
+                    "$numberInt": "200"
+                  },
+                  {
+                    "$numberInt": "400"
+                  }
+                ],
+                "default": "Other",
+                "output": {
+                  "count": {
+                    "$sum": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  "artwork": {
+                    "$push": {
+                      "title": "$title",
+                      "price": "$price"
+                    }
+                  },
+                  "averagePrice": {
+                    "$avg": "$price"
+                  }
+                }
+              }
+            }
+          ],
+          "year": [
+            {
+              "$bucket": {
+                "groupBy": "$year",
+                "boundaries": [
+                  {
+                    "$numberInt": "1890"
+                  },
+                  {
+                    "$numberInt": "1910"
+                  },
+                  {
+                    "$numberInt": "1920"
+                  },
+                  {
+                    "$numberInt": "1940"
+                  }
+                ],
+                "default": "Unknown",
+                "output": {
+                  "count": {
+                    "$sum": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  "artwork": {
+                    "$push": {
+                      "title": "$title",
+                      "year": "$year"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "price",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "0"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Pillars of Society"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "199.99"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Dancer"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "76.04"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Great Wave off Kanagawa"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "167.30"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Blue Flower"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "118.42"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "averagePrice",
+                      "value": {
+                        "decimal": "140.4375"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "200"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Melancholy III"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "280.00"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Composition VII"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "385.00"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "averagePrice",
+                      "value": {
+                        "decimal": "332.50"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Other"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Persistence of Memory"
+                                }
+                              },
+                              {
+                                "name": "price",
+                                "value": {
+                                  "decimal": "483.00"
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Scream"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "averagePrice",
+                      "value": {
+                        "decimal": "483.00"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1890"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Melancholy III"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1902"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Scream"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1893"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1910"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Composition VII"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1913"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Blue Flower"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1918"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1920"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Pillars of Society"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1926"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "Dancer"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1925"
+                                  }
+                                }
+                              }
+                            ]
+                          },
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Persistence of Memory"
+                                }
+                              },
+                              {
+                                "name": "year",
+                                "value": {
+                                  "whole": {
+                                    "$numberInt": "1931"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Unknown"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "artwork",
+                      "value": {
+                        "array": [
+                          {
+                            "document": [
+                              {
+                                "name": "title",
+                                "value": {
+                                  "text": "The Great Wave off Kanagawa"
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

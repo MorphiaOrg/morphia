@@ -1,0 +1,199 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sqrt/sqrtExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/sqrt.txt",
+    "blob": "7a9da38395074e4e34e014f8c988877b87744365"
+  },
+  "dataset": null,
+  "collections": {
+    "points": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "p1": {
+          "x": {
+            "$numberInt": "5"
+          },
+          "y": {
+            "$numberInt": "8"
+          }
+        },
+        "p2": {
+          "x": {
+            "$numberInt": "0"
+          },
+          "y": {
+            "$numberInt": "5"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "p1": {
+          "x": {
+            "$numberInt": "-2"
+          },
+          "y": {
+            "$numberInt": "1"
+          }
+        },
+        "p2": {
+          "x": {
+            "$numberInt": "1"
+          },
+          "y": {
+            "$numberInt": "5"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "p1": {
+          "x": {
+            "$numberInt": "4"
+          },
+          "y": {
+            "$numberInt": "4"
+          }
+        },
+        "p2": {
+          "x": {
+            "$numberInt": "4"
+          },
+          "y": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "points",
+    "pipeline": [
+      {
+        "$project": {
+          "distance": {
+            "$sqrt": {
+              "$add": [
+                {
+                  "$pow": [
+                    {
+                      "$subtract": [
+                        "$p2.y",
+                        "$p1.y"
+                      ]
+                    },
+                    {
+                      "$numberInt": "2"
+                    }
+                  ]
+                },
+                {
+                  "$pow": [
+                    {
+                      "$subtract": [
+                        "$p2.x",
+                        "$p1.x"
+                      ]
+                    },
+                    {
+                      "$numberInt": "2"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "distance",
+            "value": {
+              "exact": {
+                "$numberDouble": "5.830951894845301"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "distance",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "distance",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

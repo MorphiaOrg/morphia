@@ -1,0 +1,101 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/project/includeComputedFields",
+  "title": "Include Computed Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/project.txt",
+    "blob": "a875b2e46f16cdd3d1c06306668fecd025e754b6"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": "The Great Train Robbery"
+        }
+      },
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "leadActor": {
+            "$arrayElemAt": [
+              "$cast",
+              {
+                "$numberInt": "0"
+              }
+            ]
+          },
+          "releaseYear": "$year"
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "573a1390f29313caabcd42e8"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "The Great Train Robbery"
+            }
+          },
+          {
+            "name": "leadActor",
+            "value": {
+              "text": "A.C. Abadie"
+            }
+          },
+          {
+            "name": "releaseYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1903"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

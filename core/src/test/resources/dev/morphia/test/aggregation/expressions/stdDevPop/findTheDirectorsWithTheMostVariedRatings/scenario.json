@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/stdDevPop/findTheDirectorsWithTheMostVariedRatings",
+  "title": "Find the Directors with the Most Varied Ratings",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/stdDevPop.txt",
+    "blob": "57fd655e13fc629f3ce594c9168df1958eda6933"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "directors": {
+            "$exists": true
+          },
+          "imdb.rating": {
+            "$type": "double"
+          }
+        }
+      },
+      {
+        "$unwind": "$directors"
+      },
+      {
+        "$group": {
+          "_id": "$directors",
+          "movieCount": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          },
+          "stdDevRating": {
+            "$stdDevPop": "$imdb.rating"
+          }
+        }
+      },
+      {
+        "$match": {
+          "movieCount": {
+            "$gte": {
+              "$numberInt": "10"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "stdDevRating": {
+            "$numberInt": "-1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Bob Clark"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "stdDevRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.6436747447918845"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "John McTiernan"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "stdDevRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.439305388025766"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "James Cameron"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "stdDevRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.3683566786477859"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Sean McNamara"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "stdDevRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.3499945211372495"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Robert Rodriguez"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "stdDevRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.2701476292148088"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

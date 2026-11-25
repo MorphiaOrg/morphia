@@ -1,7 +1,0 @@
-[
-  {
-    $project: {
-      "stop.title": 1
-    }
-  }
-]

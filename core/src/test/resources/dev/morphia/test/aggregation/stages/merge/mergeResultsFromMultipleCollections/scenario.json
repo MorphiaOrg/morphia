@@ -1,0 +1,130 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/merge/mergeResultsFromMultipleCollections",
+  "title": "Merge Results from Multiple Collections",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/merge.txt",
+    "blob": "6154426511a893c23664d8eb81e5ccca03331a2c"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "metacritic": {
+            "$numberInt": "100"
+          },
+          "rated": {
+            "$ne": null
+          },
+          "year": {
+            "$gte": {
+              "$numberInt": "1970"
+            },
+            "$lte": {
+              "$numberInt": "1972"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "movieCount": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      },
+      {
+        "$merge": {
+          "into": "yearlyStats",
+          "on": "_id",
+          "whenMatched": "merge",
+          "whenNotMatched": "insert"
+        }
+      }
+    ],
+    "read": {
+      "collection": "yearlyStats",
+      "filter": {},
+      "sort": {
+        "_id": {
+          "$numberInt": "1"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1970"
+              }
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1972"
+              }
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "FIELD_OPERATORS_AND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

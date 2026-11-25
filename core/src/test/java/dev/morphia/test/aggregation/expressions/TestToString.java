@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToString extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toString/example1
+     * test data: dev/morphia/test/aggregation/expressions/toString/toStringExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToStringExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("convertedZipCode", StringExpressions.toString("$zipcode")),
                 sort().ascending("convertedZipCode")));

@@ -1,0 +1,194 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/floor/floorExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "744735632617f491f8d65071fae36735b6da1d8b",
+    "path": "source/reference/operator/aggregation/floor.txt",
+    "blob": "a0b5f8f3baa54365fdab45c5941daa934db2a36e"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "value": {
+          "$numberDouble": "9.25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "value": {
+          "$numberDouble": "8.73"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "value": {
+          "$numberDouble": "4.32"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "value": {
+          "$numberDouble": "-5.34"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "value": {
+            "$numberInt": "1"
+          },
+          "floorValue": {
+            "$floor": "$value"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.25"
+              }
+            }
+          },
+          {
+            "name": "floorValue",
+            "value": {
+              "whole": {
+                "$numberInt": "9"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "8.73"
+              }
+            }
+          },
+          {
+            "name": "floorValue",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "4.32"
+              }
+            }
+          },
+          {
+            "name": "floorValue",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "-5.34"
+              }
+            }
+          },
+          {
+            "name": "floorValue",
+            "value": {
+              "whole": {
+                "$numberInt": "-6"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,767 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/bucketAuto/multiFacetedAggregation",
+  "title": "Multi-Faceted Aggregation",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
+    "path": "source/reference/operator/aggregation/bucketAuto.txt",
+    "blob": "3b07c7071063998d64970ee0626c4e334f7a7091"
+  },
+  "dataset": null,
+  "collections": {
+    "artwork": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "The Pillars of Society",
+        "artist": "Grosz",
+        "year": {
+          "$numberInt": "1926"
+        },
+        "price": {
+          "$numberDecimal": "199.99"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "39"
+          },
+          "width": {
+            "$numberInt": "21"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "Melancholy III",
+        "artist": "Munch",
+        "year": {
+          "$numberInt": "1902"
+        },
+        "price": {
+          "$numberDecimal": "280.00"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "49"
+          },
+          "width": {
+            "$numberInt": "32"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "Dancer",
+        "artist": "Miro",
+        "year": {
+          "$numberInt": "1925"
+        },
+        "price": {
+          "$numberDecimal": "76.04"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "25"
+          },
+          "width": {
+            "$numberInt": "20"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "title": "The Great Wave off Kanagawa",
+        "artist": "Hokusai",
+        "price": {
+          "$numberDecimal": "167.30"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "24"
+          },
+          "width": {
+            "$numberInt": "36"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "title": "The Persistence of Memory",
+        "artist": "Dali",
+        "year": {
+          "$numberInt": "1931"
+        },
+        "price": {
+          "$numberDecimal": "483.00"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "20"
+          },
+          "width": {
+            "$numberInt": "24"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "title": "Composition VII",
+        "artist": "Kandinsky",
+        "year": {
+          "$numberInt": "1913"
+        },
+        "price": {
+          "$numberDecimal": "385.00"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "30"
+          },
+          "width": {
+            "$numberInt": "46"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "title": "The Scream",
+        "artist": "Munch",
+        "price": {
+          "$numberDecimal": "159.00"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "24"
+          },
+          "width": {
+            "$numberInt": "18"
+          },
+          "units": "in"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "title": "Blue Flower",
+        "artist": "O'Keefe",
+        "year": {
+          "$numberInt": "1918"
+        },
+        "price": {
+          "$numberDecimal": "118.42"
+        },
+        "dimensions": {
+          "height": {
+            "$numberInt": "24"
+          },
+          "width": {
+            "$numberInt": "20"
+          },
+          "units": "in"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "artwork",
+    "pipeline": [
+      {
+        "$facet": {
+          "price": [
+            {
+              "$bucketAuto": {
+                "groupBy": "$price",
+                "buckets": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ],
+          "year": [
+            {
+              "$bucketAuto": {
+                "groupBy": "$year",
+                "buckets": {
+                  "$numberInt": "3"
+                },
+                "output": {
+                  "count": {
+                    "$sum": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  "years": {
+                    "$push": "$year"
+                  }
+                }
+              }
+            }
+          ],
+          "area": [
+            {
+              "$bucketAuto": {
+                "groupBy": {
+                  "$multiply": [
+                    "$dimensions.height",
+                    "$dimensions.width"
+                  ]
+                },
+                "buckets": {
+                  "$numberInt": "4"
+                },
+                "output": {
+                  "count": {
+                    "$sum": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  "titles": {
+                    "$push": "$title"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "area",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "432"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "500"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "The Scream"
+                          },
+                          {
+                            "text": "The Persistence of Memory"
+                          },
+                          {
+                            "text": "Blue Flower"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "500"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "864"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "Dancer"
+                          },
+                          {
+                            "text": "The Pillars of Society"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "864"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1568"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "The Great Wave off Kanagawa"
+                          },
+                          {
+                            "text": "Composition VII"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1568"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1568"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "Melancholy III"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "decimal": "76.04"
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "decimal": "159.00"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "decimal": "159.00"
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "decimal": "199.99"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "decimal": "199.99"
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "decimal": "385.00"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "decimal": "385.00"
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "decimal": "483.00"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "exact": null
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1913"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "years",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "1902"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1913"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1926"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "years",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "1913"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "1918"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "1925"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1926"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1931"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "years",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "1926"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "1931"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "a page error: the page prints the facets as area, price, year; $facet returns them in the pipeline's order, price, year, area; serialization and behavior pass"
+  }
+}

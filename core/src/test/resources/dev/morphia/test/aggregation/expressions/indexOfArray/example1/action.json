@@ -1,5 +1,0 @@
-{
-   $project: {
-      index: { $indexOfArray: [ "$items", 2 ] }
-   }
-}

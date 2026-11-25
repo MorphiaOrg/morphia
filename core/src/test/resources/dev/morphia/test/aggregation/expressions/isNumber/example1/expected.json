@@ -1,6 +1,0 @@
-{ "_id" : 1, "reading" : NumberDecimal("26.0"), "isNumber" : true, "hasType" : "decimal" }
-{ "_id" : 2, "reading" : NumberLong(25), "isNumber" : true, "hasType" : "long" }
-{ "_id" : 3, "reading" : 24, "isNumber" : true, "hasType" : "int" }
-{ "_id" : 4, "reading" : 24, "isNumber" : true, "hasType" : "double" }
-{ "_id" : 5, "reading" : "24", "isNumber" : false, "hasType" : "string" }
-{ "_id" : 6, "reading" : [ NumberDecimal("26.0") ], "isNumber" : false, "hasType" : "array" }

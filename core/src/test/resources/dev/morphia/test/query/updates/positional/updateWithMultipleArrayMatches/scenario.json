@@ -1,0 +1,149 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/positional/updateWithMultipleArrayMatches",
+  "title": "Update with Multiple Array Matches",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/update/positional.txt",
+    "blob": "63b356d75dfd8a039ce4d6a8e149cb25c5832e9d"
+  },
+  "dataset": null,
+  "collections": {
+    "students_deans_list": [
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "activity_ids": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          }
+        ],
+        "grades": [
+          {
+            "$numberInt": "90"
+          },
+          {
+            "$numberInt": "95"
+          }
+        ],
+        "deans_list": [
+          {
+            "$numberInt": "2021"
+          },
+          {
+            "$numberInt": "2020"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students_deans_list",
+    "filter": {
+      "activity_ids": {
+        "$numberInt": "1"
+      },
+      "grades": {
+        "$numberInt": "95"
+      },
+      "deans_list": {
+        "$numberInt": "2021"
+      }
+    },
+    "update": {
+      "$set": {
+        "deans_list.$": {
+          "$numberInt": "2022"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "activity_ids",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "2"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "90"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "95"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "deans_list",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "2021"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "2022"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

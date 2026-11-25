@@ -1,1 +1,0 @@
-{ $project: { itemDescription: { $concat: [ "$item", " - ", "$description" ] } } }

@@ -1,8 +1,0 @@
-{ $sort: { date: 1, item: 1 } },
-   {
-       $group:
-         {
-           _id: { day: { $dayOfYear: "$date"}, year: { $year: "$date" } },
-           itemsSold: { $push:  { item: "$item", quantity: "$quantity" } }
-         }
-     }

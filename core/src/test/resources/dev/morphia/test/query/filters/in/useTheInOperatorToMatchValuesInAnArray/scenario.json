@@ -1,0 +1,206 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
+  "title": "Use the ``$in`` Operator to Match Values in an Array",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/in.txt",
+    "blob": "a1ad4613f10bb5eb67174b4a35c0505b04cf34ae"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "item": "Pens",
+        "quantity": {
+          "$numberInt": "350"
+        },
+        "tags": [
+          "school",
+          "office"
+        ]
+      },
+      {
+        "item": "Erasers",
+        "quantity": {
+          "$numberInt": "15"
+        },
+        "tags": [
+          "school",
+          "home"
+        ]
+      },
+      {
+        "item": "Maps",
+        "tags": [
+          "office",
+          "storage"
+        ]
+      },
+      {
+        "item": "Books",
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "tags": [
+          "school",
+          "storage",
+          "home"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "inventory",
+    "filter": {
+      "tags": {
+        "$in": [
+          "home",
+          "school"
+        ]
+      }
+    },
+    "update": {
+      "$set": {
+        "exclude": false
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "Pens"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "350"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "school"
+                },
+                {
+                  "text": "office"
+                }
+              ]
+            }
+          },
+          {
+            "name": "exclude",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "Erasers"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "15"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "school"
+                },
+                {
+                  "text": "home"
+                }
+              ]
+            }
+          },
+          {
+            "name": "exclude",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "Books"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "school"
+                },
+                {
+                  "text": "storage"
+                },
+                {
+                  "text": "home"
+                }
+              ]
+            }
+          },
+          {
+            "name": "exclude",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

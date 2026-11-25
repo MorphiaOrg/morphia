@@ -1,0 +1,126 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/type/matchStringRatingsByTypeAlias",
+  "title": "Match String Ratings by Type Alias",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/type.txt",
+    "blob": "5e1ef813ce1eaebe5960bb664c50bdc7000b8a94"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$type": "string"
+      },
+      "year": {
+        "$numberInt": "2013"
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "year": {
+        "$numberInt": "1"
+      },
+      "imdb.rating": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Coming to Terms"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "2013"
+              }
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "text": ""
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Absent Minded"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "2013"
+              }
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "text": ""
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

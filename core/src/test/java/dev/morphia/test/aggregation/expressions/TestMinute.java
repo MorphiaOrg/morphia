@@ -19,12 +19,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestMinute extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/minute/example1
+     * test data: dev/morphia/test/aggregation/expressions/minute/minuteExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testMinuteExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("year", year("$date"))
                 .include("month", month("$date")).include("day", dayOfMonth("$date")).include("hour", hour("$date"))
                 .include("minutes", minute("$date")).include("seconds", second("$date"))

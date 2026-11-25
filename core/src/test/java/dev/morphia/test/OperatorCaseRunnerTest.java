@@ -1,7 +1,5 @@
 package dev.morphia.test;
 
-import dev.morphia.test.util.ActionTestOptions;
-
 import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
@@ -94,14 +92,6 @@ public class OperatorCaseRunnerTest extends TestBase {
                 () -> runner.update(OperatorCase.of("/dev/morphia/test/runner/filterAfterUpdate/scenario.json"),
                         (query) -> query.filter(ne("grades", 100)), inc("grades.$[]", 10)));
         assertTrue(failure.getMessage().contains("results differ from the documented results"), failure.getMessage());
-    }
-
-    @Test
-    public void aConvertedCasesOptionsMustMatchItsScenario() {
-        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
-                () -> runner.aggregate(ROUND, new ActionTestOptions().orderMatters(false),
-                        (aggregation) -> aggregation.pipeline(project().include("roundedValue", round("$value", 1)))));
-        assertTrue(failure.getMessage().contains("options differ from its scenario: [orderMatters]"), failure.getMessage());
     }
 
     @Test

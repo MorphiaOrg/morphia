@@ -1,0 +1,114 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/push/appendAValueToAnArray",
+  "title": "Append a Value to an Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/push.txt",
+    "blob": "518d8d6909c99fd6834c2bdbb53496043c831519"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "$numberInt": "44"
+          },
+          {
+            "$numberInt": "78"
+          },
+          {
+            "$numberInt": "38"
+          },
+          {
+            "$numberInt": "80"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$numberInt": "89"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "44"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "78"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "38"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "89"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

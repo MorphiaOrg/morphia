@@ -1,0 +1,172 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/pull/removeAllItemsThatEqualASpecifiedValue",
+  "title": "Remove All Items That Equal a Specified Value",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/pull.txt",
+    "blob": "5420b98884f610b5bcaf8e41dcb7012244c2890e"
+  },
+  "dataset": null,
+  "collections": {
+    "stores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "fruits": [
+          "apples",
+          "pears",
+          "oranges",
+          "grapes",
+          "bananas"
+        ],
+        "vegetables": [
+          "carrots",
+          "celery",
+          "squash",
+          "carrots"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "fruits": [
+          "plums",
+          "kiwis",
+          "oranges",
+          "bananas",
+          "apples"
+        ],
+        "vegetables": [
+          "broccoli",
+          "zucchini",
+          "carrots",
+          "onions"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "stores",
+    "filter": {},
+    "update": {
+      "$pull": {
+        "fruits": {
+          "$in": [
+            "apples",
+            "oranges"
+          ]
+        },
+        "vegetables": "carrots"
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "fruits",
+            "value": {
+              "array": [
+                {
+                  "text": "pears"
+                },
+                {
+                  "text": "grapes"
+                },
+                {
+                  "text": "bananas"
+                }
+              ]
+            }
+          },
+          {
+            "name": "vegetables",
+            "value": {
+              "array": [
+                {
+                  "text": "celery"
+                },
+                {
+                  "text": "squash"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "fruits",
+            "value": {
+              "array": [
+                {
+                  "text": "plums"
+                },
+                {
+                  "text": "kiwis"
+                },
+                {
+                  "text": "bananas"
+                }
+              ]
+            }
+          },
+          {
+            "name": "vegetables",
+            "value": {
+              "array": [
+                {
+                  "text": "broccoli"
+                },
+                {
+                  "text": "zucchini"
+                },
+                {
+                  "text": "onions"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

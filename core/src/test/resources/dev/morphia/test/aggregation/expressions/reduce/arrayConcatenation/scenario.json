@@ -1,0 +1,427 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/reduce/arrayConcatenation",
+  "title": "Array Concatenation",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+    "path": "source/reference/operator/aggregation/reduce.txt",
+    "blob": "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd"
+  },
+  "dataset": null,
+  "collections": {
+    "arrayconcat": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "arr": [
+          [
+            {
+              "$numberInt": "24"
+            },
+            {
+              "$numberInt": "55"
+            },
+            {
+              "$numberInt": "79"
+            }
+          ],
+          [
+            {
+              "$numberInt": "14"
+            },
+            {
+              "$numberInt": "78"
+            },
+            {
+              "$numberInt": "35"
+            }
+          ],
+          [
+            {
+              "$numberInt": "84"
+            },
+            {
+              "$numberInt": "90"
+            },
+            {
+              "$numberInt": "3"
+            }
+          ],
+          [
+            {
+              "$numberInt": "50"
+            },
+            {
+              "$numberInt": "89"
+            },
+            {
+              "$numberInt": "70"
+            }
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "arr": [
+          [
+            {
+              "$numberInt": "39"
+            },
+            {
+              "$numberInt": "32"
+            },
+            {
+              "$numberInt": "43"
+            },
+            {
+              "$numberInt": "7"
+            }
+          ],
+          [
+            {
+              "$numberInt": "62"
+            },
+            {
+              "$numberInt": "17"
+            },
+            {
+              "$numberInt": "80"
+            },
+            {
+              "$numberInt": "64"
+            }
+          ],
+          [
+            {
+              "$numberInt": "17"
+            },
+            {
+              "$numberInt": "88"
+            },
+            {
+              "$numberInt": "11"
+            },
+            {
+              "$numberInt": "73"
+            }
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "arr": [
+          [
+            {
+              "$numberInt": "42"
+            }
+          ],
+          [
+            {
+              "$numberInt": "26"
+            },
+            {
+              "$numberInt": "59"
+            }
+          ],
+          [
+            {
+              "$numberInt": "17"
+            }
+          ],
+          [
+            {
+              "$numberInt": "72"
+            },
+            {
+              "$numberInt": "19"
+            },
+            {
+              "$numberInt": "35"
+            }
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "arrayconcat",
+    "pipeline": [
+      {
+        "$project": {
+          "collapsed": {
+            "$reduce": {
+              "input": "$arr",
+              "initialValue": [],
+              "in": {
+                "$concatArrays": [
+                  "$$value",
+                  "$$this"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "collapsed",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "24"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "55"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "79"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "14"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "78"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "35"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "84"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "90"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "3"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "89"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "70"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "collapsed",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "39"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "32"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "43"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "7"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "62"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "17"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "64"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "17"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "88"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "11"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "73"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "collapsed",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "42"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "26"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "59"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "17"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "72"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "19"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "35"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "collapsed",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

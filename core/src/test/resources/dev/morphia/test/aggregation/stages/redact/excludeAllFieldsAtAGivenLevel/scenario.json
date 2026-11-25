@@ -1,0 +1,142 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
+  "title": "Exclude All Fields at a Given Level",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "5345ef589188df237b4db66c0eb75aa8792d1a52",
+    "path": "source/reference/operator/aggregation/redact.txt",
+    "blob": "f2e69d3c53225905352e90e34c67ac3ac18c599b"
+  },
+  "dataset": null,
+  "collections": {
+    "accounts": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "level": {
+          "$numberInt": "1"
+        },
+        "acct_id": "xyz123",
+        "cc": {
+          "level": {
+            "$numberInt": "5"
+          },
+          "type": "yy",
+          "num": {
+            "$numberInt": "0"
+          },
+          "exp_date": {
+            "$date": {
+              "$numberLong": "1446336000000"
+            }
+          },
+          "billing_addr": {
+            "level": {
+              "$numberInt": "5"
+            },
+            "addr1": "123 ABC Street",
+            "city": "Some City"
+          },
+          "shipping_addr": [
+            {
+              "level": {
+                "$numberInt": "3"
+              },
+              "addr1": "987 XYZ Ave",
+              "city": "Some City"
+            },
+            {
+              "level": {
+                "$numberInt": "3"
+              },
+              "addr1": "PO Box 0123",
+              "city": "Some City"
+            }
+          ]
+        },
+        "status": "A"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "accounts",
+    "pipeline": [
+      {
+        "$match": {
+          "status": "A"
+        }
+      },
+      {
+        "$redact": {
+          "$cond": {
+            "if": {
+              "$eq": [
+                "$level",
+                {
+                  "$numberInt": "5"
+                }
+              ]
+            },
+            "then": "$$PRUNE",
+            "else": "$$DESCEND"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "level",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "acct_id",
+            "value": {
+              "text": "xyz123"
+            }
+          },
+          {
+            "name": "status",
+            "value": {
+              "text": "A"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

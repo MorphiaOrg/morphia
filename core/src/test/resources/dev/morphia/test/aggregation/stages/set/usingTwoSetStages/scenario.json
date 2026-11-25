@@ -1,0 +1,295 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/set/usingTwoSetStages",
+  "title": "Using Two ``$set`` Stages",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/set.txt",
+    "blob": "94fa0501865c5fcc9eea1100527e5b70851a37db"
+  },
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "student": "Maya",
+        "homework": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ],
+        "quiz": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "extraCredit": {
+          "$numberInt": "0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "student": "Ryan",
+        "homework": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "quiz": [
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "extraCredit": {
+          "$numberInt": "8"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "scores",
+    "pipeline": [
+      {
+        "$set": {
+          "totalHomework": {
+            "$sum": "$homework"
+          },
+          "totalQuiz": {
+            "$sum": "$quiz"
+          }
+        }
+      },
+      {
+        "$set": {
+          "totalScore": {
+            "$add": [
+              "$totalHomework",
+              "$totalQuiz",
+              "$extraCredit"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "student",
+            "value": {
+              "text": "Maya"
+            }
+          },
+          {
+            "name": "homework",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "quiz",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "8"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "extraCredit",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "totalHomework",
+            "value": {
+              "whole": {
+                "$numberInt": "25"
+              }
+            }
+          },
+          {
+            "name": "totalQuiz",
+            "value": {
+              "whole": {
+                "$numberInt": "18"
+              }
+            }
+          },
+          {
+            "name": "totalScore",
+            "value": {
+              "whole": {
+                "$numberInt": "43"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "student",
+            "value": {
+              "text": "Ryan"
+            }
+          },
+          {
+            "name": "homework",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "6"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "quiz",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "8"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "8"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "extraCredit",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "totalHomework",
+            "value": {
+              "whole": {
+                "$numberInt": "16"
+              }
+            }
+          },
+          {
+            "name": "totalQuiz",
+            "value": {
+              "whole": {
+                "$numberInt": "16"
+              }
+            }
+          },
+          {
+            "name": "totalScore",
+            "value": {
+              "whole": {
+                "$numberInt": "40"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

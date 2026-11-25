@@ -1,9 +1,0 @@
-[
-  { 
-    $addFields : {
-      "y-coordinate" : {
-        $radiansToDegrees : { $acosh : "$x-coordinate" }
-      }
-    }
-  }
-]

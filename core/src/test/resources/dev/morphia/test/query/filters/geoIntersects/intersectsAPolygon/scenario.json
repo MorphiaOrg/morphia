@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/geoIntersects/intersectsAPolygon",
+  "title": "Intersects a Polygon",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+    "path": "source/reference/operator/query/geoIntersects.txt",
+    "blob": "c9af0f19c4348b0f903226c26e95d32d780abc77"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$geoIntersects": {
+          "$geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  {
+                    "$numberDouble": "0.0"
+                  },
+                  {
+                    "$numberDouble": "0.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "3.0"
+                  },
+                  {
+                    "$numberDouble": "6.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "6.0"
+                  },
+                  {
+                    "$numberDouble": "1.0"
+                  }
+                ],
+                [
+                  {
+                    "$numberDouble": "0.0"
+                  },
+                  {
+                    "$numberDouble": "0.0"
+                  }
+                ]
+              ]
+            ]
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

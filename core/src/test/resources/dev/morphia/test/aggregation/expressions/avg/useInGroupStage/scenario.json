@@ -1,0 +1,219 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/avg/useInGroupStage",
+  "title": "Use in ``$group`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/avg.txt",
+    "blob": "74498fc5ffe36f042704a45c212ac777af935d95"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388563200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418000000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418300000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392451200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392455520000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$item",
+          "avgAmount": {
+            "$avg": {
+              "$multiply": [
+                "$price",
+                "$quantity"
+              ]
+            }
+          },
+          "avgQuantity": {
+            "$avg": "$quantity"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "xyz"
+            }
+          },
+          {
+            "name": "avgAmount",
+            "value": {
+              "exact": {
+                "$numberDouble": "37.5"
+              }
+            }
+          },
+          {
+            "name": "avgQuantity",
+            "value": {
+              "exact": {
+                "$numberDouble": "7.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "avgAmount",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "avgQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "avgAmount",
+            "value": {
+              "whole": {
+                "$numberInt": "60"
+              }
+            }
+          },
+          {
+            "name": "avgQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

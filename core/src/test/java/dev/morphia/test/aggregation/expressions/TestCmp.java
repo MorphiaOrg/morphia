@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestCmp extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cmp/example1
+     * test data: dev/morphia/test/aggregation/expressions/cmp/cmpExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCmpExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("item").include("qty").include("cmpTo250", cmp("$qty", 250))));
     }

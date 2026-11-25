@@ -1,0 +1,170 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unset/removeTopLevelFields",
+  "title": "Remove Top-Level Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "bdad96624ff04615572e0ec25f312f77d6ae41c6",
+    "path": "source/reference/operator/aggregation/unset.txt",
+    "blob": "1c000e215ce20bbd49255e9c8c4ad14d47a2841b"
+  },
+  "dataset": null,
+  "collections": {
+    "books": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "Antelope Antics",
+        "isbn": "0001122223334",
+        "author": {
+          "last": "An",
+          "first": "Auntie"
+        },
+        "copies": [
+          {
+            "warehouse": "A",
+            "qty": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "warehouse": "B",
+            "qty": {
+              "$numberInt": "15"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "Bees Babble",
+        "isbn": "999999999333",
+        "author": {
+          "last": "Bumble",
+          "first": "Bee"
+        },
+        "copies": [
+          {
+            "warehouse": "A",
+            "qty": {
+              "$numberInt": "2"
+            }
+          },
+          {
+            "warehouse": "B",
+            "qty": {
+              "$numberInt": "5"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "books",
+    "pipeline": [
+      {
+        "$unset": [
+          "isbn",
+          "copies"
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Antelope Antics"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "An"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "Auntie"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Bees Babble"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "Bumble"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "Bee"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

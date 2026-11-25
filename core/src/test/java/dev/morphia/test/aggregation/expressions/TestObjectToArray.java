@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,35 +19,34 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestObjectToArray extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/objectToArray/example1
+     * test data: dev/morphia/test/aggregation/expressions/objectToArray/objectToArrayExample
      * 
      */
     @Test
     @DisplayName("``$objectToArray`` Example")
-    public void testExample1() {
+    public void testObjectToArrayExample() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dimensions", objectToArray("$dimensions"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/objectToArray/example2
+     * test data: dev/morphia/test/aggregation/expressions/objectToArray/objectToArrayToSumNestedFields
      * 
      */
     @Test
     @DisplayName("``$objectToArray`` to Sum Nested Fields")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(project().include("warehouses", objectToArray("$instock")),
-                        unwind("warehouses"), group(id("$warehouses.k")).field("total", sum("$warehouses.v"))));
+    public void testObjectToArrayToSumNestedFields() {
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("warehouses", objectToArray("$instock")),
+                unwind("warehouses"), group(id("$warehouses.k")).field("total", sum("$warehouses.v"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/objectToArray/example3
+     * test data: dev/morphia/test/aggregation/expressions/objectToArray/objectToArrayArrayToObjectExample
      * 
      */
     @Test
     @DisplayName("``$objectToArray`` + ``$arrayToObject`` Example")
-    public void testExample3() {
+    public void testObjectToArrayArrayToObjectExample() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                 addFields().field("instock",
                         concatArrays("$instock", array(document().field("k", "total").field("v", sum("$instock.v"))))),

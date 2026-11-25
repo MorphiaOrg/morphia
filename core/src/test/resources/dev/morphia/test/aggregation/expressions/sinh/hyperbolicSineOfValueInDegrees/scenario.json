@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees",
+  "title": "main :: Hyperbolic Sine of Value in Degrees",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "a12f43df5272fc83b561a20f894a41b771c62e36",
+    "path": "source/reference/operator/aggregation/sinh.txt",
+    "blob": "b8e50d8c485be4f3048c9e7ad692e3602c75e372"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d25"
+        },
+        "angle": {
+          "$numberDecimal": "53.1301023541559787031443874490659"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "sinh_output": {
+            "$sinh": {
+              "$degreesToRadians": "$angle"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d25"
+              }
+            }
+          },
+          {
+            "name": "angle",
+            "value": {
+              "decimal": "53.1301023541559787031443874490659"
+            }
+          },
+          {
+            "name": "sinh_output",
+            "value": {
+              "decimal": "1.066020404405732132503284522731829"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

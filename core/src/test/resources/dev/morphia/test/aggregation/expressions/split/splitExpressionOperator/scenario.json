@@ -1,0 +1,226 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/split/splitExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "dd8638fb493316581481d0fc9413339ee019bb3a",
+    "path": "source/reference/operator/aggregation/split.txt",
+    "blob": "ae02591d100b051c6b547a9a03ea8360bb284bdb"
+  },
+  "dataset": null,
+  "collections": {
+    "deliveries": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "city": "Berkeley, CA",
+        "qty": {
+          "$numberInt": "648"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "city": "Bend, OR",
+        "qty": {
+          "$numberInt": "491"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "city": "Kensington, CA",
+        "qty": {
+          "$numberInt": "233"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "city": "Eugene, OR",
+        "qty": {
+          "$numberInt": "842"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "city": "Reno, NV",
+        "qty": {
+          "$numberInt": "655"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "city": "Portland, OR",
+        "qty": {
+          "$numberInt": "408"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "city": "Sacramento, CA",
+        "qty": {
+          "$numberInt": "574"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "deliveries",
+    "pipeline": [
+      {
+        "$project": {
+          "city_state": {
+            "$split": [
+              "$city",
+              ", "
+            ]
+          },
+          "qty": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": "$city_state"
+      },
+      {
+        "$match": {
+          "city_state": {
+            "$regularExpression": {
+              "pattern": "[A-Z]{2}",
+              "options": ""
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "state": "$city_state"
+          },
+          "total_qty": {
+            "$sum": "$qty"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "total_qty": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "state",
+                  "value": {
+                    "text": "OR"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "total_qty",
+            "value": {
+              "whole": {
+                "$numberInt": "1741"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "state",
+                  "value": {
+                    "text": "CA"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "total_qty",
+            "value": {
+              "whole": {
+                "$numberInt": "1455"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "state",
+                  "value": {
+                    "text": "NV"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "total_qty",
+            "value": {
+              "whole": {
+                "$numberInt": "655"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "REGEX_FORM"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "serialization": "the legacy test skipped its action check (skipActionCheck)"
+  }
+}

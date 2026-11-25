@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,13 +17,13 @@ public class TestTsSecond extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tsSecond/example1
+     * test data: dev/morphia/test/aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField
      * 
      */
     @Test
     @DisplayName("Obtain the Number of Seconds from a Timestamp Field")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
+    public void testObtainTheNumberOfSecondsFromATimestampField() {
+        testPipeline((aggregation) -> aggregation.pipeline(
                 project().suppressId().include("saleTimestamp").include("saleSeconds", tsSecond("$saleTimestamp"))));
     }
 }

@@ -1,6 +1,0 @@
-{
-      $project: {
-          "name": 1,
-          "menuCode": { $substrCP: [ "$name", 0, 3 ] }
-      }
-    }

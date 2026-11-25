@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,16 +23,15 @@ public class TestDerivative extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/derivative/example1
+     * test data: dev/morphia/test/aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().removeIds(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$truckID")
-                        .sortBy(ascending("timeStamp")).output(output("truckAverageSpeed")
-                                .operator(derivative("$miles").unit(HOUR)).window().range(-30, 0, SECOND)),
-                        match(gt("truckAverageSpeed", 50))));
+    public void testDerivativeWindowFunctionExpressionOperator() {
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$truckID")
+                .sortBy(ascending("timeStamp")).output(output("truckAverageSpeed")
+                        .operator(derivative("$miles").unit(HOUR)).window().range(-30, 0, SECOND)),
+                match(gt("truckAverageSpeed", 50))));
     }
 }

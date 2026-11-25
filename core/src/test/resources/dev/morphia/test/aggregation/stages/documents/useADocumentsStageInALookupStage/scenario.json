@@ -1,0 +1,184 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/documents/useADocumentsStageInALookupStage",
+  "title": "Use a ``$documents`` Stage in a ``$lookup`` Stage",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c3311eef310fdb2cc2fba722bd3fa237884c251d",
+    "path": "source/reference/operator/aggregation/documents.txt",
+    "blob": "18cc359feab78227188da9ebc1fdd2159261ee2d"
+  },
+  "dataset": null,
+  "collections": {
+    "locations": [
+      {
+        "zip": {
+          "$numberInt": "94301"
+        },
+        "name": "Palo Alto"
+      },
+      {
+        "zip": {
+          "$numberInt": "10019"
+        },
+        "name": "New York"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "locations",
+    "pipeline": [
+      {
+        "$match": {}
+      },
+      {
+        "$lookup": {
+          "localField": "zip",
+          "foreignField": "zip_id",
+          "as": "city_state",
+          "pipeline": [
+            {
+              "$documents": [
+                {
+                  "zip_id": {
+                    "$numberInt": "94301"
+                  },
+                  "name": "Palo Alto, CA"
+                },
+                {
+                  "zip_id": {
+                    "$numberInt": "10019"
+                  },
+                  "name": "New York, NY"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618949d60f7bfd5f5689490d"
+              }
+            }
+          },
+          {
+            "name": "zip",
+            "value": {
+              "whole": {
+                "$numberInt": "94301"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Palo Alto"
+            }
+          },
+          {
+            "name": "city_state",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "zip_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "94301"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Palo Alto, CA"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618949d60f7bfd5f5689490e"
+              }
+            }
+          },
+          {
+            "name": "zip",
+            "value": {
+              "whole": {
+                "$numberInt": "10019"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "New York"
+            }
+          },
+          {
+            "name": "city_state",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "zip_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "10019"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "New York, NY"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

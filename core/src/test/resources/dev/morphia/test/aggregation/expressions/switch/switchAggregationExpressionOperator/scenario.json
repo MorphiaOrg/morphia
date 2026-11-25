@@ -1,0 +1,230 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/switch/switchAggregationExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/switch.txt",
+    "blob": "66ac19a0f8d86a9d176fd08f71cb0444821c7d04"
+  },
+  "dataset": null,
+  "collections": {
+    "grades": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Susan Wilkes",
+        "scores": [
+          {
+            "$numberInt": "87"
+          },
+          {
+            "$numberInt": "86"
+          },
+          {
+            "$numberInt": "78"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Bob Hanna",
+        "scores": [
+          {
+            "$numberInt": "71"
+          },
+          {
+            "$numberInt": "64"
+          },
+          {
+            "$numberInt": "81"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "James Torrelio",
+        "scores": [
+          {
+            "$numberInt": "91"
+          },
+          {
+            "$numberInt": "84"
+          },
+          {
+            "$numberInt": "97"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "grades",
+    "pipeline": [
+      {
+        "$project": {
+          "name": {
+            "$numberInt": "1"
+          },
+          "summary": {
+            "$switch": {
+              "branches": [
+                {
+                  "case": {
+                    "$gte": [
+                      {
+                        "$avg": "$scores"
+                      },
+                      {
+                        "$numberInt": "90"
+                      }
+                    ]
+                  },
+                  "then": "Doing great!"
+                },
+                {
+                  "case": {
+                    "$and": [
+                      {
+                        "$gte": [
+                          {
+                            "$avg": "$scores"
+                          },
+                          {
+                            "$numberInt": "80"
+                          }
+                        ]
+                      },
+                      {
+                        "$lt": [
+                          {
+                            "$avg": "$scores"
+                          },
+                          {
+                            "$numberInt": "90"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "then": "Doing pretty well."
+                },
+                {
+                  "case": {
+                    "$lt": [
+                      {
+                        "$avg": "$scores"
+                      },
+                      {
+                        "$numberInt": "80"
+                      }
+                    ]
+                  },
+                  "then": "Needs improvement."
+                }
+              ],
+              "default": "No scores found."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Susan Wilkes"
+            }
+          },
+          {
+            "name": "summary",
+            "value": {
+              "text": "Doing pretty well."
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Bob Hanna"
+            }
+          },
+          {
+            "name": "summary",
+            "value": {
+              "text": "Needs improvement."
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "James Torrelio"
+            }
+          },
+          {
+            "name": "summary",
+            "value": {
+              "text": "Doing great!"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

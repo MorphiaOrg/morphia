@@ -1,0 +1,702 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/setWindowFields/useATimeRangeWindowWithAPositiveUpperBound",
+  "title": "Use a Time Range Window with a Positive Upper Bound",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/setWindowFields.txt",
+    "blob": "d7bca59440ed642470e6fcfedfa3fdcff583c458"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "metacritic": {
+            "$gt": {
+              "$numberInt": "85"
+            }
+          },
+          "year": {
+            "$gte": {
+              "$numberInt": "1993"
+            },
+            "$lte": {
+              "$numberInt": "1995"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "rated": {
+            "$numberInt": "1"
+          },
+          "released": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$setWindowFields": {
+          "partitionBy": "$rated",
+          "sortBy": {
+            "released": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "recentReleases": {
+              "$push": "$released",
+              "window": {
+                "range": [
+                  "unbounded",
+                  {
+                    "$numberInt": "10"
+                  }
+                ],
+                "unit": "month"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "G"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Toy Story"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "816998400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "816998400000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "PG"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Little Women"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "788313600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "788313600000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "The Fugitive"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "744595200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "744595200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "745804800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "King of the Hill"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "745804800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "744595200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "745804800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Quiz Show"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "781488000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "744595200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "745804800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "781488000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Hoop Dreams"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "782092800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "744595200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "745804800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "781488000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Schindler's List"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "760320000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760320000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760924800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "The Piano"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "760924800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760320000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760924800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Pulp Fiction"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "782092800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760320000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760924800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "799027200000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Crumb"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "799027200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "rated",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760320000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760924800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "799027200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "812937600000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "rated",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "To Die For"
+            }
+          },
+          {
+            "name": "released",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "812937600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "recentReleases",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760320000000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "760924800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "782092800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "799027200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "812937600000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "FIELD_OPERATORS_AND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,39 +21,38 @@ import static dev.morphia.query.filters.Filters.gt;
 
 public class TestReduce extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/reduce/example1
+     * test data: dev/morphia/test/aggregation/expressions/reduce/multiplication
      * 
      */
     @Test
     @DisplayName("Multiplication")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(
-                        group(id("$experimentId")).field("probabilityArr", push("$probability")),
-                        project().include("description").include("results",
-                                reduce("$probabilityArr", 1, multiply("$$value", "$$this")))));
+    public void testMultiplication() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                group(id("$experimentId")).field("probabilityArr", push("$probability")),
+                project().include("description").include("results",
+                        reduce("$probabilityArr", 1, multiply("$$value", "$$this")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/reduce/example2
+     * test data: dev/morphia/test/aggregation/expressions/reduce/stringConcatenation
      * 
      */
     @Test
     @DisplayName("String Concatenation")
-    public void testExample2() {
+    public void testStringConcatenation() {
         testPipeline((aggregation) -> aggregation.pipeline(match(gt("hobbies", array())),
                 project().include("name").include("bio", reduce("$hobbies", "My hobbies include:",
                         concat("$$value", condition(eq("$$value", "My hobbies include:"), " ", ", "), "$$this")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/reduce/example3
+     * test data: dev/morphia/test/aggregation/expressions/reduce/arrayConcatenation
      * 
      */
     @Test
     @DisplayName("Array Concatenation")
-    public void testExample3() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testArrayConcatenation() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));
     }
 

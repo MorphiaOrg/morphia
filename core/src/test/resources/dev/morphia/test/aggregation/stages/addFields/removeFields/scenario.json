@@ -1,0 +1,133 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/addFields/removeFields",
+  "title": "Remove Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "2440879f14b9b48427c84d27df0bb8d36acfe573",
+    "path": "source/reference/operator/aggregation/addFields.txt",
+    "blob": "dfaaaf9eaa95c07b15e61912636791903e83c25c"
+  },
+  "dataset": null,
+  "collections": {
+    "labReadings": [
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1728432000000"
+          }
+        },
+        "temperature": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "date": null,
+        "temperature": {
+          "$numberInt": "83"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1733702400000"
+          }
+        },
+        "temperature": {
+          "$numberInt": "85"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "labReadings",
+    "pipeline": [
+      {
+        "$addFields": {
+          "date": "$$REMOVE"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "671285306fd2c3b24f2e7eaa"
+              }
+            }
+          },
+          {
+            "name": "temperature",
+            "value": {
+              "whole": {
+                "$numberInt": "80"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "671285306fd2c3b24f2e7eab"
+              }
+            }
+          },
+          {
+            "name": "temperature",
+            "value": {
+              "whole": {
+                "$numberInt": "83"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "671285306fd2c3b24f2e7eac"
+              }
+            }
+          },
+          {
+            "name": "temperature",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

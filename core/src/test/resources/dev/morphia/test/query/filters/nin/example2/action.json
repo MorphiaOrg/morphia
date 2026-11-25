@@ -1,4 +1,0 @@
-db.inventory.updateMany(
-    { tags: { $nin: [ "school" ] } },
-    { $set: { exclude: true } }
-)

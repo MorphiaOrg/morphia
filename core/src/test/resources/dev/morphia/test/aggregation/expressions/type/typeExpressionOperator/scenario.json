@@ -1,0 +1,205 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/type/typeExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "7c832aeac151541199c8080413a9c01fb8f77ce6",
+    "path": "source/reference/operator/aggregation/type.txt",
+    "blob": "0a1a9498e887655d225e5ee6d4bae87bcd879f70"
+  },
+  "dataset": null,
+  "collections": {
+    "coll": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "a": {
+          "$numberInt": "8"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": [
+          {
+            "$numberDouble": "41.63"
+          },
+          {
+            "$numberDouble": "88.19"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "a": "apple",
+          "b": "banana",
+          "c": "carrot"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": "caribou"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "a": {
+          "$numberLong": "71"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "coll",
+    "pipeline": [
+      {
+        "$project": {
+          "a": {
+            "$type": "$a"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "int"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "array"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "object"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "string"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "long"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "text": "missing"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

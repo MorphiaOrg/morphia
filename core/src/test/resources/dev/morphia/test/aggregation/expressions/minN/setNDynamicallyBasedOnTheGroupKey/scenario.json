@@ -1,0 +1,210 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/minN/setNDynamicallyBasedOnTheGroupKey",
+  "title": "Set n Dynamically Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/minN.txt",
+    "blob": "8a1f595f514f95f04f57ea98c2fbca7cd639200d"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "rated": "$rated"
+          },
+          "minMovies": {
+            "$minN": {
+              "input": "$imdb.rating",
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$rated",
+                      "R"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "minMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "1.6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "G"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "minMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "1.6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "minMovies",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "2"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "2.2"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "2.2"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG-13"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "minMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "1.9"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

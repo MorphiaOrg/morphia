@@ -1,0 +1,181 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/missingOrNonArrayValues",
+  "title": "Missing or Non-array Values",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/unwind.txt",
+    "blob": "a48530d2f807435f11dbfb681202e04027bd0c1e"
+  },
+  "dataset": null,
+  "collections": {
+    "clothing": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "Shirt",
+        "sizes": [
+          "S",
+          "M",
+          "L"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "Shorts",
+        "sizes": []
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "Hat",
+        "sizes": "M"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "Gloves"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "Scarf",
+        "sizes": null
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "clothing",
+    "pipeline": [
+      {
+        "$unwind": {
+          "path": "$sizes"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Shirt"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "S"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Shirt"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "M"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Shirt"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "L"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Hat"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "M"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "UNWIND_PATH"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -18,9 +18,9 @@ import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
-import dev.morphia.test.util.ActionTestOptions;
 import dev.morphia.transactions.MorphiaSession;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,11 +29,13 @@ import org.junit.jupiter.api.Test;
 
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
+import static org.bson.Document.parse;
 
 /*@Tags(@Tag("transactions"))*/
-public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
+public class TestTransactions extends TestBase {
     @BeforeEach
     public void before() {
         checkForReplicaSet();
@@ -162,19 +164,28 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
     @Test
     @DisplayName("transactional aggregations")
     public void aggregation() {
-        getDs().withTransaction(session -> {
-            testPipeline(
-                    new ActionTestOptions().orderMatters(false),
-                    aggregation -> {
-                        loadData("aggTest2", 2);
-                        return aggregation
-                                .pipeline(Lookup.lookup("aggTest2")
-                                        .localField("item")
-                                        .foreignField("sku")
-                                        .as("inventory_docs"));
-                    });
-            return null;
-        });
+        getDatabase().getCollection("orders").insertMany(List.of(
+                parse("{ '_id' : 1, 'item' : 'almonds', 'price' : 12, 'quantity' : 2 }"),
+                parse("{ '_id' : 2, 'item' : 'pecans', 'price' : 20, 'quantity' : 1 }"),
+                parse("{ '_id' : 3  }")));
+        getDatabase().getCollection("inventory").insertMany(List.of(
+                parse("{ '_id' : 1, 'sku' : 'almonds', 'description': 'product 1', 'instock' : 120 }"),
+                parse("{ '_id' : 2, 'sku' : 'bread', 'description': 'product 2', 'instock' : 80 }"),
+                parse("{ '_id' : 3, 'sku' : 'cashews', 'description': 'product 3', 'instock' : 60 }"),
+                parse("{ '_id' : 4, 'sku' : 'pecans', 'description': 'product 4', 'instock' : 70 }"),
+                parse("{ '_id' : 5, 'sku': null, 'description': 'Incomplete' }"),
+                parse("{ '_id' : 6 }")));
+        List<Document> expected = List.of(
+                parse("{'_id' : 1, 'item' : 'almonds', 'price' : 12, 'quantity' : 2, 'inventory_docs' : [{ '_id' : 1, 'sku' : 'almonds', 'description' : 'product 1', 'instock' : 120 }]}"),
+                parse("{'_id' : 2, 'item' : 'pecans', 'price' : 20, 'quantity' : 1, 'inventory_docs' : [{ '_id' : 4, 'sku' : 'pecans', 'description' : 'product 4', 'instock' : 70 }]}"),
+                parse("{'_id' : 3, 'inventory_docs' : [{ '_id' : 5, 'sku' : null, 'description' : 'Incomplete' }, { '_id' : 6 }]}"));
+
+        List<Document> actual = getDs().withTransaction(session -> session
+                .aggregate(aggregationOptions().collection("orders"))
+                .pipeline(Lookup.lookup("inventory").localField("item").foreignField("sku").as("inventory_docs"))
+                .toList());
+
+        assertDocumentListEquals(expected, actual, false);
     }
 
     @Test

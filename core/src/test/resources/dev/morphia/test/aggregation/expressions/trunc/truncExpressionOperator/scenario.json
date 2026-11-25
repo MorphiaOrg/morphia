@@ -1,0 +1,164 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/trunc/truncExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "744735632617f491f8d65071fae36735b6da1d8b",
+    "path": "source/reference/operator/aggregation/trunc.txt",
+    "blob": "e417831c1b8b86779f5b7ee3890984f6f6b83f0d"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "value": {
+          "$numberDouble": "19.25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "value": {
+          "$numberDouble": "28.73"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "value": {
+          "$numberDouble": "34.32"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "value": {
+          "$numberDouble": "-45.34"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "truncatedValue": {
+            "$trunc": [
+              "$value",
+              {
+                "$numberInt": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "19.2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "28.7"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "34.3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "-45.3"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

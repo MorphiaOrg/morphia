@@ -1,0 +1,92 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bottom/findTheBottomRatingInAGenre",
+  "title": "Find the Bottom Rating in a Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bottom.txt",
+    "blob": "09c132aa13207d6184617e20e2867a2505304562"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "genres": "Comedy"
+        }
+      },
+      {
+        "$group": {
+          "_id": "Comedy",
+          "lowestRatedMovie": {
+            "$bottom": {
+              "output": [
+                "$title",
+                "$imdb.rating"
+              ],
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "text": "Saving Christmas"
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "1.6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/reduce/stringConcatenation",
+  "title": "String Concatenation",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+    "path": "source/reference/operator/aggregation/reduce.txt",
+    "blob": "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd"
+  },
+  "dataset": null,
+  "collections": {
+    "people": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Melissa",
+        "hobbies": [
+          "softball",
+          "drawing",
+          "reading"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Brad",
+        "hobbies": [
+          "gaming",
+          "skateboarding"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Scott",
+        "hobbies": [
+          "basketball",
+          "music",
+          "fishing"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Tracey",
+        "hobbies": [
+          "acting",
+          "yoga"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "Josh",
+        "hobbies": [
+          "programming"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "Claire"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "people",
+    "pipeline": [
+      {
+        "$match": {
+          "hobbies": {
+            "$gt": []
+          }
+        }
+      },
+      {
+        "$project": {
+          "name": {
+            "$numberInt": "1"
+          },
+          "bio": {
+            "$reduce": {
+              "input": "$hobbies",
+              "initialValue": "My hobbies include:",
+              "in": {
+                "$concat": [
+                  "$$value",
+                  {
+                    "$cond": {
+                      "if": {
+                        "$eq": [
+                          "$$value",
+                          "My hobbies include:"
+                        ]
+                      },
+                      "then": " ",
+                      "else": ", "
+                    }
+                  },
+                  "$$this"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Melissa"
+            }
+          },
+          {
+            "name": "bio",
+            "value": {
+              "text": "My hobbies include: softball, drawing, reading"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Brad"
+            }
+          },
+          {
+            "name": "bio",
+            "value": {
+              "text": "My hobbies include: gaming, skateboarding"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Scott"
+            }
+          },
+          {
+            "name": "bio",
+            "value": {
+              "text": "My hobbies include: basketball, music, fishing"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Tracey"
+            }
+          },
+          {
+            "name": "bio",
+            "value": {
+              "text": "My hobbies include: acting, yoga"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Josh"
+            }
+          },
+          {
+            "name": "bio",
+            "value": {
+              "text": "My hobbies include: programming"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,82 +1,64 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
-import static dev.morphia.aggregation.expressions.Expressions.document;
-import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexFind;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
-import static dev.morphia.aggregation.stages.Group.group;
-import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.aggregation.stages.Set.set;
-import static dev.morphia.aggregation.stages.Sort.sort;
-import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestRegexFind extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example1
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/regexFindAndItsOptions
      * 
      */
     @Test
     @DisplayName("``$regexFind`` and Its Options")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testRegexFindAndItsOptions() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example2
-     * 
-     */
     @Test
-    @DisplayName("Use ``$regexFind`` to Parse Email from String")
-    public void testExample2() {
+    @DisplayName("Find the First Line or Link")
+    public void testFindTheFirstLineOrLink() {
         testPipeline((aggregation) -> aggregation.pipeline(
-                addFields().field("email",
-                        regexFind("$comment").pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
-                set().field("email", "$email.match")));
+                addFields().field("returnObject", regexFind("$description").pattern("lin(e|k)"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example3
-     * 
-     */
     @Test
-    @DisplayName("Apply ``$regexFind`` to String Elements of an Array")
-    public void testExample3() {
-        testPipeline((aggregation) -> aggregation.pipeline(unwind("details"),
-                addFields()
-                        .field("regexemail",
-                                regexFind("$details").pattern("^[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
-                                        .options("i"))
-                        .field("regexphone", regexFind("$details").pattern("^[+]{0,1}[0-9]*\\-?[0-9_\\-]+$")),
-                project().include("_id").include("name").include("details",
-                        document().field("email", "$regexemail.match").field("phone", "$regexphone.match")),
-                group(id("$_id")).field("name", first("$name")).field("details", mergeObjects().add("$details")),
-                sort().ascending("_id")));
+    @DisplayName("Find the First Tier")
+    public void testFindTheFirstTier() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFind("$description").pattern("tier"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example4
-     * 
-     */
     @Test
-    @DisplayName("Use Captured Groupings to Parse User Name")
-    public void testExample4() {
-        testPipeline(
-                (aggregation) -> aggregation
-                        .pipeline(
-                                addFields().field("username",
-                                        regexFind("$email").pattern("^([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
-                                                .options("i")),
-                                set().field("username", elementAt("$username.captures", 0))));
+    @DisplayName("i Option")
+    public void testIOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFind("$description").pattern("line").options("i"))));
     }
 
+    @Test
+    @DisplayName("m Option")
+    public void testMOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFind("$description").pattern("^s").options("im"))));
+    }
+
+    @Test
+    @DisplayName("s Option")
+    public void testSOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFind("$description").pattern("m.*line").options("si"))));
+    }
+
+    @Test
+    @DisplayName("x Option")
+    public void testXOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFind("$description").pattern("lin(e|k) # matches line or link").options("x"))));
+    }
 }

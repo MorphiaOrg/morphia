@@ -1,0 +1,300 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8454aef6ad5fba8b4a910a4feca546c18e8a6340",
+    "path": "source/reference/operator/aggregation/derivative.txt",
+    "blob": "4d7c4178a012d6495b04dac37d61b937bb8e99e3"
+  },
+  "dataset": null,
+  "collections": {
+    "deliveryFleet": [
+      {
+        "truckID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "1295.1"
+        }
+      },
+      {
+        "truckID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811060000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "1295.63"
+        }
+      },
+      {
+        "truckID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811090000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "1296.25"
+        }
+      },
+      {
+        "truckID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811120000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "1296.76"
+        }
+      },
+      {
+        "truckID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "10234.1"
+        }
+      },
+      {
+        "truckID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811060000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "10234.33"
+        }
+      },
+      {
+        "truckID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811090000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "10234.73"
+        }
+      },
+      {
+        "truckID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811120000"
+          }
+        },
+        "miles": {
+          "$numberDouble": "10235.13"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "deliveryFleet",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "partitionBy": "$truckID",
+          "sortBy": {
+            "timeStamp": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "truckAverageSpeed": {
+              "$derivative": {
+                "input": "$miles",
+                "unit": "hour"
+              },
+              "window": {
+                "range": [
+                  {
+                    "$numberInt": "-30"
+                  },
+                  {
+                    "$numberInt": "0"
+                  }
+                ],
+                "unit": "second"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$match": {
+          "truckAverageSpeed": {
+            "$gt": {
+              "$numberInt": "50"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cb8a7e833dfeadc8e6285c"
+              }
+            }
+          },
+          {
+            "name": "truckID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811060000"
+                }
+              }
+            }
+          },
+          {
+            "name": "miles",
+            "value": {
+              "exact": {
+                "$numberDouble": "1295.63"
+              }
+            }
+          },
+          {
+            "name": "truckAverageSpeed",
+            "value": {
+              "exact": {
+                "$numberDouble": "63.60000000002401"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cb8a7e833dfeadc8e6285d"
+              }
+            }
+          },
+          {
+            "name": "truckID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811090000"
+                }
+              }
+            }
+          },
+          {
+            "name": "miles",
+            "value": {
+              "exact": {
+                "$numberDouble": "1296.25"
+              }
+            }
+          },
+          {
+            "name": "truckAverageSpeed",
+            "value": {
+              "exact": {
+                "$numberDouble": "74.3999999999869"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cb8a7e833dfeadc8e6285e"
+              }
+            }
+          },
+          {
+            "name": "truckID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811120000"
+                }
+              }
+            }
+          },
+          {
+            "name": "miles",
+            "value": {
+              "exact": {
+                "$numberDouble": "1296.76"
+              }
+            }
+          },
+          {
+            "name": "truckAverageSpeed",
+            "value": {
+              "exact": {
+                "$numberDouble": "61.199999999998916"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

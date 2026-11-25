@@ -1,0 +1,197 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/match/equalityMatch",
+  "title": "Equality Match",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/match.txt",
+    "blob": "3139f56b4248eac375cc97846a48b772c0b2a1ca"
+  },
+  "dataset": null,
+  "collections": {
+    "articles": [
+      {
+        "_id": {
+          "$oid": "512bc95fe835e68f199c8686"
+        },
+        "author": "dave",
+        "score": {
+          "$numberInt": "80"
+        },
+        "views": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "512bc962e835e68f199c8687"
+        },
+        "author": "dave",
+        "score": {
+          "$numberInt": "85"
+        },
+        "views": {
+          "$numberInt": "521"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "55f5a192d4bede9ac365b257"
+        },
+        "author": "ahn",
+        "score": {
+          "$numberInt": "60"
+        },
+        "views": {
+          "$numberInt": "1000"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "55f5a192d4bede9ac365b258"
+        },
+        "author": "li",
+        "score": {
+          "$numberInt": "55"
+        },
+        "views": {
+          "$numberInt": "5000"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "55f5a1d3d4bede9ac365b259"
+        },
+        "author": "annT",
+        "score": {
+          "$numberInt": "60"
+        },
+        "views": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "55f5a1d3d4bede9ac365b25a"
+        },
+        "author": "li",
+        "score": {
+          "$numberInt": "94"
+        },
+        "views": {
+          "$numberInt": "999"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "55f5a1d3d4bede9ac365b25b"
+        },
+        "author": "ty",
+        "score": {
+          "$numberInt": "95"
+        },
+        "views": {
+          "$numberInt": "1000"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "articles",
+    "pipeline": [
+      {
+        "$match": {
+          "author": "dave"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "512bc95fe835e68f199c8686"
+              }
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "text": "dave"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "80"
+              }
+            }
+          },
+          {
+            "name": "views",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "512bc962e835e68f199c8687"
+              }
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "text": "dave"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          },
+          {
+            "name": "views",
+            "value": {
+              "whole": {
+                "$numberInt": "521"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

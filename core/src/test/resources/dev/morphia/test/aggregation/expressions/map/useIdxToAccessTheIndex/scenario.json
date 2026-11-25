@@ -1,0 +1,272 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/map/useIdxToAccessTheIndex",
+  "title": "Use $$IDX to Access the Index",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/map.txt",
+    "blob": "e32fcad0e5cdb1baa3cfe863b23e04342fc157c3"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "rankedGenres": {
+            "$map": {
+              "input": "$genres",
+              "as": "genre",
+              "in": {
+                "genre": "$$genre",
+                "rank": {
+                  "$add": [
+                    "$$IDX",
+                    {
+                      "$numberInt": "1"
+                    }
+                  ]
+                },
+                "isPrimary": {
+                  "$eq": [
+                    "$$IDX",
+                    {
+                      "$numberInt": "0"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "rankedGenres",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "Documentary"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "History"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": false
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "Sport"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "rankedGenres",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "Action"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "Adventure"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": false
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "genre",
+                      "value": {
+                        "text": "Drama"
+                      }
+                    },
+                    {
+                      "name": "rank",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "isPrimary",
+                      "value": {
+                        "exact": false
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

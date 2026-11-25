@@ -1,0 +1,287 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue",
+  "title": "Fill Missing Field Values Based on the Last Observed Value",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+    "path": "source/reference/operator/aggregation/fill.txt",
+    "blob": "b0ee7dd39cf46de21e670976d3f6842a77c293ef"
+  },
+  "dataset": null,
+  "collections": {
+    "restaurantReviews": [
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615161600000"
+          }
+        },
+        "score": {
+          "$numberInt": "90"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615248000000"
+          }
+        },
+        "score": {
+          "$numberInt": "92"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615334400000"
+          }
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615420800000"
+          }
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615507200000"
+          }
+        },
+        "score": {
+          "$numberInt": "85"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615593600000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "restaurantReviews",
+    "pipeline": [
+      {
+        "$fill": {
+          "sortBy": {
+            "date": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "score": {
+              "method": "locf"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b553"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615161600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "90"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b554"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615248000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "92"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b555"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615334400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "92"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b556"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615420800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "92"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b557"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615507200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62040bc9394d47411658b558"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615593600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

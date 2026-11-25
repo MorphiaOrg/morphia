@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToDate extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toDate/example1
+     * test data: dev/morphia/test/aggregation/expressions/toDate/toDateExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToDateExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("convertedDate", toDate("$order_date")),
                 sort().ascending("convertedDate")));
     }

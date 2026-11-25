@@ -1,0 +1,356 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/topN/findTheHighestRatedMoviesForEachGenre",
+  "title": "Find the Highest-Rated Movies for Each Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/topN.txt",
+    "blob": "68fd3a1a63bbfa2718f454f01671d272aa12d972"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$match": {
+          "imdb.rating": {
+            "$gt": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "topRatedMovies": {
+            "$topN": {
+              "output": [
+                "$title",
+                "$imdb.rating"
+              ],
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                },
+                "title": {
+                  "$numberInt": "1"
+                }
+              },
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Band of Brothers"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.6"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Real Miyagi"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Dark Knight"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "9"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Over the Garden Wall"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Love is God"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Lord of the Rings: The Return of the King"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.9"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Over the Garden Wall"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Death Note"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Rabbit and Deer"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.7"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "A Brave Heart: The Lizzie Velasquez Story"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.4"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Schindler's List"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Shining Night: A Portrait of Composer Morten Lauridsen"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.8"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Over the Garden Wall"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "9.2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Heart of a Dog"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Chaos Class Failed the Class"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "9"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -13,11 +13,11 @@ import static dev.morphia.query.updates.UpdateOperators.pullAll;
 public class TestPullAll extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/pullAll/example1
+     * test data: dev/morphia/test/query/updates/pullAll/pullAllUpdateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testPullAllUpdateOperator() {
         testUpdate((query) -> query.filter(eq("_id", 1)), pullAll("scores", List.of(0, 5)));
     }
 }

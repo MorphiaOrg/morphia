@@ -1,0 +1,143 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sum/totalTheVotesByRating",
+  "title": "Total the Votes by Rating",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/sum.txt",
+    "blob": "b783cbdf62cf197d0fd21edcc07af1be77d57108"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "imdb.votes": {
+            "$type": "int"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$rated",
+          "totalVotes": {
+            "$sum": "$imdb.votes"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G"
+            }
+          },
+          {
+            "name": "totalVotes",
+            "value": {
+              "whole": {
+                "$numberInt": "12773015"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG"
+            }
+          },
+          {
+            "name": "totalVotes",
+            "value": {
+              "whole": {
+                "$numberInt": "57205811"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "totalVotes",
+            "value": {
+              "whole": {
+                "$numberInt": "152323029"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "totalVotes",
+            "value": {
+              "whole": {
+                "$numberInt": "209762435"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

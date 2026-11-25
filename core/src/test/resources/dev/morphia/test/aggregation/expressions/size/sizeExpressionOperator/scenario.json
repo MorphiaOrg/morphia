@@ -1,0 +1,232 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/size/sizeExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/size.txt",
+    "blob": "b0b66a16ae0f3d126ddf3c7bb10fb253fe1a9ef1"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "description": "product 1",
+        "colors": [
+          "blue",
+          "black",
+          "red"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "description": "product 2",
+        "colors": [
+          "purple"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "XYZ1",
+        "description": "product 3",
+        "colors": []
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "ZZZ1",
+        "description": "product 4 - missing colors"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "ZZZ2",
+        "description": "product 5 - colors is string",
+        "colors": "blue,red"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "numberOfColors": {
+            "$cond": {
+              "if": {
+                "$isArray": "$colors"
+              },
+              "then": {
+                "$size": "$colors"
+              },
+              "else": "NA"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC1"
+            }
+          },
+          {
+            "name": "numberOfColors",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC2"
+            }
+          },
+          {
+            "name": "numberOfColors",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "XYZ1"
+            }
+          },
+          {
+            "name": "numberOfColors",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ZZZ1"
+            }
+          },
+          {
+            "name": "numberOfColors",
+            "value": {
+              "text": "NA"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ZZZ2"
+            }
+          },
+          {
+            "name": "numberOfColors",
+            "value": {
+              "text": "NA"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "SINGLE_ARGUMENT_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

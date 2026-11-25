@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIsoDayOfWeek extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isoDayOfWeek/example1
+     * test data: dev/morphia/test/aggregation/expressions/isoDayOfWeek/isoDayOfWeekExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIsoDayOfWeekExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 project().suppressId().include("name", "$name").include("dayOfWeek", isoDayOfWeek("$birthday"))));
     }

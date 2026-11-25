@@ -1,0 +1,107 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/slice/updateArrayUsingSliceOnly",
+  "title": "Update Array Using Slice Only",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "23d941b5a8dda3b6408bfd3cb4cc79930c836dd1",
+    "path": "source/reference/operator/update/slice.txt",
+    "blob": "7d3869a48427f0dd75fe8949986ce58001bc7dae"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "scores": [
+          {
+            "$numberInt": "89"
+          },
+          {
+            "$numberInt": "70"
+          },
+          {
+            "$numberInt": "100"
+          },
+          {
+            "$numberInt": "20"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "3"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [],
+          "$slice": {
+            "$numberInt": "-3"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "70"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "20"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

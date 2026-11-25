@@ -1,1 +1,0 @@
-db.collection.find( { a: { $bitsAnySet: BinData(0, "MA==") } } )

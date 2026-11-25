@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,41 +16,39 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestMax extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/max/example1
+     * test data: dev/morphia/test/aggregation/expressions/max/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(group(id("$item")).field("maxTotalAmount", max(multiply("$price", "$quantity")))
-                                .field("maxQuantity", max("$quantity"))));
+    public void testUseInGroupStage() {
+        testPipeline((aggregation) -> aggregation
+                .pipeline(group(id("$item")).field("maxTotalAmount", max(multiply("$price", "$quantity")))
+                        .field("maxQuantity", max("$quantity"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/max/example2
+     * test data: dev/morphia/test/aggregation/expressions/max/useInProjectStage
      * 
      */
     @Test
     @DisplayName("Use in ``$project`` Stage")
-    public void testExample2() {
+    public void testUseInProjectStage() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
                 .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/max/example3
+     * test data: dev/morphia/test/aggregation/expressions/max/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
-        testPipeline(new ActionTestOptions(),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                        .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
-                                .operator(max("$quantity")).window().documents("unbounded", "current"))));
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
+                        .operator(max("$quantity")).window().documents("unbounded", "current"))));
     }
 
 }

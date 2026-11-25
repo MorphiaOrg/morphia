@@ -1,0 +1,368 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+  "title": "Perform Multiple Joins and a Correlated Subquery with ``$lookup``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "almonds",
+        "price": {
+          "$numberInt": "12"
+        },
+        "ordered": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pecans",
+        "price": {
+          "$numberInt": "20"
+        },
+        "ordered": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "cookies",
+        "price": {
+          "$numberInt": "10"
+        },
+        "ordered": {
+          "$numberInt": "60"
+        }
+      }
+    ],
+    "warehouses": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "stock_item": "almonds",
+        "warehouse": "A",
+        "instock": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "stock_item": "pecans",
+        "warehouse": "A",
+        "instock": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "stock_item": "almonds",
+        "warehouse": "B",
+        "instock": {
+          "$numberInt": "60"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "stock_item": "cookies",
+        "warehouse": "B",
+        "instock": {
+          "$numberInt": "40"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "stock_item": "cookies",
+        "warehouse": "A",
+        "instock": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "warehouses",
+          "let": {
+            "order_item": "$item",
+            "order_qty": "$ordered"
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$and": [
+                    {
+                      "$eq": [
+                        "$stock_item",
+                        "$$order_item"
+                      ]
+                    },
+                    {
+                      "$gte": [
+                        "$instock",
+                        "$$order_qty"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "$project": {
+                "stock_item": {
+                  "$numberInt": "0"
+                },
+                "_id": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ],
+          "as": "stockdata"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "ordered",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "stockdata",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "warehouse",
+                      "value": {
+                        "text": "A"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "120"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "warehouse",
+                      "value": {
+                        "text": "B"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "60"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pecans"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "ordered",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "stockdata",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "warehouse",
+                      "value": {
+                        "text": "A"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "80"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "cookies"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "ordered",
+            "value": {
+              "whole": {
+                "$numberInt": "60"
+              }
+            }
+          },
+          {
+            "name": "stockdata",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "warehouse",
+                      "value": {
+                        "text": "A"
+                      }
+                    },
+                    {
+                      "name": "instock",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "80"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,278 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setEquals/setEqualsExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "5cb31a185bb0ba8fbfbeef5023c47200fdef3c85",
+    "path": "source/reference/operator/aggregation/setEquals.txt",
+    "blob": "df46c10c404815a059689e3f86061a955505a173"
+  },
+  "dataset": null,
+  "collections": {
+    "bakeryOrders": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "cakes": [
+          "chocolate",
+          "vanilla"
+        ],
+        "cupcakes": [
+          "chocolate",
+          "vanilla"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "cakes": [
+          "chocolate",
+          "vanilla"
+        ],
+        "cupcakes": [
+          "vanilla",
+          "chocolate"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "cakes": [
+          "chocolate",
+          "chocolate"
+        ],
+        "cupcakes": [
+          "chocolate"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "cakes": [
+          "vanilla"
+        ],
+        "cupcakes": [
+          "chocolate"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "cakes": [
+          "vanilla"
+        ],
+        "cupcakes": []
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "bakeryOrders",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "cakes": {
+            "$numberInt": "1"
+          },
+          "cupcakes": {
+            "$numberInt": "1"
+          },
+          "sameFlavors": {
+            "$setEquals": [
+              "$cakes",
+              "$cupcakes"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "cakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "vanilla"
+                }
+              ]
+            }
+          },
+          {
+            "name": "cupcakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "vanilla"
+                }
+              ]
+            }
+          },
+          {
+            "name": "sameFlavors",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "cakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "vanilla"
+                }
+              ]
+            }
+          },
+          {
+            "name": "cupcakes",
+            "value": {
+              "array": [
+                {
+                  "text": "vanilla"
+                },
+                {
+                  "text": "chocolate"
+                }
+              ]
+            }
+          },
+          {
+            "name": "sameFlavors",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "cakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "chocolate"
+                }
+              ]
+            }
+          },
+          {
+            "name": "cupcakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                }
+              ]
+            }
+          },
+          {
+            "name": "sameFlavors",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "cakes",
+            "value": {
+              "array": [
+                {
+                  "text": "vanilla"
+                }
+              ]
+            }
+          },
+          {
+            "name": "cupcakes",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                }
+              ]
+            }
+          },
+          {
+            "name": "sameFlavors",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "cakes",
+            "value": {
+              "array": [
+                {
+                  "text": "vanilla"
+                }
+              ]
+            }
+          },
+          {
+            "name": "cupcakes",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "sameFlavors",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

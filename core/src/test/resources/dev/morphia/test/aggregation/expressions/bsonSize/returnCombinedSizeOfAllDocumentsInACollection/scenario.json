@@ -1,0 +1,133 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
+  "title": "Return Combined Size of All Documents in a Collection",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4be47aeab5c6f3ca0bf07ddd3e432f26b8c90658",
+    "path": "source/reference/operator/aggregation/bsonSize.txt",
+    "blob": "201c9ba757131d9e14fdd7db1139747b977eca1b"
+  },
+  "dataset": null,
+  "collections": {
+    "employees": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Alice",
+        "email": "alice@company.com",
+        "position": "Software Developer",
+        "current_task": {
+          "project_id": {
+            "$numberInt": "1"
+          },
+          "project_name": "Aggregation Improvements",
+          "project_duration": {
+            "$numberInt": "5"
+          },
+          "hours": {
+            "$numberInt": "20"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Bob",
+        "email": "bob@company.com",
+        "position": "Sales",
+        "current_task": {
+          "project_id": {
+            "$numberInt": "2"
+          },
+          "project_name": "Write Blog Posts",
+          "project_duration": {
+            "$numberInt": "2"
+          },
+          "hours": {
+            "$numberInt": "10"
+          },
+          "notes": "Progress is slow. Waiting for feedback."
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Charlie",
+        "email": "charlie@company.com",
+        "position": "HR (On Leave)",
+        "current_task": null
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Dianne",
+        "email": "diane@company.com",
+        "position": "Web Designer",
+        "current_task": {
+          "project_id": {
+            "$numberInt": "3"
+          },
+          "project_name": "Update Home Page",
+          "notes": "Need to scope this project."
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "employees",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": null,
+          "combined_object_size": {
+            "$sum": {
+              "$bsonSize": "$$ROOT"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "combined_object_size",
+            "value": {
+              "whole": {
+                "$numberInt": "733"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

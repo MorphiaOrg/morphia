@@ -1,0 +1,280 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/regexFind/mOption",
+  "title": "m Option",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/regexFind.txt",
+    "blob": "6eef6372b1690cfaabb5cdf7299fa09d8b021a52"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "description": "Single LINE description."
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "description": "First lines\nsecond line"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "description": "Many spaces before     line"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "description": "Multiple\nline descriptions"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "description": "anchors, links and hyperlinks"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "description": "métier work vocation"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "products",
+    "pipeline": [
+      {
+        "$addFields": {
+          "returnObject": {
+            "$regexFind": {
+              "input": "$description",
+              "regex": {
+                "$regularExpression": {
+                  "pattern": "^s",
+                  "options": "im"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Single LINE description."
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "document": [
+                {
+                  "name": "match",
+                  "value": {
+                    "text": "S"
+                  }
+                },
+                {
+                  "name": "idx",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "0"
+                    }
+                  }
+                },
+                {
+                  "name": "captures",
+                  "value": {
+                    "array": []
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "First lines\nsecond line"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "document": [
+                {
+                  "name": "match",
+                  "value": {
+                    "text": "s"
+                  }
+                },
+                {
+                  "name": "idx",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "12"
+                    }
+                  }
+                },
+                {
+                  "name": "captures",
+                  "value": {
+                    "array": []
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Many spaces before     line"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Multiple\nline descriptions"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "anchors, links and hyperlinks"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "métier work vocation"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "REGEX_OPTIONS",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

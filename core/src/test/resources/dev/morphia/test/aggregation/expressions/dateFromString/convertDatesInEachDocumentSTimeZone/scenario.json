@@ -1,0 +1,196 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateFromString/convertDatesInEachDocumentSTimeZone",
+  "title": "Convert Dates in Each Document's Time Zone",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/dateFromString.txt",
+    "blob": "9124c47ee54e14c6a0f226ca22d5328c8b480c7b"
+  },
+  "dataset": null,
+  "collections": {
+    "logmessages": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": "2017-02-08T12:10:40.787",
+        "timezone": "America/New_York",
+        "message": "Step 1: Started"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": "2017-02-08",
+        "timezone": "-05:00",
+        "message": "Step 1: Ended"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "message": " Step 1: Ended "
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "date": "2017-02-09",
+        "timezone": "Europe/London",
+        "message": "Step 2: Started"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "date": "2017-02-09T03:35:02.055",
+        "timezone": "+0530",
+        "message": "Step 2: In Progress"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "logmessages",
+    "pipeline": [
+      {
+        "$project": {
+          "date": {
+            "$dateFromString": {
+              "dateString": "$date",
+              "timezone": "$timezone"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486573840787"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486530000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486598400000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486591502055"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

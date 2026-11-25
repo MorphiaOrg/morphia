@@ -1,0 +1,224 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/useLookupWithMergeObjects",
+  "title": "Use ``$lookup`` with ``$mergeObjects``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "items": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "almonds",
+        "description": "almond clusters",
+        "instock": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "bread",
+        "description": "raisin and nut bread",
+        "instock": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "pecans",
+        "description": "candied pecans",
+        "instock": {
+          "$numberInt": "60"
+        }
+      }
+    ],
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "almonds",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pecans",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "items",
+          "localField": "item",
+          "foreignField": "item",
+          "as": "fromItems"
+        }
+      },
+      {
+        "$replaceRoot": {
+          "newRoot": {
+            "$mergeObjects": [
+              {
+                "$arrayElemAt": [
+                  "$fromItems",
+                  {
+                    "$numberInt": "0"
+                  }
+                ]
+              },
+              "$$ROOT"
+            ]
+          }
+        }
+      },
+      {
+        "$project": {
+          "fromItems": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "almond clusters"
+            }
+          },
+          {
+            "name": "instock",
+            "value": {
+              "whole": {
+                "$numberInt": "120"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pecans"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "candied pecans"
+            }
+          },
+          {
+            "name": "instock",
+            "value": {
+              "whole": {
+                "$numberInt": "60"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

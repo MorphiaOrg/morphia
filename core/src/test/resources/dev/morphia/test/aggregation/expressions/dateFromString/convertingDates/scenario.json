@@ -1,0 +1,194 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateFromString/convertingDates",
+  "title": "Converting Dates",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
+    "path": "source/reference/operator/aggregation/dateFromString.txt",
+    "blob": "d24517a6c3e5f96685d5fc3a474667d2569d57c7"
+  },
+  "dataset": null,
+  "collections": {
+    "logmessages": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": "2017-02-08T12:10:40.787",
+        "timezone": "America/New_York",
+        "message": "Step 1: Started"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": "2017-02-08",
+        "timezone": "-05:00",
+        "message": "Step 1: Ended"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "message": " Step 1: Ended "
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "date": "2017-02-09",
+        "timezone": "Europe/London",
+        "message": "Step 2: Started"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "date": "2017-02-09T03:35:02.055",
+        "timezone": "+0530",
+        "message": "Step 2: In Progress"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "logmessages",
+    "pipeline": [
+      {
+        "$project": {
+          "date": {
+            "$dateFromString": {
+              "dateString": "$date",
+              "timezone": "America/New_York"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486573840787"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486530000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486616400000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486629302055"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

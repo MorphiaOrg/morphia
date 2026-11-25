@@ -1,0 +1,143 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/accumulator/comparisonWithAvg",
+  "title": "Comparison with $avg",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/accumulator.txt",
+    "blob": "6b935dec279168d6d8c3fb1dabd55b0c41fc1107"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "imdb.rating": {
+            "$type": "double"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$rated",
+          "avgRating": {
+            "$avg": "$imdb.rating"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G"
+            }
+          },
+          {
+            "name": "avgRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.6280922431865825"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG"
+            }
+          },
+          {
+            "name": "avgRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.435259179265659"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "avgRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.404911676001723"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "avgRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.456657633242999"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

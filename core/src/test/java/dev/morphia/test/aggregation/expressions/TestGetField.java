@@ -21,32 +21,32 @@ public class TestGetField extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/getField/example1
+     * test data: dev/morphia/test/aggregation/expressions/getField/queryFieldsThatContainPeriods
      * 
      */
     @Test
     @DisplayName("Query Fields that Contain Periods (``.``)")
-    public void testExample1() {
+    public void testQueryFieldsThatContainPeriods() {
         testPipeline((aggregation) -> aggregation.pipeline(match(expr(gt(getField("price.usd"), 200)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/getField/example2
+     * test data: dev/morphia/test/aggregation/expressions/getField/queryFieldsThatStartWithADollarSign
      * 
      */
     @Test
     @DisplayName("Query Fields that Start with a Dollar Sign (``$``)")
-    public void testExample2() {
+    public void testQueryFieldsThatStartWithADollarSign() {
         testPipeline((aggregation) -> aggregation.pipeline(match(expr(gt(getField(literal("$price")), 200)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/getField/example3
+     * test data: dev/morphia/test/aggregation/expressions/getField/queryAFieldInASubDocument
      * 
      */
     @Test
     @DisplayName("Query a Field in a Sub-document")
-    public void testExample3() {
+    public void testQueryAFieldInASubDocument() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(match(expr(lte(getField(literal("$small")).input("$quantity"), 20)))));
     }

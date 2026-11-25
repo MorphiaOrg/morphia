@@ -1,0 +1,147 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/group/pivotData",
+  "title": "Pivot Data",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "50a2fb0cc5a95528ce1853159b02828a353352ae",
+    "path": "source/reference/operator/aggregation/group.txt",
+    "blob": "3a27b8e136e0acd5d851b6db24b6a71bbce66998"
+  },
+  "dataset": null,
+  "collections": {
+    "books": [
+      {
+        "_id": {
+          "$numberInt": "8751"
+        },
+        "title": "The Banquet",
+        "author": "Dante",
+        "copies": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8752"
+        },
+        "title": "Divine Comedy",
+        "author": "Dante",
+        "copies": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8645"
+        },
+        "title": "Eclogues",
+        "author": "Dante",
+        "copies": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7000"
+        },
+        "title": "The Odyssey",
+        "author": "Homer",
+        "copies": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7020"
+        },
+        "title": "Iliad",
+        "author": "Homer",
+        "copies": {
+          "$numberInt": "10"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "books",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$author",
+          "books": {
+            "$push": "$title"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Homer"
+            }
+          },
+          {
+            "name": "books",
+            "value": {
+              "array": [
+                {
+                  "text": "The Odyssey"
+                },
+                {
+                  "text": "Iliad"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Dante"
+            }
+          },
+          {
+            "name": "books",
+            "value": {
+              "array": [
+                {
+                  "text": "The Banquet"
+                },
+                {
+                  "text": "Divine Comedy"
+                },
+                {
+                  "text": "Eclogues"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

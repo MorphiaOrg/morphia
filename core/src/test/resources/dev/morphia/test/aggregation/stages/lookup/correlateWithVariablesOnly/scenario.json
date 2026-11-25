@@ -1,0 +1,252 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/correlateWithVariablesOnly",
+  "title": "Correlate with Variables Only",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/lookup.txt",
+    "blob": "f8c2e0be29dc8e0908b09e4a5136b8dc63171c43"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "I Don't Kiss",
+              "Lucky Luke",
+              "Mississippi Masala"
+            ]
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "comments",
+          "let": {
+            "movie_id": "$_id",
+            "movie_year": "$year"
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$and": [
+                    {
+                      "$eq": [
+                        "$movie_id",
+                        "$$movie_id"
+                      ]
+                    },
+                    {
+                      "$gt": [
+                        {
+                          "$year": "$date"
+                        },
+                        "$$movie_year"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "$project": {
+                "_id": {
+                  "$numberInt": "0"
+                },
+                "name": {
+                  "$numberInt": "1"
+                },
+                "date": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ],
+          "as": "post_release_comments"
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "year": {
+            "$numberInt": "1"
+          },
+          "post_release_comments": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "I Don't Kiss"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1991"
+              }
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Brandon Hardy"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1474197094000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Lucky Luke"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1991"
+              }
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Kelsey Smith"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1263405301000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Mississippi Masala"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1991"
+              }
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Phillip Collins"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1273737862000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

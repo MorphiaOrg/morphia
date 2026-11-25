@@ -1,0 +1,45 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/skip/skipAggregationStage",
+  "title": "main",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "f8b15986988b40b4cebb137793fd7adebefc026b",
+    "path": "source/reference/operator/aggregation/skip.txt",
+    "blob": "aa6851d8b3a6b4f64333239b6aac04deff43fa3c"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "article",
+    "pipeline": [
+      {
+        "$skip": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

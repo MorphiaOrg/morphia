@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestCond extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cond/example1
+     * test data: dev/morphia/test/aggregation/expressions/cond/condExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCondExpressionOperator() {
         testPipeline(aggregation -> aggregation
                 .pipeline(project().include("item").include("discount", condition(gte("$qty", 250), 30, 20))));
 

@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,26 +19,24 @@ public class TestExpMovingAvg extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example1
+     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN
      * 
      */
     @Test
     @DisplayName("Exponential Moving Average Using ``N``")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().removeIds(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
-                        .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 2)))));
+    public void testExponentialMovingAverageUsingN() {
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
+                .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 2)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example2
+     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha
      * 
      */
     @Test
     @DisplayName("Exponential Moving Average Using ``alpha``")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().removeIds(true),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
-                        .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 0.75)))));
+    public void testExponentialMovingAverageUsingAlpha() {
+        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
+                .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 0.75)))));
     }
 }

@@ -1,7 +1,0 @@
-{
-       $project:
-         {
-           item: { $toLower: "$item" },
-           description: { $toLower: "$description" }
-         }
-     }

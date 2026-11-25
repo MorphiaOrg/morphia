@@ -1,5 +1,0 @@
-{
-      $addFields : {
-         "cosh_output" : { $cosh : "$angle" }
-      }
-   }

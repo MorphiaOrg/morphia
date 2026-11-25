@@ -1,0 +1,231 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/project/conditionallyExcludeFields",
+  "title": "Conditionally Exclude Fields",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/project.txt",
+    "blob": "6139e853557792da45aaaf91a90530d9221b5823"
+  },
+  "dataset": null,
+  "collections": {
+    "books": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "abc123",
+        "isbn": "0001122223334",
+        "author": {
+          "last": "zzz",
+          "first": "aaa"
+        },
+        "copies": {
+          "$numberInt": "5"
+        },
+        "lastModified": "2016-07-28"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "Baked Goods",
+        "isbn": "9999999999999",
+        "author": {
+          "last": "xyz",
+          "first": "abc",
+          "middle": ""
+        },
+        "copies": {
+          "$numberInt": "2"
+        },
+        "lastModified": "2017-07-21"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "Ice Cream Cakes",
+        "isbn": "8888888888888",
+        "author": {
+          "last": "xyz",
+          "first": "abc",
+          "middle": "mmm"
+        },
+        "copies": {
+          "$numberInt": "5"
+        },
+        "lastModified": "2017-07-22"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "books",
+    "pipeline": [
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "author.first": {
+            "$numberInt": "1"
+          },
+          "author.last": {
+            "$numberInt": "1"
+          },
+          "author.middle": {
+            "$cond": {
+              "if": {
+                "$eq": [
+                  "",
+                  "$author.middle"
+                ]
+              },
+              "then": "$$REMOVE",
+              "else": "$author.middle"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "abc123"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "zzz"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "aaa"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Baked Goods"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "xyz"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "abc"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Ice Cream Cakes"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "xyz"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "abc"
+                  }
+                },
+                {
+                  "name": "middle",
+                  "value": {
+                    "text": "mmm"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

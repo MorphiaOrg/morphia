@@ -1,0 +1,129 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/concat/concatExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "20d430bf85ccd1a09d10351a1bab7923be21ac03",
+    "path": "source/reference/operator/aggregation/concat.txt",
+    "blob": "20576035722de9b9cf392c0692ace828650bc988"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "quarter": "13Q1",
+        "description": "product 1"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "quarter": "13Q4",
+        "description": "product 2"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "XYZ1",
+        "quarter": "14Q2",
+        "description": null
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "itemDescription": {
+            "$concat": [
+              "$item",
+              " - ",
+              "$description"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "itemDescription",
+            "value": {
+              "text": "ABC1 - product 1"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "itemDescription",
+            "value": {
+              "text": "ABC2 - product 2"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "itemDescription",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,38 +15,35 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestMedian extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/median/example1
+     * test data: dev/morphia/test/aggregation/expressions/median/useMedianAsAnAccumulator
      */
     @Test
     @DisplayName("Use |operatorName| as an Accumulator")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
-                aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
+    public void testUseMedianAsAnAccumulator() {
+        testPipeline(aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/median/example2
+     * test data: dev/morphia/test/aggregation/expressions/median/useMedianInAProjectStage
      *
      */
     @Test
     @DisplayName("Use |operatorName| in a ``$project`` Stage")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
-                aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include("testMedians",
-                        median(array("$test01", "$test02", "$test03")))));
+    public void testUseMedianInAProjectStage() {
+        testPipeline(aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include("testMedians",
+                median(array("$test01", "$test02", "$test03")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/median/example3
+     * test data: dev/morphia/test/aggregation/expressions/median/useMedianInASetWindowFieldStage
      *
      */
     @Test
     @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
-    public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
-                aggregation -> aggregation.pipeline(
-                        setWindowFields().sortBy(ascending("test01"))
-                                .output(output("test01_median").operator(median("$test01")).window().range(-3, 3)),
-                        project().suppressId().include("studentId").include("test01_median")));
+    public void testUseMedianInASetWindowFieldStage() {
+        testPipeline(aggregation -> aggregation.pipeline(
+                setWindowFields().sortBy(ascending("test01"))
+                        .output(output("test01_median").operator(median("$test01")).window().range(-3, 3)),
+                project().suppressId().include("studentId").include("test01_median")));
     }
 }

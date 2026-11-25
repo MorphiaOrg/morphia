@@ -1,0 +1,131 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre",
+  "title": "Find the Three Highest-Rated Movies in a Single Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/topN.txt",
+    "blob": "68fd3a1a63bbfa2718f454f01671d272aa12d972"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "genres": "Short",
+          "imdb.rating": {
+            "$gt": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "Short",
+          "topRatedMovies": {
+            "$topN": {
+              "output": [
+                "$title",
+                "$imdb.rating"
+              ],
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                },
+                "title": {
+                  "$numberInt": "1"
+                }
+              },
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Short"
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Rabbit and Deer"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.7"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Assume the Position with Mr. Wuhl"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.6"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Hole"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "8.6"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/useMultipleJoinConditionsAndACorrelatedSubquery",
+  "title": "Use Multiple Join Conditions and a Correlated Subquery",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/lookup.txt",
+    "blob": "f8c2e0be29dc8e0908b09e4a5136b8dc63171c43"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "Class Action",
+              "Kafka",
+              "Corpse Bride"
+            ]
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "comments",
+          "localField": "_id",
+          "foreignField": "movie_id",
+          "let": {
+            "movie_year": "$year"
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$expr": {
+                  "$gt": [
+                    {
+                      "$year": "$date"
+                    },
+                    "$$movie_year"
+                  ]
+                }
+              }
+            },
+            {
+              "$project": {
+                "_id": {
+                  "$numberInt": "0"
+                },
+                "name": {
+                  "$numberInt": "1"
+                },
+                "date": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ],
+          "as": "post_release_comments"
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "year": {
+            "$numberInt": "1"
+          },
+          "post_release_comments": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1991"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Class Action"
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Khal Drogo"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1481008623000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1991"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Kafka"
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Khal Drogo"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "894769820000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "2005"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Corpse Bride"
+            }
+          },
+          {
+            "name": "post_release_comments",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,2 +1,0 @@
-{ item: "hammer", sku: "unknown"},
-{ item: "nails", sku: "unknown", quantity: 100, instock: true}

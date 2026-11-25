@@ -8,7 +8,6 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.BooksBucketResult;
 import dev.morphia.test.aggregation.model.BucketAutoResult;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -25,41 +24,39 @@ import static java.util.Collections.singleton;
 
 public class TestBucketAuto extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucketAuto/example1
+     * test data: dev/morphia/test/aggregation/stages/bucketAuto/singleFacetAggregation
      * 
      */
     @Test
     @DisplayName("Single Facet Aggregation")
-    public void testExample1() {
+    public void testSingleFacetAggregation() {
         testPipeline((aggregation) -> aggregation.pipeline(autoBucket().groupBy("$price").buckets(4)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucketAuto/example2
+     * test data: dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregation
      * 
      */
     @Test
     @DisplayName("Multi-Faceted Aggregation")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
-                        .field("year",
-                                autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
-                                        .outputField("years", push("$year")))
-                        .field("area", autoBucket().groupBy(multiply("$dimensions.height", "$dimensions.width"))
-                                .buckets(4).outputField("count", sum(1)).outputField("titles", push("$title")))));
+    public void testMultiFacetedAggregation() {
+        testPipeline((aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
+                .field("year",
+                        autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
+                                .outputField("years", push("$year")))
+                .field("area", autoBucket().groupBy(multiply("$dimensions.height", "$dimensions.width"))
+                        .buckets(4).outputField("count", sum(1)).outputField("titles", push("$title")))));
     }
 
     @Test
     @DisplayName("Multi-Faceted Aggregation")
-    public void testExample3() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
-                        .field("year",
-                                autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
-                                        .outputField("years", push("$year")))
-                        .field("area", autoBucket().groupBy(multiply("$dimensions.height", "$dimensions.width"))
-                                .buckets(4).outputField("count", sum(1)).outputField("titles", push("$title")))));
+    public void testMultiFacetedAggregationAsPipeline() {
+        testPipeline((aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
+                .field("year",
+                        autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
+                                .outputField("years", push("$year")))
+                .field("area", autoBucket().groupBy(multiply("$dimensions.height", "$dimensions.width"))
+                        .buckets(4).outputField("count", sum(1)).outputField("titles", push("$title")))));
     }
 
     @Test

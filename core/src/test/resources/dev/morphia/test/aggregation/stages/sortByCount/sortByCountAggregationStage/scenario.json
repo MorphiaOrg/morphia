@@ -1,0 +1,341 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/sortByCount/sortByCountAggregationStage",
+  "title": "main",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
+    "path": "source/reference/operator/aggregation/sortByCount.txt",
+    "blob": "7f92ddf55c937279fafe343fe4853b49f66ed742"
+  },
+  "dataset": null,
+  "collections": {
+    "exhibits": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "The Pillars of Society",
+        "artist": "Grosz",
+        "year": {
+          "$numberInt": "1926"
+        },
+        "tags": [
+          "painting",
+          "satire",
+          "Expressionism",
+          "caricature"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "Melancholy III",
+        "artist": "Munch",
+        "year": {
+          "$numberInt": "1902"
+        },
+        "tags": [
+          "woodcut",
+          "Expressionism"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "Dancer",
+        "artist": "Miro",
+        "year": {
+          "$numberInt": "1925"
+        },
+        "tags": [
+          "oil",
+          "Surrealism",
+          "painting"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "title": "The Great Wave off Kanagawa",
+        "artist": "Hokusai",
+        "tags": [
+          "woodblock",
+          "ukiyo-e"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "title": "The Persistence of Memory",
+        "artist": "Dali",
+        "year": {
+          "$numberInt": "1931"
+        },
+        "tags": [
+          "Surrealism",
+          "painting",
+          "oil"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "title": "Composition VII",
+        "artist": "Kandinsky",
+        "year": {
+          "$numberInt": "1913"
+        },
+        "tags": [
+          "oil",
+          "painting",
+          "abstract"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "title": "The Scream",
+        "artist": "Munch",
+        "year": {
+          "$numberInt": "1893"
+        },
+        "tags": [
+          "Expressionism",
+          "painting",
+          "oil"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "title": "Blue Flower",
+        "artist": "O'Keefe",
+        "year": {
+          "$numberInt": "1918"
+        },
+        "tags": [
+          "abstract",
+          "painting"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "exhibits",
+    "pipeline": [
+      {
+        "$unwind": "$tags"
+      },
+      {
+        "$sortByCount": "$tags"
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "painting"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "oil"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Expressionism"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Surrealism"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "abstract"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "woodblock"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "woodcut"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "ukiyo-e"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "satire"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "caricature"
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

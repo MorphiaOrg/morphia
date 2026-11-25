@@ -1,0 +1,168 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/type/queryingByMultipleDataTypes",
+  "title": "Querying by Multiple Data Types",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/type.txt",
+    "blob": "0902d6a741899af1732131889743c75df2d9cc6e"
+  },
+  "dataset": null,
+  "collections": {
+    "grades": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Alice King",
+        "classAverage": {
+          "$numberDouble": "87.33333333333333"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Bob Jenkins",
+        "classAverage": "83.52"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Cathy Hart",
+        "classAverage": "94.06"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Drew Williams",
+        "classAverage": {
+          "$numberInt": "93"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "grades",
+    "filter": {
+      "classAverage": {
+        "$type": [
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "1"
+          }
+        ]
+      }
+    },
+    "alternatives": [
+      {
+        "filter": {
+          "classAverage": {
+            "$type": [
+              "string",
+              "double"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Alice King"
+            }
+          },
+          {
+            "name": "classAverage",
+            "value": {
+              "exact": {
+                "$numberDouble": "87.33333333333333"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Bob Jenkins"
+            }
+          },
+          {
+            "name": "classAverage",
+            "value": {
+              "text": "83.52"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Cathy Hart"
+            }
+          },
+          {
+            "name": "classAverage",
+            "value": {
+              "text": "94.06"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

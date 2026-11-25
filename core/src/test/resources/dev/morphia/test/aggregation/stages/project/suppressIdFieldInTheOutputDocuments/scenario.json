@@ -1,0 +1,96 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/project/suppressIdFieldInTheOutputDocuments",
+  "title": "Suppress ``_id`` Field in the Output Documents",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/project.txt",
+    "blob": "6139e853557792da45aaaf91a90530d9221b5823"
+  },
+  "dataset": null,
+  "collections": {
+    "books": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "abc123",
+        "isbn": "0001122223334",
+        "author": {
+          "last": "zzz",
+          "first": "aaa"
+        },
+        "copies": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "books",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "author": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "abc123"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "document": [
+                {
+                  "name": "last",
+                  "value": {
+                    "text": "zzz"
+                  }
+                },
+                {
+                  "name": "first",
+                  "value": {
+                    "text": "aaa"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

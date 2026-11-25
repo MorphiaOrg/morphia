@@ -1,0 +1,127 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/literal/treatAsALiteral",
+  "title": "Treat ``$`` as a Literal",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "747de586932f8bd0e3efdaaf298424e40dc1428c",
+    "path": "source/reference/operator/aggregation/literal.txt",
+    "blob": "fcc478ceed1acee71c7999a2670d4253c1f7b5cd"
+  },
+  "dataset": null,
+  "collections": {
+    "storeInventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "napkins",
+        "price": "$2.50"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "coffee",
+        "price": "1"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "soap",
+        "price": "$1"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "storeInventory",
+    "pipeline": [
+      {
+        "$project": {
+          "costsOneDollar": {
+            "$eq": [
+              "$price",
+              {
+                "$literal": "$1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "costsOneDollar",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "costsOneDollar",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "costsOneDollar",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

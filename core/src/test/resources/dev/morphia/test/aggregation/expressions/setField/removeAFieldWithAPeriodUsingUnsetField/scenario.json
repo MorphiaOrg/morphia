@@ -1,0 +1,109 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setField/removeAFieldWithAPeriodUsingUnsetField",
+  "title": "Remove a Field with a Period Using $unsetField",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/setField.txt",
+    "blob": "7bf53eb8645426f16e189c63a25ef228079fab60"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "sweatshirt",
+        "qty": {
+          "$numberInt": "300"
+        },
+        "price.usd": {
+          "$numberDouble": "45.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "winter coat",
+        "qty": {
+          "$numberInt": "200"
+        },
+        "price.usd": {
+          "$numberDouble": "499.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "sun dress",
+        "qty": {
+          "$numberInt": "250"
+        },
+        "price.usd": {
+          "$numberDouble": "199.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "leather boots",
+        "qty": {
+          "$numberInt": "300"
+        },
+        "price.usd": {
+          "$numberDouble": "249.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "bow tie",
+        "qty": {
+          "$numberInt": "180"
+        },
+        "price.usd": {
+          "$numberDouble": "9.99"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$replaceWith": {
+          "$unsetField": {
+            "field": "price.usd",
+            "input": "$$ROOT"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

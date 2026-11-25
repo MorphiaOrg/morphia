@@ -1,0 +1,107 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/max/useMaxToCompareDates",
+  "title": "Use ``$max`` to Compare Dates",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+    "path": "source/reference/operator/update/max.txt",
+    "blob": "cc05e8e4f8e88c6d2dc5f99ab472351c53797487"
+  },
+  "dataset": null,
+  "collections": {
+    "tags": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "desc": "crafts",
+        "dateEntered": {
+          "$date": {
+            "$numberLong": "1380603600000"
+          }
+        },
+        "dateExpired": {
+          "$date": {
+            "$numberLong": "1380645496163"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "tags",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$max": {
+        "dateExpired": {
+          "$date": {
+            "$numberLong": "1380499200000"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "desc",
+            "value": {
+              "text": "crafts"
+            }
+          },
+          {
+            "name": "dateEntered",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1380603600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "dateExpired",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1380645496163"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

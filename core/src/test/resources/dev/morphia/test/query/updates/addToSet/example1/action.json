@@ -1,4 +1,0 @@
-db.inventory.updateOne(
-   { _id: 1 },
-   { $addToSet: { tags: "accessories" } }
-)

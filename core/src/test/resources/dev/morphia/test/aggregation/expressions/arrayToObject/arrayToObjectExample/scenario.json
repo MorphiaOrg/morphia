@@ -1,0 +1,249 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/arrayToObject/arrayToObjectExample",
+  "title": "``$arrayToObject``  Example",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "bcf7bcc3704b04da5262f9aa5a89bfe27097b1fa",
+    "path": "source/reference/operator/aggregation/arrayToObject.txt",
+    "blob": "c4d6b97a52ee8b788ab99262f08e8a7a41059f6b"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "dimensions": [
+          {
+            "k": "l",
+            "v": {
+              "$numberInt": "25"
+            }
+          },
+          {
+            "k": "w",
+            "v": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "k": "uom",
+            "v": "cm"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "dimensions": [
+          [
+            "l",
+            {
+              "$numberInt": "50"
+            }
+          ],
+          [
+            "w",
+            {
+              "$numberInt": "25"
+            }
+          ],
+          [
+            "uom",
+            "cm"
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ABC3",
+        "dimensions": [
+          [
+            "l",
+            {
+              "$numberInt": "25"
+            }
+          ],
+          [
+            "l",
+            "cm"
+          ],
+          [
+            "l",
+            {
+              "$numberInt": "50"
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "dimensions": {
+            "$arrayToObject": "$dimensions"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC1"
+            }
+          },
+          {
+            "name": "dimensions",
+            "value": {
+              "document": [
+                {
+                  "name": "l",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "25"
+                    }
+                  }
+                },
+                {
+                  "name": "w",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "10"
+                    }
+                  }
+                },
+                {
+                  "name": "uom",
+                  "value": {
+                    "text": "cm"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC2"
+            }
+          },
+          {
+            "name": "dimensions",
+            "value": {
+              "document": [
+                {
+                  "name": "l",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "50"
+                    }
+                  }
+                },
+                {
+                  "name": "w",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "25"
+                    }
+                  }
+                },
+                {
+                  "name": "uom",
+                  "value": {
+                    "text": "cm"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC3"
+            }
+          },
+          {
+            "name": "dimensions",
+            "value": {
+              "document": [
+                {
+                  "name": "l",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "50"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

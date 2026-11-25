@@ -1,0 +1,333 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/positionalAll/updateAllDocumentsInAnArray",
+  "title": "Update All Documents in an Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/positional-all.txt",
+    "blob": "2132adf02cce83c6e597ccf578bc2990525a5c6e"
+  },
+  "dataset": null,
+  "collections": {
+    "students2": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "grade": {
+              "$numberInt": "80"
+            },
+            "mean": {
+              "$numberInt": "75"
+            },
+            "std": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "grade": {
+              "$numberInt": "85"
+            },
+            "mean": {
+              "$numberInt": "90"
+            },
+            "std": {
+              "$numberInt": "6"
+            }
+          },
+          {
+            "grade": {
+              "$numberInt": "85"
+            },
+            "mean": {
+              "$numberInt": "85"
+            },
+            "std": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "grades": [
+          {
+            "grade": {
+              "$numberInt": "90"
+            },
+            "mean": {
+              "$numberInt": "75"
+            },
+            "std": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "grade": {
+              "$numberInt": "87"
+            },
+            "mean": {
+              "$numberInt": "90"
+            },
+            "std": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "grade": {
+              "$numberInt": "85"
+            },
+            "mean": {
+              "$numberInt": "85"
+            },
+            "std": {
+              "$numberInt": "6"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students2",
+    "filter": {},
+    "update": {
+      "$inc": {
+        "grades.$[].std": {
+          "$numberInt": "-2"
+        }
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "80"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "75"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "85"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "90"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "85"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "85"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "90"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "75"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "87"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "90"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "85"
+                        }
+                      }
+                    },
+                    {
+                      "name": "mean",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "85"
+                        }
+                      }
+                    },
+                    {
+                      "name": "std",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

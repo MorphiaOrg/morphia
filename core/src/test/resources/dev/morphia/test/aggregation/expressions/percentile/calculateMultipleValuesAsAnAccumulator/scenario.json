@@ -1,0 +1,303 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
+  "title": "Calculate Multiple Values as an Accumulator",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "3119142f7c7443c44ec9e941b3a072e35efc3540",
+    "path": "source/reference/operator/aggregation/percentile.txt",
+    "blob": "809aebea5746a5dcf41a3049d88b2d29372799c2"
+  },
+  "dataset": null,
+  "collections": {
+    "testScores": [
+      {
+        "studentId": "2345",
+        "test01": {
+          "$numberInt": "62"
+        },
+        "test02": {
+          "$numberInt": "81"
+        },
+        "test03": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "studentId": "2356",
+        "test01": {
+          "$numberInt": "60"
+        },
+        "test02": {
+          "$numberInt": "83"
+        },
+        "test03": {
+          "$numberInt": "79"
+        }
+      },
+      {
+        "studentId": "2358",
+        "test01": {
+          "$numberInt": "67"
+        },
+        "test02": {
+          "$numberInt": "82"
+        },
+        "test03": {
+          "$numberInt": "78"
+        }
+      },
+      {
+        "studentId": "2367",
+        "test01": {
+          "$numberInt": "64"
+        },
+        "test02": {
+          "$numberInt": "72"
+        },
+        "test03": {
+          "$numberInt": "77"
+        }
+      },
+      {
+        "studentId": "2369",
+        "test01": {
+          "$numberInt": "60"
+        },
+        "test02": {
+          "$numberInt": "53"
+        },
+        "test03": {
+          "$numberInt": "72"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "testScores",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": null,
+          "test01_percentiles": {
+            "$percentile": {
+              "input": "$test01",
+              "p": [
+                {
+                  "$numberDouble": "0.5"
+                },
+                {
+                  "$numberDouble": "0.75"
+                },
+                {
+                  "$numberDouble": "0.9"
+                },
+                {
+                  "$numberDouble": "0.95"
+                }
+              ],
+              "method": "approximate"
+            }
+          },
+          "test02_percentiles": {
+            "$percentile": {
+              "input": "$test02",
+              "p": [
+                {
+                  "$numberDouble": "0.5"
+                },
+                {
+                  "$numberDouble": "0.75"
+                },
+                {
+                  "$numberDouble": "0.9"
+                },
+                {
+                  "$numberDouble": "0.95"
+                }
+              ],
+              "method": "approximate"
+            }
+          },
+          "test03_percentiles": {
+            "$percentile": {
+              "input": "$test03",
+              "p": [
+                {
+                  "$numberDouble": "0.5"
+                },
+                {
+                  "$numberDouble": "0.75"
+                },
+                {
+                  "$numberDouble": "0.9"
+                },
+                {
+                  "$numberDouble": "0.95"
+                }
+              ],
+              "method": "approximate"
+            }
+          },
+          "test03_percent_alt": {
+            "$percentile": {
+              "input": "$test03",
+              "p": [
+                {
+                  "$numberDouble": "0.9"
+                },
+                {
+                  "$numberDouble": "0.5"
+                },
+                {
+                  "$numberDouble": "0.75"
+                },
+                {
+                  "$numberDouble": "0.95"
+                }
+              ],
+              "method": "approximate"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "test01_percentiles",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "62"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "64"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "67"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "67"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "test02_percentiles",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "81"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "82"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "83"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "83"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "test03_percentiles",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "78"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "79"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "test03_percent_alt",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "78"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "79"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "7.0.0",
+    "topology": "STANDALONE"
+  }
+}

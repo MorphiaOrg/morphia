@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,23 +11,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestTanh extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tanh/example1
+     * test data: dev/morphia/test/aggregation/expressions/tanh/hyperbolicTangentInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Hyperbolic Tangent in Degrees")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
+    public void testHyperbolicTangentInDegrees() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("tanh_output", tanh(degreesToRadians("$angle")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tanh/example2
+     * test data: dev/morphia/test/aggregation/expressions/tanh/hyperbolicTangentInRadians
      * 
      */
     @Test
     @DisplayName("main :: Hyperbolic Tangent in Radians")
-    public void testExample2() {
+    public void testHyperbolicTangentInRadians() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("tanh_output", tanh("$angle"))));
     }
 

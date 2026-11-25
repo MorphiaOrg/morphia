@@ -1,0 +1,205 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/firstN/setNBasedOnTheGroupKey",
+  "title": "Set n Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/firstN.txt",
+    "blob": "0bc605aac52ba143b2d5c2f4be44cb68254dcafe"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "rated": "$rated"
+          },
+          "movies": {
+            "$firstN": {
+              "input": "$title",
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$rated",
+                      "PG"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG-13"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "'night, Mother"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "*batteries not included"
+                },
+                {
+                  "text": "...And God Created Woman"
+                },
+                {
+                  "text": "1776"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "G"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "101 Dalmatians"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "$"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

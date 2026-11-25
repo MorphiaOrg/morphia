@@ -1,0 +1,287 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue",
+  "title": "Fill Missing Values with the Last Observed Value",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "095396b6319b25c0e8334317f148b79b31b2ae7a",
+    "path": "source/reference/operator/aggregation/locf.txt",
+    "blob": "6d04592e4a3602f084faf65de760ca63a721b6da"
+  },
+  "dataset": null,
+  "collections": {
+    "stock": [
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615194000000"
+          }
+        },
+        "price": {
+          "$numberInt": "500"
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615197600000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615201200000"
+          }
+        },
+        "price": {
+          "$numberInt": "515"
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615204800000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615208400000"
+          }
+        }
+      },
+      {
+        "time": {
+          "$date": {
+            "$numberLong": "1615212000000"
+          }
+        },
+        "price": {
+          "$numberInt": "485"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "stock",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "sortBy": {
+            "time": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "price": {
+              "$locf": "$price"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5f5"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615194000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5f6"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615197600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5f7"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615201200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5f8"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615204800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5f9"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615208400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "515"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "62169b65394d47411658b5fa"
+              }
+            }
+          },
+          {
+            "name": "time",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615212000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "485"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

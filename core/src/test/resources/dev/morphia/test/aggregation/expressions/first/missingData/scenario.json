@@ -1,0 +1,203 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/first/missingData",
+  "title": "Missing Data",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b08efbdbfb6dbb10ff4c493d4646636213e10c36",
+    "path": "source/reference/operator/aggregation/first.txt",
+    "blob": "952e837274a06de838338fc35e3921d01cb7a1e8"
+  },
+  "dataset": null,
+  "collections": {
+    "badData": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "price": {
+          "$numberInt": "6"
+        },
+        "quantity": {
+          "$numberInt": "6"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "album",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "item": "tape",
+        "price": {
+          "$numberInt": "6"
+        },
+        "quantity": {
+          "$numberInt": "6"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "9"
+        },
+        "item": "album",
+        "price": {
+          "$numberInt": "3"
+        },
+        "quantity": ""
+      },
+      {
+        "_id": {
+          "$numberInt": "10"
+        },
+        "item": "tape",
+        "price": {
+          "$numberInt": "3"
+        },
+        "quantity": {
+          "$numberInt": "4"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "12"
+        },
+        "item": "cd",
+        "price": {
+          "$numberInt": "7"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "badData",
+    "pipeline": [
+      {
+        "$sort": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "price": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$item",
+          "inStock": {
+            "$first": "$quantity"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "inStock",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "album"
+            }
+          },
+          {
+            "name": "inStock",
+            "value": {
+              "text": ""
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "cd"
+            }
+          },
+          {
+            "name": "inStock",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "tape"
+            }
+          },
+          {
+            "name": "inStock",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

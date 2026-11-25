@@ -1,0 +1,354 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bottomN/findTheLowestRatedMoviesForEachGenre",
+  "title": "Find the Lowest Rated Movies for Each Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bottomN.txt",
+    "blob": "e889d2a459bf25885175611a49408f65c55394f4"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$match": {
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "lowestRatedMovie": {
+            "$bottomN": {
+              "output": [
+                "$title",
+                "$imdb.rating"
+              ],
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                },
+                "title": {
+                  "$numberInt": "1"
+                }
+              },
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Starship: Rising"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "House of the Dead"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Krampus: The Christmas Devil"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Battlefield Earth"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.4"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Epic Movie"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Son of the Mask"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "The Adventures of Rocky & Bullwinkle"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "4.1"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The King and I"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "4"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Space Chimps 2: Zartog Strikes Back"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.7"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Man in the Mirror: The Michael Jackson Story"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "3.5"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Gaul"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.7"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Undefeated"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "2.3"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "lowestRatedMovie",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "Superbabies: Baby Geniuses 2"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "1.9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "The Hottie & the Nottie"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "1.9"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "Saving Christmas"
+                    },
+                    {
+                      "exact": {
+                        "$numberDouble": "1.6"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

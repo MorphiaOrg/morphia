@@ -1,0 +1,86 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/addFields/overwritingAnExistingField",
+  "title": "Overwriting an existing field",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/addFields.txt",
+    "blob": "265803b8d934ddedd4f37e31f74afdf491f6f75f"
+  },
+  "dataset": null,
+  "collections": {
+    "animals": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "dogs": {
+          "$numberInt": "10"
+        },
+        "cats": {
+          "$numberInt": "15"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "animals",
+    "pipeline": [
+      {
+        "$addFields": {
+          "cats": {
+            "$numberInt": "20"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "dogs",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "cats",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

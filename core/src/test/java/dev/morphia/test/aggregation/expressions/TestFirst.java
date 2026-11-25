@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,51 +8,44 @@ import org.junit.jupiter.api.Test;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Limit.limit;
 import static dev.morphia.aggregation.stages.Sort.sort;
+import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestFirst extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example1
+     * test data: dev/morphia/test/aggregation/expressions/first/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testUseInGroupStage() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "date"), group(id("$item")).field("firstSale", first("$date"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example2
+     * test data: dev/morphia/test/aggregation/expressions/first/missingData
      * 
      */
     @Test
     @DisplayName("Missing Data")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testMissingData() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "price"), group(id("$item")).field("inStock", first("$quantity"))
 
                 ));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example3
-     * 
-     */
     @Test
-    @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
-        // this example starts importing a bunch of stuff and gets more complicated than
-        // I care
-        // to make the parser support. we have working examples already.
-        /*
-         * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),
-         * (aggregation) -> aggregation.pipeline( setWindowFields()
-         * .partitionBy("$state") .sortBy(Sort.ascending("orderDate"))
-         * .output(Output.output("firstOrderTypeForState") .operator(first("$type"))
-         * .window() .documents("unbounded", "current"))));
-         */
+    @DisplayName("Find the First Movie in Each Genre")
+    public void testFindTheFirstMovieInEachGenre() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                sort().ascending("year").ascending("title"),
+                unwind("$genres"),
+                group(id("$genres")).field("firstMovieTitle", first("$title")).field("firstMovieYear", first("$year")),
+                sort().ascending("_id"),
+                limit(5)));
     }
-
 }

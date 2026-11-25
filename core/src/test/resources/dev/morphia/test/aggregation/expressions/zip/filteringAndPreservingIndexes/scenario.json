@@ -1,0 +1,180 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/zip/filteringAndPreservingIndexes",
+  "title": "Filtering and Preserving Indexes",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/zip.txt",
+    "blob": "c5747f08bee83735943e7e50ad96d64bd36ffce6"
+  },
+  "dataset": null,
+  "collections": {
+    "pages": [
+      {
+        "category": "unix",
+        "pages": [
+          {
+            "title": "awk for beginners",
+            "reviews": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "title": "sed for newbies",
+            "reviews": {
+              "$numberInt": "0"
+            }
+          },
+          {
+            "title": "grep made simple",
+            "reviews": {
+              "$numberInt": "2"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "pages",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": false,
+          "pages": {
+            "$filter": {
+              "input": {
+                "$zip": {
+                  "inputs": [
+                    "$pages",
+                    {
+                      "$range": [
+                        {
+                          "$numberInt": "0"
+                        },
+                        {
+                          "$size": "$pages"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              },
+              "as": "pageWithIndex",
+              "cond": {
+                "$let": {
+                  "vars": {
+                    "page": {
+                      "$arrayElemAt": [
+                        "$$pageWithIndex",
+                        {
+                          "$numberInt": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "in": {
+                    "$gte": [
+                      "$$page.reviews",
+                      {
+                        "$numberInt": "1"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "pages",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "document": [
+                        {
+                          "name": "title",
+                          "value": {
+                            "text": "awk for beginners"
+                          }
+                        },
+                        {
+                          "name": "reviews",
+                          "value": {
+                            "whole": {
+                              "$numberInt": "5"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "0"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "document": [
+                        {
+                          "name": "title",
+                          "value": {
+                            "text": "grep made simple"
+                          }
+                        },
+                        {
+                          "name": "reviews",
+                          "value": {
+                            "whole": {
+                              "$numberInt": "2"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECTION_FLAGS",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

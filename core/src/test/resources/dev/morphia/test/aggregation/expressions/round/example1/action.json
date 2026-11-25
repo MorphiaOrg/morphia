@@ -1,3 +1,0 @@
-[
-   { $project: { roundedValue: { $round: [ "$value", 1 ] } } }
-]

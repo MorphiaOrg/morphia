@@ -1,0 +1,204 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/set/addingFieldsToAnEmbeddedDocument",
+  "title": "Adding Fields to an Embedded Document",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/set.txt",
+    "blob": "94fa0501865c5fcc9eea1100527e5b70851a37db"
+  },
+  "dataset": null,
+  "collections": {
+    "vehicles": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "type": "car",
+        "specs": {
+          "doors": {
+            "$numberInt": "4"
+          },
+          "wheels": {
+            "$numberInt": "4"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "type": "motorcycle",
+        "specs": {
+          "doors": {
+            "$numberInt": "0"
+          },
+          "wheels": {
+            "$numberInt": "2"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "type": "jet ski"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "vehicles",
+    "pipeline": [
+      {
+        "$set": {
+          "specs.fuel_type": "unleaded"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "car"
+            }
+          },
+          {
+            "name": "specs",
+            "value": {
+              "document": [
+                {
+                  "name": "doors",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "4"
+                    }
+                  }
+                },
+                {
+                  "name": "wheels",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "4"
+                    }
+                  }
+                },
+                {
+                  "name": "fuel_type",
+                  "value": {
+                    "text": "unleaded"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "motorcycle"
+            }
+          },
+          {
+            "name": "specs",
+            "value": {
+              "document": [
+                {
+                  "name": "doors",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "0"
+                    }
+                  }
+                },
+                {
+                  "name": "wheels",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                },
+                {
+                  "name": "fuel_type",
+                  "value": {
+                    "text": "unleaded"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "jet ski"
+            }
+          },
+          {
+            "name": "specs",
+            "value": {
+              "document": [
+                {
+                  "name": "fuel_type",
+                  "value": {
+                    "text": "unleaded"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

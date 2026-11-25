@@ -21,32 +21,32 @@ public class TestUnsetField extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/unsetField/example1
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/removeFieldsThatContainPeriods
      * 
      */
     @Test
     @DisplayName("Remove Fields that Contain Periods (``.``)")
-    public void testExample1() {
+    public void testRemoveFieldsThatContainPeriods() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(unsetField("price.usd", ROOT))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/unsetField/example2
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/removeFieldsThatStartWithADollarSign
      * 
      */
     @Test
     @DisplayName("Remove Fields that Start with a Dollar Sign (``$``)")
-    public void testExample2() {
+    public void testRemoveFieldsThatStartWithADollarSign() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/unsetField/example3
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/removeASubfield
      * 
      */
     @Test
     @DisplayName("Remove A Subfield")
-    public void testExample3() {
+    public void testRemoveASubfield() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(replaceWith(setField("price", ROOT, unsetField("euro", getField("price"))))));
     }

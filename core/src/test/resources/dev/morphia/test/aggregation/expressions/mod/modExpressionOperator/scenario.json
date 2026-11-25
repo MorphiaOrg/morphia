@@ -1,0 +1,114 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/mod/modExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "bc9d05d5652fe5e05041d5736228d9b36c28fa78",
+    "path": "source/reference/operator/aggregation/mod.txt",
+    "blob": "6d18d6bfa25f5b0f2bbf08d99d905fcf839bd531"
+  },
+  "dataset": null,
+  "collections": {
+    "conferencePlanning": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "city": "New York",
+        "hours": {
+          "$numberInt": "80"
+        },
+        "tasks": {
+          "$numberInt": "7"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "city": "Singapore",
+        "hours": {
+          "$numberInt": "40"
+        },
+        "tasks": {
+          "$numberInt": "4"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "conferencePlanning",
+    "pipeline": [
+      {
+        "$project": {
+          "remainder": {
+            "$mod": [
+              "$hours",
+              "$tasks"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "remainder",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "remainder",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

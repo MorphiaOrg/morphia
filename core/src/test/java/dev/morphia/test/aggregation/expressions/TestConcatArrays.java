@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestConcatArrays extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/concatArrays/example1
+     * test data: dev/morphia/test/aggregation/expressions/concatArrays/concatArraysAccumulatorOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testConcatArraysAccumulatorOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("items", concatArrays("$instock", "$ordered"))));
     }

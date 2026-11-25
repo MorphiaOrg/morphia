@@ -1,0 +1,192 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/elemMatch/arrayOfEmbeddedDocuments",
+  "title": "Array of Embedded Documents",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/query/elemMatch.txt",
+    "blob": "f5ff82ce948d31e2108b0e932810e1280f149961"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "5"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "7"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "def",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "results": {
+          "product": "xyz",
+          "score": {
+            "$numberInt": "7"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "survey",
+    "filter": {
+      "results": {
+        "$elemMatch": {
+          "product": "xyz",
+          "score": {
+            "$gte": {
+              "$numberInt": "8"
+            }
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "abc"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "7"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "xyz"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

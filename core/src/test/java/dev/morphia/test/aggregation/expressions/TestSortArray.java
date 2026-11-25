@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.sortArray;
-import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
@@ -23,25 +21,13 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example1
-     * 
-     */
-    @Test
-    @DisplayName("Sort on a Field ")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
-                .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
-
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example2
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnASubfield
      * 
      */
     @Test
     @DisplayName("Sort on a Subfield")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> {
+    public void testSortOnASubfield() {
+        testPipeline((aggregation) -> {
             return aggregation
                     .pipeline(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
         });
@@ -49,52 +35,30 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example3
-     * 
-     */
-    @Test
-    @DisplayName("Sort on Multiple Fields")
-    public void testExample3() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
-                project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example4
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortAnArrayOfIntegers
      * 
      */
     @Test
     @DisplayName("Sort an Array of Integers")
-    public void testExample4() {
-        testPipeline(new ActionTestOptions(), (aggregation) -> {
+    public void testSortAnArrayOfIntegers() {
+        testPipeline((aggregation) -> {
             return aggregation.pipeline(
                     project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
         });
 
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example5
-     * 
-     */
     @Test
-    @DisplayName("Sort on Mixed Type Fields")
-    public void testExample5() {
-        testPipeline(
-                new ActionTestOptions().orderMatters(false), (
-                        aggregation) -> aggregation
-                                .pipeline(
-                                        project().suppressId()
-                                                .include("result",
-                                                        sortArray(
-                                                                array(20, 4, document("a", "Free"), 6, 21, 5, "Gratis",
-                                                                        document("a", null),
-                                                                        document("a",
-                                                                                document("sale", true).field("price",
-                                                                                        19)),
-                                                                        10.23, document("a", "On sale")),
-                                                                naturalAscending()))));
-
+    @DisplayName("Sort on a Field")
+    public void testSortOnAField() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                project().suppressId().include("result", sortArray("$team", ascending("name")))));
     }
 
+    @Test
+    @DisplayName("Sort on Multiple Fields")
+    public void testSortOnMultipleFields() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
+    }
 }

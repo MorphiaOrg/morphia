@@ -1,0 +1,197 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/meta/metaTextScore",
+  "title": "$meta: \"textScore\"",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/meta.txt",
+    "blob": "6bcec1af90dce08be0daf31147ca3e92b4318333"
+  },
+  "dataset": null,
+  "collections": {
+    "articles": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "cakes and ale"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "more cakes"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "bread"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "title": "some cakes"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "title": "two cakes to go"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "title": "pie"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "articles",
+      "keys": {
+        "title": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "articles",
+    "filter": {
+      "$text": {
+        "$search": "cake"
+      }
+    },
+    "projection": {
+      "score": {
+        "$meta": "textScore"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "some cakes"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "cakes and ale"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.75"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "two cakes to go"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.6666666666666666"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "more cakes"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

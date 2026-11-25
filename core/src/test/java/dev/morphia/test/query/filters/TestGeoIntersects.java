@@ -6,7 +6,6 @@ import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,24 +16,24 @@ import static java.util.List.of;
 public class TestGeoIntersects extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/geoIntersects/example1
+     * test data: dev/morphia/test/query/filters/geoIntersects/intersectsAPolygon
      */
     @Test
     @DisplayName("Intersects a Polygon")
-    public void testExample1() {
-        testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoIntersects("loc",
+    public void testIntersectsAPolygon() {
+        testQuery((query) -> query.filter(geoIntersects("loc",
                 new Polygon(of(new Position(0, 0), new Position(3, 6), new Position(6, 1), new Position(0, 0))))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/geoIntersects/example2
+     * test data: dev/morphia/test/query/filters/geoIntersects/intersectsABigPolygon
      */
     @Test
     @DisplayName("Intersects a \"Big\" Polygon")
-    public void testExample2() {
+    public void testIntersectsABigPolygon() {
         var exterior = new PolygonCoordinates(of(new Position(-100, 60), new Position(-100, 0), new Position(-100, -60),
                 new Position(100, -60), new Position(100, 60), new Position(-100, 60)));
-        testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoIntersects("loc", new Polygon(
+        testQuery((query) -> query.filter(geoIntersects("loc", new Polygon(
                 new NamedCoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326"), exterior))));
     }
 }

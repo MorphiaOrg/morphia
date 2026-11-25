@@ -1,0 +1,140 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/includeArrayIndex",
+  "title": "includeArrayIndex",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unwind.txt",
+    "blob": "195393b7aefd488cbd70cbdab4478fde747707f1"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": "Inception"
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "genres": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$genres",
+          "includeArrayIndex": "genreIndex"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          },
+          {
+            "name": "genreIndex",
+            "value": {
+              "exact": {
+                "$numberLong": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Mystery"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          },
+          {
+            "name": "genreIndex",
+            "value": {
+              "exact": {
+                "$numberLong": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "text": "Sci-Fi"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          },
+          {
+            "name": "genreIndex",
+            "value": {
+              "exact": {
+                "$numberLong": "2"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

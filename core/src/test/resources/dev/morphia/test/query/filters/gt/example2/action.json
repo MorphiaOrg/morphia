@@ -1,3 +1,0 @@
-db.inventory.updateOne(
-   { "carrier.fee": { $gt: 2 } }, { $set: { "price": 9.99 } }
-)

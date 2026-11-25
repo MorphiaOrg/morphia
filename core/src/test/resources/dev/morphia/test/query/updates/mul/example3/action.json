@@ -1,4 +1,0 @@
-db.products.updateOne(
-   { _id: 3 },
-   { $mul: { price: NumberInt(5) } }
-)

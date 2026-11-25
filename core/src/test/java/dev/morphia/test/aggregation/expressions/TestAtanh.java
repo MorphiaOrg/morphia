@@ -11,23 +11,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestAtanh extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/atanh/example1
+     * test data: dev/morphia/test/aggregation/expressions/atanh/inverseHyperbolicTangentInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Inverse Hyperbolic Tangent in Degrees")
-    public void testExample1() {
+    public void testInverseHyperbolicTangentInDegrees() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("y-coordinate", radiansToDegrees(atanh("$x-coordinate")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/atanh/example2
+     * test data: dev/morphia/test/aggregation/expressions/atanh/inverseHyperbolicTangentInRadians
      * 
      */
     @Test
     @DisplayName("main :: Inverse Hyperbolic Tangent in Radians")
-    public void testExample2() {
+    public void testInverseHyperbolicTangentInRadians() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("y-coordinate", atanh("$x-coordinate"))));
     }
 

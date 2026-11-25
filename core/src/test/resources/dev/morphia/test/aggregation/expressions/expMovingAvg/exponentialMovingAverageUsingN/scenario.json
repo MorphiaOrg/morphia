@@ -1,0 +1,502 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN",
+  "title": "Exponential Moving Average Using ``N``",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "029f8ac3bf08e3c2fd59dec2e7ce3c0177bf4d65",
+    "path": "source/reference/operator/aggregation/expMovingAvg.txt",
+    "blob": "19d8fc2674e0196de42dec7682a0395614757f64"
+  },
+  "dataset": null,
+  "collections": {
+    "stockPrices": [
+      {
+        "stock": "MDB",
+        "date": {
+          "$date": {
+            "$numberLong": "1589832000000"
+          }
+        },
+        "price": {
+          "$numberInt": "13"
+        }
+      },
+      {
+        "stock": "MDB",
+        "date": {
+          "$date": {
+            "$numberLong": "1589918400000"
+          }
+        },
+        "price": {
+          "$numberDouble": "15.4"
+        }
+      },
+      {
+        "stock": "MDB",
+        "date": {
+          "$date": {
+            "$numberLong": "1590004800000"
+          }
+        },
+        "price": {
+          "$numberInt": "12"
+        }
+      },
+      {
+        "stock": "MDB",
+        "date": {
+          "$date": {
+            "$numberLong": "1590091200000"
+          }
+        },
+        "price": {
+          "$numberDouble": "11.7"
+        }
+      },
+      {
+        "stock": "MSFT",
+        "date": {
+          "$date": {
+            "$numberLong": "1589832000000"
+          }
+        },
+        "price": {
+          "$numberInt": "82"
+        }
+      },
+      {
+        "stock": "MSFT",
+        "date": {
+          "$date": {
+            "$numberLong": "1589918400000"
+          }
+        },
+        "price": {
+          "$numberInt": "94"
+        }
+      },
+      {
+        "stock": "MSFT",
+        "date": {
+          "$date": {
+            "$numberLong": "1590004800000"
+          }
+        },
+        "price": {
+          "$numberInt": "112"
+        }
+      },
+      {
+        "stock": "MSFT",
+        "date": {
+          "$date": {
+            "$numberLong": "1590091200000"
+          }
+        },
+        "price": {
+          "$numberDouble": "97.3"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "stockPrices",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "partitionBy": "$stock",
+          "sortBy": {
+            "date": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "expMovingAvgForStock": {
+              "$expMovingAvg": {
+                "input": "$price",
+                "N": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e6286b"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MDB"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589832000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e6286c"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MDB"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589918400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "15.4"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "exact": {
+                "$numberDouble": "14.6"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e6286d"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MDB"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1590004800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "exact": {
+                "$numberDouble": "12.866666666666667"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e6286e"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MDB"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1590091200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "11.7"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "exact": {
+                "$numberDouble": "12.088888888888889"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e6286f"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MSFT"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589832000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "82"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "whole": {
+                "$numberInt": "82"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e62870"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MSFT"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589918400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "94"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "whole": {
+                "$numberInt": "90"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e62871"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MSFT"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1590004800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "112"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "exact": {
+                "$numberDouble": "104.66666666666667"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60d11fef833dfeadc8e62872"
+              }
+            }
+          },
+          {
+            "name": "stock",
+            "value": {
+              "text": "MSFT"
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1590091200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "97.3"
+              }
+            }
+          },
+          {
+            "name": "expMovingAvgForStock",
+            "value": {
+              "exact": {
+                "$numberDouble": "99.75555555555556"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

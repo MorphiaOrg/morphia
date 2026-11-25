@@ -1,1 +1,0 @@
-{ $project: { item: 1, description: { $rtrim: { input: "$description" } } } }
