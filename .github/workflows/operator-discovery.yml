@@ -1,0 +1,145 @@
+name: Operator Example Discovery
+
+# Extracts the documented operator examples at the head of mongodb/docs and runs core's operator
+# tests against the result under both mappers, uploading every report. It never commits. The Publish
+# job then files its findings as issues in this repository: each documented operator with no Morphia
+# factory, each example that appeared upstream, each example with no scenario, and failing tests.
+# An issue's marker keeps reruns from filing it twice; a closed issue is not reopened.
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: File the findings as issues (otherwise only report what would be filed)
+        type: boolean
+        default: true
+  schedule:
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: read
+
+# Overlapping runs would publish from two journals at once.
+concurrency:
+  group: operator-discovery
+  cancel-in-progress: false
+
+jobs:
+  Discover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      # A sparse, blobless clone: git checks every blob, and it makes no rate-limited API calls.
+      - name: Checkout mongodb/docs operator pages
+        run: |
+          git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git "$RUNNER_TEMP/docs"
+          # The operator pages, their includes and tested snippets, and the rest of the bundle's roots
+          # (audits/config/manual-baseline-sources.json).
+          git -C "$RUNNER_TEMP/docs" sparse-checkout set --no-cone \
+            /content/manual/manual/snooty.toml /content/manual/manual/source/reference/ \
+            /content/manual/manual/source/includes/ /content/manual/manual/source/core/ \
+            /content/manual/manual/source/tutorial/ /content/manual/manual/source/images/ \
+            /content/manual/manual/source/code-examples/ \
+            /content/code-examples/tested/
+          git -C "$RUNNER_TEMP/docs" checkout -q
+
+      - name: Setup the pinned parser's Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12.16'
+
+      - name: Install the pinned runtime manager
+        run: python -m pip install uv==0.13.7
+
+      - name: Extract and test
+        run: audits/discover.sh "$RUNNER_TEMP/docs" "$RUNNER_TEMP/discovery" --test
+
+      - name: Summarize
+        if: always()
+        run: '[ ! -f "$RUNNER_TEMP/discovery/summary.md" ] || cat "$RUNNER_TEMP/discovery/summary.md" >> "$GITHUB_STEP_SUMMARY"'
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: operator-discovery
+          path: |
+            ${{ runner.temp }}/discovery/*.json
+            ${{ runner.temp }}/discovery/*.md
+            ${{ runner.temp }}/discovery/*.diff
+            ${{ runner.temp }}/discovery/*.txt
+            ${{ runner.temp }}/discovery/*.log
+          retention-days: 90
+
+  Publish:
+    needs: Discover
+    # Discovery's reports are uploaded even when its tests fail, and that failure is a finding.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      - name: Download reports
+        uses: actions/download-artifact@v7
+        with:
+          name: operator-discovery
+          path: ${{ runner.temp }}/discovery
+
+      # The journal names each finding's issue, which is read by number. The issue listing can lag
+      # a recent write by minutes, so without it a rerun soon after a run could file a finding twice.
+      - name: Restore the previous journal
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for run in $(gh run list -R "$GITHUB_REPOSITORY" --workflow operator-discovery.yml -L 20 \
+              --json databaseId --jq ".[].databaseId | select(. != $GITHUB_RUN_ID)"); do
+            if gh run download "$run" -R "$GITHUB_REPOSITORY" -n operator-publications -D "$RUNNER_TEMP/previous" 2>/dev/null \
+                && [ -f "$RUNNER_TEMP/previous/journal.json" ]; then
+              cp "$RUNNER_TEMP/previous/journal.json" "$RUNNER_TEMP/journal.json"
+              echo "Journal from run $run"
+              break
+            fi
+            rm -rf "$RUNNER_TEMP/previous"
+          done
+
+      - name: File findings
+        env:
+          AUDITS_GITHUB_TOKEN: ${{ github.token }}
+          PUBLISH: ${{ github.event_name == 'schedule' || inputs.publish }}
+        run: |
+          flag=$([ "$PUBLISH" = "true" ] && echo --publish || true)
+          ./mvnw -B -ntp -q -Daudits -pl audits compile exec:java \
+            -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
+            -Dexec.args="publish $RUNNER_TEMP/discovery/findings.json $PWD/audits/catalog/publication-policy.json $RUNNER_TEMP/journal.json $PWD/pom.xml ${{ github.repository }} $flag" \
+            | tee "$RUNNER_TEMP/publications.json"
+
+      - name: Upload publications
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: operator-publications
+          path: |
+            ${{ runner.temp }}/publications.json
+            ${{ runner.temp }}/journal.json
+          if-no-files-found: ignore
+          retention-days: 90

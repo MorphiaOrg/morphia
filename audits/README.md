@@ -40,6 +40,31 @@ They need no MongoDB, docs checkout or token. Run them with `-Dmorphia.mapper=cr
 A docs bump: pin the new commit in `config/manual-baseline-sources.json`, bundle and parse the
 pages, run `ExtractMainKt`, then review the scenario, inventory and baseline diffs.
 
+## Weekly discovery
+
+`.github/workflows/operator-discovery.yml` runs `audits/discover.sh` every Monday against the head
+of mongodb/docs. In a throwaway worktree, it bundles and parses the pages, runs extraction, and
+runs core's operator tests under both mappers against the result. The Publish job then files the
+findings as issues, each keyed so that a rerun updates its issue instead of filing it again:
+
+| Finding | Filed for |
+|---|---|
+| `MISSING_API` | A documented operator with no tagged Morphia factory, listing the scenarios it blocks. |
+| `NEW_EXAMPLE` | An example the docs gained since the committed inventory, with no scenario. |
+| `MISSING_SCENARIO` | An in-scope example with no scenario and no exclusion. |
+| `FAILING_AUDIT` | Operator tests failing against the current docs' scenarios. |
+
+Run it locally, without publishing:
+
+```sh
+audits/discover.sh <docs-checkout> <out-dir> [--test]
+./mvnw -q -Daudits -pl audits exec:java -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
+  -Dexec.args="publish <out-dir>/findings.json audits/catalog/publication-policy.json <journal.json> pom.xml <OWNER/REPO>"
+```
+
+Without `--publish`, `publish` only reports what it would file. The publisher's mutation tests run
+against a sandbox repository: `-Daudits.sandbox=<OWNER/REPO>`.
+
 ## Commands
 
 Each runs through the exec plugin from the repository root:
@@ -55,6 +80,7 @@ Each runs through the exec plugin from the repository root:
 | `dev.morphia.audits.documents.DocumentsMainKt` | `<bundle> <content-sha256> <python> <adapter.py> <page-id>…` | Parses pages with the docs' own Snooty parser (`parser/`), includes resolved, into a document AST report. |
 | `dev.morphia.audits.scenarios.ScenariosMainKt` | `<bundle> <source-sha256> <documents.json> <plan.json>` | Assembles each example section into seed data, command and printed results, with descriptive names. `catalog/scenario-plan.json` is the plan. |
 | `dev.morphia.audits.extraction.ExtractMainKt` | `<repository> <bundle> <content-sha256> <documents.json>` | Inventories the pages into `catalog/documented-examples.json` and writes a `scenario.json` for every example that has none, with its reviewed override applied. A committed scenario is never rewritten. Exits 3 when an example can't be extracted. |
+| `dev.morphia.audits.publish.PublishMainKt` | `findings <tree> <committed-inventory.json> <audit.log\|->` or `publish <findings.json> <policy.json> <journal.json> <pom.xml> <OWNER/REPO> [--publish]` | Computes a discovery run's findings, or files them as issues. |
 | `dev.morphia.audits.shell.ProgramsMainKt` | `<program-request.json>` | Lowers mongosh source into typed commands and BSON, without running it. |
 | `dev.morphia.audits.naming.NamesMainKt` | `<accepted-registry.json> <request.json>` | Proposes descriptive names for examples, checked against the accepted registry. |
 
@@ -70,6 +96,7 @@ Each runs through the exec plugin from the repository root:
 | `semantics` | Strict BSON comparison and BSON paths. |
 | `naming` | Descriptive example names and their collision rules. |
 | `extraction` | The inventory, the scenario writer, overrides and the completeness checks. |
+| `publish` | Findings, and filing them as GitHub issues with a journal and the release milestone. |
 | `coverage` | Shared JSON contracts and validation helpers. |
 
 ## Catalogs
@@ -79,6 +106,7 @@ Each runs through the exec plugin from the repository root:
 | `catalog/scenario-plan.json` | The pages and example destinations extraction reads. |
 | `catalog/documented-examples.json` | Every example on the current operator pages, and the scenario that holds it; the source text of every example without one. |
 | `catalog/example-overrides.json` | Reviewed overrides, each keyed by its example's page, title and block digest: exclusions, digest-guarded patches, skips, order and rules. Also the sample datasets an example may query. |
+| `catalog/publication-policy.json` | The labels each finding type's issues get. |
 | `catalog/untested-examples.json` | The reviewed baseline of scenarios with no test, each with a reason: `NOT_WRITTEN`, `NO_MORPHIA_API` (with the `operator`, and `option` for an option gap) or `OUT_OF_SCOPE`. |
 | `catalog/example-names.json` | The 93 reviewed names for examples whose page title is generic (`main`) or shared. |
 | `catalog/name-backport-review.json` | Reviewed stems for name collisions. |
