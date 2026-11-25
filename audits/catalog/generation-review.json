@@ -40,6 +40,10 @@
       "reason": "The page prints the third product's match as \"Many spaces before line\", with one space; its description, and the match the server returns, has five. Serialization and behavior pass; the page is wrong."
     },
     {
+      "name": "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
+      "reason": "The page prints the output of the $addFields stage alone, with each name as {match, idx, captures}; the pipeline's next stage, $set, reduces it to the captured names, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
       "name": "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
       "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
     },

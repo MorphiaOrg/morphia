@@ -3,6 +3,8 @@ package dev.morphia.test.generated.expressions;
 
 import java.util.List;
 
+import dev.morphia.aggregation.expressions.ComparisonExpressions;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.OperatorCase;
 import dev.morphia.test.OperatorCaseRunner;
 import dev.morphia.test.TestBase;
@@ -11,11 +13,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.maxN;
+import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Sort.sort;
-import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static dev.morphia.query.filters.Filters.in;
 
@@ -40,8 +43,19 @@ public class TestMaxN extends TestBase {
         runner.aggregate(
                 OperatorCase.of("/dev/morphia/test/generated/fixtures/expressions/maxN/findTheThreeHighestRatedMoviesForASingleYear/scenario.json"),
                 (aggregation) -> aggregation.pipeline(
-                        match(eq("year", 1999), exists("imdb.rating")),
+                        match(Filters.eq("year", 1999), exists("imdb.rating")),
                         group(id(1999)).field("topThreeRatings", maxN(3, "$imdb.rating"))));
+    }
+
+    @Test
+    @DisplayName("Set n Based on the Group Key")
+    public void setNBasedOnTheGroupKey() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/expressions/maxN/setNBasedOnTheGroupKey/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(in("year", List.of(1999, 2000, 2001)), exists("imdb.rating")),
+                        group(id(document().field("year", "$year"))).field("topRatedMovies", maxN(condition(ComparisonExpressions.eq("$year", 2001), 3, 1), "$imdb.rating")),
+                        sort().ascending("_id.year")));
     }
 }
 // spotless:on

@@ -1,0 +1,253 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/merge/summarizeRatingsIntoAnotherCollection",
+  "title": "Summarize Ratings into Another Collection",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/merge.txt",
+    "blob": "6154426511a893c23664d8eb81e5ccca03331a2c"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "metacritic": {
+            "$numberInt": "100"
+          },
+          "rated": {
+            "$ne": null
+          },
+          "year": {
+            "$lte": {
+              "$numberInt": "1972"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "year": "$year",
+            "rated": "$rated"
+          },
+          "count": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      },
+      {
+        "$merge": {
+          "into": "movieRatingSummary",
+          "on": "_id",
+          "whenMatched": "replace",
+          "whenNotMatched": "insert"
+        }
+      }
+    ],
+    "read": {
+      "collection": "movieRatingSummary",
+      "filter": {},
+      "sort": {
+        "_id": {
+          "$numberInt": "1"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1939"
+                    }
+                  }
+                },
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PASSED"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1962"
+                    }
+                  }
+                },
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1963"
+                    }
+                  }
+                },
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1970"
+                    }
+                  }
+                },
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1972"
+                    }
+                  }
+                },
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -205,6 +205,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestBottomN#testFindingTheThreeLowestScoreDocumentsAcrossMultipleGames"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/bottomN/setNDynamicallyBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/bottomN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestBottomN#setNDynamicallyBasedOnTheGroupKey"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
     "scenario" : "/dev/morphia/test/aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection/scenario.json",
@@ -440,6 +445,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/firstN/findingTheFirstThreePlayerScoresAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestFirstN#testFindingTheFirstThreePlayerScoresAcrossMultipleGames"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/firstN/setNBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/firstN/setNBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestFirstN#setNBasedOnTheGroupKey"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/firstN/usingSortWithFirstN",
     "scenario" : "/dev/morphia/test/aggregation/expressions/firstN/usingSortWithFirstN/scenario.json",
@@ -560,6 +570,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/lastN/findingTheLastThreePlayerScoresAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestLastN#testFindingTheLastThreePlayerScoresAcrossMultipleGames"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/lastN/setNBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/lastN/setNBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestLastN#setNBasedOnTheGroupKey"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/lastN/usingSortWithLastN",
     "scenario" : "/dev/morphia/test/aggregation/expressions/lastN/usingSortWithLastN/scenario.json",
@@ -635,6 +650,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/map/truncateEachArrayElement/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMap#testTruncateEachArrayElement"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/map/useIdxToAccessTheIndex",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/map/useIdxToAccessTheIndex/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMap#useIdxToAccessTheIndex"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/max/useInGroupStage",
     "scenario" : "/dev/morphia/test/aggregation/expressions/max/useInGroupStage/scenario.json",
@@ -679,6 +699,11 @@
     "name" : "aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames",
     "scenario" : "/dev/morphia/test/aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMaxN#testFindingTheMaximumThreeScoresAcrossMultipleGames"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/maxN/setNBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/maxN/setNBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMaxN#setNBasedOnTheGroupKey"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/median/useMedianAsAnAccumulator",
@@ -749,6 +774,11 @@
     "name" : "aggregation/expressions/minN/findingTheMinimumThreeDocumentsAcrossMultipleGames",
     "scenario" : "/dev/morphia/test/aggregation/expressions/minN/findingTheMinimumThreeDocumentsAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMinN#testFindingTheMinimumThreeDocumentsAcrossMultipleGames"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/minN/setNDynamicallyBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/minN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMinN#setNDynamicallyBasedOnTheGroupKey"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/minute/minuteExpressionOperator",
@@ -1320,6 +1350,11 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestTopN#testFindingTheThreeHighestScoreDocumentsAcrossMultipleGames"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/topN/setNDynamicallyBasedOnTheGroupKey",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/topN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestTopN#setNDynamicallyBasedOnTheGroupKey"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/trunc/truncExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
@@ -1536,9 +1571,19 @@
     "test" : "dev.morphia.test.generated.stages.TestMerge#mergeResultsFromMultipleCollections"
   }, {
     "kind" : "GENERATED",
+    "name" : "aggregation/stages/merge/onDemandMaterializedViewUpdateReplaceData",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/merge/onDemandMaterializedViewUpdateReplaceData/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestMerge#onDemandMaterializedViewUpdateReplaceData"
+  }, {
+    "kind" : "GENERATED",
     "name" : "aggregation/stages/merge/onlyInsertNewData",
     "scenario" : "/dev/morphia/test/generated/fixtures/stages/merge/onlyInsertNewData/scenario.json",
     "test" : "dev.morphia.test.generated.stages.TestMerge#onlyInsertNewData"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/merge/summarizeRatingsIntoAnotherCollection",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/merge/summarizeRatingsIntoAnotherCollection/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestMerge#summarizeRatingsIntoAnotherCollection"
   }, {
     "kind" : "GENERATED",
     "name" : "aggregation/stages/out/outputToSameDatabase",
@@ -1559,6 +1604,11 @@
     "name" : "aggregation/stages/project/excludeFieldsFromOutputDocuments",
     "scenario" : "/dev/morphia/test/generated/fixtures/stages/project/excludeFieldsFromOutputDocuments/scenario.json",
     "test" : "dev.morphia.test.generated.stages.TestProject#excludeFieldsFromOutputDocuments"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/project/includeAnEmbeddedFieldWithANestedDocument",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithANestedDocument/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestProject#includeAnEmbeddedFieldWithANestedDocument"
   }, {
     "kind" : "GENERATED",
     "name" : "aggregation/stages/project/includeAnEmbeddedFieldWithDotNotation",
@@ -2462,7 +2512,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestBottomN.java",
-    "sha256" : "eb63e7850be0e2e00661b41b08557f6a59ab2c79aa064bff47315b0f8020c099"
+    "sha256" : "52bb14d573979addd204eabe83b8454c339066c7814c3ef34e1b7a8bdba2bf8a"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFirst.java",
@@ -2470,7 +2520,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFirstN.java",
-    "sha256" : "dfc14f4184302b0208f18340f3a5816419a7fa1b875daf61bdd4d371578c7bcc"
+    "sha256" : "81dac2645fe5bc763338152f464a3bbf7678e52675588f2feb60464cb4530149"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestLast.java",
@@ -2478,11 +2528,15 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestLastN.java",
-    "sha256" : "212646cd9e2d32a1ed66bf1115c909050c38cf451346a51435221875749aa7c0"
+    "sha256" : "18ba8c88e19040cdea7818f7f1f00a7864ddf7dccfbb0d14ef5d84943b648224"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMap.java",
+    "sha256" : "c6d1b84937006cfdc627db14c92d6695d2a3e2b3492dd3cbfea5c2b9fb939f34"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMaxN.java",
-    "sha256" : "4f95b5f229f7fb00e340c3ded0f48ca1444335c71152a6f4a6a39c14c4acca8b"
+    "sha256" : "4c7f4de9dbd623f0d4ab368f9e92dc088d5f4907a724a9d429948693ff9007a2"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMaxNArrayElement.java",
@@ -2494,7 +2548,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMinN.java",
-    "sha256" : "db07d7a27d6ecd12693fa1f8e79160c4c81c7f805e7dc973e276db6cd8f7223d"
+    "sha256" : "ea36dce4d93bc28fc9257f51c197a5751f6a833ff593e77094c3f2d738393ccf"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestPush.java",
@@ -2526,7 +2580,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestTopN.java",
-    "sha256" : "64924cad5268b18d9c45fe2f2a44dd823c3a9f271a7bbf1a7f2a32da119cf354"
+    "sha256" : "951bd655db97fabe84d3f5056170c2251372347dbe2042734048196419b3e9b3"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/filters/TestAnd.java",
@@ -2574,7 +2628,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestMerge.java",
-    "sha256" : "77289ce50c7182987543376a9b0a1628b55298537999c884bd90d7eb56588563"
+    "sha256" : "ba9e017f5944d19569fb71a926de5126dd94e9db59736e96d220adf161c0809c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestOut.java",
@@ -2582,7 +2636,7 @@
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestProject.java",
-    "sha256" : "8d2eb0705b98e391cbcd0baaada91b441ebc34ce0d5907f647f1a423f62c8fa6"
+    "sha256" : "07ea047ce92f274c447242d156f683627945e9762550dd596579d106e36b3f89"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestSort.java",
@@ -3817,6 +3871,10 @@
     "sha256" : "c39d5e9bf578743e5c62e1860855de6de0b16c4f97e4b7e7eb1a36d4aec8e0d0"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/bottomN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "sha256" : "42891403bbf3e38ee8634d5d1902e1dac808fe876ac36006bfa3435cf56c677c"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/first/findTheFirstMovieInEachGenre/scenario.json",
     "sha256" : "8284d3ddafaced7bca0aca345578a83c36795e180b563a58ca3af712b9d2729f"
   }, {
@@ -3827,6 +3885,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/findTheFirstThreeMoviesForASingleGenre/scenario.json",
     "sha256" : "5f7e61c8328a7846714106adb205ad931964ac8fba344b5f6d7e5fbbd6b06cda"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/firstN/setNBasedOnTheGroupKey/scenario.json",
+    "sha256" : "476add6d415ab1bd17cc18a595bcff256c289152af8bd56be5bcdb151231d53d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/last/findTheLastMovieInEachGenre/scenario.json",
@@ -3841,6 +3903,14 @@
     "sha256" : "a647c9a2ec0631816ab4e0d157f10c573be1b69fdb528522cce3513b70b1ca55"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/lastN/setNBasedOnTheGroupKey/scenario.json",
+    "sha256" : "3567207bf8c3966243433c857d573297a5b086af47e359a547330c66ec880ad7"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/map/useIdxToAccessTheIndex/scenario.json",
+    "sha256" : "20be427ea35e627c79d25cb59998e56108627c0e071b9398ab904a14a5558652"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN-array-element/findTheTopTwoCastMembers/scenario.json",
     "sha256" : "64842f658bd4a8276dea7f2206c0b6b3c408c2a8422081eedf45a2f70027904d"
   }, {
@@ -3853,6 +3923,10 @@
     "sha256" : "d64d3877583249c2452d3065799e494cc0e990f39f24201bd2e4f3d70b2582f5"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/setNBasedOnTheGroupKey/scenario.json",
+    "sha256" : "36ba230a7e12fa9b8f278076c764652769044aeadbc512fa696d0b6155aba800"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/min/useMinInAGroupStage/scenario.json",
     "sha256" : "c7676950647fe4acf3058d9d9408c68aa9d378423d98840dcf2eef623d99fbc5"
   }, {
@@ -3863,6 +3937,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/findTheMinimumThreeRatingsForASingleGenre/scenario.json",
     "sha256" : "a256b42390db32b61d78f9017f2d1d62871ae0d1fc83547723ea437e112d2626"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/minN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "sha256" : "d5978f766b1f2a2aa8057bb9fc31fd91b4903dc42b49ddf6613530afd961bcd8"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/push/collectTheFirstGenreOfEachDirectorSMovies/scenario.json",
@@ -3955,6 +4033,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/findTheThreeHighestRatedMoviesInASingleGenre/scenario.json",
     "sha256" : "c00273bdf10a7ad0ba29a9e4f603963c802b0be41588284f15a273a45343d6ba"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/topN/setNDynamicallyBasedOnTheGroupKey/scenario.json",
+    "sha256" : "41d6f7d0c8c7e6a079d81a312152f7bcf69a761c4f0b3aa4cf0e618c088a02e4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/and/combineConditionsOnOneField/scenario.json",
@@ -4129,8 +4211,16 @@
     "sha256" : "fc5d5930feaa01cc72d0242618b2e0b006355658f899c1e0ae738635bd57bf90"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/onDemandMaterializedViewUpdateReplaceData/scenario.json",
+    "sha256" : "2cc5e658cd429a4470967fa5e80553232b97aae781595c4ab8b95822850ac3f0"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/onlyInsertNewData/scenario.json",
     "sha256" : "5f064cda30cf4b0b7dc8d499322585f5eeac503811921aea3d689abc71dc487b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/merge/summarizeRatingsIntoAnotherCollection/scenario.json",
+    "sha256" : "e90c0eb9259776d8d3dbaa80833b384f74cdef470c8e3481cb9ea2e5396ec735"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/out/outputToSameDatabase/scenario.json",
@@ -4143,6 +4233,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/excludeFieldsFromOutputDocuments/scenario.json",
     "sha256" : "ec584e58a7d14b5960225874cea9be799385de1ef00c0a20a8f4b2d36547630b"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithANestedDocument/scenario.json",
+    "sha256" : "462c6c49f0d250e4601986d80954a3f770e19de8b2352a4b2526e2e6d68d8d96"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithDotNotation/scenario.json",

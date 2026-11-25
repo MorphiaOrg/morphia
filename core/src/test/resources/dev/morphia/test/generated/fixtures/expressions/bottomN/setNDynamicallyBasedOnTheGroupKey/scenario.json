@@ -1,0 +1,305 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bottomN/setNDynamicallyBasedOnTheGroupKey",
+  "title": "Set n Dynamically Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bottomN.txt",
+    "blob": "e889d2a459bf25885175611a49408f65c55394f4"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "rated": "$rated"
+          },
+          "movies": {
+            "$bottomN": {
+              "output": {
+                "title": "$title",
+                "rating": "$imdb.rating"
+              },
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$rated",
+                      "PG"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              },
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.rated": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "G"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Justin Bieber: Never Say Never"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "1.6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Superbabies: Baby Geniuses 2"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "1.9"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Justin Bieber's Believe"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "1.6"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Saving Christmas"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "1.6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG-13"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "The Hottie & the Nottie"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "1.9"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "House of the Dead"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/project/includeAnEmbeddedFieldWithANestedDocument",
+  "title": "Include an Embedded Field with a Nested Document",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/project.txt",
+    "blob": "a875b2e46f16cdd3d1c06306668fecd025e754b6"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": "The Great Train Robbery"
+        }
+      },
+      {
+        "$project": {
+          "imdb": {
+            "rating": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "573a1390f29313caabcd42e8"
+              }
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "7.4"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "EQ_SHORTHAND"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

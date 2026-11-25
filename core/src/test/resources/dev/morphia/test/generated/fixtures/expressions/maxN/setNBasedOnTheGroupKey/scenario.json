@@ -1,0 +1,203 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/maxN/setNBasedOnTheGroupKey",
+  "title": "Set n Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/maxN.txt",
+    "blob": "cf1200c4cd68051729b66c1e31462cd0cf6d1b1a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$in": [
+              {
+                "$numberInt": "1999"
+              },
+              {
+                "$numberInt": "2000"
+              },
+              {
+                "$numberInt": "2001"
+              }
+            ]
+          },
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "year": "$year"
+          },
+          "topRatedMovies": {
+            "$maxN": {
+              "input": "$imdb.rating",
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$year",
+                      {
+                        "$numberInt": "2001"
+                      }
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.year": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1999"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "8.9"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2000"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "8.5"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2001"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "topRatedMovies",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "9.6"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "9.2"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "8.8"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

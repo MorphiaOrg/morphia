@@ -106,6 +106,8 @@ object CaseGenerator {
     private const val SORTS = "dev.morphia.query.Sort[]"
     /** The binding key of an array literal in an expression. */
     const val ARRAY = "[]"
+    /** The catalog entry binding a document literal (`Expressions.document`). */
+    const val DOCUMENT = "{}"
 
     /**
      * [protected] holds the repository paths that generation must not write: moved handwritten
@@ -241,6 +243,18 @@ object CaseGenerator {
                         review.sampleDatasets[documented.collection].takeIf {
                             example.blocks.none { it.role == BlockRole.DATA }
                         }
+                    // Results from a collection nothing seeds were printed from data the example
+                    // does not show.
+                    if (
+                        dataset == null &&
+                            documented.data.values.all { it.isEmpty() } &&
+                            documented.printed?.isNotEmpty() == true
+                    ) {
+                        return@forEach gap(
+                            GapKind.SOURCE_UNSUPPORTED,
+                            "the page prints results for ${documented.collection}, which nothing seeds",
+                        )
+                    }
                     val override =
                         FormOverride(
                             fixture = name,
@@ -427,8 +441,26 @@ object CaseGenerator {
             val factory = "${static(binding.owner, binding.method)}(%s)"
             return when (binding.form) {
                 BindingForm.POSITIONAL -> {
+                    // `$cond: {if, then, else}` is `$cond: [if, then, else]`, which Morphia writes.
+                    val condition =
+                        argument
+                            .takeIf {
+                                binding.operator == "\$cond" &&
+                                    it.isDocument &&
+                                    it.asDocument().keys == setOf("if", "then", "else")
+                            }
+                            ?.asDocument()
+                            ?.let { listOf(it["if"]!!, it["then"]!!, it["else"]!!) }
+                    if (condition != null) rules += FormRule.COND_ARRAY
+                    // `concatArrays` always writes an array; its accumulator form takes one bare.
+                    if (binding.operator == "\$concatArrays" && !argument.isArray)
+                        throw Unbound("$path: Morphia writes \$concatArrays' argument as an array")
                     val values =
-                        if (argument.isArray) argument.asArray().values else listOf(argument)
+                        condition
+                            ?: if (argument.isArray) argument.asArray().values else listOf(argument)
+                    // `condition` builds a `List.of`, which rejects null.
+                    if (binding.operator == "\$cond" && values.any { it.isNull })
+                        throw Unbound("$path: Morphia's condition() rejects a null operand")
                     val fixed =
                         if (binding.varargs) binding.parameters.size - 1
                         else binding.parameters.size
@@ -437,6 +469,9 @@ object CaseGenerator {
                             "$path: ${values.size} arguments for ${binding.method}${binding.parameters}"
                         )
                     }
+                    // Java reads a lone null as the varargs array itself.
+                    if (binding.varargs && values.size == fixed + 1 && values.last().isNull)
+                        throw Unbound("$path: Java passes a lone null as the varargs array")
                     val component = binding.parameters.last().removeSuffix("[]")
                     factory.format(
                         values
@@ -516,8 +551,6 @@ object CaseGenerator {
                     val id = binding.fields.getValue("id")
                     val group = argument.asDocument()
                     val key = group["_id"]!!
-                    if (key.isDocument && operator(key, "$path/_id") == null)
-                        throw Unbound("$path/_id: a compound _id has no binding")
                     factory.format(
                         "${static(binding.owner, id.method)}(${value(key, OBJECT, "$path/_id")})"
                     ) +
@@ -550,6 +583,18 @@ object CaseGenerator {
                 BindingForm.PROJECTION -> {
                     if (!argument.isDocument)
                         throw Unbound("$path: ${binding.operator} takes a document")
+                    // `Projection` rejects exclusions beside inclusions or values, except _id's.
+                    val kinds =
+                        argument.asDocument().entries.map { (field, each) ->
+                            (field == "_id" && flag(each) == false) to flag(each)
+                        }
+                    if (
+                        kinds.any { (id, flag) -> !id && flag == false } &&
+                            kinds.any { (_, flag) -> flag != false }
+                    )
+                        throw Unbound(
+                            "$path: Morphia rejects exclusions beside inclusions or values"
+                        )
                     // The projection writes a suppressed _id first, wherever the page put it.
                     if (argument.asDocument().keys.indexOf("_id") > 0)
                         rules += FormRule.PROJECT_ID_FIRST
@@ -913,6 +958,10 @@ object CaseGenerator {
                 options.joinToString("") { ".${it.method}()" }
         }
 
+        /** Whether [value] is an array holding a document at any depth of nested arrays. */
+        private fun holdsADocument(value: BsonValue): Boolean =
+            value.isArray && value.asArray().any { it.isDocument || holdsADocument(it) }
+
         private fun display(value: BsonValue): String =
             when {
                 value.isString -> "\"${value.asString().value}\""
@@ -975,10 +1024,45 @@ object CaseGenerator {
             }
             if (value.isArray && type == OBJECT) {
                 // An array argument, such as `$top`'s output of several fields, is an expression
-                // in Morphia; its binding is the catalog's `[]` entry.
+                // in Morphia; its binding is the catalog's `[]` entry. `ArrayLiteralCodec` fails on
+                // a null item.
+                if (value.asArray().any { it.isNull })
+                    throw Unbound("$path: Morphia cannot write an array literal's null item")
                 val binding =
                     expressions[ARRAY] ?: throw Unbound("$path: an array literal has no binding")
                 return call(binding, value, "$path/$ARRAY")
+            }
+            // `document()` is an Expression, which only an Object or Expression parameter takes.
+            if (value.isDocument && !plain && (type == OBJECT || type == EXPRESSION)) {
+                // A document of expressions is `document().field(k, v)…`, the catalog's `{}` entry.
+                // Its codec skips null fields, and a `$` key would be an operator.
+                val document = value.asDocument()
+                document.keys
+                    .firstOrNull { it.startsWith("$") }
+                    ?.let {
+                        throw Unbound(
+                            "$path/$it: a document literal with an operator key has no binding"
+                        )
+                    }
+                document.entries
+                    .firstOrNull { it.value.isNull }
+                    ?.let {
+                        throw Unbound(
+                            "$path/${it.key}: Morphia omits a document literal's null field"
+                        )
+                    }
+                // `ArrayLiteralCodec` fails on a document item inside a document literal.
+                document.entries
+                    .firstOrNull { (_, each) -> holdsADocument(each) }
+                    ?.let {
+                        throw Unbound(
+                            "$path/${it.key}: Morphia cannot write a document in a document literal's array"
+                        )
+                    }
+                val binding =
+                    expressions[DOCUMENT]
+                        ?: throw Unbound("$path: a document literal has no binding")
+                return call(binding, value, "$path/$DOCUMENT")
             }
             if (value.isDocument) throw Unbound("$path: a document literal has no binding")
             if (value.isArray) throw Unbound("$path: an array literal has no binding")

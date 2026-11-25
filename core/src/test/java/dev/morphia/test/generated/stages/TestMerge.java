@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -39,6 +40,17 @@ public class TestMerge extends TestBase {
     }
 
     @Test
+    @DisplayName("On-Demand Materialized View: Update/Replace Data")
+    public void onDemandMaterializedViewUpdateReplaceData() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/merge/onDemandMaterializedViewUpdateReplaceData/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("metacritic", 100), ne("rated", null), gte("year", 1963)),
+                        group(id(document().field("year", "$year").field("rated", "$rated"))).field("count", sum(1)),
+                        merge("movieRatingSummary").on("_id").whenMatched(WhenMatched.REPLACE).whenNotMatched(WhenNotMatched.INSERT)));
+    }
+
+    @Test
     @DisplayName("Only Insert New Data")
     public void onlyInsertNewData() {
         runner.aggregate(
@@ -48,6 +60,17 @@ public class TestMerge extends TestBase {
                         group(id("$year")).field("titles", push("$title")),
                         project().suppressId().include("year", "$_id").include("titles"),
                         merge("movieArchive").on("year").whenMatched(WhenMatched.FAIL)));
+    }
+
+    @Test
+    @DisplayName("Summarize Ratings into Another Collection")
+    public void summarizeRatingsIntoAnotherCollection() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/merge/summarizeRatingsIntoAnotherCollection/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("metacritic", 100), ne("rated", null), lte("year", 1972)),
+                        group(id(document().field("year", "$year").field("rated", "$rated"))).field("count", sum(1)),
+                        merge("movieRatingSummary").on("_id").whenMatched(WhenMatched.REPLACE).whenNotMatched(WhenNotMatched.INSERT)));
     }
 }
 // spotless:on

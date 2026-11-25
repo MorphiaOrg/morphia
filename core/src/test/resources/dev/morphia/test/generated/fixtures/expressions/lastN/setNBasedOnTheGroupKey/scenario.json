@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/lastN/setNBasedOnTheGroupKey",
+  "title": "Set n Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/lastN.txt",
+    "blob": "98dafefa7632bb0e385d2997600ec03d4e304ae7"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "year": {
+            "$type": "int"
+          },
+          "title": {
+            "$regex": "^[A-Za-z0-9]"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "rated": "$rated"
+          },
+          "movies": {
+            "$lastN": {
+              "input": "$title",
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$rated",
+                      "PG"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.rated": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "G"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "Zambezia"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "Zoom"
+                },
+                {
+                  "text": "Zorro: The Gay Blade"
+                },
+                {
+                  "text": "Zulu Dawn"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG-13"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "xXx: State of the Union"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "eXistenZ"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "REGEX_FORM",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

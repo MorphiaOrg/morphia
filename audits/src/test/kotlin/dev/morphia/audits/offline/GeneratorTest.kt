@@ -816,7 +816,7 @@ class GeneratorTest {
                 ),
                 emptySet(),
             )
-        val case = generation.cases.single().manifest
+        val case = generation.cases.single { it.manifest.name.endsWith("topRatedByYear") }.manifest
         assertEquals("aggregation/expressions/top/topRatedByYear", case.name)
         val source =
             generation.files.getValue(
@@ -829,6 +829,8 @@ class GeneratorTest {
                 "\"\$imdb.rating\"), descending(\"imdb.rating\"), ascending(\"title\"))),\n" +
                 "                        sort().ascending(\"_id\")"
         assertTrue(pipeline in source, source)
+        // A compound _id is a document literal.
+        assertTrue("group(id(document().field(\"y\", \"\$year\")))" in source, source)
         assertTrue("import java.util.List;" in source, source)
         val scenario =
             BsonDocument.parse(generation.files.getValue("core/src/test/resources${case.scenario}"))
@@ -841,7 +843,6 @@ class GeneratorTest {
         )
         assertEquals(
             mapOf(
-                "Grouped by Two Fields" to "/pipeline/0/\$group/_id: a compound _id has no binding",
                 "Without a Rating" to
                     "/pipeline/0/\$match/imdb.rating/\$exists: \$exists BsonBoolean{value=false} has no binding",
                 "Listed Years" to
@@ -1090,6 +1091,42 @@ class GeneratorTest {
                 )
             )
         }
+        fun ParsedPages.Page.addFields(title: String, value: String) =
+            section(
+                title,
+                code("db.inventory.aggregate( [ { \$addFields: { r: $value } } ] )"),
+                code("[ { _id: 1, sku: \"abc\", qty: 25, r: 1 } ]"),
+            )
+        pages.operator("cond", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    addFields(
+                        "Document Form",
+                        "{ \$cond: { if: { \$eq: [ \"\$qty\", 25 ] }, then: { size: \"\$qty\" }, else: \"small\" } }",
+                    ),
+                    addFields(
+                        "Null Field",
+                        "{ \$cond: [ { \$eq: [ \"\$qty\", 25 ] }, { size: null }, \"small\" ] }",
+                    ),
+                    addFields("Null Branch", "{ \$cond: [ true, 1, null ] }"),
+                    addFields("Null Array Item", "{ \$cond: [ true, { a: [ 1, null ] }, 1 ] }"),
+                    addFields(
+                        "Operators in a Nested Array",
+                        "{ \$cond: [ true, { a: [ [ { \$eq: [ 1, 1 ] } ] ] }, 1 ] }",
+                    ),
+                    addFields(
+                        "Operators in a Literal's Array",
+                        "{ \$cond: [ true, { a: [ { \$eq: [ 1, 1 ] } ] }, 1 ] }",
+                    ),
+                    addFields(
+                        "Operator Key",
+                        "{ \$cond: [ { \$eq: [ \"\$qty\", 25 ] }, { \$size: \"\$tags\", b: 1 }, \"small\" ] }",
+                    ),
+                )
+            )
+        }
         pages.operator("regexFind", "expression") {
             listOf(
                 section(
@@ -1152,6 +1189,18 @@ class GeneratorTest {
                 "One Element" to
                     "/filter/qty/\$mod: mod[java.lang.String, long, long] takes an array of 2",
                 "Fractional Divisor" to "/filter/qty/\$mod/0: DOUBLE where long is required",
+                "Null Field" to
+                    "/pipeline/0/\$addFields/r/\$cond/1/size: Morphia omits a document literal's null field",
+                "Null Array Item" to
+                    "/pipeline/0/\$addFields/r/\$cond/1/{}/a: Morphia cannot write an array literal's null item",
+                "Operators in a Nested Array" to
+                    "/pipeline/0/\$addFields/r/\$cond/1/a: Morphia cannot write a document in a document literal's array",
+                "Null Branch" to
+                    "/pipeline/0/\$addFields/r/\$cond: Morphia's condition() rejects a null operand",
+                "Operators in a Literal's Array" to
+                    "/pipeline/0/\$addFields/r/\$cond/1/a: Morphia cannot write a document in a document literal's array",
+                "Operator Key" to
+                    "/pipeline/0/\$addFields/r/\$cond/1/\$size: a document literal with an operator key has no binding",
                 "Long Divisor" to "/filter/qty/\$mod/0: Morphia writes 5L as an Int32",
                 "Repeated Flag" to
                     "/filter/sku/\$regex: Morphia writes \$regex's repeated flags once",
@@ -1208,12 +1257,93 @@ class GeneratorTest {
             expr,
         )
         assertTrue("import static dev.morphia.query.filters.Filters.expr;" in expr, expr)
+        // `$cond`'s document form is its array, which COND_ARRAY equates; a document is a literal.
+        val cond = source("expressions/TestCond")
+        assertTrue(
+            "condition(eq(\"\$qty\", 25), document().field(\"size\", \"\$qty\"), \"small\")" in
+                cond,
+            cond,
+        )
+        assertTrue("COND_ARRAY" in rules("cond/documentForm"))
         // Morphia writes a regex expression's flags in `options`, which REGEX_OPTIONS equates.
         val find = source("expressions/TestRegexFind")
         assertTrue("regexFind(\"\$sku\").pattern(\"^A\").options(\"i\")" in find, find)
         assertTrue("regexFind(\"\$sku\").pattern(\"^a\").options(\"x\")" in find, find)
         assertTrue("REGEX_OPTIONS" in rules("regexFind/inlineFlags"))
         assertTrue("REGEX_OPTIONS" !in rules("regexFind/separateOptions"))
+    }
+
+    @Test
+    fun projectionsMorphiaRejectsAndUnseededResultsAreGaps() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed =
+            "db.films.insertMany( [ { _id: 1, imdb: { rating: 7, votes: 9 }, title: \"a\" } ] )"
+        pages.operator("project", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    section(
+                        "Nested Inclusion",
+                        code(
+                            "db.films.aggregate( [ { \$project: { _id: 0, imdb: { rating: 1 } } } ] )"
+                        ),
+                        code("[ { imdb: { rating: 7 } } ]"),
+                    ),
+                    section(
+                        "Exclusion Beside a Nested Document",
+                        code(
+                            "db.films.aggregate( [ { \$project: { title: 0, imdb: { votes: 0 } } } ] )"
+                        ),
+                        code("[ { _id: 1, imdb: { rating: 7 } } ]"),
+                    ),
+                )
+            )
+        }
+        pages.operator("limit", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    section(
+                        "Unseeded",
+                        code("db.elsewhere.aggregate( [ { \$limit: 1 } ] )"),
+                        code("[ { _id: 1 } ]"),
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("aggregation/stages")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "Exclusion Beside a Nested Document" to
+                    "/pipeline/0/\$project: Morphia rejects exclusions beside inclusions or values",
+                "Unseeded" to "the page prints results for elsewhere, which nothing seeds",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/stages/TestProject.java"
+            )
+        // A nested projection is a document literal, which the server reads as one.
+        assertTrue(
+            "project().suppressId().include(\"imdb\", document().field(\"rating\", 1))" in source,
+            source,
+        )
     }
 
     @Test

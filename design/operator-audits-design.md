@@ -271,7 +271,9 @@ a test method:
    its BSON takes:
    - `POSITIONAL` and `NAMED` for operators, `PROJECTION`, `FIELDS`, `GROUP` and `SORT` for those
      stages, `FILTERS` for `$match`, and `FIELD` for a query or update operator on a field;
-   - the `[]` entry binds an array literal (`ArrayExpressions.array`);
+   - the `[]` entry binds an array literal (`ArrayExpressions.array`), and the `{}` entry, a
+     `FIELDS` binding, a document literal (`Expressions.document().field(k, v)`), which also
+     writes a compound `$group` `_id` and a nested `$project` document;
    - a `NAMED` binding with `shorthand` also takes its one argument alone, as `{$out: "coll"}` and
      `{$unwind: "$sizes"}` are spelled; an option whose last parameter is an array takes a single
      value or an array's items (`$merge`'s `on`). Spellings Morphia writes differently, with no
@@ -303,7 +305,10 @@ a test method:
    query regex with `java.util.regex`, so a pattern that rejects (`(*UCP)`) is a gap. The first node
    without a binding makes the example a gap; so does a pipeline update,
    or a stage that names another database, which the runner refuses because both behavior runs
-   would share it.
+   would share it. So is a document literal with a null field (its codec omits it) or an operator
+   key, a `$project` mixing exclusions with inclusions (`Projection` rejects it), and an example
+   that prints results from a collection nothing seeds. `$cond`'s `{if, then, else}` is its array,
+   which Morphia writes, under `COND_ARRAY`.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
    case uses, ordered. Its form rules are those the emitted spelling needs: `EQ_SHORTHAND` when a
    plain value became `eq()`, `FIELD_OPERATORS_AND` when one field's operators became one filter

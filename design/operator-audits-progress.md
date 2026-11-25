@@ -2856,3 +2856,24 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   Generated scenarios still compare results in order; a find or pipeline without a sort could
   compare them unordered instead, which would change every generated scenario and is left for
   review.
+- Document literals: the `{}` catalog entry binds `Expressions.document()` as a `FIELDS`
+  expression, so a document of expressions is `document().field(k, v)…`. A compound `$group`
+  `_id` is no longer refused (`id(document()…)`), and a nested `$project` document is a literal,
+  which the server reads as a nested projection. `$cond` binds `condition(if, then, else)`; its
+  document form takes `COND_ARRAY`. `$concatArrays` binds `concatArrays(Object, Object...)`.
+  Gaps: a literal's null field (the codec omits it), an operator key, a `$project` mixing
+  exclusions with inclusions or values (`Projection` rejects it), and an example printing results
+  from a collection nothing seeds (`$reduce`'s single reduction, whose page seeds `arrayconcat`
+  elsewhere). 10 cases generate (487 to 497): the seven ranked accumulators' "set n by the group
+  key" examples, `$map`'s `$$IDX`, a nested `$project` inclusion, and the two seeded `$merge`
+  examples with paired reads that #4592 left waiting on a compound `_id`. One more page error is
+  a reviewed exclusion: `$regexFindAll`'s captured-groupings example prints the `$addFields`
+  output before the pipeline's `$set`.
+  Review round 1 (Codex) found four more, now gaps: a null `$cond` operand (`condition` builds a
+  `List.of`), a lone null as the varargs argument (Java reads it as the array), `$concatArrays`
+  given one bare argument as an accumulator (`concatArrays` always writes an array), and a document
+  inside a document literal's array, which `ArrayLiteralCodec` fails to write there.
+  Round 2 found two more: an array literal's null item (`ArrayLiteralCodec` fails on it), now a
+  gap, and a document where a typed parameter is required (`$merge`'s `into: {coll}` would have
+  emitted `merge(document()…)`, which does not compile); document literals are emitted only for an
+  `Object` or `Expression` parameter. Round 3 found a document two arrays deep escaping the array check, which is now recursive.

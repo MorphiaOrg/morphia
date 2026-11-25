@@ -129,6 +129,37 @@
       "fields": {}
     },
     {
+      "operator": "$concatArrays",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ArrayExpressions",
+      "method": "concatArrays",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object[]"
+      ],
+      "varargs": true,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
+      "operator": "$cond",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ConditionalExpressions",
+      "method": "condition",
+      "parameters": [
+        "java.lang.Object",
+        "java.lang.Object",
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "$convert",
       "position": "EXPRESSION",
       "form": "NAMED",
@@ -645,6 +676,26 @@
       "arguments": [],
       "options": {},
       "fields": {}
+    },
+    {
+      "operator": "{}",
+      "position": "EXPRESSION",
+      "form": "FIELDS",
+      "owner": "dev.morphia.aggregation.expressions.Expressions",
+      "method": "document",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {
+        "value": {
+          "method": "field",
+          "parameters": [
+            "java.lang.String",
+            "java.lang.Object"
+          ]
+        }
+      }
     },
     {
       "operator": "$eq",

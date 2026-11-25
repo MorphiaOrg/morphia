@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Limit.limit;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -37,6 +38,17 @@ public class TestProject extends TestBase {
                 (aggregation) -> aggregation.pipeline(
                         match(eq("title", "The Great Train Robbery")),
                         project().exclude("rated"),
+                        limit(1)));
+    }
+
+    @Test
+    @DisplayName("Include an Embedded Field with a Nested Document")
+    public void includeAnEmbeddedFieldWithANestedDocument() {
+        runner.aggregate(
+                OperatorCase.of("/dev/morphia/test/generated/fixtures/stages/project/includeAnEmbeddedFieldWithANestedDocument/scenario.json"),
+                (aggregation) -> aggregation.pipeline(
+                        match(eq("title", "The Great Train Robbery")),
+                        project().include("imdb", document().field("rating", 1)),
                         limit(1)));
     }
 
