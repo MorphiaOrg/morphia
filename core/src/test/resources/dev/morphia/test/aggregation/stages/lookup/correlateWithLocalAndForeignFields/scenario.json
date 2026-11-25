@@ -233,7 +233,7 @@
     "tolerance": null
   },
   "requirements": {
-    "minimumServer": null,
+    "minimumServer": "6.0.0",
     "topology": "STANDALONE"
   },
   "skipped": {

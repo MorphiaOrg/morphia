@@ -154,7 +154,7 @@
     "tolerance": null
   },
   "requirements": {
-    "minimumServer": null,
+    "minimumServer": "5.0.0",
     "topology": "STANDALONE"
   }
 }

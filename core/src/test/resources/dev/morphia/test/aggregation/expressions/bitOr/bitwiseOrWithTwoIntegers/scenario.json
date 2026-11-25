@@ -137,7 +137,7 @@
     "tolerance": null
   },
   "requirements": {
-    "minimumServer": null,
+    "minimumServer": "6.3.0",
     "topology": "STANDALONE"
   }
 }

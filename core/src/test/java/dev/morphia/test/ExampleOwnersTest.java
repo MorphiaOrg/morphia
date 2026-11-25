@@ -45,6 +45,7 @@ public class ExampleOwnersTest {
             Map.entry("TestBucket#testBucketWithoutOptions", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestBucketAuto#testWithGranularity", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestBucketAuto#testWithoutGranularity", "aggregates a mapped entity, not a documented example"),
+            Map.entry("TestChangeStream#testChangeStream", "watches a change stream fed from inline documents"),
             Map.entry("TestChangeStream#testChangeStreamOptions", "checks the $changeStream options' encoding"),
             Map.entry("TestLookup#testLookup", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestMerge#keepExisting", "checks the server accepts whenMatched: keepExisting as Morphia writes it"),
