@@ -213,7 +213,9 @@ entry can be one of:
   it never seeds, or its results depend on `$$NOW`.
 - **A patch to `collections`, `action` or `expected`:** for when the page printed the first stage's
   output, ObjectId `_id`s for integer seeds, and so on.
-  - Each patch records a digest of the extracted value it replaces.
+  - A patch names an RFC 6901 pointer into the written scenario, the digest of the extracted value
+    it replaces, and the new value in extended JSON. A number retype is a patch too, so the stack's
+    separate retype and correction formats aren't carried over.
   - If the page changes upstream, the digest stops matching and extraction fails. A later docs fix
     can't be silently overwritten.
 - **A skip:** `serialization`, `behavior` or `published`, each separately, with its reason. They

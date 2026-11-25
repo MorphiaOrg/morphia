@@ -1,0 +1,57 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/minDistance/useWithNearSphere",
+  "title": "Use with $nearSphere",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/minDistance.txt",
+    "blob": "8b8e4df767af726804eab30f85c803c866308edd"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "location": {
+        "$nearSphere": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [
+              {
+                "$numberDouble": "-73.9667"
+              },
+              {
+                "$numberDouble": "40.78"
+              }
+            ]
+          },
+          "$minDistance": {
+            "$numberInt": "1000"
+          },
+          "$maxDistance": {
+            "$numberInt": "5000"
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

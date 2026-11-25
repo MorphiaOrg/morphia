@@ -1,0 +1,364 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/facet/categorizeMoviesSeveralWays",
+  "title": "Categorize Movies Several Ways",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/facet.txt",
+    "blob": "ec7879b3546b5db03b444f8de4fac4916e231023"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$facet": {
+          "categorizedByGenres": [
+            {
+              "$unwind": "$genres"
+            },
+            {
+              "$sortByCount": "$genres"
+            }
+          ],
+          "categorizedByRuntime": [
+            {
+              "$bucket": {
+                "groupBy": "$runtime",
+                "boundaries": [
+                  {
+                    "$numberInt": "1000"
+                  },
+                  {
+                    "$numberInt": "1200"
+                  },
+                  {
+                    "$numberInt": "1400"
+                  }
+                ],
+                "default": "Other",
+                "output": {
+                  "count": {
+                    "$sum": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  "titles": {
+                    "$push": "$title"
+                  }
+                }
+              }
+            }
+          ],
+          "categorizedByYear(Auto)": [
+            {
+              "$bucketAuto": {
+                "groupBy": "$year",
+                "buckets": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "categorizedByGenres",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Sport"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Documentary"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Action"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Drama"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "Adventure"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "text": "History"
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "categorizedByRuntime",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1000"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "Baseball"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1200"
+                        }
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "titles",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "Centennial"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "categorizedByYear(Auto)",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1978"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1994"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "min",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1994"
+                              }
+                            }
+                          },
+                          {
+                            "name": "max",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "1994"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "count",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

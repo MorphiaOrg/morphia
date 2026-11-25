@@ -1,0 +1,108 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateDiff/weeksPerMonth",
+  "title": "Weeks Per Month",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/dateDiff.txt",
+    "blob": "1a62ae52cf0eb1d1064e30f41ba80ac7f0b1830a"
+  },
+  "dataset": null,
+  "collections": {
+    "months": [
+      {
+        "month": "January",
+        "start": {
+          "$date": {
+            "$numberLong": "1609459200000"
+          }
+        },
+        "end": {
+          "$date": {
+            "$numberLong": "1612051200000"
+          }
+        }
+      },
+      {
+        "month": "February",
+        "start": {
+          "$date": {
+            "$numberLong": "1612137600000"
+          }
+        },
+        "end": {
+          "$date": {
+            "$numberLong": "1614470400000"
+          }
+        }
+      },
+      {
+        "month": "March",
+        "start": {
+          "$date": {
+            "$numberLong": "1614556800000"
+          }
+        },
+        "end": {
+          "$date": {
+            "$numberLong": "1617148800000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "months",
+    "pipeline": [
+      {
+        "$project": {
+          "wks_default": {
+            "$dateDiff": {
+              "startDate": "$start",
+              "endDate": "$end",
+              "unit": "week"
+            }
+          },
+          "wks_monday": {
+            "$dateDiff": {
+              "startDate": "$start",
+              "endDate": "$end",
+              "unit": "week",
+              "startOfWeek": "Monday"
+            }
+          },
+          "wks_friday": {
+            "$dateDiff": {
+              "startDate": "$start",
+              "endDate": "$end",
+              "unit": "week",
+              "startOfWeek": "fri"
+            }
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

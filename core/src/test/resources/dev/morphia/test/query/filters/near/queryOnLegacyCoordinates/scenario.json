@@ -1,0 +1,49 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/near/queryOnLegacyCoordinates",
+  "title": "Query on Legacy Coordinates",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/near.txt",
+    "blob": "eb4487d42b34b2ed7e322f0a63f82d953a3eae8e"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "legacy2d",
+    "filter": {
+      "location": {
+        "$near": [
+          {
+            "$numberDouble": "-73.9667"
+          },
+          {
+            "$numberDouble": "40.78"
+          }
+        ],
+        "$maxDistance": {
+          "$numberDouble": "0.1"
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

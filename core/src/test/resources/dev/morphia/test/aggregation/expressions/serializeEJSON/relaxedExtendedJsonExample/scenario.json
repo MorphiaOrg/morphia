@@ -1,0 +1,168 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/serializeEJSON/relaxedExtendedJsonExample",
+  "title": "Relaxed Extended JSON Example",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/serializeEJSON.txt",
+    "blob": "ee40af96a05b38c3b3102d51e89b13c8cb195a5e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": "Inception"
+        }
+      },
+      {
+        "$project": {
+          "ejson": {
+            "$serializeEJSON": {
+              "input": "$$ROOT",
+              "relaxed": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "573a1398f29313caabcea974"
+              }
+            }
+          },
+          {
+            "name": "ejson",
+            "value": {
+              "document": [
+                {
+                  "name": "_id",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "$oid",
+                        "value": {
+                          "text": "573a1398f29313caabcea974"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "title",
+                  "value": {
+                    "text": "Inception"
+                  }
+                },
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2010"
+                    }
+                  }
+                },
+                {
+                  "name": "runtime",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "148"
+                    }
+                  }
+                },
+                {
+                  "name": "released",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "$date",
+                        "value": {
+                          "text": "2010-07-16T00:00:00.000Z"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "cast",
+                  "value": {
+                    "array": [
+                      {
+                        "text": "Leonardo DiCaprio"
+                      },
+                      {
+                        "text": "Joseph Gordon-Levitt"
+                      },
+                      {
+                        "text": "Ellen Page"
+                      },
+                      {
+                        "text": "Tom Hardy"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "genres",
+                  "value": {
+                    "array": [
+                      {
+                        "text": "Action"
+                      },
+                      {
+                        "text": "Sci-Fi"
+                      },
+                      {
+                        "text": "Thriller"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "directors",
+                  "value": {
+                    "array": [
+                      {
+                        "text": "Christopher Nolan"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

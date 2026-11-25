@@ -1,0 +1,224 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/similarityDotProduct/computeRawAndNormalizedDotProducts",
+  "title": "Compute Raw and Normalized Dot Products",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/similarityDotProduct.txt",
+    "blob": "a3d84e4650f9293c5f735269e104c7ebc48ef6ab"
+  },
+  "dataset": null,
+  "collections": {
+    "vectors": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "3"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "1"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "vectors",
+    "pipeline": [
+      {
+        "$project": {
+          "raw": {
+            "$similarityDotProduct": [
+              "$a",
+              "$b"
+            ]
+          },
+          "normalized": {
+            "$similarityDotProduct": {
+              "vectors": [
+                "$a",
+                "$b"
+              ],
+              "score": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "7.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "5.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "whole": {
+                "$numberInt": "32"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "16.5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

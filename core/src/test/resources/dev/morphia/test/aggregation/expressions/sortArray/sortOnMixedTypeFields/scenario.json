@@ -1,0 +1,223 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sortArray/sortOnMixedTypeFields",
+  "title": "Sort on Mixed Type Fields",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/sortArray.txt",
+    "blob": "06d3e13bf9c909deb937b2bd39d4c41589a2b032"
+  },
+  "dataset": null,
+  "collections": {
+    "engineers": [
+      {
+        "team": [
+          {
+            "name": "pat",
+            "age": {
+              "$numberInt": "30"
+            },
+            "address": {
+              "street": "12 Baker St",
+              "city": "London"
+            }
+          },
+          {
+            "name": "dallas",
+            "age": {
+              "$numberInt": "36"
+            },
+            "address": {
+              "street": "12 Cowper St",
+              "city": "Palo Alto"
+            }
+          },
+          {
+            "name": "charlie",
+            "age": {
+              "$numberInt": "42"
+            },
+            "address": {
+              "street": "12 French St",
+              "city": "New Brunswick"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "engineers",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "result": {
+            "$sortArray": {
+              "input": [
+                {
+                  "$numberInt": "20"
+                },
+                {
+                  "$numberInt": "4"
+                },
+                {
+                  "a": "Free"
+                },
+                {
+                  "$numberInt": "6"
+                },
+                {
+                  "$numberInt": "21"
+                },
+                {
+                  "$numberInt": "5"
+                },
+                "Gratis",
+                {
+                  "a": null
+                },
+                {
+                  "a": {
+                    "sale": true,
+                    "price": {
+                      "$numberInt": "19"
+                    }
+                  }
+                },
+                {
+                  "$numberDecimal": "10.23"
+                },
+                {
+                  "a": "On sale"
+                }
+              ],
+              "sortBy": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "result",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "4"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "6"
+                  }
+                },
+                {
+                  "decimal": "10.23"
+                },
+                {
+                  "whole": {
+                    "$numberInt": "20"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "21"
+                  }
+                },
+                {
+                  "text": "Gratis"
+                },
+                {
+                  "document": [
+                    {
+                      "name": "a",
+                      "value": {
+                        "exact": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "a",
+                      "value": {
+                        "text": "Free"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "a",
+                      "value": {
+                        "text": "On sale"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "a",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "sale",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "price",
+                            "value": {
+                              "whole": {
+                                "$numberInt": "19"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

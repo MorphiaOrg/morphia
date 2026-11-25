@@ -1,0 +1,806 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/listSearchIndexes/returnASingleSearchIndexByName",
+  "title": "Return a Single Search Index by Name",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/listSearchIndexes.txt",
+    "blob": "7869e7ae0f16daa421ebbe7718ec943e9b892e39"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$listSearchIndexes": {
+          "name": "synonym-mappings"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "id",
+            "value": {
+              "text": "65240be420da840844a4d077"
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "synonym_mappings"
+            }
+          },
+          {
+            "name": "status",
+            "value": {
+              "text": "READY"
+            }
+          },
+          {
+            "name": "queryable",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "latestDefinitionVersion",
+            "value": {
+              "document": [
+                {
+                  "name": "version",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "0"
+                    }
+                  }
+                },
+                {
+                  "name": "createdAt",
+                  "value": {
+                    "exact": {
+                      "$date": {
+                        "$numberLong": "1696861156305"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "latestDefinition",
+            "value": {
+              "document": [
+                {
+                  "name": "mappings",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "dynamic",
+                        "value": {
+                          "exact": true
+                        }
+                      },
+                      {
+                        "name": "fields",
+                        "value": {
+                          "document": [
+                            {
+                              "name": "fullplot",
+                              "value": {
+                                "document": [
+                                  {
+                                    "name": "type",
+                                    "value": {
+                                      "text": "string"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "synonyms",
+                  "value": {
+                    "array": [
+                      {
+                        "document": [
+                          {
+                            "name": "name",
+                            "value": {
+                              "text": "synonym_mapping"
+                            }
+                          },
+                          {
+                            "name": "analyzer",
+                            "value": {
+                              "text": "lucene.english"
+                            }
+                          },
+                          {
+                            "name": "source",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "collection",
+                                  "value": {
+                                    "text": "synonyms"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "synonymMappingStatus",
+            "value": {
+              "text": "READY"
+            }
+          },
+          {
+            "name": "synonymMappingStatusDetail",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "synonym_mapping",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "statusDetail",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-02"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "READY"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696861156000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": [
+                                            {
+                                              "name": "fullplot",
+                                              "value": {
+                                                "document": [
+                                                  {
+                                                    "name": "type",
+                                                    "value": {
+                                                      "text": "string"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "indexOptions",
+                                                    "value": {
+                                                      "text": "offsets"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "store",
+                                                    "value": {
+                                                      "exact": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "norms",
+                                                    "value": {
+                                                      "text": "include"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "synonyms",
+                                  "value": {
+                                    "array": [
+                                      {
+                                        "document": [
+                                          {
+                                            "name": "name",
+                                            "value": {
+                                              "text": "synonym_mapping"
+                                            }
+                                          },
+                                          {
+                                            "name": "analyzer",
+                                            "value": {
+                                              "text": "lucene.english"
+                                            }
+                                          },
+                                          {
+                                            "name": "source",
+                                            "value": {
+                                              "document": [
+                                                {
+                                                  "name": "collection",
+                                                  "value": {
+                                                    "text": "synonyms"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatus",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatusDetail",
+                            "value": {
+                              "array": [
+                                {
+                                  "document": [
+                                    {
+                                      "name": "synonym_mapping",
+                                      "value": {
+                                        "document": [
+                                          {
+                                            "name": "status",
+                                            "value": {
+                                              "text": "READY"
+                                            }
+                                          },
+                                          {
+                                            "name": "queryable",
+                                            "value": {
+                                              "exact": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-01"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "READY"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696861156000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": [
+                                            {
+                                              "name": "fullplot",
+                                              "value": {
+                                                "document": [
+                                                  {
+                                                    "name": "type",
+                                                    "value": {
+                                                      "text": "string"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "indexOptions",
+                                                    "value": {
+                                                      "text": "offsets"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "store",
+                                                    "value": {
+                                                      "exact": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "norms",
+                                                    "value": {
+                                                      "text": "include"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "synonyms",
+                                  "value": {
+                                    "array": [
+                                      {
+                                        "document": [
+                                          {
+                                            "name": "name",
+                                            "value": {
+                                              "text": "synonym_mapping"
+                                            }
+                                          },
+                                          {
+                                            "name": "analyzer",
+                                            "value": {
+                                              "text": "lucene.english"
+                                            }
+                                          },
+                                          {
+                                            "name": "source",
+                                            "value": {
+                                              "document": [
+                                                {
+                                                  "name": "collection",
+                                                  "value": {
+                                                    "text": "synonyms"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatus",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatusDetail",
+                            "value": {
+                              "array": [
+                                {
+                                  "document": [
+                                    {
+                                      "name": "synonym_mapping",
+                                      "value": {
+                                        "document": [
+                                          {
+                                            "name": "status",
+                                            "value": {
+                                              "text": "READY"
+                                            }
+                                          },
+                                          {
+                                            "name": "queryable",
+                                            "value": {
+                                              "exact": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-00"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "READY"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696861156000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": [
+                                            {
+                                              "name": "fullplot",
+                                              "value": {
+                                                "document": [
+                                                  {
+                                                    "name": "type",
+                                                    "value": {
+                                                      "text": "string"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "indexOptions",
+                                                    "value": {
+                                                      "text": "offsets"
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "store",
+                                                    "value": {
+                                                      "exact": true
+                                                    }
+                                                  },
+                                                  {
+                                                    "name": "norms",
+                                                    "value": {
+                                                      "text": "include"
+                                                    }
+                                                  }
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "synonyms",
+                                  "value": {
+                                    "array": [
+                                      {
+                                        "document": [
+                                          {
+                                            "name": "name",
+                                            "value": {
+                                              "text": "synonym_mapping"
+                                            }
+                                          },
+                                          {
+                                            "name": "analyzer",
+                                            "value": {
+                                              "text": "lucene.english"
+                                            }
+                                          },
+                                          {
+                                            "name": "source",
+                                            "value": {
+                                              "document": [
+                                                {
+                                                  "name": "collection",
+                                                  "value": {
+                                                    "text": "synonyms"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatus",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "synonymMappingStatusDetail",
+                            "value": {
+                              "array": [
+                                {
+                                  "document": [
+                                    {
+                                      "name": "synonym_mapping",
+                                      "value": {
+                                        "document": [
+                                          {
+                                            "name": "status",
+                                            "value": {
+                                              "text": "READY"
+                                            }
+                                          },
+                                          {
+                                            "name": "queryable",
+                                            "value": {
+                                              "exact": true
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

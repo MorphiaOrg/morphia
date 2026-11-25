@@ -1,0 +1,712 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/graphLookup/acrossMultipleCollections",
+  "title": "Across Multiple Collections",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/graphLookup.txt",
+    "blob": "d3e1e0aac59fc7b811cd2ffcf23f0eed62fbcae9"
+  },
+  "dataset": null,
+  "collections": {
+    "airports": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "airport": "JFK",
+        "connects": [
+          "BOS",
+          "ORD"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "airport": "BOS",
+        "connects": [
+          "JFK",
+          "PWM"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "airport": "ORD",
+        "connects": [
+          "JFK"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "airport": "PWM",
+        "connects": [
+          "BOS",
+          "LHR"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "airport": "LHR",
+        "connects": [
+          "PWM"
+        ]
+      }
+    ],
+    "travelers": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Dev",
+        "nearestAirport": "JFK"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Eliot",
+        "nearestAirport": "JFK"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Jeff",
+        "nearestAirport": "BOS"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "travelers",
+    "pipeline": [
+      {
+        "$graphLookup": {
+          "from": "airports",
+          "startWith": "$nearestAirport",
+          "connectFromField": "connects",
+          "connectToField": "airport",
+          "maxDepth": {
+            "$numberInt": "2"
+          },
+          "depthField": "numConnections",
+          "as": "destinations"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Dev"
+            }
+          },
+          {
+            "name": "nearestAirport",
+            "value": {
+              "text": "JFK"
+            }
+          },
+          {
+            "name": "destinations",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "0"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "JFK"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "ORD"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "BOS"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          },
+                          {
+                            "text": "PWM"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "PWM"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "LHR"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "ORD"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Eliot"
+            }
+          },
+          {
+            "name": "nearestAirport",
+            "value": {
+              "text": "JFK"
+            }
+          },
+          {
+            "name": "destinations",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "0"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "JFK"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "ORD"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "BOS"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          },
+                          {
+                            "text": "PWM"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "PWM"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "LHR"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "ORD"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Jeff"
+            }
+          },
+          {
+            "name": "nearestAirport",
+            "value": {
+              "text": "BOS"
+            }
+          },
+          {
+            "name": "destinations",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "0"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "JFK"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "ORD"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "BOS"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          },
+                          {
+                            "text": "PWM"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "LHR"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "PWM"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "PWM"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "BOS"
+                          },
+                          {
+                            "text": "LHR"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "airport",
+                      "value": {
+                        "text": "ORD"
+                      }
+                    },
+                    {
+                      "name": "connects",
+                      "value": {
+                        "array": [
+                          {
+                            "text": "JFK"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "numConnections",
+                      "value": {
+                        "exact": {
+                          "$numberLong": "2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

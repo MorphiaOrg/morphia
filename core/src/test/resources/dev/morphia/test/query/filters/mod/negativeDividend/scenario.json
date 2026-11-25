@@ -1,0 +1,129 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/mod/negativeDividend",
+  "title": "Negative Dividend",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/mod.txt",
+    "blob": "6e993c25d85ccfbfedfadceaf7e792550e19423c"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc123",
+        "qty": {
+          "$numberInt": "0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "xyz123",
+        "qty": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ijk123",
+        "qty": {
+          "$numberInt": "12"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "qty": {
+        "$mod": [
+          {
+            "$numberInt": "-4"
+          },
+          {
+            "$numberDouble": "-0.0"
+          }
+        ]
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc123"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ijk123"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

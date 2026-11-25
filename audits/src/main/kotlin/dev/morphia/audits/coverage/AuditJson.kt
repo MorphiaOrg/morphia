@@ -11,6 +11,10 @@ import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.morphia.audits.documents.DocumentReport
+import dev.morphia.audits.extraction.ExampleInventory
+import dev.morphia.audits.extraction.ExampleOverrides
+import dev.morphia.audits.extraction.ReviewedExamples
+import dev.morphia.audits.extraction.UntestedExamples
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
@@ -114,6 +118,14 @@ object AuditJson {
         read(json, SourceAcquisitionReport::class.java)
 
     fun documents(json: String): DocumentReport = read(json, DocumentReport::class.java)
+
+    fun exampleInventory(json: String): ExampleInventory = read(json, ExampleInventory::class.java)
+
+    fun reviewedExamples(json: String): ReviewedExamples = read(json, ReviewedExamples::class.java)
+
+    fun overrides(json: String): ExampleOverrides = read(json, ExampleOverrides::class.java)
+
+    fun untested(json: String): UntestedExamples = read(json, UntestedExamples::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

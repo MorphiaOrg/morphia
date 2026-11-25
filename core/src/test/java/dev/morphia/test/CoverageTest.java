@@ -47,6 +47,8 @@ public abstract class CoverageTest extends TestBase {
                     });
             stream(path.listFiles())
                     .filter(file -> !new File(file, "ignored").exists())
+                    // An operator whose every scenario still waits for its test is in the audits' baseline.
+                    .filter(file -> !untestedOnly(file))
                     .map(file -> {
                         var parent = new File(file.getPath().replace("resources", "java")).getParentFile();
                         return new File(parent, "Test%s.java".formatted(NamingStrategy.title().apply(file.getName())));
@@ -57,6 +59,29 @@ public abstract class CoverageTest extends TestBase {
                     });
         } catch (Exception e) {
             throw new RuntimeException("failure on path: " + path, e);
+        }
+    }
+
+    private static boolean untestedOnly(File operator) {
+        File[] stems = operator.listFiles(File::isDirectory);
+        if (stems == null || stems.length == 0) {
+            return false;
+        }
+        String prefix = operator.getPath().replace(File.separatorChar, '/').replaceAll(".*/dev/morphia/test/", "");
+        return stream(stems).allMatch(stem -> UNTESTED.contains(prefix + "/" + stem.getName()));
+    }
+
+    private static final java.util.Set<String> UNTESTED = untested();
+
+    private static java.util.Set<String> untested() {
+        File baseline = new File(CORE_ROOT, "../audits/catalog/untested-examples.json");
+        try {
+            java.util.Set<String> names = new java.util.TreeSet<>();
+            org.bson.BsonDocument.parse(Files.readString(baseline.toPath())).getArray("examples")
+                    .forEach(entry -> names.add(entry.asDocument().getString("scenario").getValue()));
+            return names;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot read " + baseline, e);
         }
     }
 }

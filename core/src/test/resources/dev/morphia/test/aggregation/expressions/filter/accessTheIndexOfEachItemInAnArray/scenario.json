@@ -1,0 +1,222 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/filter/accessTheIndexOfEachItemInAnArray",
+  "title": "Access the Index of Each Item in an Array",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/filter.txt",
+    "blob": "e04f7d1db758fc5f0eab0cb09544bb1e6160d6a8"
+  },
+  "dataset": null,
+  "collections": {
+    "people": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Melissa",
+        "hobbies": [
+          "softball",
+          "drawing",
+          "reading"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Brad",
+        "hobbies": [
+          "gaming",
+          "skateboarding"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Scott",
+        "hobbies": [
+          "basketball",
+          "music",
+          "fishing"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Tracey",
+        "hobbies": [
+          "acting",
+          "yoga"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "Josh",
+        "hobbies": [
+          "programming"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "Claire"
+      }
+    ],
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "43"
+            },
+            "quantity": {
+              "$numberInt": "2"
+            },
+            "price": {
+              "$numberInt": "10"
+            },
+            "name": "pen"
+          },
+          {
+            "item_id": {
+              "$numberInt": "2"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "240"
+            },
+            "name": "briefcase"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "23"
+            },
+            "quantity": {
+              "$numberInt": "3"
+            },
+            "price": {
+              "$numberInt": "110"
+            },
+            "name": "notebook"
+          },
+          {
+            "item_id": {
+              "$numberInt": "103"
+            },
+            "quantity": {
+              "$numberInt": "4"
+            },
+            "price": {
+              "$numberInt": "5"
+            },
+            "name": "pen"
+          },
+          {
+            "item_id": {
+              "$numberInt": "38"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "300"
+            },
+            "name": "printer"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "4"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "23"
+            },
+            "name": "paper"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "people",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "name": {
+            "$numberInt": "1"
+          },
+          "secondaryHobbies": {
+            "$filter": {
+              "input": "$hobbies",
+              "arrayIndexAs": "myIndex",
+              "cond": {
+                "$eq": [
+                  {
+                    "$mod": [
+                      "$$myIndex",
+                      {
+                        "$numberInt": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "$numberInt": "0"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

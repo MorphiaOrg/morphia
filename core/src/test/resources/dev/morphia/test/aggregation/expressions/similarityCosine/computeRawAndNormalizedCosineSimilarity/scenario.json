@@ -1,0 +1,224 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/similarityCosine/computeRawAndNormalizedCosineSimilarity",
+  "title": "Compute Raw and Normalized Cosine Similarity",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/similarityCosine.txt",
+    "blob": "8ac4676b05663926ff5274f13c4ab2f96571f008"
+  },
+  "dataset": null,
+  "collections": {
+    "vectors": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "3"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "1"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "vectors",
+    "pipeline": [
+      {
+        "$project": {
+          "raw": {
+            "$similarityCosine": [
+              "$a",
+              "$b"
+            ]
+          },
+          "normalized": {
+            "$similarityCosine": {
+              "vectors": [
+                "$a",
+                "$b"
+              ],
+              "score": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.7142857142857143"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.8571428571428571"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.9746318461970762"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.9873159230985381"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

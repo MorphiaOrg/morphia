@@ -1,0 +1,90 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toArray/convertBinDataToArray",
+  "title": "Convert binData to Array",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/toArray.txt",
+    "blob": "cc79af753b38dd104405734a5b966d4533b2963f"
+  },
+  "dataset": null,
+  "collections": {
+    "t": [
+      {
+        "v": {
+          "$binary": {
+            "base64": "EAA=",
+            "subType": "09"
+          }
+        }
+      },
+      {
+        "v": {
+          "$binary": {
+            "base64": "EAB/Bw==",
+            "subType": "09"
+          }
+        }
+      },
+      {
+        "v": {
+          "$binary": {
+            "base64": "AwAAAQ==",
+            "subType": "09"
+          }
+        }
+      },
+      {
+        "v": {
+          "$binary": {
+            "base64": "JwCamZk+",
+            "subType": "09"
+          }
+        }
+      },
+      {
+        "v": {
+          "$binary": {
+            "base64": "JwAAAID/AAAAAAAAgH8=",
+            "subType": "09"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "t",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "original": "$v",
+          "asArray": {
+            "$toArray": "$v"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

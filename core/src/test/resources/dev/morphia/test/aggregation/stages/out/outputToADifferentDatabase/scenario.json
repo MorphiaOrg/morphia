@@ -1,0 +1,117 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/out/outputToADifferentDatabase",
+  "title": "Output to a Different Database",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/out.txt",
+    "blob": "cd34cd6cbc4c117defea107a7acf2af6002b525c"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "movies": {
+            "$push": "$title"
+          }
+        }
+      },
+      {
+        "$out": {
+          "db": "reporting",
+          "coll": "movies_by_year"
+        }
+      }
+    ],
+    "read": {
+      "collection": "movies_by_year",
+      "filter": {},
+      "sort": {
+        "_id": {
+          "$numberInt": "1"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1978"
+              }
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "Centennial"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1994"
+              }
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "text": "Baseball"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

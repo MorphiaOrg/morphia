@@ -1,0 +1,206 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/meta/returnTheIndexKeyOfAPriceRangeInAFind",
+  "title": "Return the Index Key of a Price Range in a Find",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/meta.txt",
+    "blob": "6bcec1af90dce08be0daf31147ca3e92b4318333"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "12"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "type": "apparel"
+      },
+      {
+        "item": "jkl",
+        "price": {
+          "$numberDecimal": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "type": "electronics"
+      },
+      {
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "10"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "type": "apparel"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "orders",
+      "keys": {
+        "type": {
+          "$numberInt": "1"
+        },
+        "item": {
+          "$numberInt": "1"
+        }
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "orders",
+    "filter": {
+      "price": {
+        "$gte": {
+          "$numberDecimal": "10"
+        }
+      }
+    },
+    "projection": {
+      "idxKey": {
+        "$meta": "indexKey"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5e98a33ceaf5e9dcf2b8dcde"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "12"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "apparel"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5e98a33ceaf5e9dcf2b8dcdf"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "20"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "electronics"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5e98a33ceaf5e9dcf2b8dce0"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "10"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "apparel"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/meta/returnTheIndexKeyOfAPriceRangeInAnAggregation",
+  "title": "Return the Index Key of a Price Range in an Aggregation",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/meta.txt",
+    "blob": "6bcec1af90dce08be0daf31147ca3e92b4318333"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "12"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "type": "apparel"
+      },
+      {
+        "item": "jkl",
+        "price": {
+          "$numberDecimal": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "type": "electronics"
+      },
+      {
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "10"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "type": "apparel"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "orders",
+      "keys": {
+        "type": {
+          "$numberInt": "1"
+        },
+        "item": {
+          "$numberInt": "1"
+        }
+      }
+    }
+  ],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$match": {
+          "price": {
+            "$gte": {
+              "$numberDecimal": "10"
+            }
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "idxKey": {
+            "$meta": "indexKey"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

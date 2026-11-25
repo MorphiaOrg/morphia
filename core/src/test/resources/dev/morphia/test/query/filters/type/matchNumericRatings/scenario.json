@@ -1,0 +1,129 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/type/matchNumericRatings",
+  "title": "Match Numeric Ratings",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/type.txt",
+    "blob": "5e1ef813ce1eaebe5960bb664c50bdc7000b8a94"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$type": "number"
+      },
+      "runtime": {
+        "$gt": {
+          "$numberInt": "1000"
+        }
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "runtime": {
+        "$numberInt": "1"
+      },
+      "imdb.rating": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "runtime",
+            "value": {
+              "whole": {
+                "$numberInt": "1256"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "8.5"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "runtime",
+            "value": {
+              "whole": {
+                "$numberInt": "1140"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.1"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

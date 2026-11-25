@@ -1,0 +1,137 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/percentile/calculateRatingPercentilesByGenre",
+  "title": "Calculate Rating Percentiles by Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/percentile.txt",
+    "blob": "53342ed574f6447fdef1423cb61ea62f3554d8f3"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$match": {
+          "genres": {
+            "$in": [
+              "Action",
+              "Drama"
+            ]
+          },
+          "imdb.rating": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "ratingPercentiles": {
+            "$percentile": {
+              "input": "$imdb.rating",
+              "p": [
+                {
+                  "$numberDouble": "0.5"
+                },
+                {
+                  "$numberDouble": "0.9"
+                }
+              ],
+              "method": "approximate"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "ratingPercentiles",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "6.5"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "7.6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Drama"
+            }
+          },
+          {
+            "name": "ratingPercentiles",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$numberDouble": "6.9"
+                  }
+                },
+                {
+                  "exact": {
+                    "$numberDouble": "7.8"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/push/appendMultipleValuesToAnArray",
+  "title": "Append Multiple Values to an Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/push.txt",
+    "blob": "fdb0910d9434d1a5996a946255b051a314b2be99"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "movies",
+    "filter": {
+      "title": "The Dark Knight"
+    },
+    "update": {
+      "$push": {
+        "genres": {
+          "$each": [
+            "Modern Classic",
+            "Award-Winning"
+          ]
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "acknowledged",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "insertedId",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "matchedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "modifiedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "upsertedCount",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

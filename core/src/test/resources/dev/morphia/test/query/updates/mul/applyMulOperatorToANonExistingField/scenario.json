@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/mul/applyMulOperatorToANonExistingField",
+  "title": "Apply $mul Operator to a Non-existing Field",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/mul.txt",
+    "blob": "ae5956964fcbbe75aa1505908f247ec46fb0d8d6"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "Unknown"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "products",
+    "filter": {
+      "_id": {
+        "$numberInt": "2"
+      }
+    },
+    "update": {
+      "$mul": {
+        "price": {
+          "$numberDecimal": "100"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "Unknown"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberLong": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

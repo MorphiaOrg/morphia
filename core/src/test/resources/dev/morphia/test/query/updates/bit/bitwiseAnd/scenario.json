@@ -1,0 +1,76 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/bit/bitwiseAnd",
+  "title": "Bitwise AND",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/bit.txt",
+    "blob": "8cf8522ce2030420f3b272e6316ab52863437435"
+  },
+  "dataset": null,
+  "collections": {
+    "switches": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "expdata": {
+          "$numberInt": "13"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "expdata": {
+          "$numberInt": "3"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "expdata": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "switches",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$bit": {
+        "expdata": {
+          "and": {
+            "$numberInt": "10"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

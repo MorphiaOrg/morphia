@@ -1,0 +1,151 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
+  "title": "Interpolate Identical Values in Different Partitions",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/fill.txt",
+    "blob": "028133c06f1416b89625d18cf6b613bb132d65a9"
+  },
+  "dataset": null,
+  "collections": {
+    "restaurantReviewsMultiple": [
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615161600000"
+          }
+        },
+        "restaurant": "Steve's Pizza",
+        "score": {
+          "$numberInt": "90"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615161600000"
+          }
+        },
+        "restaurant": "Sally's Deli",
+        "score": {
+          "$numberInt": "75"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "restaurantReviewsMultiple",
+    "pipeline": [
+      {
+        "$fill": {
+          "sortBy": {
+            "date": {
+              "$numberInt": "1"
+            }
+          },
+          "partitionBy": {
+            "restaurant": "$restaurant"
+          },
+          "output": {
+            "score": {
+              "method": "linear"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b590"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615161600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Sally's Deli"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "75"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b58f"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615161600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Steve's Pizza"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "90"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}
