@@ -1,6 +1,7 @@
 package dev.morphia.test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.IntFunction;
@@ -8,6 +9,7 @@ import java.util.function.IntFunction;
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonDouble;
+import org.bson.BsonJavaScriptWithScope;
 import org.bson.BsonValue;
 
 /**
@@ -62,12 +64,15 @@ public final class StrictBson {
             // Raw bits, as the audits comparator compares doubles: -0.0 is not 0.0, and NaN payloads differ.
             return Double.doubleToRawLongBits(a.getValue()) == Double.doubleToRawLongBits(b.getValue());
         }
+        if (left instanceof BsonJavaScriptWithScope a && right instanceof BsonJavaScriptWithScope b) {
+            // Its equals compares the scope as a document, ignoring key order.
+            return a.getCode().equals(b.getCode()) && equal(a.getScope(), b.getScope(), path, unordered);
+        }
         return left.getBsonType() == right.getBsonType() && left.equals(right);
     }
 
     /**
-     * {@code at} gives each left element's pointer: the row's own for results, the item's for an array. Strict
-     * equality is an equivalence, so taking the first match never rejects a valid pairing.
+     * {@code at} gives each left element's pointer: the row's own for results, the item's for an array.
      */
     private static boolean equal(List<? extends BsonValue> left, List<? extends BsonValue> right, boolean ordered,
             IntFunction<String> at, Set<String> unordered) {
@@ -82,20 +87,37 @@ public final class StrictBson {
             }
             return true;
         }
-        List<BsonValue> remaining = new ArrayList<>(right);
-        for (int index = 0; index < left.size(); index++) {
-            int match = -1;
-            for (int i = 0; i < remaining.size() && match < 0; i++) {
-                if (equal(left.get(index), remaining.get(i), at.apply(index), unordered)) {
-                    match = i;
-                }
+        // A pointer inside an unordered array names one left item, so a left item may equal some right items and not
+        // others: the pairing is a maximum bipartite matching, not a first match.
+        int size = left.size();
+        boolean[][] fits = new boolean[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                fits[i][j] = equal(left.get(i), right.get(j), at.apply(i), unordered);
             }
-            if (match < 0) {
+        }
+        int[] owner = new int[size];
+        Arrays.fill(owner, -1);
+        for (int i = 0; i < size; i++) {
+            if (!augment(i, fits, owner, new boolean[size])) {
                 return false;
             }
-            remaining.remove(match);
         }
         return true;
+    }
+
+    /** Kuhn's augmenting path: pairs left item {@code i}, re-pairing earlier items when that frees a right item. */
+    private static boolean augment(int i, boolean[][] fits, int[] owner, boolean[] visited) {
+        for (int j = 0; j < fits.length; j++) {
+            if (fits[i][j] && !visited[j]) {
+                visited[j] = true;
+                if (owner[j] < 0 || augment(owner[j], fits, owner, visited)) {
+                    owner[j] = i;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static String child(String path, String segment) {
