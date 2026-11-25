@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "name": "runner/crossDatabaseAlternative",
+  "context": "STAGE",
+  "source": null,
+  "dataset": null,
+  "collections": { "items": [] },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "items",
+    "pipeline": [ { "$out": "copy" } ],
+    "alternatives": [ { "pipeline": [ { "$out": { "db": "elsewhere", "coll": "copy" } } ] } ]
+  },
+  "expected": { "none": "runner self-test" },
+  "comparison": { "order": "ORDERED", "rules": [], "ignore": [], "tolerance": null },
+  "requirements": { "minimumServer": null, "topology": "STANDALONE" }
+}

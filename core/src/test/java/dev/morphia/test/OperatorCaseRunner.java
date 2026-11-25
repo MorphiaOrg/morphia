@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.Aggregation;
@@ -63,6 +64,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class OperatorCaseRunner {
     // Canonical extended JSON, so a failure shows BSON types: relaxed JSON prints an Int64 like an Int32.
     private static final JsonWriterSettings JSON = JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).indent(true).build();
+
+    /** The stages whose argument can name another database, with {@code db} or a {@code {db, coll}} namespace. */
+    private static final Set<String> NAMESPACED = Set.of("$out", "$merge", "$lookup", "$graphLookup", "$unionWith");
 
     private final TestBase test;
 
@@ -457,9 +461,18 @@ public class OperatorCaseRunner {
         if (!present.equals(fields)) {
             unsupported.add("action fields " + action.keySet());
         } else if (action.getString("kind").getValue().equals("aggregate")) {
-            for (BsonValue stage : action.getArray("pipeline")) {
-                if (namesADatabase(stage)) {
-                    unsupported.add("a stage naming another database: " + stage.asDocument().getFirstKey());
+            List<BsonValue> pipelines = new ArrayList<>(List.of(action.getArray("pipeline")));
+            // An alternative spelling runs in place of the action when it matches, so it is held to the same rule.
+            for (BsonValue alternative : action.getArray("alternatives", new BsonArray())) {
+                if (alternative.isDocument() && alternative.asDocument().containsKey("pipeline")) {
+                    pipelines.add(alternative.asDocument().get("pipeline"));
+                }
+            }
+            for (BsonValue pipeline : pipelines) {
+                for (BsonValue stage : pipeline.isArray() ? pipeline.asArray().getValues() : List.of(pipeline)) {
+                    if (namesADatabase(stage)) {
+                        unsupported.add("a stage naming another database: " + stage.asDocument().getFirstKey());
+                    }
                 }
             }
         }
@@ -473,17 +486,27 @@ public class OperatorCaseRunner {
      * {@code $graphLookup} or {@code $unionWith} with a {@code db}), which would make the two behavior runs share
      * state.
      */
-    private static boolean namesADatabase(BsonValue value) {
+    static boolean namesADatabase(BsonValue value) {
         if (value instanceof BsonDocument document) {
-            if (document.containsKey("db")) {
-                return true;
+            for (var entry : document.entrySet()) {
+                if (NAMESPACED.contains(entry.getKey()) && entry.getValue() instanceof BsonDocument argument
+                        && (argument.containsKey("db") || hasDb(argument.get("into")) || hasDb(argument.get("from")))) {
+                    return true;
+                }
+                if (namesADatabase(entry.getValue())) {
+                    return true;
+                }
             }
-            return document.values().stream().anyMatch(OperatorCaseRunner::namesADatabase);
+            return false;
         }
         if (value instanceof BsonArray array) {
             return array.getValues().stream().anyMatch(OperatorCaseRunner::namesADatabase);
         }
         return false;
+    }
+
+    private static boolean hasDb(@Nullable BsonValue namespace) {
+        return namespace instanceof BsonDocument document && document.containsKey("db");
     }
 
     private void seed(MongoDatabase database, BsonDocument collections) {

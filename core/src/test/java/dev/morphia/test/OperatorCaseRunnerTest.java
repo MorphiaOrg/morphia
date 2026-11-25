@@ -2,6 +2,7 @@ package dev.morphia.test;
 
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
@@ -13,6 +14,7 @@ import static dev.morphia.query.filters.Filters.expr;
 import static dev.morphia.query.filters.Filters.ne;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.unset;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,6 +39,27 @@ public class OperatorCaseRunnerTest extends TestBase {
                         "/dev/morphia/test/runner/crossDatabase/scenario.json"),
                         (aggregation) -> aggregation));
         assertTrue(failure.getMessage().contains("a stage naming another database"), failure.getMessage());
+    }
+
+    @Test
+    public void anAlternativeNamingAnotherDatabaseIsRejected() {
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.aggregate(OperatorCase.of(
+                        "/dev/morphia/test/runner/crossDatabaseAlternative/scenario.json"),
+                        (aggregation) -> aggregation));
+        assertTrue(failure.getMessage().contains("a stage naming another database"), failure.getMessage());
+    }
+
+    @Test
+    public void onlyNamespaceArgumentsNameADatabase() {
+        assertFalse(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$match: {db: 'sales'}}")));
+        assertFalse(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$project: {db: 1}}")));
+        assertFalse(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$out: 'copy'}")));
+        assertTrue(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$out: {db: 'other', coll: 'copy'}}")));
+        assertTrue(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$merge: {into: {db: 'other', coll: 'copy'}}}")));
+        assertTrue(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$lookup: {from: {db: 'other', coll: 'c'}, as: 'x'}}")));
+        assertTrue(OperatorCaseRunner.namesADatabase(
+                BsonDocument.parse("{$facet: {a: [{$unionWith: {db: 'other', coll: 'c'}}]}}")));
     }
 
     @Test

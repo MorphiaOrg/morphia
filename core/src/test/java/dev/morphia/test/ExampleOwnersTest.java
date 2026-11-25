@@ -30,8 +30,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * The methods in {@link #MANUAL} are reviewed tests that own no fixture.
  */
 public class ExampleOwnersTest {
-    private static final Path RESOURCES = Path.of("src/test/resources");
-    private static final Path CLASSES = Path.of("target/test-classes");
+    /** The compiled test classes, wherever the build runs from; the module's sources are two levels up. */
+    private static final Path CLASSES = classes();
+    private static final Path RESOURCES = CLASSES.resolve("../../src/test/resources").normalize();
     private static final List<String> FAMILIES = List.of("aggregation/expressions", "aggregation/stages", "query/filters",
             "query/updates");
 
@@ -54,7 +55,12 @@ public class ExampleOwnersTest {
     public void everyExampleTestOwnsAFixture() throws IOException {
         Set<String> problems = new TreeSet<>();
         for (Class<?> type : exampleClasses()) {
-            for (Method method : type.getDeclaredMethods()) {
+            // Public methods include inherited tests, which JUnit runs too, but not the base classes' own.
+            for (Method method : type.getMethods()) {
+                if (!TemplatedTestBase.class.isAssignableFrom(method.getDeclaringClass())
+                        || method.getDeclaringClass() == TemplatedTestBase.class) {
+                    continue;
+                }
                 if (method.getAnnotation(Test.class) == null) {
                     continue;
                 }
@@ -80,10 +86,7 @@ public class ExampleOwnersTest {
     public void everyScenarioHasItsTest() throws IOException {
         Set<String> problems = new TreeSet<>();
         for (String family : FAMILIES) {
-            Path root = RESOURCES.resolve("dev/morphia/test").resolve(family);
-            if (!Files.isDirectory(root)) {
-                continue;
-            }
+            Path root = existing(RESOURCES.resolve("dev/morphia/test").resolve(family));
             try (Stream<Path> files = Files.walk(root)) {
                 for (Path scenario : files.filter(it -> it.getFileName().toString().equals("scenario.json")).toList()) {
                     problems.addAll(owner(family, root.relativize(scenario)));
@@ -106,10 +109,14 @@ public class ExampleOwnersTest {
         String where = family + "/" + operator + "/" + stem;
         Method method;
         try {
-            method = Class.forName(className).getDeclaredMethod(methodName);
+            method = Class.forName(className).getMethod(methodName);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             problems.add(where + " has no test " + className + "#" + methodName);
             return problems;
+        }
+        String problem = CurrentTest.problem(method);
+        if (problem != null) {
+            problems.add(where + ": " + className + "#" + methodName + " " + problem);
         }
         BsonDocument scenario = BsonDocument.parse(Files.readString(RESOURCES.resolve("dev/morphia/test").resolve(family)
                 .resolve(relative), StandardCharsets.UTF_8));
@@ -133,10 +140,7 @@ public class ExampleOwnersTest {
     private static List<Class<?>> exampleClasses() throws IOException {
         List<Class<?>> classes = new ArrayList<>();
         for (String family : FAMILIES) {
-            Path root = CLASSES.resolve("dev/morphia/test").resolve(family);
-            if (!Files.isDirectory(root)) {
-                continue;
-            }
+            Path root = existing(CLASSES.resolve("dev/morphia/test").resolve(family));
             try (Stream<Path> files = Files.list(root)) {
                 for (Path file : files.filter(it -> it.toString().endsWith(".class") && !it.toString().contains("$")).toList()) {
                     String name = CLASSES.relativize(file).toString().replace('/', '.').replaceAll("\\.class$", "");
@@ -152,6 +156,22 @@ public class ExampleOwnersTest {
             }
         }
         return classes;
+    }
+
+    /** A missing root would let both checks pass without looking at anything. */
+    private static Path existing(Path root) {
+        if (!Files.isDirectory(root)) {
+            throw new IllegalStateException("No such directory: " + root.toAbsolutePath());
+        }
+        return root;
+    }
+
+    private static Path classes() {
+        try {
+            return Path.of(ExampleOwnersTest.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        } catch (java.net.URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private static String capitalize(String value) {
