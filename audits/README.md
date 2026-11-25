@@ -59,6 +59,6 @@ Each runs through the exec plugin from the repository root:
 | `catalog/name-backport.json` | The ledger renaming master's `testExampleN` tests and `exampleN` fixtures to descriptive names (step 4). |
 | `catalog/generation-review.json` | The reviewed page-error exclusions, until step 5 moves them into the overrides file. |
 
-The golden vectors in `core/src/test/resources/dev/morphia/test/vectors/` pin this module's strict
-and printed-result comparisons. Step 3 adds core's Java ports of both, which run the same vectors,
-so the two sides stay in agreement.
+The golden vectors in `core/src/test/resources/dev/morphia/test/vectors/` hold this module's strict
+and printed-result comparisons and core's Java ports of them (`StrictBson`, `PrintedResults`) to the
+same verdicts.

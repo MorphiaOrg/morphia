@@ -1,0 +1,746 @@
+{
+  "inputKeys": "An input key that starts with # is read with $ in its place: the JSON reader turns a {$regex, $options} document into a regular expression.",
+  "vectors": [
+    {
+      "name": "cond document to array",
+      "shape": "PIPELINE",
+      "rules": [
+        "COND_ARRAY"
+      ],
+      "input": [
+        {
+          "$project": {
+            "d": {
+              "$cond": {
+                "if": {
+                  "$gte": [
+                    "$qty",
+                    {
+                      "$numberInt": "250"
+                    }
+                  ]
+                },
+                "then": {
+                  "$numberInt": "30"
+                },
+                "else": {
+                  "$numberInt": "20"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"d\": {\"$cond\": [{\"$gte\": [\"$qty\", {\"$numberInt\": \"250\"}]}, {\"$numberInt\": \"30\"}, {\"$numberInt\": \"20\"}]}}}]}"
+    },
+    {
+      "name": "cond with other keys is untouched",
+      "shape": "PIPELINE",
+      "rules": [
+        "COND_ARRAY"
+      ],
+      "input": [
+        {
+          "$project": {
+            "d": {
+              "$cond": {
+                "if": true,
+                "then": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"d\": {\"$cond\": {\"if\": true, \"then\": {\"$numberInt\": \"1\"}}}}}]}"
+    },
+    {
+      "name": "eq shorthand in a find filter",
+      "shape": "FIND",
+      "rules": [
+        "EQ_SHORTHAND"
+      ],
+      "input": [
+        {
+          "qty": {
+            "$eq": {
+              "$numberInt": "20"
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"qty\": {\"$numberInt\": \"20\"}}]}"
+    },
+    {
+      "name": "eq with an operator document is kept",
+      "shape": "FIND",
+      "rules": [
+        "EQ_SHORTHAND"
+      ],
+      "input": [
+        {
+          "qty": {
+            "$eq": {
+              "$gt": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"qty\": {\"$eq\": {\"$gt\": {\"$numberInt\": \"1\"}}}}]}"
+    },
+    {
+      "name": "eq with a regex is kept",
+      "shape": "FIND",
+      "rules": [
+        "EQ_SHORTHAND"
+      ],
+      "input": [
+        {
+          "name": {
+            "$eq": {
+              "$regularExpression": {
+                "pattern": "^a",
+                "options": ""
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"name\": {\"$eq\": {\"$regularExpression\": {\"pattern\": \"^a\", \"options\": \"\"}}}}]}"
+    },
+    {
+      "name": "regex forms",
+      "shape": "FIND",
+      "rules": [
+        "REGEX_FORM"
+      ],
+      "input": [
+        {
+          "a": {
+            "$regularExpression": {
+              "pattern": "p",
+              "options": "im"
+            }
+          },
+          "b": {
+            "#regex": "p",
+            "#options": "im"
+          },
+          "c": {
+            "$regex": {
+              "$regularExpression": {
+                "pattern": "p",
+                "options": ""
+              }
+            },
+            "$options": "i"
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"a\": {\"$regex\": \"p\", \"$options\": \"im\"}, \"b\": {\"$regex\": \"p\", \"$options\": \"im\"}, \"c\": {\"$regex\": \"p\", \"$options\": \"i\"}}]}"
+    },
+    {
+      "name": "regex options in both places are kept",
+      "shape": "FIND",
+      "rules": [
+        "REGEX_FORM"
+      ],
+      "input": [
+        {
+          "c": {
+            "$regex": {
+              "$regularExpression": {
+                "pattern": "p",
+                "options": "m"
+              }
+            },
+            "$options": "i"
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"c\": {\"$regex\": {\"$regularExpression\": {\"pattern\": \"p\", \"options\": \"m\"}}, \"$options\": \"i\"}}]}"
+    },
+    {
+      "name": "field operators become an and",
+      "shape": "FIND",
+      "rules": [
+        "FIELD_OPERATORS_AND"
+      ],
+      "input": [
+        {
+          "qty": {
+            "$gt": {
+              "$numberInt": "1"
+            },
+            "$lt": {
+              "$numberInt": "5"
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$and\": [{\"qty\": {\"$gt\": {\"$numberInt\": \"1\"}}}, {\"qty\": {\"$lt\": {\"$numberInt\": \"5\"}}}]}]}"
+    },
+    {
+      "name": "elemMatch is not split",
+      "shape": "FIND",
+      "rules": [
+        "FIELD_OPERATORS_AND"
+      ],
+      "input": [
+        {
+          "qty": {
+            "$elemMatch": {
+              "$gt": {
+                "$numberInt": "1"
+              }
+            },
+            "$size": {
+              "$numberInt": "2"
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"qty\": {\"$elemMatch\": {\"$gt\": {\"$numberInt\": \"1\"}}, \"$size\": {\"$numberInt\": \"2\"}}}]}"
+    },
+    {
+      "name": "single argument array unwrapped",
+      "shape": "PIPELINE",
+      "rules": [
+        "SINGLE_ARGUMENT_ARRAY"
+      ],
+      "input": [
+        {
+          "$project": {
+            "a": {
+              "$isArray": [
+                "$x"
+              ]
+            },
+            "b": {
+              "$isArray": [
+                [
+                  {
+                    "$numberInt": "1"
+                  }
+                ]
+              ]
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"a\": {\"$isArray\": \"$x\"}, \"b\": {\"$isArray\": [[{\"$numberInt\": \"1\"}]]}}}]}"
+    },
+    {
+      "name": "size in a query keeps its array",
+      "shape": "FIND",
+      "rules": [
+        "SINGLE_ARGUMENT_ARRAY"
+      ],
+      "input": [
+        {
+          "tags": {
+            "$size": [
+              {
+                "$numberInt": "2"
+              }
+            ]
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"tags\": {\"$size\": [{\"$numberInt\": \"2\"}]}}]}"
+    },
+    {
+      "name": "project id first",
+      "shape": "PIPELINE",
+      "rules": [
+        "PROJECT_ID_FIRST"
+      ],
+      "input": [
+        {
+          "$project": {
+            "b": {
+              "$numberInt": "1"
+            },
+            "_id": {
+              "$numberInt": "0"
+            },
+            "a": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"_id\": {\"$numberInt\": \"0\"}, \"b\": {\"$numberInt\": \"1\"}, \"a\": {\"$numberInt\": \"1\"}}}]}"
+    },
+    {
+      "name": "projection flags",
+      "shape": "FIND",
+      "rules": [
+        "PROJECTION_FLAGS"
+      ],
+      "input": [
+        {},
+        {
+          "a": true,
+          "b": false,
+          "c": {
+            "$eq": [
+              true,
+              "$x"
+            ]
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{}, {\"a\": {\"$numberInt\": \"1\"}, \"b\": {\"$numberInt\": \"0\"}, \"c\": {\"$eq\": [true, \"$x\"]}}]}"
+    },
+    {
+      "name": "unwind path",
+      "shape": "PIPELINE",
+      "rules": [
+        "UNWIND_PATH"
+      ],
+      "input": [
+        {
+          "$unwind": "$sizes"
+        }
+      ],
+      "canonical": "{\"v\": [{\"$unwind\": {\"path\": \"$sizes\"}}]}"
+    },
+    {
+      "name": "named arguments sorted, nested kept",
+      "shape": "PIPELINE",
+      "rules": [
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$project": {
+            "f": {
+              "$filter": {
+                "input": "$i",
+                "cond": {
+                  "b": {
+                    "$numberInt": "1"
+                  },
+                  "a": {
+                    "$numberInt": "2"
+                  }
+                },
+                "as": "x"
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"f\": {\"$filter\": {\"as\": \"x\", \"cond\": {\"b\": {\"$numberInt\": \"1\"}, \"a\": {\"$numberInt\": \"2\"}}, \"input\": \"$i\"}}}}]}"
+    },
+    {
+      "name": "literal is data",
+      "shape": "PIPELINE",
+      "rules": [
+        "COND_ARRAY",
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$project": {
+            "l": {
+              "$literal": {
+                "$cond": {
+                  "if": {
+                    "$numberInt": "1"
+                  },
+                  "then": {
+                    "$numberInt": "2"
+                  },
+                  "else": {
+                    "$numberInt": "3"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"l\": {\"$literal\": {\"$cond\": {\"if\": {\"$numberInt\": \"1\"}, \"then\": {\"$numberInt\": \"2\"}, \"else\": {\"$numberInt\": \"3\"}}}}}}]}"
+    },
+    {
+      "name": "no rules change nothing",
+      "shape": "PIPELINE",
+      "rules": [],
+      "input": [
+        {
+          "$project": {
+            "b": {
+              "$numberInt": "1"
+            },
+            "_id": {
+              "$numberInt": "0"
+            },
+            "c": {
+              "$cond": {
+                "if": {
+                  "$numberInt": "1"
+                },
+                "then": {
+                  "$numberInt": "2"
+                },
+                "else": {
+                  "$numberInt": "3"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"b\": {\"$numberInt\": \"1\"}, \"_id\": {\"$numberInt\": \"0\"}, \"c\": {\"$cond\": {\"if\": {\"$numberInt\": \"1\"}, \"then\": {\"$numberInt\": \"2\"}, \"else\": {\"$numberInt\": \"3\"}}}}}]}"
+    },
+    {
+      "name": "update filter and update",
+      "shape": "UPDATE",
+      "rules": [
+        "EQ_SHORTHAND",
+        "COND_ARRAY"
+      ],
+      "input": [
+        {
+          "a": {
+            "$eq": {
+              "$numberInt": "1"
+            }
+          }
+        },
+        {
+          "$set": {
+            "b": {
+              "$cond": {
+                "if": {
+                  "$numberInt": "1"
+                },
+                "then": {
+                  "$numberInt": "2"
+                },
+                "else": {
+                  "$numberInt": "3"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"a\": {\"$numberInt\": \"1\"}}, {\"$set\": {\"b\": {\"$cond\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}, {\"$numberInt\": \"3\"}]}}}]}"
+    },
+    {
+      "name": "lookup pipeline and facet",
+      "shape": "PIPELINE",
+      "rules": [
+        "COND_ARRAY",
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$lookup": {
+            "from": "o",
+            "pipeline": [
+              {
+                "$project": {
+                  "c": {
+                    "$cond": {
+                      "if": {
+                        "$numberInt": "1"
+                      },
+                      "then": {
+                        "$numberInt": "2"
+                      },
+                      "else": {
+                        "$numberInt": "3"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "as": "x"
+          }
+        },
+        {
+          "$facet": {
+            "f": [
+              {
+                "$match": {
+                  "a": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$lookup\": {\"as\": \"x\", \"from\": \"o\", \"pipeline\": [{\"$project\": {\"c\": {\"$cond\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}, {\"$numberInt\": \"3\"}]}}}]}}, {\"$facet\": {\"f\": [{\"$match\": {\"a\": {\"$numberInt\": \"1\"}}}]}}]}"
+    },
+    {
+      "name": "regex string pattern with unsorted options",
+      "shape": "FIND",
+      "rules": [
+        "REGEX_FORM"
+      ],
+      "input": [
+        {
+          "b": {
+            "#regex": "p",
+            "#options": "mi"
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"b\": {\"$regex\": \"p\", \"$options\": \"im\"}}]}"
+    },
+    {
+      "name": "field operators split inside or, and, nor",
+      "shape": "FIND",
+      "rules": [
+        "FIELD_OPERATORS_AND"
+      ],
+      "input": [
+        {
+          "$or": [
+            {
+              "q": {
+                "$gt": {
+                  "$numberInt": "1"
+                },
+                "$lt": {
+                  "$numberInt": "5"
+                }
+              }
+            },
+            {
+              "r": {
+                "$numberInt": "1"
+              }
+            }
+          ],
+          "$nor": [
+            {
+              "s": {
+                "$gte": {
+                  "$numberInt": "2"
+                },
+                "$lte": {
+                  "$numberInt": "3"
+                }
+              }
+            }
+          ],
+          "$and": [
+            {
+              "t": {
+                "$ne": {
+                  "$numberInt": "1"
+                },
+                "$exists": true
+              }
+            }
+          ]
+        }
+      ],
+      "canonical": "{\"v\": [{\"$or\": [{\"$and\": [{\"q\": {\"$gt\": {\"$numberInt\": \"1\"}}}, {\"q\": {\"$lt\": {\"$numberInt\": \"5\"}}}]}, {\"r\": {\"$numberInt\": \"1\"}}], \"$nor\": [{\"$and\": [{\"s\": {\"$gte\": {\"$numberInt\": \"2\"}}}, {\"s\": {\"$lte\": {\"$numberInt\": \"3\"}}}]}], \"$and\": [{\"$and\": [{\"t\": {\"$ne\": {\"$numberInt\": \"1\"}}}, {\"t\": {\"$exists\": true}}]}]}]}"
+    },
+    {
+      "name": "eq and regex through a pipeline match",
+      "shape": "PIPELINE",
+      "rules": [
+        "EQ_SHORTHAND",
+        "REGEX_FORM"
+      ],
+      "input": [
+        {
+          "$match": {
+            "a": {
+              "$eq": {
+                "$numberInt": "1"
+              }
+            },
+            "n": {
+              "$regularExpression": {
+                "pattern": "^x",
+                "options": "is"
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$match\": {\"a\": {\"$numberInt\": \"1\"}, \"n\": {\"$regex\": \"^x\", \"$options\": \"is\"}}}]}"
+    },
+    {
+      "name": "unionWith pipeline",
+      "shape": "PIPELINE",
+      "rules": [
+        "COND_ARRAY",
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$unionWith": {
+            "pipeline": [
+              {
+                "$project": {
+                  "c": {
+                    "$cond": {
+                      "if": {
+                        "$numberInt": "1"
+                      },
+                      "then": {
+                        "$numberInt": "2"
+                      },
+                      "else": {
+                        "$numberInt": "3"
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "coll": "o"
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$unionWith\": {\"coll\": \"o\", \"pipeline\": [{\"$project\": {\"c\": {\"$cond\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}, {\"$numberInt\": \"3\"}]}}}]}}]}"
+    },
+    {
+      "name": "projection flags in a project stage",
+      "shape": "PIPELINE",
+      "rules": [
+        "PROJECTION_FLAGS"
+      ],
+      "input": [
+        {
+          "$project": {
+            "a": true,
+            "_id": false
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$project\": {\"a\": {\"$numberInt\": \"1\"}, \"_id\": {\"$numberInt\": \"0\"}}}]}"
+    },
+    {
+      "name": "eq with an empty document collapses",
+      "shape": "FIND",
+      "rules": [
+        "EQ_SHORTHAND"
+      ],
+      "input": [
+        {
+          "f": {
+            "$eq": {}
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"f\": {}}]}"
+    },
+    {
+      "name": "regex expression flags move to options",
+      "shape": "PIPELINE",
+      "rules": [
+        "REGEX_OPTIONS"
+      ],
+      "input": [
+        {
+          "$addFields": {
+            "a": {
+              "$regexFind": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "^s",
+                    "options": "mi"
+                  }
+                }
+              }
+            },
+            "b": {
+              "$regexMatch": {
+                "input": "$d",
+                "regex": "x",
+                "options": "si"
+              }
+            },
+            "c": {
+              "$regexFindAll": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "l",
+                    "options": "i"
+                  }
+                },
+                "options": "m"
+              }
+            },
+            "e": {
+              "$regexFind": {
+                "input": "$d",
+                "regex": {
+                  "$regularExpression": {
+                    "pattern": "p",
+                    "options": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$addFields\": {\"a\": {\"$regexFind\": {\"input\": \"$d\", \"regex\": \"^s\", \"options\": \"im\"}}, \"b\": {\"$regexMatch\": {\"input\": \"$d\", \"regex\": \"x\", \"options\": \"is\"}}, \"c\": {\"$regexFindAll\": {\"input\": \"$d\", \"regex\": {\"$regularExpression\": {\"pattern\": \"l\", \"options\": \"i\"}}, \"options\": \"m\"}}, \"e\": {\"$regexFind\": {\"input\": \"$d\", \"regex\": \"p\"}}}}]}"
+    },
+    {
+      "name": "text keys sorted",
+      "shape": "FIND",
+      "rules": [
+        "NAMED_ARGUMENTS"
+      ],
+      "input": [
+        {
+          "$text": {
+            "$search": "abc",
+            "$caseSensitive": true
+          },
+          "qty": {
+            "$gt": 1
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$text\": {\"$caseSensitive\": true, \"$search\": \"abc\"}, \"qty\": {\"$gt\": {\"$numberInt\": \"1\"}}}]}"
+    },
+    {
+      "name": "regex expression field paths are kept",
+      "shape": "PIPELINE",
+      "rules": [
+        "REGEX_OPTIONS"
+      ],
+      "input": [
+        {
+          "$addFields": {
+            "a": {
+              "$regexMatch": {
+                "input": "$s",
+                "regex": "$p"
+              }
+            },
+            "b": {
+              "$regexMatch": {
+                "input": "$s",
+                "regex": "x",
+                "options": "$o"
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$addFields\": {\"a\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"$p\"}}, \"b\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"x\", \"options\": \"$o\"}}}}]}"
+    }
+  ]
+}

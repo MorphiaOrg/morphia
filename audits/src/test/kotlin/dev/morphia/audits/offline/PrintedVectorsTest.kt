@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 /**
- * Pins the printed-result comparison; core's `PrintedResults` will run the same vectors (step 3).
+ * Core's `PrintedResults` runs the same vectors, so the Kotlin comparison and its Java port agree.
  */
 class PrintedVectorsTest {
     @Test

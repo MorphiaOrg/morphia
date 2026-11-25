@@ -12,7 +12,7 @@ import org.bson.BsonDocument
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-/** Pins the strict comparator; core's `StrictBson` will run the same vectors (step 3). */
+/** Core's `StrictBson` runs the same vectors, so the two strict comparators agree. */
 class StrictVectorsTest {
     companion object {
         /** A vector's declared unordered arrays, when it declares any. */

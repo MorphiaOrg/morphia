@@ -7,8 +7,10 @@ on:
       - 'audits/**'
       - 'pom.xml'
       - '.github/workflows/audits.yml'
-      # The shared comparison vectors the reader's tests read.
+      # The shared comparison vectors, which core's comparators also run.
       - 'core/src/test/resources/dev/morphia/test/vectors/**'
+      - 'core/src/test/java/dev/morphia/test/StrictBson.java'
+      - 'core/src/test/java/dev/morphia/test/PrintedResults.java'
 
 permissions:
   contents: read

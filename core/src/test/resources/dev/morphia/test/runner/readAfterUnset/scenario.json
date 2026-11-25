@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "name": "runner/readAfterUnset",
+  "context": "UPDATE",
+  "source": null,
+  "dataset": null,
+  "collections": { "items": [ { "_id": { "$numberInt": "1" }, "tags": [ "a" ] } ] },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "items",
+    "filter": { "$expr": { "$gt": [ { "$size": "$tags" }, { "$numberInt": "0" } ] } },
+    "update": { "$unset": { "tags": "" } },
+    "multi": false,
+    "read": { "collection": "items", "filter": {} }
+  },
+  "expected": { "documents": [ { "_id": { "$numberInt": "1" } } ] },
+  "comparison": { "order": "ORDERED", "rules": [], "ignore": [], "tolerance": null },
+  "requirements": { "minimumServer": null, "topology": "STANDALONE" }
+}

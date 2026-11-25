@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "name": "runner/printedMismatch",
+  "context": "STAGE",
+  "source": null,
+  "dataset": null,
+  "collections": { "items": [ { "_id": 1, "v": { "$numberLong": "4" } } ] },
+  "indexes": [],
+  "action": { "kind": "aggregate", "collection": "items", "pipeline": [ { "$project": { "v": 1 } } ] },
+  "expected": { "printed": [ { "document": [ { "name": "_id", "value": { "whole": 1 } }, { "name": "v", "value": { "whole": 4 } } ] } ] },
+  "comparison": { "order": "ORDERED", "rules": [], "ignore": [], "tolerance": null },
+  "requirements": { "minimumServer": null, "topology": "STANDALONE" }
+}
