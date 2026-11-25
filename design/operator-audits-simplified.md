@@ -623,6 +623,14 @@ reworks what it drops. Each step is a PR stacked on the one before:
 6. **API check** from javadoc tags.
 7. **Issue filing.** `publish`, adapted, and the scheduled job.
 
-Separately, the stack's four fixes to Morphia itself go to master as their own small PRs: the
-ranked-accumulator `sortBy` encoding, whole-number parameters written as Int32, the `$toUUID` and
-`$documents` releases, and the capability fixes. The old stack's PRs are closed once these land.
+**Fixes found by the old stack come with the new one.** No old PR is closed until its fixes are
+in the new series:
+- **Morphia fixes**, in step 2's PR as their own commit:
+  - the ranked-accumulator `sortBy` encoding, with its test;
+  - whole-number parameters written as Int32 (`CodecHelper.whole`, across 11 codecs);
+  - the `$toUUID` and `$documents` server releases;
+  - `AggregationOptions.let`'s server release.
+- **Test-body fixes** (wrong DSL calls in master's tests, and #4553's ordered maps for four update
+  tests) come with step 4, which takes the stack's test bodies.
+- **Unchanged:** the `$merge` `keepExisting` fix (#4591) was never in the stack, and stays its own
+  PR.
