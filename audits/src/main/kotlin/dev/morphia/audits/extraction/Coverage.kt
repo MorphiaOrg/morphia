@@ -75,20 +75,21 @@ object Coverage {
         return inventory.pages
             .filter { it.context in Extraction.FAMILIES }
             .flatMap { page ->
-                page.examples
-                    // An owned example must still have its scenario.
-                    .filter {
-                        it.status != ExampleStatus.OWNED ||
-                            !Files.isRegularFile(
-                                repository.resolve("$RESOURCES/${it.owner}/scenario.json")
-                            )
-                    }
-                    .filter {
-                        Triple(page.id, it.title, Overrides.identity(it.blocks)) !in excluded
-                    }
-                    .map {
-                        "${page.id} \"${it.title}\": ${it.status}${it.detail?.let { d -> " ($d)" } ?: ""}"
-                    }
+                page.problems.map { "${page.id}: the reader couldn't read the page: $it" } +
+                    page.examples
+                        // An owned example must still have its scenario.
+                        .filter {
+                            it.status != ExampleStatus.OWNED ||
+                                !Files.isRegularFile(
+                                    repository.resolve("$RESOURCES/${it.owner}/scenario.json")
+                                )
+                        }
+                        .filter {
+                            Triple(page.id, it.title, Overrides.identity(it.blocks)) !in excluded
+                        }
+                        .map {
+                            "${page.id} \"${it.title}\": ${it.status}${it.detail?.let { d -> " ($d)" } ?: ""}"
+                        }
             }
     }
 

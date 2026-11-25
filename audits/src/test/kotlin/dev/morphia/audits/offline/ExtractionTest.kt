@@ -1,5 +1,6 @@
 package dev.morphia.audits.offline
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import dev.morphia.audits.extraction.BlockRole
 import dev.morphia.audits.extraction.Coverage
 import dev.morphia.audits.extraction.Documented
@@ -12,10 +13,12 @@ import dev.morphia.audits.extraction.ExampleStatus
 import dev.morphia.audits.extraction.Extraction
 import dev.morphia.audits.extraction.FormSource
 import dev.morphia.audits.extraction.Overrides
+import dev.morphia.audits.extraction.ScenarioPatch
 import dev.morphia.audits.extraction.SourceBlock
 import java.nio.file.Files
 import java.nio.file.Path
 import org.bson.BsonDocument
+import org.bson.BsonString
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -229,6 +232,72 @@ class ExtractionTest {
         assertEquals(
             emptyList<String>(),
             Coverage.missingScenarios(repository, inventory, ExampleOverrides()),
+        )
+    }
+
+    @Test
+    fun aPatchThatNamesAnotherDatabaseIsRefused() {
+        val pipeline =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1 }])"),
+                block(BlockRole.ACTION, "db.items.aggregate([{ \$out: \"copy\" }])"),
+            )
+        val page = inventory().pages[0]
+        val override =
+            ExampleOverride(
+                "query/filters/gt",
+                page.examples[0].title,
+                Overrides.identity(pipeline),
+                "reason",
+                patches =
+                    listOf(
+                        ScenarioPatch(
+                            "/action/pipeline/0/\$out",
+                            Overrides.digest(BsonString("copy")),
+                            ObjectMapper().readTree("""{"db": "reporting", "coll": "copy"}"""),
+                        )
+                    ),
+            )
+        val result =
+            Extraction.extract(
+                repository,
+                inventory()
+                    .copy(
+                        pages =
+                            listOf(
+                                page.copy(
+                                    examples = listOf(page.examples[0].copy(blocks = pipeline))
+                                )
+                            )
+                    ),
+                ExampleOverrides(overrides = listOf(override)),
+            )
+        assertEquals(
+            listOf("a stage naming another database: \$out"),
+            result.failures.map { it.detail },
+        )
+    }
+
+    @Test
+    fun aPageTheReaderCouldNotReadFailsTheAudit() {
+        val page =
+            inventory()
+                .pages[0]
+                .copy(
+                    examples = emptyList(),
+                    problems = listOf("MISSING_SECTION: no examples section"),
+                )
+        val missing =
+            Coverage.missingScenarios(
+                repository,
+                inventory().copy(pages = listOf(page)),
+                ExampleOverrides(),
+            )
+        assertEquals(
+            listOf(
+                "query/filters/gt: the reader couldn't read the page: MISSING_SECTION: no examples section"
+            ),
+            missing,
         )
     }
 }

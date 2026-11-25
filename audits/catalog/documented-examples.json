@@ -4489,6 +4489,7 @@
     "includes" : [ ],
     "operator" : "minMaxScaler",
     "pageBlob" : "b3c30cad4be713deef541856de0fc99c8c50a586",
+    "problems" : [ "GROUP_COUNT_DROP: Observed 0 reference groups, expected at least 1", "UNRESOLVED_LANGUAGE: Input language/tab is missing, conflicting or outside the declared policies" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/minMaxScaler.txt"
@@ -8751,6 +8752,7 @@
     } ],
     "operator" : "changeStreamSplitLargeEvent",
     "pageBlob" : "4e42a6b41fa8f4358b753f1f139c624088a0ade6",
+    "problems" : [ "GROUP_COUNT_DROP: Observed 0 reference groups, expected at least 1" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/changeStreamSplitLargeEvent.txt"
@@ -8916,6 +8918,7 @@
     } ],
     "operator" : "currentOp",
     "pageBlob" : "97d72474ff98a27451ac32bc5729ca8b0f8f583b",
+    "problems" : [ "UNRESOLVED_LANGUAGE: Input language/tab is missing, conflicting or outside the declared policies" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/currentOp.txt"
@@ -10400,6 +10403,7 @@
     } ],
     "operator" : "merge",
     "pageBlob" : "6154426511a893c23664d8eb81e5ccca03331a2c",
+    "problems" : [ "PARSER_SOURCE_ERROR: CannotOpenFile: Error opening dbx/csharp/aggregation/rst-files/method-intro.rst: UNRESOLVED_PINNED_RESOURCE: https://raw.githubusercontent.com/10gen/docs-shared/main/dbx/csharp/aggregation/rst-files/method-intro.rst" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/merge.txt"
@@ -10906,6 +10910,7 @@
     } ],
     "operator" : "rankFusion",
     "pageBlob" : "bf2c2ea4ac751753616ca5643bed3a60b65b5efe",
+    "problems" : [ "GROUP_COUNT_DROP: Observed 0 reference groups, expected at least 1", "UNRESOLVED_LANGUAGE: Input language/tab is missing, conflicting or outside the declared policies" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/rankFusion.txt"
@@ -11339,6 +11344,7 @@
     "includes" : [ ],
     "operator" : "scoreFusion",
     "pageBlob" : "547597fc21f23ed8ef37a26bbf60f09f8fb7a976",
+    "problems" : [ "GROUP_COUNT_DROP: Observed 0 reference groups, expected at least 1", "UNRESOLVED_LANGUAGE: Input language/tab is missing, conflicting or outside the declared policies" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/aggregation/scoreFusion.txt"
@@ -12269,6 +12275,7 @@
     "includes" : [ ],
     "operator" : "all",
     "pageBlob" : "06c88ad754b8abef8f6c48849daf6168d2bbb64f",
+    "problems" : [ "UNASSIGNED_CODE: 1 selected reference/unknown blocks have no explicit io owner; declare grouping/setup before promotion", "UNSUPPORTED_SHARED_SETUP: Declared shared setup is not a closed setup-only program" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/query/all.txt"
@@ -13359,6 +13366,7 @@
     "includes" : [ ],
     "operator" : "jsonSchema",
     "pageBlob" : "3d6169733aaa5cbb60867fecad8c76b796a8eb42",
+    "problems" : [ "GROUP_COUNT_DROP: Observed 0 reference groups, expected at least 1" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/query/jsonSchema.txt"
@@ -14134,6 +14142,7 @@
     "includes" : [ ],
     "operator" : "regex",
     "pageBlob" : "15c439109f30b8b073365973147384da07bb16d2",
+    "problems" : [ "UNRESOLVED_LANGUAGE: Input language/tab is missing, conflicting or outside the declared policies" ],
     "source" : {
       "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
       "path" : "content/manual/manual/source/reference/operator/query/regex.txt"

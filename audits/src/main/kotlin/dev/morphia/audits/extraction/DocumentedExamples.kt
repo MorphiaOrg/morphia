@@ -83,6 +83,11 @@ data class DocumentedPage(
     val pageBlob: String,
     val includes: List<FormInclude>,
     val examples: List<DocumentedExample>,
+    /**
+     * What the reader couldn't read on the page, such as a missing section: the page's examples are
+     * incomplete, so the audit fails until the plan or the reader is fixed.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY) val problems: List<String> = emptyList(),
 ) {
     /** The page's identity, `<context>/<operator>`, as reviews and overrides name it. */
     @get:JsonIgnore
@@ -190,6 +195,10 @@ object DocumentedExamples {
                         reviewed.filter { it.page == operator.id },
                         used,
                     ),
+                    report.problems
+                        .filter { it.rule == rule.id }
+                        .map { "${it.code}: ${it.message}" }
+                        .distinct(),
                 )
         }
         val examples = documented.flatMap { it.examples }

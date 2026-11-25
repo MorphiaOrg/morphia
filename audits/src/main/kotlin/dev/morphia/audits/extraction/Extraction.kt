@@ -119,16 +119,20 @@ object Extraction {
                                     return@examples fail(failure.message!!)
                                 }
                             // The runner refuses a stage that reads or writes another database,
-                            // since its two behavior runs would share it.
-                            if (documented.shape == ActionShape.PIPELINE) {
-                                (documented.action + documented.alternatives.flatten())
-                                    .firstOrNull(::namesADatabase)
-                                    ?.let {
-                                        return@examples fail(
-                                            "a stage naming another database: ${it.asDocument().firstKey}"
-                                        )
-                                    }
-                            }
+                            // since its two behavior runs would share it. The written action is
+                            // checked, patches and alternatives included.
+                            val action = BsonDocument.parse(text).getDocument("action")
+                            (listOfNotNull(action["pipeline"]) +
+                                    action.getArray("alternatives", BsonArray()).mapNotNull {
+                                        it.asDocument()["pipeline"]
+                                    })
+                                .flatMap { it.asArray() }
+                                .firstOrNull(::namesADatabase)
+                                ?.let {
+                                    return@examples fail(
+                                        "a stage naming another database: ${it.asDocument().firstKey}"
+                                    )
+                                }
                             // A page that retitles an example would otherwise get a second
                             // scenario beside the one its test reads.
                             twin(repository, path, text)?.let { existing ->
