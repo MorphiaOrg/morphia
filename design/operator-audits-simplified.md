@@ -335,7 +335,7 @@ inventory diff and the baseline diff. Then write tests for the new examples.
 ### 6. Migration from the stack
 
 1. **Keep #4530's renames.** Methods and folders are already title-based. Keep its reviewed naming
-   catalogs too: `example-names.json` (the 92 reviewed names for generic or shared titles) and
+   catalogs too: `example-names.json` (the 93 reviewed names for generic or shared titles) and
    `name-backport-review.json` (reviewed stems for collisions).
 2. **Keep the reader and what it depends on.**
    - The reader: `sources`, `documents`, `shell`, `scenarios`, `naming` (7,705 lines).
@@ -478,7 +478,7 @@ inputs for the runner rather than docs examples.
 |---|---|---|
 | `schemaVersion` | Int32 | Format version. `1`. |
 | `name` | string | The fixture path below the test resources, `<family>/<operator>/<stem>`, e.g. `aggregation/expressions/regexFind/regexFlags`. It must match the file's folder. |
-| `title` | string | The example's display title. Usually the title on the docs page, with its inline markup as written. Where the page's title is generic (`main`) or shared, it's a reviewed name instead: e.g. `main` on `$addToSet`'s page becomes "Collect the Genres of Each Director". Those 92 reviewed names live in `example-names.json`, which stays, so re-extraction and the work queue produce the same names. The owning test's `@DisplayName` must equal it. |
+| `title` | string | The example's display title. Usually the title on the docs page, with its inline markup as written. Where the page's title is generic (`main`) or shared, it's a reviewed name instead: e.g. `main` on `$addToSet`'s page becomes "Collect the Genres of Each Director". Those 93 reviewed names live in `example-names.json`, which stays, so re-extraction and the work queue produce the same names. The owning test's `@DisplayName` must equal it. |
 | `context` | string | Where the operator is used. One of `EXPRESSION` (`aggregation/expressions`), `STAGE` (`aggregation/stages`), `FILTER` (`query/filters`) or `UPDATE` (`query/updates`). |
 | `source` | document | Where the example was read from. See [source](#source). |
 | `dataset` | string or null | A MongoDB sample dataset the example queries instead of inline data, e.g. `sample_mflix`. `null` when the example seeds its own data. When set, the behavior and published checks run only where that dataset is loaded. |
