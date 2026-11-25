@@ -60,6 +60,7 @@ public class OperatorCaseRunnerTest extends TestBase {
         assertTrue(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$lookup: {from: {db: 'other', coll: 'c'}, as: 'x'}}")));
         assertTrue(OperatorCaseRunner.namesADatabase(
                 BsonDocument.parse("{$facet: {a: [{$unionWith: {db: 'other', coll: 'c'}}]}}")));
+        assertFalse(OperatorCaseRunner.namesADatabase(BsonDocument.parse("{$project: {x: {$literal: {$out: {db: 'sales'}}}}}")));
     }
 
     @Test

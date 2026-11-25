@@ -286,6 +286,10 @@ public class OperatorCaseRunner {
             index(reference, scenario.getArray("indexes"));
 
             Execution execution = plan.apply(action, collection);
+            // Morphia's own command runs even when its serialization isn't compared, so it is held to the same rule.
+            if (kind.equals("aggregate") && execution.emitted().getValues().stream().anyMatch(OperatorCaseRunner::namesADatabase)) {
+                fail(operatorCase.resource() + ": Morphia's pipeline names another database: " + json(execution.emitted()));
+            }
             BsonArray documented = documented(action);
             // Both sides take the declared rules; the documented command itself is what runs.
             Set<Rule> rules = EnumSet.noneOf(Rule.class);
@@ -448,6 +452,19 @@ public class OperatorCaseRunner {
             case "update" -> Set.of("kind", "collection", "filter", "update", "multi");
             default -> Set.of();
         };
+        // An alternative respells the command only; the collection and the read stay the action's.
+        Set<String> spelled = switch (action.getString("kind", new BsonString("")).getValue()) {
+            case "aggregate" -> Set.of("pipeline");
+            case "find" -> Set.of("filter", "projection");
+            case "update" -> Set.of("filter", "update");
+            default -> Set.of();
+        };
+        for (BsonValue alternative : action.getArray("alternatives", new BsonArray())) {
+            if (!alternative.isDocument() || alternative.asDocument().isEmpty()
+                    || !spelled.containsAll(alternative.asDocument().keySet())) {
+                unsupported.add("alternative " + alternative);
+            }
+        }
         Set<String> present = new TreeSet<>(action.keySet());
         present.remove("alternatives");
         // Only a write has a read after it.
@@ -489,6 +506,10 @@ public class OperatorCaseRunner {
     static boolean namesADatabase(BsonValue value) {
         if (value instanceof BsonDocument document) {
             for (var entry : document.entrySet()) {
+                // A literal is data, not a stage.
+                if (entry.getKey().equals("$literal")) {
+                    continue;
+                }
                 if (NAMESPACED.contains(entry.getKey()) && entry.getValue() instanceof BsonDocument argument
                         && (argument.containsKey("db") || hasDb(argument.get("into")) || hasDb(argument.get("from")))) {
                     return true;

@@ -55,12 +55,7 @@ public class ExampleOwnersTest {
     public void everyExampleTestOwnsAFixture() throws IOException {
         Set<String> problems = new TreeSet<>();
         for (Class<?> type : exampleClasses()) {
-            // Public methods include inherited tests, which JUnit runs too, but not the base classes' own.
-            for (Method method : type.getMethods()) {
-                if (!TemplatedTestBase.class.isAssignableFrom(method.getDeclaringClass())
-                        || method.getDeclaringClass() == TemplatedTestBase.class) {
-                    continue;
-                }
+            for (Method method : testMethods(type)) {
                 if (method.getAnnotation(Test.class) == null) {
                     continue;
                 }
@@ -109,7 +104,8 @@ public class ExampleOwnersTest {
         String where = family + "/" + operator + "/" + stem;
         Method method;
         try {
-            method = Class.forName(className).getMethod(methodName);
+            method = testMethods(Class.forName(className)).stream().filter(it -> it.getName().equals(methodName)).findFirst()
+                    .orElseThrow(NoSuchMethodException::new);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             problems.add(where + " has no test " + className + "#" + methodName);
             return problems;
@@ -156,6 +152,25 @@ public class ExampleOwnersTest {
             }
         }
         return classes;
+    }
+
+    /**
+     * The methods JUnit can run as tests of {@code type}: its own and those it inherits from its example-test
+     * superclasses, whatever their visibility, but not the base classes' own.
+     */
+    private static List<Method> testMethods(Class<?> type) {
+        List<Method> methods = new ArrayList<>();
+        Set<String> seen = new java.util.HashSet<>();
+        for (Class<?> current = type; current != null && current != TemplatedTestBase.class
+                && TemplatedTestBase.class.isAssignableFrom(current); current = current.getSuperclass()) {
+            for (Method method : current.getDeclaredMethods()) {
+                // An override hides the method it overrides.
+                if (seen.add(method.getName() + java.util.Arrays.toString(method.getParameterTypes()))) {
+                    methods.add(method);
+                }
+            }
+        }
+        return methods;
     }
 
     /** A missing root would let both checks pass without looking at anything. */
