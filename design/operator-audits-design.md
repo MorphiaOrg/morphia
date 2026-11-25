@@ -291,14 +291,17 @@ a test method:
    seed data, an action and expected results, through `ShellPrograms`.
 3. **Emit the call.** The emitter walks the action: a pipeline becomes `runner.aggregate`, a find
    `runner.find` with the filter's `Filters` calls, and an update `runner.update` with the filter and
-   one `UpdateOperators` call per field. Every node needs a binding, and every value is emitted only
+   one `UpdateOperators` call per field. A find's documented projection becomes its `FindOptions`:
+   `include` and `exclude` calls for flags, Morphia writing inclusions before exclusions (an `_id`
+   exclusion moves, which `PROJECT_ID_FIRST` equates), or `project(Meta.textScore(f))` for a lone
+   `$meta` field; any other projection value is a gap. Every node needs a binding, and every value is emitted only
    in a form its parameter type accepts: a sort document as `Sort` varargs, and an array as `List.of`
    where it is data (a query or update operand, an `Iterable`) or as `array(...)` where it is an
    expression. An enum parameter of Morphia's or the driver's takes the MQL value in upper snake
    case (`keepExisting` is `KEEP_EXISTING`). A factory name two owners share in one class
    (`Filters.eq`, `ComparisonExpressions.eq`) is called through its class there. Morphia compiles a
    query regex with `java.util.regex`, so a pattern that rejects (`(*UCP)`) is a gap. The first node
-   without a binding makes the example a gap; so does a documented projection, a pipeline update,
+   without a binding makes the example a gap; so does a pipeline update,
    or a stage that names another database, which the runner refuses because both behavior runs
    would share it.
 4. **Write the scenario.** `FixtureMigration.scenario` writes it in the same format a converted
@@ -326,7 +329,7 @@ Examples that are not generated are listed in `gaps.json`, each with its reason:
 
 All four families are generated today: aggregation expressions and stages, query filters and
 updates. Most remaining gaps are bindings, database-level commands (`db.aggregate(...)`),
-documented projections and update options (`arrayFilters`).
+projections other than flags or a lone `$meta`, and update options (`arrayFilters`).
 
 ### Candidates, integration and promotion
 

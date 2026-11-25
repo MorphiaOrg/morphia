@@ -183,6 +183,36 @@ class GeneratorTest {
                         "Project the Quantity",
                         code("db.inventory.find( { qty: { \$gt: 20 } }, { qty: 1 } )"),
                     ),
+                    section(
+                        "Project Without the Id",
+                        code("db.inventory.find( { qty: { \$gt: 20 } }, { _id: 0, qty: true } )"),
+                    ),
+                    section(
+                        "Project the Text Score",
+                        code(
+                            "db.inventory.find( { qty: { \$gt: 20 } }, { score: { \$meta: \"textScore\" } } )"
+                        ),
+                    ),
+                    section(
+                        "Project the Text Score and More",
+                        code(
+                            "db.inventory.find( { qty: { \$gt: 20 } }, { score: { \$meta: \"textScore\" }, qty: 1 } )"
+                        ),
+                    ),
+                    section(
+                        "Project a Long Flag",
+                        code("db.inventory.find( { qty: { \$gt: 20 } }, { qty: Long(1) } )"),
+                    ),
+                    section(
+                        "Project a Slice",
+                        code("db.inventory.find( { qty: { \$gt: 20 } }, { tags: { \$slice: 1 } } )"),
+                    ),
+                    section(
+                        "Project Exclusions Out of Order",
+                        code(
+                            "db.inventory.find( { qty: { \$gt: 20 } }, { tags: 0, _id: 1, qty: 0 } )"
+                        ),
+                    ),
                 )
             )
         }
@@ -216,7 +246,13 @@ class GeneratorTest {
                 emptySet(),
             )
         assertEquals(
-            listOf("query/filters/gt/matchLargerQuantities", "query/updates/inc/incrementAndTag"),
+            listOf(
+                "query/filters/gt/matchLargerQuantities",
+                "query/filters/gt/projectTheQuantity",
+                "query/filters/gt/projectTheTextScore",
+                "query/filters/gt/projectWithoutTheId",
+                "query/updates/inc/incrementAndTag",
+            ),
             generation.cases.map { it.manifest.name },
         )
         val find =
@@ -224,6 +260,25 @@ class GeneratorTest {
                 "core/src/test/java/dev/morphia/test/generated/filters/TestGt.java"
             )
         assertTrue("(query) -> query.filter(gt(\"qty\", 20)));" in find, find)
+        // A documented projection is the find's options: inclusions, then exclusions.
+        assertTrue(
+            "(query) -> query.filter(gt(\"qty\", 20)),\n                " +
+                "new FindOptions().projection().include(\"qty\"));" in find,
+            find,
+        )
+        assertTrue(
+            "new FindOptions().projection().include(\"qty\").projection().exclude(\"_id\"));" in
+                find,
+            find,
+        )
+        assertTrue("import dev.morphia.query.FindOptions;" in find, find)
+        assertTrue(
+            "new FindOptions().projection().project(Meta.textScore(\"score\")));" in find,
+            find,
+        )
+        val withoutId =
+            generation.cases.single { it.manifest.name.endsWith("projectWithoutTheId") }.scenario
+        assertTrue("PROJECT_ID_FIRST" in withoutId && "PROJECTION_FLAGS" in withoutId, withoutId)
         // The page's index travels with the case; the runner creates it before the action.
         val found = generation.cases.first().manifest
         assertEquals(
@@ -246,7 +301,14 @@ class GeneratorTest {
         assertTrue("runner.update(" in update && call in update, update)
         assertEquals(
             mapOf(
-                "Project the Quantity" to "a documented projection is not generated yet",
+                "Project the Text Score and More" to
+                    "/projection/score: a projection of {\"\$meta\": \"textScore\"} has no binding",
+                "Project a Long Flag" to
+                    "/projection/qty: Morphia writes a flag of INT64 as an Int32",
+                "Project a Slice" to
+                    "/projection/tags: a projection of {\"\$slice\": 1} has no binding",
+                "Project Exclusions Out of Order" to
+                    "/projection: Morphia rejects inclusions beside exclusions other than _id",
                 "Increment in a Pipeline" to "/update: a pipeline update has no binding",
             ),
             generation.gaps.associate { it.title to it.detail },

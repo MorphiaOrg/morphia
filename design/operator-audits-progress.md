@@ -2844,3 +2844,15 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   Round 2 found four more, now gaps: `$expr` given an array (an array value, not an argument list),
   a string `$regex` beside another operator, a repeated flag (`"ii"`, which Morphia writes once),
   and a pattern that compiles only under its flags (`regex(f, p)` compiles it alone first).
+- Find projections: a find's documented projection becomes its `FindOptions` instead of a gap.
+  Flags become `projection().include(...)` and `.exclude(...)` calls; Morphia writes the
+  inclusions, then the exclusions, so a leading `_id: 0` moves, which `PROJECT_ID_FIRST` equates,
+  and `true`/`false` take `PROJECTION_FLAGS`. A lone `{f: {$meta: k}}` is
+  `project(Meta.k("f"))` for the keywords `Meta` has a factory for. Other projection values
+  (`$slice`, `$elemMatch`, expressions, `$meta` beside other fields, Int64 or Double flags) are gaps. 10 cases generate
+  (477 to 487): four `$text`, three `$type`, two `$ne`, one `$in`. Two `$meta` finds are reviewed
+  exclusions: one has no sort and ties on score, so the page's order is not one the query
+  guarantees; the other seeds documents without `_id` and prints its own run's ObjectIds.
+  Generated scenarios still compare results in order; a find or pipeline without a sort could
+  compare them unordered instead, which would change every generated scenario and is left for
+  review.

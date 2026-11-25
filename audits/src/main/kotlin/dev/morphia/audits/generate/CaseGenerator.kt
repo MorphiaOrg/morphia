@@ -98,6 +98,9 @@ object CaseGenerator {
     /** A static call marked by [Emitter.static]: its owner and method. */
     private val STATIC = Regex("\u0001([^#\u0002]+)#([^\u0002]+)\u0002")
     private const val EXPRESSION = "dev.morphia.aggregation.expressions.impls.Expression"
+    private const val FIND_OPTIONS = "dev.morphia.query.FindOptions"
+    /** The `$meta` keywords Morphia's `Meta` has a factory for, each named as its keyword. */
+    private val META = setOf("indexKey", "searchHighlights", "searchScore", "textScore")
     private const val LIST = "java.util.List"
     private const val NUMBER = "java.lang.Number"
     private const val SORTS = "dev.morphia.query.Sort[]"
@@ -184,12 +187,6 @@ object CaseGenerator {
                                 failure.message!!.removePrefix("$name: "),
                             )
                         }
-                    if (documented.shape == ActionShape.FIND && documented.action.size != 1) {
-                        return@forEach gap(
-                            GapKind.SOURCE_UNSUPPORTED,
-                            "a documented projection is not generated yet",
-                        )
-                    }
                     // The runner refuses a stage that reads or writes another database, since the
                     // two behavior runs would share it.
                     if (documented.shape == ActionShape.PIPELINE) {
@@ -217,9 +214,16 @@ object CaseGenerator {
                                         pipeline.joinToString(",$indent") +
                                         "));"
                                 }
-                                ActionShape.FIND ->
+                                ActionShape.FIND -> {
+                                    val options =
+                                        documented.action.getOrNull(1)?.let {
+                                            emitted.projection(it, "/projection")
+                                        }
                                     "runner.find(\n                OperatorCase.of(${literal(resource)}),\n" +
-                                        "                ${query(emitted.filters(documented.action[0], "/filter"))});"
+                                        "                ${query(emitted.filters(documented.action[0], "/filter"))}" +
+                                        (options?.let { ",\n                $it" } ?: "") +
+                                        ");"
+                                }
                                 ActionShape.UPDATE -> {
                                     val operators = emitted.updates(documented.action[1], "/update")
                                     "runner.update(\n                OperatorCase.of(${literal(resource)}),\n" +
@@ -625,6 +629,62 @@ object CaseGenerator {
                     value(each, if (index < fixed) parameters[index] else component, "$path/$index")
                 }
                 .joinToString(", ")
+        }
+
+        /**
+         * A find's documented projection as Morphia's `FindOptions`, or null for an empty one,
+         * which the runner compares as it is. Morphia writes the inclusions, then the exclusions,
+         * each in order, as `1` and `0`.
+         */
+        fun projection(projection: BsonValue, path: String): String? {
+            if (!projection.isDocument) throw Unbound("$path: not a projection document")
+            val fields = projection.asDocument()
+            if (fields.isEmpty()) return null
+            // `{f: {$meta: "textScore"}}` alone is `project(Meta.textScore("f"))`; Morphia rejects
+            // a metadata projection beside any other.
+            fields.entries.singleOrNull()?.let { (field, value) ->
+                val keyword =
+                    value
+                        .takeIf { it.isDocument && it.asDocument().keys == setOf("\$meta") }
+                        ?.asDocument()
+                        ?.get("\$meta")
+                        ?.takeIf { it.isString }
+                        ?.asString()
+                        ?.value
+                if (keyword != null) {
+                    if (keyword !in META)
+                        throw Unbound("$path/$field: Meta has no factory for \$meta \"$keyword\"")
+                    types += FIND_OPTIONS
+                    types += "dev.morphia.query.Meta"
+                    return "new FindOptions().projection().project(Meta.$keyword(${literal(field)}))"
+                }
+            }
+            val flags =
+                fields.entries.map { (field, value) ->
+                    if (value.isBoolean) rules += FormRule.PROJECTION_FLAGS
+                    // `Projection.map` writes Int32 flags; only booleans have a rule equating them.
+                    if (value.isInt64 || value.isDouble)
+                        throw Unbound(
+                            "$path/$field: Morphia writes a flag of ${value.bsonType} as an Int32"
+                        )
+                    field to
+                        (flag(value)
+                            ?: throw Unbound("$path/$field: a projection of $value has no binding"))
+                }
+            val includes = flags.filter { it.second }.map { it.first }
+            val excludes = flags.filter { !it.second }.map { it.first }
+            if (includes.isNotEmpty() && excludes.any { it != "_id" })
+                throw Unbound("$path: Morphia rejects inclusions beside exclusions other than _id")
+            // Only a lone _id exclusion can follow an inclusion it preceded, and the server ignores
+            // where _id sits.
+            if (includes + excludes != flags.map { it.first }) rules += FormRule.PROJECT_ID_FIRST
+            types += FIND_OPTIONS
+            return "new FindOptions()" +
+                listOf("include" to includes, "exclude" to excludes)
+                    .filter { it.second.isNotEmpty() }
+                    .joinToString("") { (method, names) ->
+                        ".projection().$method(${names.joinToString(", ") { literal(it) }})"
+                    }
         }
 
         /** The filters of a query document, one per field operator, in order. */

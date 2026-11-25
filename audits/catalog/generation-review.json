@@ -20,6 +20,14 @@
       "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912)."
     },
     {
+      "name": "aggregation/expressions/meta/metaTextScore",
+      "reason": "The find has no sort, so the server may return its matches in any order, and two of them tie on score; the page prints one order and the server returns another. Serialization and behavior pass; the printed order is not one the query guarantees."
+    },
+    {
+      "name": "aggregation/expressions/meta/returnTheIndexKeyOfAMatchedTypeInAFind",
+      "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass."
+    },
+    {
       "name": "aggregation/expressions/reduce/probability",
       "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection."
     },
