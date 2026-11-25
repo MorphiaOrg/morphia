@@ -295,6 +295,33 @@
       "fields": {}
     },
     {
+      "operator": "$dateAdd",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateAdd",
+      "parameters": [
+        "java.lang.Object",
+        "long",
+        "dev.morphia.aggregation.expressions.TimeUnit"
+      ],
+      "varargs": false,
+      "arguments": [
+        "startDate",
+        "amount",
+        "unit"
+      ],
+      "options": {
+        "timezone": {
+          "method": "timezone",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
       "operator": "$dateDiff",
       "position": "EXPRESSION",
       "form": "NAMED",
@@ -319,6 +346,192 @@
         }
       },
       "varargs": false,
+      "fields": {}
+    },
+    {
+      "operator": "$dateFromParts",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateFromParts",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {
+        "year": {
+          "method": "year",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "month": {
+          "method": "month",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "day": {
+          "method": "day",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "hour": {
+          "method": "hour",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "minute": {
+          "method": "minute",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "second": {
+          "method": "second",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "millisecond": {
+          "method": "millisecond",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "isoWeekYear": {
+          "method": "isoWeekYear",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "isoWeek": {
+          "method": "isoWeek",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "isoDayOfWeek": {
+          "method": "isoDayOfWeek",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "timezone": {
+          "method": "timezone",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$dateFromString",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateFromString",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {
+        "dateString": {
+          "method": "dateString",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "format": {
+          "method": "format",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "timezone": {
+          "method": "timeZone",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "onError": {
+          "method": "onError",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "onNull": {
+          "method": "onNull",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$dateSubtract",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateSubtract",
+      "parameters": [
+        "java.lang.Object",
+        "long",
+        "dev.morphia.aggregation.expressions.TimeUnit"
+      ],
+      "varargs": false,
+      "arguments": [
+        "startDate",
+        "amount",
+        "unit"
+      ],
+      "options": {
+        "timezone": {
+          "method": "timezone",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
+      "operator": "$dateToString",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "dateToString",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {
+        "date": {
+          "method": "date",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "format": {
+          "method": "format",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "timezone": {
+          "method": "timeZone",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "onNull": {
+          "method": "onNull",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      },
       "fields": {}
     },
     {
@@ -477,6 +690,30 @@
       "fields": {}
     },
     {
+      "operator": "$let",
+      "position": "EXPRESSION",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.expressions.VariableExpressions",
+      "method": "let",
+      "parameters": [
+        "dev.morphia.aggregation.expressions.impls.Expression"
+      ],
+      "varargs": false,
+      "arguments": [
+        "in"
+      ],
+      "options": {
+        "vars": {
+          "method": "variable",
+          "parameters": [
+            "java.lang.String",
+            "dev.morphia.aggregation.expressions.impls.Expression"
+          ]
+        }
+      },
+      "fields": {}
+    },
+    {
       "operator": "$literal",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -600,6 +837,25 @@
       ],
       "options": {},
       "fields": {}
+    },
+    {
+      "operator": "$mergeObjects",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.ObjectExpressions",
+      "method": "mergeObjects",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {
+        "value": {
+          "method": "add",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        }
+      }
     },
     {
       "operator": "$min",

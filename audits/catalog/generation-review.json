@@ -24,6 +24,10 @@
       "reason": "$dateDiff returns a long, which mongosh prints as Long('1'); the page prints 1, which only an Int32 or a Double prints as. Serialization and behavior pass."
     },
     {
+      "name": "aggregation/expressions/dateSubtract/filterByRelativeDates",
+      "reason": "The pipeline keeps logouts within a week of $$NOW, so its result depends on the day it runs; the page's 2021 logouts are never within a week of today, and the server returns nothing. Serialization passes."
+    },
+    {
       "name": "aggregation/expressions/divide/divideHoursIntoWorkdays",
       "reason": "The page inserts into conferencePlanning but aggregates planning, so the server returns nothing. Serialization passes; the page is wrong."
     },
@@ -42,6 +46,10 @@
     {
       "name": "aggregation/expressions/reduce/probability",
       "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection."
+    },
+    {
+      "name": "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
+      "reason": "The page prints the $unwind stage's output (one document per details item), not the pipeline's, which groups each contact's matches back into one details document. Serialization passes; the page is wrong."
     },
     {
       "name": "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",

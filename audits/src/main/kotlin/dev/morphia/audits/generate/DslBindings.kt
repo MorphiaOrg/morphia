@@ -18,7 +18,8 @@ enum class BindingPosition {
 enum class BindingForm {
     /**
      * `{$op: [a, b, …]}`, or `{$op: a}` for one argument: the values in order, the last parameter
-     * taking the rest when it is varargs.
+     * taking the rest when it is varargs. A builder of no parameters takes each value through its
+     * [DslBinding.fields] `value` call (`mergeObjects().add(a).add(b)`), and writes one alone.
      */
     POSITIONAL,
     /**
@@ -142,6 +143,14 @@ object DslBindings {
                 BindingForm.POSITIONAL ->
                     if (binding.arguments.isNotEmpty() || binding.options.isNotEmpty())
                         problems += "$label: a positional binding names no keys"
+                    else if (
+                        binding.fields.isNotEmpty() &&
+                            (binding.fields.keys != setOf("value") ||
+                                binding.parameters.isNotEmpty() ||
+                                binding.fields.getValue("value").parameters.size != 1)
+                    )
+                        problems +=
+                            "$label: a positional builder takes no arguments and binds [value]"
                 BindingForm.NAMED ->
                     if (binding.arguments.size != binding.parameters.size)
                         problems +=

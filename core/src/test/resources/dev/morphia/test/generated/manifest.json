@@ -290,10 +290,20 @@
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateAdd/addAFutureDate/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateAdd#testAddAFutureDate"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/dateAdd/adjustForDaylightSavingsTime/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestDateAdd#adjustForDaylightSavingsTime"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateDiff/elapsedTime",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testElapsedTime"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/dateFromString/convertDatesInEachDocumentSTimeZone",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/dateFromString/convertDatesInEachDocumentSTimeZone/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestDateFromString#convertDatesInEachDocumentSTimeZone"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateFromString/convertingDates",
@@ -309,6 +319,11 @@
     "name" : "aggregation/expressions/dateFromString/onNull",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateFromString/onNull/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateFromString#testOnNull"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/dateSubtract/adjustForDaylightSavingsTime/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestDateSubtract#adjustForDaylightSavingsTime"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
@@ -749,6 +764,11 @@
     "name" : "aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestMergeObjects#testMergeObjectsAsAnAccumulator"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/mergeObjects/mergeTheRatingsOfEachMovie",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/mergeObjects/mergeTheRatingsOfEachMovie/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestMergeObjects#mergeTheRatingsOfEachMovie"
   }, {
     "kind" : "GENERATED",
     "name" : "aggregation/expressions/meta/metaTextScore",
@@ -1484,6 +1504,11 @@
     "name" : "aggregation/expressions/year/yearExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/year/yearExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestYear#testYearExpressionOperator"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/expressions/zip/filteringAndPreservingIndexes",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/zip/filteringAndPreservingIndexes/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestZip#filteringAndPreservingIndexes"
   }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/expressions/zip/matrixTransposition",
@@ -2663,6 +2688,18 @@
     "sha256" : "52bb14d573979addd204eabe83b8454c339066c7814c3ef34e1b7a8bdba2bf8a"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestDateAdd.java",
+    "sha256" : "1b3e77d116a580851a8c10c41062d19d0ce4c330e8f15171ade3cc0a6821aff7"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestDateFromString.java",
+    "sha256" : "d4d495fdbc9c33700b48c4e60163e017f05733dd4c77c5a79f084e94ec43b016"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestDateSubtract.java",
+    "sha256" : "25f5fed4ac096602653fef5a78ab8418f2701281e10fb141dc238868427e4a67"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestFilter.java",
     "sha256" : "6f28448750271d1f4c8ff5c4eb186e308bd51efa7bfa309aa6613c595585981e"
   }, {
@@ -2697,6 +2734,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMaxNArrayElement.java",
     "sha256" : "cb41ee0b3be918fa7cd34e2621fe6edfded90ba044f9aeea5c5e1c3fef06ede4"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMergeObjects.java",
+    "sha256" : "c6f8e4d88b736e27761447ee866cfdd8b32ea34e158786b2782ce477c20b6f22"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestMeta.java",
@@ -2777,6 +2818,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestType.java",
     "sha256" : "5c928a0e052aacd4ef96e0283af9b8877716575dc497e1a3618a174c62ead2d5"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestZip.java",
+    "sha256" : "4bce99199b71843b344f7f438d8120668762b6c7ba0d564f1676309f2c6ae3c4"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/filters/TestAnd.java",
@@ -4087,6 +4132,18 @@
     "sha256" : "02259f7760f67c8afc393d9b6f241479222118bf69b43cce7b0c1a0a6ead4ba4"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/dateAdd/adjustForDaylightSavingsTime/scenario.json",
+    "sha256" : "4426192c782b9b838b59c3b50fdba6806761fcff1f6c818ea5a4b77265ff18c8"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/dateFromString/convertDatesInEachDocumentSTimeZone/scenario.json",
+    "sha256" : "d5632dbad22979427a5eee4165d2e22af58ab44eba015c704eb2ef8280732b93"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/dateSubtract/adjustForDaylightSavingsTime/scenario.json",
+    "sha256" : "f42569ba72e114c0af64d6cde6fb428ba09d240d1a379aa411ba77f69b528b38"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/filter/limitGreaterThanPossibleMatches/scenario.json",
     "sha256" : "af2651536c9eb816073197c37358d455ba73db939d9234aefff2454225e9d309"
   }, {
@@ -4149,6 +4206,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/maxN/setNBasedOnTheGroupKey/scenario.json",
     "sha256" : "5608622fda6fe4b966ad7094792e1b0ec6b11734c87bf5ab1f20d4063f56d41a"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/mergeObjects/mergeTheRatingsOfEachMovie/scenario.json",
+    "sha256" : "ede0863db25879faee63d08736e1d50f958bdfff177a48c16f8126f3af5eb59c"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/meta/metaTextScore/scenario.json",
@@ -4313,6 +4374,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/type/existenceCheck/scenario.json",
     "sha256" : "e7305b6a7b97e0aafcfa0c66c4440702de378abb0cab0e16ec934268c945da57"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/zip/filteringAndPreservingIndexes/scenario.json",
+    "sha256" : "198966b902704dae5c5decb5db0cb83830e9da5c2e606f75d98ee7e5f4434d6e"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/filters/and/combineConditionsOnOneField/scenario.json",

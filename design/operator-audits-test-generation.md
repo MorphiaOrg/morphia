@@ -202,6 +202,8 @@ maps an MQL shape to Morphia factory calls, for example:
 | `{$abs: <expr>}` | `dev.morphia.aggregation.expressions.MathExpressions.abs(Object)` |
 | `{$add: [<expr>, <expr>, …]}` | `MathExpressions.add(Object, Object...)` |
 | `{$project: {<field>: <expr>, …}}` | `Projection.project()`, then `.include(String, Object)` per field |
+| `{$mergeObjects: [<expr>, <expr>]}` | `ObjectExpressions.mergeObjects()`, then `.add(Object)` per value (a positional builder) |
+| `{$dateToString: {date: <expr>, format: <expr>}}` | `DateExpressions.dateToString()`, then `.date(Object)` and `.format(Object)` (a named builder: no arguments, every key an option) |
 | `"$<path>"` | the string itself |
 
 The `"$<path>"` binding holds only for the `Document`-typed operations the runner uses, where Morphia

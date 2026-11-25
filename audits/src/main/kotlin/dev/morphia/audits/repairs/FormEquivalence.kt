@@ -83,6 +83,7 @@ object FormEquivalence {
             "\$bottomN",
             "\$dateAdd",
             "\$dateDiff",
+            "\$dateFromParts",
             "\$dateFromString",
             "\$dateSubtract",
             "\$dateToString",

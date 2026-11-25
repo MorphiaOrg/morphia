@@ -42,7 +42,8 @@ public final class FormRules {
         UPDATE
     }
 
-    private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff", "$dateFromString",
+    private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff", "$dateFromParts",
+            "$dateFromString",
             "$dateSubtract", "$dateToString", "$dateTrunc", "$densify", "$fill", "$filter", "$firstN", "$graphLookup", "$lastN", "$let",
             "$lookup", "$ltrim", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll", "$regexMatch", "$rtrim",
             "$setField", "$setWindowFields", "$sortArray", "$text", "$top", "$topN", "$trim", "$unsetField", "$unwind", "$zip");

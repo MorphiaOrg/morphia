@@ -567,6 +567,22 @@ object CaseGenerator {
                     // These factories build a `List.of`, which rejects null.
                     if (binding.operator in LIST_OF && values.any { it.isNull })
                         throw Unbound("$path: Morphia's ${binding.method}() rejects a null operand")
+                    // A builder (`mergeObjects().add(a).add(b)`) writes one value alone, like a
+                    // varargs factory.
+                    binding.fields["value"]?.let { adder ->
+                        if (argument.isArray && values.size == 1)
+                            throw Unbound(
+                                "$path: Morphia writes ${binding.operator}'s lone argument bare"
+                            )
+                        if (values.isEmpty())
+                            throw Unbound("$path: ${binding.method}() without arguments")
+                        return factory.format("") +
+                            values
+                                .mapIndexed { index, each ->
+                                    ".${adder.method}(${value(each, adder.parameters.single(), "$path/$index")})"
+                                }
+                                .joinToString("")
+                    }
                     val fixed =
                         if (binding.varargs) binding.parameters.size - 1
                         else binding.parameters.size
@@ -638,6 +654,15 @@ object CaseGenerator {
                                 )
                             }
                     }
+                    // `DateDeltaExpressionCodec` writes `amount` as an Int32 when it fits.
+                    if (
+                        binding.operator in setOf("\$dateAdd", "\$dateSubtract") &&
+                            document["amount"]?.isInt64 == true &&
+                            document["amount"]!!.asInt64().value in Int.MIN_VALUE..Int.MAX_VALUE
+                    )
+                        throw Unbound(
+                            "$path/amount: Morphia writes a small Int64 amount as an Int32"
+                        )
                     val missing = binding.arguments.filter { it !in document }
                     if (missing.isNotEmpty())
                         throw Unbound("$path: ${binding.operator} without $missing")
@@ -755,6 +780,10 @@ object CaseGenerator {
                     // The projection writes a suppressed _id first, wherever the page put it.
                     if (argument.asDocument().keys.indexOf("_id") > 0)
                         rules += FormRule.PROJECT_ID_FIRST
+                    // Morphia writes a flag as 1 or 0, which PROJECTION_FLAGS equates with true and
+                    // false.
+                    if (argument.asDocument().values.any { it.isBoolean })
+                        rules += FormRule.PROJECTION_FLAGS
                     factory.format("") +
                         argument.asDocument().entries.joinToString("") { (field, each) ->
                             val flag = flag(each)
@@ -815,9 +844,10 @@ object CaseGenerator {
          */
         private fun arguments(option: MethodRef, value: BsonValue, path: String): String {
             val parameters = option.parameters
-            // An option of a name and a value (`$lookup`'s `let(String, Object)`) takes a document,
-            // one call per field; the caller writes the first call's name.
-            if (parameters == listOf(STRING, OBJECT)) {
+            // An option of a name and a value (`$lookup`'s `let(String, Object)`, `$let`'s
+            // `variable(String, Expression)`) takes a document, one call per field; the caller
+            // writes the first call's name.
+            if (parameters == listOf(STRING, OBJECT) || parameters == listOf(STRING, EXPRESSION)) {
                 if (!value.isDocument || value.asDocument().isEmpty())
                     throw Unbound("$path: ${option.method} takes a document of fields")
                 return value.asDocument().entries.joinToString(").${option.method}(") { (name, each)
@@ -827,7 +857,7 @@ object CaseGenerator {
                         throw Unbound(
                             "$path/$name: Morphia cannot write a document in a variable's array"
                         )
-                    "${literal(name)}, ${value(each, OBJECT, "$path/$name")}"
+                    "${literal(name)}, ${value(each, parameters.last(), "$path/$name")}"
                 }
             }
             if (parameters.size == 1) return value(value, parameters.single(), path)

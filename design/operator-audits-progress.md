@@ -2948,3 +2948,21 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   same for an enum parameter (`$convert`'s `to`, `$dateDiff`'s `unit`), so the guard is now an
   allowlist of the types that take an expression (`Object`, `Expression`, and the DSL types built
   from operators: stages, sorts, window outputs, filters and group ids). No generated file changed.
+- Builders: a factory of no parameters whose result takes each value or key as a call now binds.
+  A positional builder takes each value through its `value` field call
+  (`mergeObjects().add(a).add(b)`); like a varargs factory, it writes one value alone, so a
+  one-item array is a gap. A named builder is a named binding with no
+  arguments, every key an option (`dateToString().date(d).format(f)`). `$mergeObjects`,
+  `$dateToString`, `$dateFromString` and `$dateFromParts` (now a named-argument operator) bind this
+  way. `$let` binds as `let(in)` with one `variable(name, expression)` call per variable; a name and
+  value option may now take an `Expression`, so a plain value as a variable is a gap. `$dateAdd`
+  and `$dateSubtract` bind as `(startDate, amount, unit)` with a `timezone` option. A `$project`
+  of `true` or `false` now declares `PROJECTION_FLAGS`, since Morphia writes `1` or `0`; `$zip`'s
+  index example was its first. 5 cases generate (525 to 530). Two more are reviewed exclusions:
+  `$dateSubtract`'s relative-date filter depends on `$$NOW`, and `$regexFind`'s array example
+  prints its `$unwind` stage's output.
+  Review round 1 (Codex) found two. An Int64 `amount` to `$dateAdd` or `$dateSubtract` is now a
+  gap, since `DateDeltaExpressionCodec` writes a small one as an Int32. A null `$mergeObjects`
+  operand was a gap, needlessly: `add(null)` writes BSON null, so it now generates.
+  Round 2 found the guard too wide: an Int64 amount outside the Int32 range stays an Int64, so
+  only one that fits is a gap.

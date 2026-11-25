@@ -1666,6 +1666,96 @@ class GeneratorTest {
     }
 
     @Test
+    fun buildersTakeTheirValuesAndOptions() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.inventory.insertMany( [ { _id: 1, a: { x: 1 }, b: { y: 2 }, n: 3 } ] )"
+        fun ParsedPages.Page.addFields(title: String, value: String) =
+            section(
+                title,
+                code("db.inventory.aggregate( [ { \$addFields: { r: $value } } ] )"),
+                code("[ { _id: 1, a: { x: 1 }, b: { y: 2 }, n: 3, r: 1 } ]"),
+            )
+        pages.operator("mergeObjects", "expression") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    addFields("Two Objects", "{ \$mergeObjects: [ \"\$a\", \"\$b\" ] }"),
+                    addFields("One Object", "{ \$mergeObjects: \"\$a\" }"),
+                    addFields("One Object In An Array", "{ \$mergeObjects: [ \"\$a\" ] }"),
+                    addFields("A Null Object", "{ \$mergeObjects: [ \"\$a\", null ] }"),
+                    addFields(
+                        "Formatted",
+                        "{ \$dateToString: { format: \"%Y\", date: \"\$d\", timezone: \"UTC\" } }",
+                    ),
+                    addFields(
+                        "Variables",
+                        "{ \$let: { vars: { t: { \$add: [ \"\$n\", 1 ] } }, in: { \$multiply: [ \"\$\$t\", 2 ] } } }",
+                    ),
+                    addFields(
+                        "A Larger Amount",
+                        "{ \$dateAdd: { startDate: \"\$d\", unit: \"day\", amount: Long(\"2147483648\") } }",
+                    ),
+                    addFields(
+                        "A Long Amount",
+                        "{ \$dateAdd: { startDate: \"\$d\", unit: \"day\", amount: Long(\"1\") } }",
+                    ),
+                    addFields(
+                        "A Plain Variable",
+                        "{ \$let: { vars: { t: \"\$n\" }, in: { \$multiply: [ \"\$\$t\", 2 ] } } }",
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("aggregation/expressions")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "One Object In An Array" to
+                    "/pipeline/0/\$addFields/r/\$mergeObjects: Morphia writes \$mergeObjects's lone argument bare",
+                "A Long Amount" to
+                    "/pipeline/0/\$addFields/r/\$dateAdd/amount: Morphia writes a small Int64 amount as an Int32",
+                "A Plain Variable" to
+                    "/pipeline/0/\$addFields/r/\$let/vars/t: STRING where dev.morphia.aggregation.expressions.impls.Expression is required",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        fun rules(suffix: String) =
+            generation.cases.single { it.manifest.name.endsWith(suffix) }.scenario
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/expressions/TestMergeObjects.java"
+            )
+        // A builder takes each value through its `add` call, and one value alone.
+        assertTrue("mergeObjects().add(\"\$a\").add(\"\$b\")" in source, source)
+        assertTrue("mergeObjects().add(\"\$a\")" in source, source)
+        assertTrue("mergeObjects().add(\"\$a\").add(null)" in source, source)
+        // An Int64 amount beyond the Int32 range stays an Int64.
+        assertTrue("dateAdd(\"\$d\", 2147483648L, TimeUnit.DAY)" in source, source)
+        // A builder of options takes each key as its call, in any order.
+        assertTrue(
+            "dateToString().format(\"%Y\").date(\"\$d\").timeZone(\"UTC\")" in source,
+            source,
+        )
+        assertTrue("NAMED_ARGUMENTS" in rules("mergeObjects/formatted"))
+        // `$let`'s variables are one `variable` call each.
+        assertTrue("let(multiply(\"\$\$t\", 2)).variable(\"t\", add(\"\$n\", 1))" in source, source)
+    }
+
+    @Test
     fun bindingsAreCheckedAgainstTheCurrentSource() {
         val root = directory.resolve("api")
         fun java(name: String, text: String) =
