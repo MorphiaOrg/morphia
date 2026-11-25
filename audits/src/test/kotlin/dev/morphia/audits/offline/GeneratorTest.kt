@@ -1347,6 +1347,115 @@ class GeneratorTest {
     }
 
     @Test
+    fun windowFieldsTakeTheirOutputsAndWindows() {
+        val root = directory.resolve("repository")
+        write(
+            root.resolve("audits/catalog/fixture-migration.json"),
+            AuditJson.write(FixtureMigrationLedger()),
+        )
+        val seed = "db.sales.insertMany( [ { _id: 1, rated: \"G\", released: 1, runtime: 90 } ] )"
+        fun ParsedPages.Page.window(title: String, output: String) =
+            section(
+                title,
+                code(
+                    "db.sales.aggregate( [ { \$setWindowFields: { partitionBy: \"\$rated\", " +
+                        "sortBy: { released: 1 }, output: $output } } ] )"
+                ),
+                code("[ { _id: 1, rated: \"G\", released: 1, runtime: 90, total: 90 } ]"),
+            )
+        pages.operator("setWindowFields", "pipeline") {
+            listOf(
+                section(
+                    "Examples",
+                    code(seed),
+                    window(
+                        "Documents Window",
+                        "{ total: { \$sum: \"\$runtime\", window: { documents: [ \"unbounded\", \"current\" ] } } }",
+                    ),
+                    window(
+                        "Range Window",
+                        "{ total: { \$sum: \"\$runtime\", window: { range: [ -1, 1 ], unit: \"month\" } } }",
+                    ),
+                    window("No Window", "{ total: { \$sum: \"\$runtime\" } }"),
+                    window("One-Item Sum", "{ total: { \$sum: [ \"\$runtime\" ] } }"),
+                    section(
+                        "Partition by a Year in an Array",
+                        code(
+                            "db.sales.aggregate( [ { \$setWindowFields: { partitionBy: { \$year: [ \"\$released\" ] }, " +
+                                "output: { total: { \$sum: \"\$runtime\" } } } } ] )"
+                        ),
+                        code("[ { _id: 1, rated: \"G\", released: 1, runtime: 90, total: 90 } ]"),
+                    ),
+                    window(
+                        "Window First",
+                        "{ total: { window: { documents: [ -1, 0 ] }, \$sum: \"\$runtime\" } }",
+                    ),
+                    window(
+                        "Two Operators",
+                        "{ total: { \$sum: \"\$runtime\", \$max: \"\$runtime\" } }",
+                    ),
+                    window(
+                        "Fractional Bound",
+                        "{ total: { \$sum: \"\$runtime\", window: { range: [ -1.5, 0 ] } } }",
+                    ),
+                )
+            )
+        }
+        val inventory = capture(root)
+        val repository =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("audits/catalog")) }
+        val generation =
+            CaseGenerator.generate(
+                inventory,
+                AuditJson.dslBindings(Files.readString(repository.resolve(DslBindings.PATH))),
+                GenerationReview(families = listOf("aggregation/stages")),
+                emptySet(),
+            )
+        assertEquals(
+            setOf(
+                "Window First" to
+                    "/pipeline/0/\$setWindowFields/output/total: Morphia writes an output's operator before its window",
+                "Two Operators" to
+                    "/pipeline/0/\$setWindowFields/output/total: an output takes one operator, not [\$sum, \$max]",
+                "One-Item Sum" to
+                    "/pipeline/0/\$setWindowFields/output/total/\$sum: Morphia writes \$sum's lone argument bare",
+                "Fractional Bound" to
+                    "/pipeline/0/\$setWindowFields/output/total/window/range/0: a DOUBLE bound has no binding",
+            ),
+            generation.gaps.map { it.title to it.detail }.toSet(),
+        )
+        val source =
+            generation.files.getValue(
+                "core/src/test/java/dev/morphia/test/generated/stages/TestSetWindowFields.java"
+            )
+        val stage = "setWindowFields().partitionBy(\"\$rated\").sortBy(ascending(\"released\"))"
+        assertTrue(
+            "$stage.output(output(\"total\").operator(sum(\"\$runtime\")).window().documents(\"unbounded\", \"current\"))" in
+                source,
+            source,
+        )
+        assertTrue(
+            "output(output(\"total\").operator(sum(\"\$runtime\")).window().range(-1, 1, TimeUnit.MONTH))" in
+                source,
+            source,
+        )
+        assertTrue("output(output(\"total\").operator(sum(\"\$runtime\"))))" in source, source)
+        assertTrue("import dev.morphia.aggregation.expressions.TimeUnit;" in source, source)
+        // `{$year: [d]}` is `{$year: d}`, which SINGLE_ARGUMENT_ARRAY equates.
+        assertTrue(
+            "SINGLE_ARGUMENT_ARRAY" in
+                generation.cases
+                    .single { it.manifest.name.endsWith("partitionByAYearInAnArray") }
+                    .scenario
+        )
+        assertTrue(
+            "import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;" in source,
+            source,
+        )
+    }
+
+    @Test
     fun bindingsAreCheckedAgainstTheCurrentSource() {
         val root = directory.resolve("api")
         fun java(name: String, text: String) =

@@ -297,7 +297,9 @@ a test method:
    `include` and `exclude` calls for flags, Morphia writing inclusions before exclusions (an `_id`
    exclusion moves, which `PROJECT_ID_FIRST` equates), or `project(Meta.textScore(f))` for a lone
    `$meta` field; any other projection value is a gap. Every node needs a binding, and every value is emitted only
-   in a form its parameter type accepts: a sort document as `Sort` varargs, and an array as `List.of`
+   in a form its parameter type accepts: a sort document as `Sort` varargs, `$setWindowFields`'
+   `output` document as `output(name).operator(op)` calls with an optional
+   `.window().documents(l, u)` or `.window().range(l, u[, unit])`, and an array as `List.of`
    where it is data (a query or update operand, an `Iterable`) or as `array(...)` where it is an
    expression. An enum parameter of Morphia's or the driver's takes the MQL value in upper snake
    case (`keepExisting` is `KEEP_EXISTING`). A factory name two owners share in one class

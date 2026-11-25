@@ -100,6 +100,7 @@ object FormEquivalence {
             "\$merge",
             "\$minN",
             "\$reduce",
+            "\$setWindowFields",
             "\$regexFind",
             "\$regexFindAll",
             "\$regexMatch",
@@ -139,6 +140,7 @@ object FormEquivalence {
             "\$toObjectId",
             "\$toString",
             "\$toUpper",
+            "\$year",
         )
 
     private val comparisonOperators =

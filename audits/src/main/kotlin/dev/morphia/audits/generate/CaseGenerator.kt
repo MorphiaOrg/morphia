@@ -104,6 +104,10 @@ object CaseGenerator {
     private const val LIST = "java.util.List"
     private const val NUMBER = "java.lang.Number"
     private const val SORTS = "dev.morphia.query.Sort[]"
+    /** `$setWindowFields`' outputs, each `output(name).operator(op)` with an optional window. */
+    private const val OUTPUTS = "dev.morphia.aggregation.stages.SetWindowFields.Output[]"
+    private const val OUTPUT = "dev.morphia.aggregation.stages.SetWindowFields.Output"
+    private const val TIME_UNIT = "dev.morphia.aggregation.expressions.TimeUnit"
     /** The binding key of an array literal in an expression. */
     const val ARRAY = "[]"
     /** The catalog entry binding a document literal (`Expressions.document`). */
@@ -452,6 +456,35 @@ object CaseGenerator {
                             ?.asDocument()
                             ?.let { listOf(it["if"]!!, it["then"]!!, it["else"]!!) }
                     if (condition != null) rules += FormRule.COND_ARRAY
+                    // `{$op: [a]}` is `{$op: a}` for an operator of one argument, which Morphia
+                    // writes bare; SINGLE_ARGUMENT_ARRAY equates them unless `a` is an array.
+                    if (
+                        !binding.varargs &&
+                            binding.parameters.size == 1 &&
+                            argument.isArray &&
+                            argument.asArray().size == 1
+                    ) {
+                        if (
+                            binding.operator !in FormEquivalence.singleArgumentOperators ||
+                                argument.asArray()[0].isArray
+                        )
+                            throw Unbound(
+                                "$path: Morphia writes ${binding.operator}'s argument without its array"
+                            )
+                        rules += FormRule.SINGLE_ARGUMENT_ARRAY
+                    }
+                    // A varargs factory given one argument writes it bare (`sum("$a")` is
+                    // `$sum: "$a"`), so a one-item array has no binding; `array` and
+                    // `concatArrays` always write an array.
+                    if (
+                        binding.varargs &&
+                            binding.operator !in setOf(ARRAY, "\$concatArrays") &&
+                            argument.isArray &&
+                            argument.asArray().size == 1
+                    )
+                        throw Unbound(
+                            "$path: Morphia writes ${binding.operator}'s lone argument bare"
+                        )
                     // `concatArrays` always writes an array; its accumulator form takes one bare.
                     if (binding.operator == "\$concatArrays" && !argument.isArray)
                         throw Unbound("$path: Morphia writes \$concatArrays' argument as an array")
@@ -958,6 +991,61 @@ object CaseGenerator {
                 options.joinToString("") { ".${it.method}()" }
         }
 
+        /**
+         * `$setWindowFields`' `output: {name: {$op: v, window: {documents | range, unit}}, …}` as
+         * `output(name).operator(op)` calls, each with `.window().documents(l, u)` or
+         * `.window().range(l, u[, unit])`, in order. `SetWindowFieldsCodec` writes the operator,
+         * then the window's documents, range and unit.
+         */
+        private fun outputs(outputs: BsonDocument, path: String): String =
+            outputs.entries.joinToString(", ") { (name, spec) ->
+                val at = "$path/$name"
+                if (!spec.isDocument) throw Unbound("$at: an output takes a document")
+                val fields = spec.asDocument()
+                val operators = fields.keys.filter { it.startsWith("$") }
+                val operator =
+                    operators.singleOrNull()
+                        ?: throw Unbound("$at: an output takes one operator, not $operators")
+                fields.keys
+                    .firstOrNull { it != operator && it != "window" }
+                    ?.let { throw Unbound("$at/$it: an output's $it has no binding") }
+                if (fields.keys.first() != operator)
+                    throw Unbound("$at: Morphia writes an output's operator before its window")
+                val binding =
+                    expressions[operator]
+                        ?: throw Unbound("$at/$operator: $operator has no binding")
+                val call =
+                    "${static(OUTPUT, "output")}(${literal(name)})" +
+                        ".operator(${call(binding, fields[operator]!!, "$at/$operator")})"
+                call + (fields["window"]?.let { window(it, "$at/window") } ?: "")
+            }
+
+        private fun window(window: BsonValue, path: String): String {
+            if (!window.isDocument) throw Unbound("$path: a window takes a document")
+            val fields = window.asDocument()
+            val bounds = listOf("documents", "range").filter { it in fields }
+            val kind =
+                bounds.singleOrNull()
+                    ?: throw Unbound("$path: a window takes documents or range, not $bounds")
+            val allowed = if (kind == "range") setOf("range", "unit") else setOf("documents")
+            fields.keys
+                .firstOrNull { it !in allowed }
+                ?.let { throw Unbound("$path/$it: a window's $it has no binding") }
+            if (fields.keys.toList() != allowed.filter { it in fields })
+                throw Unbound("$path: Morphia writes a window's range before its unit")
+            val pair = fields[kind]!!
+            if (!pair.isArray || pair.asArray().size != 2)
+                throw Unbound("$path/$kind: a window's $kind takes [lower, upper]")
+            val (lower, upper) =
+                pair.asArray().values.mapIndexed { index, each ->
+                    if (!(each.isString || each.isInt32))
+                        throw Unbound("$path/$kind/$index: a ${each.bsonType} bound has no binding")
+                    value(each, OBJECT, "$path/$kind/$index")
+                }
+            val unit = fields["unit"]?.let { ", ${value(it, TIME_UNIT, "$path/unit")}" } ?: ""
+            return ".window().$kind($lower, $upper$unit)"
+        }
+
         /** Whether [value] is an array holding a document at any depth of nested arrays. */
         private fun holdsADocument(value: BsonValue): Boolean =
             value.isArray && value.asArray().any { it.isDocument || holdsADocument(it) }
@@ -1010,6 +1098,7 @@ object CaseGenerator {
                     .mapIndexed { index, item -> value(item, OBJECT, "$path/$index", plain) }
                     .joinToString(", ", "List.of(", ")")
             }
+            if (value.isDocument && type == OUTPUTS) return outputs(value.asDocument(), path)
             if (value.isDocument && type == SORTS) {
                 // `{f: -1, g: 1}` as `Sort` varargs, in order.
                 return value.asDocument().entries.joinToString(", ") { (field, each) ->

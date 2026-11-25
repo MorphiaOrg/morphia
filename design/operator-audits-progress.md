@@ -2877,3 +2877,18 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   gap, and a document where a typed parameter is required (`$merge`'s `into: {coll}` would have
   emitted `merge(document()…)`, which does not compile); document literals are emitted only for an
   `Object` or `Expression` parameter. Round 3 found a document two arrays deep escaping the array check, which is now recursive.
+- Window fields: `$setWindowFields` binds as a named stage of no arguments whose `partitionBy`,
+  `sortBy` and `output` are options; `output`'s `SetWindowFields.Output[]` parameter takes each
+  output field as `output(name).operator(op)`, with `.window().documents(l, u)` or
+  `.window().range(l, u[, unit])` (a `TimeUnit` constant). `$year` binds `year(Object)`, which
+  four of the examples partition by. `$setWindowFields` joins the named-argument operators.
+  Gaps: an output with no or several operators, a key other than its operator and `window`, a
+  window before its operator or a unit before its range (the codec's order), and a bound other
+  than a string or Int32. All six documented examples generate (497 to 503); they query the
+  sample dataset, so only their serialization is checked.
+  Review round 1 (Codex) found that a one-item argument array (`{$year: ["$released"]}`) was
+  emitted bare without a rule. The generator now declares `SINGLE_ARGUMENT_ARRAY` for an operator
+  of one argument that rule lists (now including `$year`), and makes any other one-item array a gap.
+  Round 2 found the varargs case: `{$sum: ["$runtime"]}` was emitted as `sum("$runtime")`, which
+  writes the argument bare. A one-item array for a varargs factory is now a gap, except for `array`
+  and `concatArrays`, which always write an array.

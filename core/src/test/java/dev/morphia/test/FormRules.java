@@ -45,13 +45,13 @@ public final class FormRules {
     private static final Set<String> NAMED_ARGUMENT_OPERATORS = Set.of("$bottom", "$bottomN", "$dateAdd", "$dateDiff",
             "$dateFromString", "$dateSubtract", "$dateToString", "$dateTrunc", "$densify", "$fill", "$filter", "$firstN",
             "$graphLookup", "$lastN", "$let", "$lookup", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll",
-            "$regexMatch", "$sortArray", "$text", "$top", "$topN", "$unwind", "$zip");
+            "$regexMatch", "$setWindowFields", "$sortArray", "$text", "$top", "$topN", "$unwind", "$zip");
 
     private static final Set<String> REGEX_OPERATORS = Set.of("$regexFind", "$regexFindAll", "$regexMatch");
 
     private static final Set<String> SINGLE_ARGUMENT_OPERATORS = Set.of("$abs", "$ceil", "$exp", "$floor", "$isArray",
             "$isNumber", "$ln", "$log10", "$size", "$sqrt", "$strLenBytes", "$strLenCP", "$toBool", "$toDate", "$toDecimal",
-            "$toDouble", "$toInt", "$toLong", "$toLower", "$toObjectId", "$toString", "$toUpper");
+            "$toDouble", "$toInt", "$toLong", "$toLower", "$toObjectId", "$toString", "$toUpper", "$year");
 
     private static final Set<String> COMPARISON_OPERATORS = Set.of("$all", "$eq", "$exists", "$gt", "$gte", "$in", "$lt",
             "$lte", "$mod", "$ne", "$nin", "$size", "$type");

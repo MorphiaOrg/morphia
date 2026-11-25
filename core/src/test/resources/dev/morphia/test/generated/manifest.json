@@ -1740,6 +1740,36 @@
     "scenario" : "/dev/morphia/test/aggregation/stages/setWindowFields/timeRangeWindowExamples/scenario.json",
     "test" : "dev.morphia.test.aggregation.stages.TestSetWindowFields#testTimeRangeWindowExamples"
   }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useATimeRangeWindowWithANegativeUpperBound",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithANegativeUpperBound/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useATimeRangeWindowWithANegativeUpperBound"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useATimeRangeWindowWithAPositiveUpperBound",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithAPositiveUpperBound/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useATimeRangeWindowWithAPositiveUpperBound"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useDocumentsWindowToObtainCumulativeAndMaximumRuntimeForEachYear",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeAndMaximumRuntimeForEachYear/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useDocumentsWindowToObtainCumulativeAndMaximumRuntimeForEachYear"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachRating",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachRating/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useDocumentsWindowToObtainCumulativeRuntimeForEachRating"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachYear",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachYear/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useDocumentsWindowToObtainCumulativeRuntimeForEachYear"
+  }, {
+    "kind" : "GENERATED",
+    "name" : "aggregation/stages/setWindowFields/useDocumentsWindowToObtainMovingAverageRuntimeForEachYear",
+    "scenario" : "/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainMovingAverageRuntimeForEachYear/scenario.json",
+    "test" : "dev.morphia.test.generated.stages.TestSetWindowFields#useDocumentsWindowToObtainMovingAverageRuntimeForEachYear"
+  }, {
     "kind" : "CONVERTED",
     "name" : "aggregation/stages/skip/skipAggregationStage",
     "scenario" : "/dev/morphia/test/aggregation/stages/skip/skipAggregationStage/scenario.json",
@@ -2637,6 +2667,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestProject.java",
     "sha256" : "07ea047ce92f274c447242d156f683627945e9762550dd596579d106e36b3f89"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/java/dev/morphia/test/generated/stages/TestSetWindowFields.java",
+    "sha256" : "10fd06d2a563e13413c89e84ed454fea08476db8fae3a5d0757faaf6b99a160d"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/java/dev/morphia/test/generated/stages/TestSort.java",
@@ -4249,6 +4283,30 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/project/projectAnArrayWithAMissingField/scenario.json",
     "sha256" : "33ea2e209b9ccf14498c6efafb3d438998652364843dd02fc6515aed931a0102"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithANegativeUpperBound/scenario.json",
+    "sha256" : "7a13a03ced4913c95290ecffa84aec33aac5844b9c7b1702b6172f6415da2822"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useATimeRangeWindowWithAPositiveUpperBound/scenario.json",
+    "sha256" : "9649109dcf1bce355d4eb59eea8dd4e05c84c7eb461e7a70d404754569488902"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeAndMaximumRuntimeForEachYear/scenario.json",
+    "sha256" : "1fc396a5a95144527cd898547c937bb046ceea9488c1c903d81a209f8c34cb81"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachRating/scenario.json",
+    "sha256" : "9d0a43e9f37c687d2ec57fd11b3ddaec6155dbc18e9549e1b70bd3d5172fe738"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainCumulativeRuntimeForEachYear/scenario.json",
+    "sha256" : "fcc1c87bac3ca93a6266a42cc02995be9fda6232d0c0c2a51e66047738c0aaa1"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/setWindowFields/useDocumentsWindowToObtainMovingAverageRuntimeForEachYear/scenario.json",
+    "sha256" : "34ffaaa5945fa6df31f69c13825760856703c5b364fe47c5968d6b93ac7273cf"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/stages/sort/ascendingAndDescendingSort/scenario.json",

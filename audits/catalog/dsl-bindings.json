@@ -664,6 +664,20 @@
       "fields": {}
     },
     {
+      "operator": "$year",
+      "position": "EXPRESSION",
+      "form": "POSITIONAL",
+      "owner": "dev.morphia.aggregation.expressions.DateExpressions",
+      "method": "year",
+      "parameters": [
+        "java.lang.Object"
+      ],
+      "varargs": false,
+      "arguments": [],
+      "options": {},
+      "fields": {}
+    },
+    {
       "operator": "[]",
       "position": "EXPRESSION",
       "form": "POSITIONAL",
@@ -1149,6 +1163,37 @@
       "varargs": false,
       "arguments": [],
       "options": {}
+    },
+    {
+      "operator": "$setWindowFields",
+      "position": "STAGE",
+      "form": "NAMED",
+      "owner": "dev.morphia.aggregation.stages.SetWindowFields",
+      "method": "setWindowFields",
+      "parameters": [],
+      "varargs": false,
+      "arguments": [],
+      "options": {
+        "partitionBy": {
+          "method": "partitionBy",
+          "parameters": [
+            "java.lang.Object"
+          ]
+        },
+        "sortBy": {
+          "method": "sortBy",
+          "parameters": [
+            "dev.morphia.query.Sort[]"
+          ]
+        },
+        "output": {
+          "method": "output",
+          "parameters": [
+            "dev.morphia.aggregation.stages.SetWindowFields.Output[]"
+          ]
+        }
+      },
+      "fields": {}
     },
     {
       "operator": "$skip",
