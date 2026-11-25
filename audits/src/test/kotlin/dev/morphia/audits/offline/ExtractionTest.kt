@@ -354,4 +354,53 @@ class ExtractionTest {
             refreshed.failures.map { it.detail },
         )
     }
+
+    @Test
+    fun aRetitledExampleIsRefreshedByItsOwner() {
+        val first = Extraction.extract(repository, inventory(), ExampleOverrides())
+        Files.createDirectories(repository.resolve(path).parent)
+        Files.writeString(repository.resolve(path), first.written.getValue(path))
+        val committed = first.inventory
+        val page = committed.pages[0]
+        val changed =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1, qty: 9 }])"),
+                block(BlockRole.ACTION, "db.items.find({ qty: { \$gt: 8 } })"),
+            )
+        val current =
+            committed.copy(
+                pages =
+                    listOf(
+                        page.copy(
+                            examples =
+                                listOf(
+                                    page.examples[0].copy(
+                                        title = "Match Larger Quantities",
+                                        blocks = changed,
+                                    )
+                                )
+                        )
+                    )
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        assertTrue(path in refreshed.written, refreshed.toString())
+    }
+
+    @Test
+    fun siblingsWithOneTitleFailSeparately() {
+        val unreadable = listOf(block(BlockRole.ACTION, "db.items.find({ qty: 1 }).limit(1)"))
+        val page = inventory().pages[0]
+        val siblings =
+            listOf(
+                page.examples[0].copy(title = "main", stem = "first", blocks = unreadable),
+                page.examples[0].copy(title = "main", stem = "second", blocks = unreadable),
+            )
+        val result =
+            Extraction.extract(
+                repository,
+                inventory().copy(pages = listOf(page.copy(examples = siblings))),
+                ExampleOverrides(),
+            )
+        assertEquals(listOf("main", "main#2"), result.failures.map { it.title })
+    }
 }

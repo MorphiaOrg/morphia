@@ -45,7 +45,8 @@ object Extraction {
                 if (page.context !in FAMILIES) return@map page
                 page.copy(
                     examples =
-                        page.examples.map examples@{ example ->
+                        page.examples.zip(Coverage.exampleKeys(page)).map examples@{ (example, key)
+                            ->
                             val override =
                                 byIdentity[
                                     Triple(
@@ -55,7 +56,12 @@ object Extraction {
                                     )]
                             override?.let { used += it }
                             fun fail(detail: String): DocumentedExample {
-                                failures += ExtractionFailure(page.id, example.title, detail)
+                                failures +=
+                                    ExtractionFailure(
+                                        page.id,
+                                        key.removePrefix("${page.id}/"),
+                                        detail,
+                                    )
                                 return example
                             }
                             if (override?.exclude == true) return@examples example
@@ -188,10 +194,12 @@ object Extraction {
     ): ExtractionResult {
         val byIdentity =
             overrides.overrides.associateBy { Triple(it.page, it.title, it.blocksSha256) }
-        val before =
-            committed.pages
-                .flatMap { page -> page.examples.zip(Coverage.exampleKeys(page)) }
-                .associate { (example, key) -> key to example }
+        val pairs =
+            committed.pages.flatMap { page -> page.examples.zip(Coverage.exampleKeys(page)) }
+        val before = pairs.associate { (example, key) -> key to example }
+        // A retitled example keeps its scenario, so its owner finds it when its key doesn't.
+        val byOwner =
+            pairs.mapNotNull { (example, _) -> example.owner?.let { it to example } }.toMap()
         val written = sortedMapOf<String, String>()
         val failures = mutableListOf<ExtractionFailure>()
         current.pages
@@ -199,7 +207,9 @@ object Extraction {
             .forEach { page ->
                 page.examples.zip(Coverage.exampleKeys(page)).forEach { (example, key) ->
                     val owner = example.owner
-                    val was = before[key]
+                    val was = owner?.let { byOwner[it] } ?: before[key]
+                    // Examples that share a title are told apart by their place, as their keys are.
+                    val label = key.removePrefix("${page.id}/")
                     // A page edit that leaves the reader nothing to extract would otherwise keep
                     // the
                     // old scenario passing silently.
@@ -211,7 +221,7 @@ object Extraction {
                         failures +=
                             ExtractionFailure(
                                 page.id,
-                                example.title,
+                                label,
                                 "its source changed, and the reader no longer finds the example's code",
                             )
                         return@forEach
@@ -261,7 +271,7 @@ object Extraction {
                         failures +=
                             ExtractionFailure(
                                 page.id,
-                                example.title,
+                                label,
                                 "its source changed, and ${failure.message}",
                             )
                     }
