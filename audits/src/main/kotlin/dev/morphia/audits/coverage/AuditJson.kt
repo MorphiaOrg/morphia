@@ -100,12 +100,6 @@ object AuditJson {
     fun programRequest(json: String): ShellProgramRequest =
         read(json, ShellProgramRequest::class.java)
 
-    fun catalog(json: String): CapabilityCatalog = read(json, CapabilityCatalog::class.java)
-
-    fun plan(json: String): CoveragePlan = read(json, CoveragePlan::class.java)
-
-    fun report(json: String): CoverageReport = read(json, CoverageReport::class.java)
-
     fun names(json: String): ExampleNameRegistry = read(json, ExampleNameRegistry::class.java)
 
     fun namingRequest(json: String): NamingRequest = read(json, NamingRequest::class.java)

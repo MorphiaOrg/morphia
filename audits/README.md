@@ -54,10 +54,11 @@ Each runs through the exec plugin from the repository root:
 |---|---|
 | `catalog/scenario-plan.json` | The pages and example destinations extraction reads. |
 | `catalog/documented-examples.json` | Every example on the current operator pages; the inventory later steps check against. |
-| `catalog/example-names.json` | The 92 reviewed names for examples whose page title is generic (`main`) or shared. |
+| `catalog/example-names.json` | The 93 reviewed names for examples whose page title is generic (`main`) or shared. |
 | `catalog/name-backport-review.json` | Reviewed stems for name collisions. |
 | `catalog/name-backport.json` | The ledger renaming master's `testExampleN` tests and `exampleN` fixtures to descriptive names (step 4). |
 | `catalog/generation-review.json` | The reviewed page-error exclusions, until step 5 moves them into the overrides file. |
 
-The shared golden vectors in `core/src/test/resources/dev/morphia/test/vectors/` keep this
-module's comparators and core's in agreement.
+The golden vectors in `core/src/test/resources/dev/morphia/test/vectors/` pin this module's strict
+and printed-result comparisons. Step 3 adds core's Java ports of both, which run the same vectors,
+so the two sides stay in agreement.
