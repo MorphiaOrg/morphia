@@ -32,7 +32,7 @@ object ApiCoverage {
 
     private val TAG =
         Regex(
-            """@(aggregation\.expression|aggregation\.stage|query\.filter|update\.operator)\s+(\$\S+)"""
+            """@(aggregation\.expression|aggregation\.stage|query\.filter|update\.operator)\s+(\$[^\s*]*)"""
         )
 
     /** The tagged operators of core's sources, by family. */
@@ -71,7 +71,7 @@ object ApiCoverage {
                         .filter {
                             it.reason == UntestedReason.NO_MORPHIA_API &&
                                 it.operator == key.second &&
-                                it.scenario.startsWith("${key.first}/")
+                                family(it) == key.first
                         }
                         .map { it.scenario },
                 )
@@ -85,12 +85,16 @@ object ApiCoverage {
     fun staleGaps(baseline: UntestedExamples, tags: Map<String, Set<String>>): List<String> =
         baseline.examples
             .filter { it.reason == UntestedReason.NO_MORPHIA_API && it.option == null }
-            .filter { entry ->
-                val family = Extraction.FAMILIES.single { entry.scenario.startsWith("$it/") }
-                entry.operator in tags[family].orEmpty()
-            }
+            .filter { entry -> entry.operator in tags[family(entry)].orEmpty() }
             .map {
                 "${it.scenario}: ${it.operator} now has a tagged Morphia factory; make the entry " +
                     "NOT_WRITTEN, or write the test"
             }
+
+    /**
+     * The family of the operator a gap names: its own [UntestedExample.family], or the scenario's,
+     * since most examples wait on an operator of their own page's family.
+     */
+    fun family(entry: UntestedExample): String =
+        entry.family ?: Extraction.FAMILIES.single { entry.scenario.startsWith("$it/") }
 }

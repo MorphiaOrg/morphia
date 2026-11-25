@@ -33,6 +33,11 @@ data class UntestedExample(
     @get:JsonInclude(JsonInclude.Include.NON_NULL) val operator: String? = null,
     /** For an option gap: the option Morphia's factory for [operator] doesn't support. */
     @get:JsonInclude(JsonInclude.Include.NON_NULL) val option: String? = null,
+    /**
+     * The family of [operator] when it isn't the scenario's own, such as a query operator a
+     * `$match` example needs: `query/filters`.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val family: String? = null,
 )
 
 /** `audits/catalog/untested-examples.json`: the reviewed baseline of untested scenarios. */
@@ -154,12 +159,14 @@ object Coverage {
             .forEach { problems += "$it is in the untested baseline more than once" }
         baseline.examples
             .filter {
-                (it.reason == UntestedReason.NO_MORPHIA_API) != (it.operator != null) ||
-                    it.option != null && it.operator == null
+                val gap = it.reason == UntestedReason.NO_MORPHIA_API
+                gap != !it.operator.isNullOrBlank() ||
+                    it.option != null && (!gap || it.option.isBlank()) ||
+                    it.family != null && (!gap || it.family !in Extraction.FAMILIES)
             }
             .forEach {
                 problems +=
-                    "${it.scenario}: NO_MORPHIA_API names the operator Morphia lacks, or that operator and its missing option; no other reason does"
+                    "${it.scenario}: NO_MORPHIA_API names the operator Morphia lacks (and its family when it isn't the scenario's), or that operator and its missing option; no other reason does"
             }
         val names = untested.map { it.scenario }.toSet()
         (reviewed.keys - names).sorted().forEach {
