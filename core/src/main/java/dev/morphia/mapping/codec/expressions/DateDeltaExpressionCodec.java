@@ -11,6 +11,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.whole;
 
 public class DateDeltaExpressionCodec extends BaseExpressionCodec<DateDeltaExpression> {
     public DateDeltaExpressionCodec(MorphiaDatastore datastore) {
@@ -23,7 +24,7 @@ public class DateDeltaExpressionCodec extends BaseExpressionCodec<DateDeltaExpre
             CodecRegistry registry = datastore.getCodecRegistry();
             encodeIfNotNull(registry, writer, "startDate", delta.startDate(), encoderContext);
             writer.writeString("unit", delta.unit().name().toLowerCase(Locale.ROOT));
-            writer.writeInt64("amount", delta.amount());
+            whole(writer, "amount", delta.amount());
             encodeIfNotNull(registry, writer, "timezone", delta.timezone(), encoderContext);
         });
 

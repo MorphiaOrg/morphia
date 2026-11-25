@@ -9,6 +9,7 @@ import org.bson.codecs.configuration.CodecRegistry;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
+import static dev.morphia.mapping.codec.CodecHelper.whole;
 
 public class ShiftExpressionCodec extends BaseExpressionCodec<ShiftExpression> {
     public ShiftExpressionCodec(MorphiaDatastore datastore) {
@@ -20,7 +21,7 @@ public class ShiftExpressionCodec extends BaseExpressionCodec<ShiftExpression> {
         document(writer, shift.operation(), () -> {
             CodecRegistry registry = datastore.getCodecRegistry();
             encodeIfNotNull(registry, writer, "output", shift.output(), encoderContext);
-            writer.writeInt64("by", shift.by());
+            whole(writer, "by", shift.by());
             encodeIfNotNull(registry, writer, "default", shift.defaultValue(), encoderContext);
         });
 

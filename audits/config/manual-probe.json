@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "manual-probe",
+  "uri": "https://github.com/mongodb/docs.git",
+  "revision": "a5d960b9574cdf31db571249dd6e298ff5b3f104",
+  "projectRoot": "content/manual/manual",
+  "label": "current-probe",
+  "role": "CURRENT",
+  "channel": "UNKNOWN",
+  "roots": [
+    "content/manual/manual/snooty.toml",
+    "content/manual/manual/source/reference/operator",
+    "content/manual/manual/source/includes",
+    "content/manual/manual/source/code-examples/tested"
+  ],
+  "allowedSymlinkRoots": [
+    "content/code-examples/tested"
+  ],
+  "maximumFiles": 100000,
+  "maximumFileBytes": 134217728,
+  "maximumTotalBytes": 2147483648,
+  "timeoutSeconds": 120
+}

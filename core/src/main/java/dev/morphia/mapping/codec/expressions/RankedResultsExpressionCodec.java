@@ -7,7 +7,6 @@ import dev.morphia.query.Sort;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
-import static dev.morphia.mapping.codec.CodecHelper.array;
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.mapping.codec.CodecHelper.encodeIfNotNull;
 
@@ -20,22 +19,13 @@ public class RankedResultsExpressionCodec extends BaseExpressionCodec<RankedResu
     public void encode(BsonWriter writer, RankedResultsExpression ranked, EncoderContext encoderContext) {
         document(writer, ranked.operation(), () -> {
             encodeIfNotNull(datastore.getCodecRegistry(), writer, "output", ranked.output(), encoderContext);
-            Sort[] sortBy = ranked.sortBy();
-            if (sortBy.length == 1) {
-                writer.writeName("sortBy");
-
-                document(writer, () -> {
-                    writer.writeInt64(sortBy[0].getField(), sortBy[0].getOrder());
-                });
-            } else {
-                array(writer, "sortBy", () -> {
-                    for (Sort sort : sortBy) {
-                        document(writer, () -> {
-                            writer.writeInt64(sort.getField(), sort.getOrder());
-                        });
-                    }
-                });
-            }
+            // The server takes one sort document, its keys in priority order.
+            writer.writeName("sortBy");
+            document(writer, () -> {
+                for (Sort sort : ranked.sortBy()) {
+                    writer.writeInt32(sort.getField(), sort.getOrder());
+                }
+            });
         });
     }
 

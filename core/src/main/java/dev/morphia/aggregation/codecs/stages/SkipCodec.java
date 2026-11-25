@@ -6,6 +6,8 @@ import dev.morphia.aggregation.stages.Skip;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.mapping.codec.CodecHelper.whole;
+
 public class SkipCodec extends StageCodec<Skip> {
     public SkipCodec(MorphiaDatastore datastore) {
         super(datastore);
@@ -18,6 +20,6 @@ public class SkipCodec extends StageCodec<Skip> {
 
     @Override
     protected void encodeStage(BsonWriter writer, Skip value, EncoderContext encoderContext) {
-        writer.writeInt64(value.getSize());
+        whole(writer, value.getSize());
     }
 }

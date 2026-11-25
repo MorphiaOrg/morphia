@@ -51,7 +51,7 @@ public class SetWindowFieldsCodec extends StageCodec<SetWindowFields> {
             if (sorts != null) {
                 document(writer, "sortBy", () -> {
                     for (Sort sort : sorts) {
-                        writer.writeInt64(sort.getField(), sort.getOrder());
+                        writer.writeInt32(sort.getField(), sort.getOrder());
                     }
                 });
             }

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "dialect": "MONGOSH",
+  "resultOrder": "ORDERED",
+  "blocks": [
+    {
+      "id": "seedTemperatures",
+      "source": "db.temperatureChange.insertMany( [\n   { _id: 1, startTemp: 50, endTemp: 80 },\n   { _id: 2, startTemp: 40, endTemp: 40 },\n   { _id: 3, startTemp: 90, endTemp: 70 },\n   { _id: 4, startTemp: 60, endTemp: 70 }\n] )",
+      "role": "SETUP",
+      "format": "SHELL",
+      "namespace": null,
+      "expectedFor": null,
+      "expectedError": null
+    },
+    {
+      "id": "absoluteTemperatureChanges",
+      "source": "db.temperatureChange.aggregate([\n   {\n      $project: { delta: { $abs: { $subtract: [ \"$startTemp\", \"$endTemp\" ] } } }\n   }\n])",
+      "role": "ACTION",
+      "format": "SHELL",
+      "namespace": null,
+      "expectedFor": null,
+      "expectedError": null
+    },
+    {
+      "id": "publishedChanges",
+      "source": "{ \"_id\" : 1, \"delta\" : 30 }\n{ \"_id\" : 2, \"delta\" : 0 }\n{ \"_id\" : 3, \"delta\" : 20 }\n{ \"_id\" : 4, \"delta\" : 10 }",
+      "role": "EXPECTED",
+      "format": "SHELL_RESULTS",
+      "namespace": null,
+      "expectedFor": null,
+      "expectedError": null
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "catalogSha256": "61c0879656464120f041fc857467efe06e5381ad28427f3f1e8726baf6c9ac09",
+  "pages": [
+    {
+      "referenceLanguages": [
+        "javascript",
+        "js",
+        "shell",
+        "mongosh"
+      ],
+      "referenceTabs": [
+        "shell"
+      ],
+      "foreignLanguages": [
+        "csharp",
+        "c#",
+        "python",
+        "sql",
+        "typescript",
+        "java",
+        "go",
+        "ruby",
+        "javascript/nodejs"
+      ],
+      "foreignTabs": [
+        "nodejs",
+        "csharp",
+        "python"
+      ],
+      "dialect": "MONGOSH",
+      "resultOrder": "ORDERED",
+      "sections": [
+        "example"
+      ],
+      "excludedSections": [],
+      "id": "absoluteValue",
+      "page": "reference/operator/aggregation/abs.txt",
+      "scope": {
+        "capability": {
+          "key": {
+            "product": "mongodb",
+            "context": "AGGREGATION_EXPRESSION",
+            "token": "$abs"
+          },
+          "facet": null
+        },
+        "language": "mongosh"
+      },
+      "destination": {
+        "testClass": "fixture.GeneratedAbs",
+        "resourceDirectory": "fixture/abs"
+      },
+      "minimumReferenceGroups": 1,
+      "sectionAssembly": {
+        "layout": "COMMANDS_THEN_RESULT",
+        "sharedSetupSections": [],
+        "scenarioTabs": [],
+        "additionalShellLanguages": []
+      }
+    },
+    {
+      "referenceLanguages": [
+        "javascript",
+        "js",
+        "shell",
+        "mongosh"
+      ],
+      "referenceTabs": [
+        "shell"
+      ],
+      "foreignLanguages": [
+        "csharp",
+        "c#",
+        "python",
+        "sql",
+        "typescript",
+        "java",
+        "go",
+        "ruby",
+        "javascript/nodejs"
+      ],
+      "foreignTabs": [
+        "nodejs",
+        "csharp",
+        "python"
+      ],
+      "dialect": "MONGOSH",
+      "resultOrder": "ORDERED",
+      "sections": [
+        "example"
+      ],
+      "excludedSections": [],
+      "id": "inverseCosine",
+      "page": "reference/operator/aggregation/acos.txt",
+      "scope": {
+        "capability": {
+          "key": {
+            "product": "mongodb",
+            "context": "AGGREGATION_EXPRESSION",
+            "token": "$acos"
+          },
+          "facet": null
+        },
+        "language": "mongosh"
+      },
+      "destination": {
+        "testClass": "fixture.GeneratedAcos",
+        "resourceDirectory": "fixture/acos"
+      },
+      "minimumReferenceGroups": 2,
+      "sectionAssembly": {
+        "layout": "SOURCE_ONLY",
+        "sharedSetupSections": [],
+        "scenarioTabs": [
+          "degrees",
+          "radians"
+        ],
+        "additionalShellLanguages": [
+          "bash"
+        ]
+      }
+    }
+  ]
+}

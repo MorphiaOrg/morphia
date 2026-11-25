@@ -169,6 +169,7 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * 
      * @param let the variable definitions
      * @return this
+     * @mongodb.server.release 5.0
      * @since 3.0
      */
     public AggregationOptions let(Document let) {
