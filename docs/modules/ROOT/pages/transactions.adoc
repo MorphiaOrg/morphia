@@ -5,7 +5,7 @@ Morphia 2.0 introduced a simple mechanism to access this functionality.
 Morphia 2.0 added the methods `withTransaction(MorphiaTransaction<T> transaction)` and
 `withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction)` allowing for the execution of logic scoped to a transaction.
 
-The API is designed to work with Java 8's lambda syntax for the most convenience.
+The API is designed to work with Java's lambda syntax for the most convenience.
 In this example, let's assume we're building a shopping site.
 
 [source,java]
