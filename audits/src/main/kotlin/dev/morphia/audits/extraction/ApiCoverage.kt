@@ -43,12 +43,19 @@ object ApiCoverage {
                 .filter { it.isRegularFile() && it.extension == "java" }
                 .forEach { file ->
                     TAG.findAll(file.readText()).forEach { match ->
-                        tags.getValue(TAGS.getValue(match.groupValues[1])) += match.groupValues[2]
+                        tags.getValue(TAGS.getValue(match.groupValues[1])) +=
+                            unescape(match.groupValues[2])
                     }
                 }
         }
         return tags
     }
+
+    /**
+     * A tag's operator as the docs name it: javadoc needs `$[<identifier>]` written with entities.
+     */
+    fun unescape(operator: String): String =
+        operator.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&")
 
     /**
      * The documented operators of the families with no tagged factory, each with the untested

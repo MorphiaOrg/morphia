@@ -16,7 +16,10 @@
 
 package taglets;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.Element;
 
@@ -39,6 +42,16 @@ public class UpdateOperatorTaglet extends ManualTaglet {
         return "update.operator";
     }
 
+    /**
+     * Also allows the type, for the positional operators, which any update operator's field path can use.
+     */
+    @Override
+    public Set<Location> getAllowedLocations() {
+        Set<Location> locations = new HashSet<>(super.getAllowedLocations());
+        locations.add(Location.TYPE);
+        return locations;
+    }
+
     @Override
     protected String getBaseDocURI() {
         return super.getBaseDocURI() + "reference/operator/update/";
@@ -52,14 +65,34 @@ public class UpdateOperatorTaglet extends ManualTaglet {
 
         StringBuilder buf = new StringBuilder(String.format("<dl><dt><span class=\"strong\">%s</span></dt>", getHeader()));
         for (DocTree tag : tags) {
-            String text = ((UnknownBlockTagTree) tag).getContent().get(0).toString();
+            // The whole content, since an escaped operator such as $[&lt;identifier&gt;] parses as several trees.
+            String text = ((UnknownBlockTagTree) tag).getContent().stream()
+                    .map(DocTree::toString)
+                    .collect(Collectors.joining())
+                    .trim();
             buf.append("<dd>").append(genLink(text)).append("</dd>");
         }
         return buf.toString();
     }
 
     protected String genLink(String text) {
-        return String.format("<a href='%s%s'>Update Operator:  %s</a>", getBaseDocURI(), text.replace("$", ""), text);
+        return String.format("<a href='%s%s'>Update Operator:  %s</a>", getBaseDocURI(), page(text), text);
+    }
+
+    /**
+     * @return the manual page of an operator; the positional operators' pages are named for what they do
+     */
+    static String page(String text) {
+        if (text.equals("$")) {
+            return "positional";
+        }
+        if (text.equals("$[]")) {
+            return "positional-all";
+        }
+        if (text.startsWith("$[")) {
+            return "positional-filtered";
+        }
+        return text.replace("$", "");
     }
 
 }

@@ -49,6 +49,7 @@ public class PushOperator extends UpdateOperator {
      *
      * @param position the position in the array for the update
      * @return this
+     * @update.operator $position
      */
     public PushOperator position(int position) {
         this.position = position;
@@ -68,6 +69,7 @@ public class PushOperator extends UpdateOperator {
      *
      * @param slice the slice value for the update
      * @return this
+     * @update.operator $slice
      */
     public PushOperator slice(int slice) {
         this.slice = slice;
@@ -87,6 +89,7 @@ public class PushOperator extends UpdateOperator {
      *
      * @param sort the sort value for the update
      * @return this
+     * @update.operator $sort
      */
     public PushOperator sort(int sort) {
         if (sortDocument != null) {
@@ -101,6 +104,7 @@ public class PushOperator extends UpdateOperator {
      *
      * @param value the sort criteria to add
      * @return this
+     * @update.operator $sort
      */
     public PushOperator sort(Sort value) {
         if (sort != null) {

@@ -30,6 +30,16 @@ class ApiCoverageTest {
     }
 
     @Test
+    fun escapedTagsReadAsTheDocsNameThem() {
+        // The positional operators are tagged on UpdateOperators; javadoc needs the filtered one's
+        // brackets written as entities.
+        val updates = tags.getValue("query/updates")
+        listOf("\$", "\$[]", "\$[<identifier>]", "\$position", "\$slice", "\$sort").forEach {
+            assertTrue(it in updates, "$it isn't tagged: $updates")
+        }
+    }
+
+    @Test
     fun missingApiIsReported() {
         val inventory =
             AuditJson.exampleInventory(Files.readString(root.resolve(DocumentedExamples.PATH)))
