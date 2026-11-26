@@ -1,0 +1,134 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/group/groupTitlesByYear",
+  "title": "Group Titles by Year",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/group.txt",
+    "blob": "8a18fc90e2df0775fccd5531514e665a1a131341"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$lt": {
+              "$numberInt": "1910"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "titles": {
+            "$push": "$title"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1896"
+              }
+            }
+          },
+          {
+            "name": "titles",
+            "value": {
+              "array": [
+                {
+                  "text": "The Kiss"
+                },
+                {
+                  "text": "The Kiss"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1903"
+              }
+            }
+          },
+          {
+            "name": "titles",
+            "value": {
+              "array": [
+                {
+                  "text": "The Great Train Robbery"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1909"
+              }
+            }
+          },
+          {
+            "name": "titles",
+            "value": {
+              "array": [
+                {
+                  "text": "A Corner in Wheat"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.0.0",
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

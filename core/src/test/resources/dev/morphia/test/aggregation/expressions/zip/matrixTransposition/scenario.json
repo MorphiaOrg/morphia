@@ -1,0 +1,231 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/zip/matrixTransposition",
+  "title": "Matrix Transposition",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "08e800f56f6f44b44a625756fc1c3c64061055b9",
+    "path": "source/reference/operator/aggregation/zip.txt",
+    "blob": "88768190850e225b4aee38ddde325830c65b55a2"
+  },
+  "dataset": null,
+  "collections": {
+    "matrices": [
+      {
+        "matrix": [
+          [
+            {
+              "$numberInt": "1"
+            },
+            {
+              "$numberInt": "2"
+            }
+          ],
+          [
+            {
+              "$numberInt": "2"
+            },
+            {
+              "$numberInt": "3"
+            }
+          ],
+          [
+            {
+              "$numberInt": "3"
+            },
+            {
+              "$numberInt": "4"
+            }
+          ]
+        ]
+      },
+      {
+        "matrix": [
+          [
+            {
+              "$numberInt": "8"
+            },
+            {
+              "$numberInt": "7"
+            }
+          ],
+          [
+            {
+              "$numberInt": "7"
+            },
+            {
+              "$numberInt": "6"
+            }
+          ],
+          [
+            {
+              "$numberInt": "5"
+            },
+            {
+              "$numberInt": "4"
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "matrices",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": false,
+          "transposed": {
+            "$zip": {
+              "inputs": [
+                {
+                  "$arrayElemAt": [
+                    "$matrix",
+                    {
+                      "$numberInt": "0"
+                    }
+                  ]
+                },
+                {
+                  "$arrayElemAt": [
+                    "$matrix",
+                    {
+                      "$numberInt": "1"
+                    }
+                  ]
+                },
+                {
+                  "$arrayElemAt": [
+                    "$matrix",
+                    {
+                      "$numberInt": "2"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "transposed",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "1"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "2"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "3"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "2"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "3"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "4"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "transposed",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "8"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "7"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "5"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "7"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "6"
+                      }
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "4"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "PROJECTION_FLAGS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

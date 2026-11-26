@@ -1,0 +1,447 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/anyElementTrue/checkWhetherAnyResponseIsTrue",
+  "title": "Check Whether Any Response Is True",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/anyElementTrue.txt",
+    "blob": "d039b073f74f7704fbdb356635950ebe11215e6f"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "responses": [
+          true
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "responses": [
+          true,
+          false
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "responses": []
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "responses": [
+          {
+            "$numberInt": "1"
+          },
+          true,
+          "seven"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "responses": [
+          {
+            "$numberInt": "0"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "responses": [
+          []
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "responses": [
+          [
+            {
+              "$numberInt": "0"
+            }
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "responses": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "9"
+        },
+        "responses": [
+          null
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "10"
+        },
+        "responses": [
+          null
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "survey",
+    "pipeline": [
+      {
+        "$project": {
+          "responses": {
+            "$numberInt": "1"
+          },
+          "isAnyTrue": {
+            "$anyElementTrue": [
+              "$responses"
+            ]
+          },
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "exact": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "exact": true
+                },
+                {
+                  "exact": false
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                },
+                {
+                  "exact": true
+                },
+                {
+                  "text": "seven"
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "0"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "array": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "7"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "0"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "exact": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "9"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "exact": null
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "responses",
+            "value": {
+              "array": [
+                {
+                  "exact": null
+                }
+              ]
+            }
+          },
+          {
+            "name": "isAnyTrue",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

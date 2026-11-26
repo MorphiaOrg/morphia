@@ -9,15 +9,11 @@ import static dev.morphia.aggregation.expressions.SetExpressions.anyElementTrue;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestAnyElementTrue extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/anyElementTrue/example1
-     * 
-     */
-    @Test
-    @DisplayName("main")
-    public void testExample1() {
-        testPipeline(aggregation -> aggregation.pipeline(
-                project().suppressId().include("responses").include("isAnyTrue", anyElementTrue("$responses"))));
 
+    @Test
+    @DisplayName("Check Whether Any Response Is True")
+    public void testCheckWhetherAnyResponseIsTrue() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                project().include("responses").include("isAnyTrue", anyElementTrue("$responses")).include("_id")));
     }
 }

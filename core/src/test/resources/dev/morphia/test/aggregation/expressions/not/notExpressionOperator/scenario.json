@@ -1,0 +1,229 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/not/notExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "a1a6a389dc78ceac367b900d0d5f1ec970cf8fff",
+    "path": "source/reference/operator/aggregation/not.txt",
+    "blob": "70bd59278800bb2aa90dd977c91bbae1b6c48d7d"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc1",
+        "description": "product 1",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "abc2",
+        "description": "product 2",
+        "qty": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz1",
+        "description": "product 3",
+        "qty": {
+          "$numberInt": "250"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "VWZ1",
+        "description": "product 4",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "VWZ2",
+        "description": "product 5",
+        "qty": {
+          "$numberInt": "180"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "result": {
+            "$not": [
+              {
+                "$gt": [
+                  "$qty",
+                  {
+                    "$numberInt": "250"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc1"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc2"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "xyz1"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ1"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ2"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

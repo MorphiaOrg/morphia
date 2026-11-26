@@ -1,0 +1,230 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/groupByUnwoundValues",
+  "title": "Group by Unwound Values",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unwind.txt",
+    "blob": "195393b7aefd488cbd70cbdab4478fde747707f1"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "The Dark Knight",
+              "Inception",
+              "Interstellar",
+              "Brave"
+            ]
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "genres": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "movieCount": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "movieCount": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Drama"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Sci-Fi"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Crime"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Mystery"
+            }
+          },
+          {
+            "name": "movieCount",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

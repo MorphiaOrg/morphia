@@ -1,8 +1,0 @@
-   [
-     {
-       $project:
-          {
-            cpLocation: { $indexOfCP: [ "$item", "foo" ] },
-          }
-      }
-   ]

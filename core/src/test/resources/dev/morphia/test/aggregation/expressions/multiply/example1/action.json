@@ -1,1 +1,0 @@
-{ $project: { date: 1, item: 1, total: { $multiply: [ "$price", "$quantity" ] } } }

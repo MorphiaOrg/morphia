@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sortArray/sortOnMultipleFields",
+  "title": "Sort on Multiple Fields",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/sortArray.txt",
+    "blob": "06d3e13bf9c909deb937b2bd39d4c41589a2b032"
+  },
+  "dataset": null,
+  "collections": {
+    "engineers": [
+      {
+        "team": [
+          {
+            "name": "pat",
+            "age": {
+              "$numberInt": "30"
+            },
+            "address": {
+              "street": "12 Baker St",
+              "city": "London"
+            }
+          },
+          {
+            "name": "dallas",
+            "age": {
+              "$numberInt": "36"
+            },
+            "address": {
+              "street": "12 Cowper St",
+              "city": "Palo Alto"
+            }
+          },
+          {
+            "name": "charlie",
+            "age": {
+              "$numberInt": "42"
+            },
+            "address": {
+              "street": "12 French St",
+              "city": "New Brunswick"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "engineers",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "result": {
+            "$sortArray": {
+              "input": "$team",
+              "sortBy": {
+                "age": {
+                  "$numberInt": "-1"
+                },
+                "name": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "result",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "charlie"
+                      }
+                    },
+                    {
+                      "name": "age",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "42"
+                        }
+                      }
+                    },
+                    {
+                      "name": "address",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "street",
+                            "value": {
+                              "text": "12 French St"
+                            }
+                          },
+                          {
+                            "name": "city",
+                            "value": {
+                              "text": "New Brunswick"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "dallas"
+                      }
+                    },
+                    {
+                      "name": "age",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "36"
+                        }
+                      }
+                    },
+                    {
+                      "name": "address",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "street",
+                            "value": {
+                              "text": "12 Cowper St"
+                            }
+                          },
+                          {
+                            "name": "city",
+                            "value": {
+                              "text": "Palo Alto"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "pat"
+                      }
+                    },
+                    {
+                      "name": "age",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "30"
+                        }
+                      }
+                    },
+                    {
+                      "name": "address",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "street",
+                            "value": {
+                              "text": "12 Baker St"
+                            }
+                          },
+                          {
+                            "name": "city",
+                            "value": {
+                              "text": "London"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

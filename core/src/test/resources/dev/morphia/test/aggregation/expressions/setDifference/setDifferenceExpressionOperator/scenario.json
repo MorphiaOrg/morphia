@@ -1,0 +1,522 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e0848b6ada3e691ecada5da38e717de2d2545843",
+    "path": "source/reference/operator/aggregation/setDifference.txt",
+    "blob": "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f"
+  },
+  "dataset": null,
+  "collections": {
+    "flowers": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          "rose",
+          "orchid"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          "orchid",
+          "rose",
+          "orchid"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          "rose",
+          "orchid",
+          "jasmine"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          "jasmine",
+          "rose"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": []
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          [
+            "rose"
+          ],
+          [
+            "orchid"
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "flowerFieldA": [
+          "rose",
+          "orchid"
+        ],
+        "flowerFieldB": [
+          [
+            "rose",
+            "orchid"
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "flowerFieldA": [],
+        "flowerFieldB": []
+      },
+      {
+        "_id": {
+          "$numberInt": "9"
+        },
+        "flowerFieldA": [],
+        "flowerFieldB": [
+          "rose"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "flowers",
+    "pipeline": [
+      {
+        "$project": {
+          "flowerFieldA": {
+            "$numberInt": "1"
+          },
+          "flowerFieldB": {
+            "$numberInt": "1"
+          },
+          "inBOnly": {
+            "$setDifference": [
+              "$flowerFieldB",
+              "$flowerFieldA"
+            ]
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "text": "orchid"
+                },
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                },
+                {
+                  "text": "jasmine"
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": [
+                {
+                  "text": "jasmine"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "text": "jasmine"
+                },
+                {
+                  "text": "rose"
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": [
+                {
+                  "text": "jasmine"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "rose"
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "orchid"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "rose"
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "orchid"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                },
+                {
+                  "text": "orchid"
+                }
+              ]
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "rose"
+                    },
+                    {
+                      "text": "orchid"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "rose"
+                    },
+                    {
+                      "text": "orchid"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "flowerFieldA",
+            "value": {
+              "array": []
+            }
+          },
+          {
+            "name": "flowerFieldB",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                }
+              ]
+            }
+          },
+          {
+            "name": "inBOnly",
+            "value": {
+              "array": [
+                {
+                  "text": "rose"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

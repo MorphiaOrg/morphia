@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToLong extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toLong/example1
+     * test data: dev/morphia/test/aggregation/expressions/toLong/toLongExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToLongExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("convertedQty", toLong("$qty")),
                 sort().descending("convertedQty")));
     }

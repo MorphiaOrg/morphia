@@ -1,1 +1,0 @@
-db.inventory.updateMany( { "carrier.fee": { $lt: 20 } }, { $set: { price: 9.99 } } )

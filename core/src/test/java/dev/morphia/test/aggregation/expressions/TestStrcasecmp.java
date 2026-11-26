@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestStrcasecmp extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/strcasecmp/example1
+     * test data: dev/morphia/test/aggregation/expressions/strcasecmp/strcasecmpExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testStrcasecmpExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("comparisonResult", strcasecmp("$quarter", "13q4"))));
     }

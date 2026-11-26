@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIsoWeek extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isoWeek/example1
+     * test data: dev/morphia/test/aggregation/expressions/isoWeek/isoWeekExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIsoWeekExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("city", "$city").include("weekNumber", isoWeek("$date"))));
     }

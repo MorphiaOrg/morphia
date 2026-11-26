@@ -1,0 +1,207 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isArray/isArrayExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "190e04195a5e4f9cd0651bfc71cfa65928fb8ce5",
+    "path": "source/reference/operator/aggregation/isArray.txt",
+    "blob": "bc5c7095f3dd2b19238a8edaa22444ced7d9b66b"
+  },
+  "dataset": null,
+  "collections": {
+    "warehouses": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "instock": [
+          "chocolate"
+        ],
+        "ordered": [
+          "butter",
+          "apples"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "instock": [
+          "apples",
+          "pudding",
+          "pie"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "instock": [
+          "pears",
+          "pecans"
+        ],
+        "ordered": [
+          "cherries"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "instock": [
+          "ice cream"
+        ],
+        "ordered": []
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "warehouses",
+    "pipeline": [
+      {
+        "$project": {
+          "items": {
+            "$cond": {
+              "if": {
+                "$and": [
+                  {
+                    "$isArray": "$instock"
+                  },
+                  {
+                    "$isArray": "$ordered"
+                  }
+                ]
+              },
+              "then": {
+                "$concatArrays": [
+                  "$instock",
+                  "$ordered"
+                ]
+              },
+              "else": "One or more fields is not an array."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "butter"
+                },
+                {
+                  "text": "apples"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "text": "One or more fields is not an array."
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "pears"
+                },
+                {
+                  "text": "pecans"
+                },
+                {
+                  "text": "cherries"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "ice cream"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "SINGLE_ARGUMENT_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

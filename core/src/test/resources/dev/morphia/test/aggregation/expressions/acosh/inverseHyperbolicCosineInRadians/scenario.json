@@ -1,0 +1,79 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/acosh/inverseHyperbolicCosineInRadians",
+  "title": "main :: Inverse Hyperbolic Cosine in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+    "path": "source/reference/operator/aggregation/acosh.txt",
+    "blob": "287395a4d1c9ea75403d43865315f018cabcf2f8"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "x-coordinate": {
+          "$numberDecimal": "3"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "y-coordinate": {
+            "$acosh": "$x-coordinate"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "x-coordinate",
+            "value": {
+              "decimal": "3"
+            }
+          },
+          {
+            "name": "y-coordinate",
+            "value": {
+              "decimal": "1.762747174039086050465218649959585"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

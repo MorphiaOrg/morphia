@@ -1,0 +1,112 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setIntersection/retrieveTheDocuments",
+  "title": "Retrieve the documents",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/setIntersection.txt",
+    "blob": "6ed7f7255c3c7ee01eb499acd179d574236766f9"
+  },
+  "dataset": null,
+  "collections": {
+    "budget": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "allowedRoles": [
+          "Marketing"
+        ],
+        "comment": "For marketing team",
+        "yearlyBudget": {
+          "$numberInt": "15000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "allowedRoles": [
+          "Sales"
+        ],
+        "comment": "For sales team",
+        "yearlyBudget": {
+          "$numberInt": "17000"
+        },
+        "salesEventsBudget": {
+          "$numberInt": "1000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "allowedRoles": [
+          "Operations"
+        ],
+        "comment": "For operations team",
+        "yearlyBudget": {
+          "$numberInt": "19000"
+        },
+        "cloudBudget": {
+          "$numberInt": "12000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "allowedRoles": [
+          "Development"
+        ],
+        "comment": "For development team",
+        "yearlyBudget": {
+          "$numberInt": "27000"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "budget",
+    "pipeline": [
+      {
+        "$match": {
+          "$expr": {
+            "$not": {
+              "$eq": [
+                {
+                  "$setIntersection": [
+                    "$allowedRoles",
+                    "$$USER_ROLES.role"
+                  ]
+                },
+                []
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "SINGLE_ARGUMENT_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

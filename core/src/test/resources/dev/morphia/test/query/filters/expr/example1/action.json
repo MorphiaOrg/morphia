@@ -1,1 +1,0 @@
-db.monthlyBudget.find( { $expr: { $gt: [ "$spent" , "$budget" ] } } )

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/pop/removeTheLastItemOfAnArray",
+  "title": "Remove the Last Item of an Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "948002e14f1d94c10fb84b8fb833149a16531169",
+    "path": "source/reference/operator/update/pop.txt",
+    "blob": "8c4113566f383e557ecae739dd6a96cabcbe8208"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "10"
+        },
+        "scores": [
+          {
+            "$numberInt": "9"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "10"
+      }
+    },
+    "update": {
+      "$pop": {
+        "scores": {
+          "$numberInt": "1"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "9"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

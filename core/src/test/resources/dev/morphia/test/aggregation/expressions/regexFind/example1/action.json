@@ -1,3 +1,0 @@
-[
-   { $addFields: { returnObject: { $regexFind: { input: "$description", regex: /line/ } } } }
-]

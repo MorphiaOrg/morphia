@@ -1,8 +1,0 @@
-{
-       $group:
-         {
-           _id: "$item",
-           avgAmount: { $avg: { $multiply: [ "$price", "$quantity" ] } },
-           avgQuantity: { $avg: "$quantity" }
-         }
-     }

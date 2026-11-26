@@ -1,0 +1,186 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument",
+  "title": "``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+    "path": "source/reference/operator/aggregation/replaceRoot.txt",
+    "blob": "f8c2929b446278e8fe95d37f5b21b670097511e4"
+  },
+  "dataset": null,
+  "collections": {
+    "contacts": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Fred",
+        "email": "fred@example.net"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Frank N. Stine",
+        "cell": "012-345-9999"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Gren Dell",
+        "home": "987-654-3210",
+        "email": "beo@example.net"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "contacts",
+    "pipeline": [
+      {
+        "$replaceRoot": {
+          "newRoot": {
+            "$mergeObjects": [
+              {
+                "_id": "",
+                "name": "",
+                "email": "",
+                "cell": "",
+                "home": ""
+              },
+              "$$ROOT"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Fred"
+            }
+          },
+          {
+            "name": "email",
+            "value": {
+              "text": "fred@example.net"
+            }
+          },
+          {
+            "name": "cell",
+            "value": {
+              "text": ""
+            }
+          },
+          {
+            "name": "home",
+            "value": {
+              "text": ""
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Frank N. Stine"
+            }
+          },
+          {
+            "name": "email",
+            "value": {
+              "text": ""
+            }
+          },
+          {
+            "name": "cell",
+            "value": {
+              "text": "012-345-9999"
+            }
+          },
+          {
+            "name": "home",
+            "value": {
+              "text": ""
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Gren Dell"
+            }
+          },
+          {
+            "name": "email",
+            "value": {
+              "text": "beo@example.net"
+            }
+          },
+          {
+            "name": "cell",
+            "value": {
+              "text": ""
+            }
+          },
+          {
+            "name": "home",
+            "value": {
+              "text": "987-654-3210"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

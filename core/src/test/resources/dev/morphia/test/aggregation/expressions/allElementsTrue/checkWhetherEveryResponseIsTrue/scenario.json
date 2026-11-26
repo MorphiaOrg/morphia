@@ -1,0 +1,147 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/allElementsTrue/checkWhetherEveryResponseIsTrue",
+  "title": "Check Whether Every Response Is True",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/allElementsTrue.txt",
+    "blob": "a1c9612d980c60f8278aefffae573410f5a77c7c"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "responses": [
+          true
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "responses": [
+          true,
+          false
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "responses": []
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "responses": [
+          {
+            "$numberInt": "1"
+          },
+          true,
+          "seven"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "responses": [
+          {
+            "$numberInt": "0"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "responses": [
+          []
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "responses": [
+          [
+            {
+              "$numberInt": "0"
+            }
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "responses": [
+          [
+            false
+          ]
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "9"
+        },
+        "responses": [
+          null
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "10"
+        },
+        "responses": [
+          null
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "survey",
+    "pipeline": [
+      {
+        "$project": {
+          "responses": {
+            "$numberInt": "1"
+          },
+          "isAllTrue": {
+            "$allElementsTrue": [
+              "$responses"
+            ]
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

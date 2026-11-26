@@ -1,0 +1,238 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/binarySize/binarySizeExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "00a744dc63b488437043031dab7af6df0399b86f",
+    "path": "source/reference/operator/aggregation/binarySize.txt",
+    "blob": "fd67064d5ae5c109841aa73b0775196aed53fa81"
+  },
+  "dataset": null,
+  "collections": {
+    "images": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "cat.jpg",
+        "binary": {
+          "$binary": {
+            "base64": "OEJTfmD8twzaj/LPKLIVkA==",
+            "subType": "00"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "big_ben.jpg",
+        "binary": {
+          "$binary": {
+            "base64": "aGVsZmRqYWZqYmxhaGJsYXJnYWZkYXJlcTU1NDE1Z2FmZCBmZGFmZGE=",
+            "subType": "00"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "tea_set.jpg",
+        "binary": {
+          "$binary": {
+            "base64": "MyIRAFVEd2aImaq7zN3u/w==",
+            "subType": "00"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "concert.jpg",
+        "binary": {
+          "$binary": {
+            "base64": "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=",
+            "subType": "00"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "empty.jpg",
+        "binary": {
+          "$binary": {
+            "base64": "",
+            "subType": "00"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "images",
+    "pipeline": [
+      {
+        "$project": {
+          "name": "$name",
+          "imageSize": {
+            "$binarySize": "$binary"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "cat.jpg"
+            }
+          },
+          {
+            "name": "imageSize",
+            "value": {
+              "whole": {
+                "$numberInt": "16"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "big_ben.jpg"
+            }
+          },
+          {
+            "name": "imageSize",
+            "value": {
+              "whole": {
+                "$numberInt": "41"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "tea_set.jpg"
+            }
+          },
+          {
+            "name": "imageSize",
+            "value": {
+              "whole": {
+                "$numberInt": "16"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "concert.jpg"
+            }
+          },
+          {
+            "name": "imageSize",
+            "value": {
+              "whole": {
+                "$numberInt": "269"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "empty.jpg"
+            }
+          },
+          {
+            "name": "imageSize",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

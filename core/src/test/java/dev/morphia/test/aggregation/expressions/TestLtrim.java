@@ -9,15 +9,11 @@ import static dev.morphia.aggregation.expressions.StringExpressions.ltrim;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLtrim extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/ltrim/example1
-     * 
-     */
-    @Test
-    @DisplayName("main")
-    public void testExample1() {
-        testPipeline((aggregation) -> aggregation
-                .pipeline(project().include("item").include("description", ltrim("$description"))));
-    }
 
+    @Test
+    @DisplayName("Trim Leading Whitespace")
+    public void testTrimLeadingWhitespace() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                project().include("item").include("description", ltrim("$description"))));
+    }
 }

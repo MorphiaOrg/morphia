@@ -457,19 +457,16 @@ canonical Extended JSON: numbers keep their BSON type (`{"$numberInt": "1"}`,
 it, and corrections go through the overrides file. Every key below is required unless it says
 otherwise.
 
-Today's runner rejects:
-- unknown top-level, `action`, `comparison` and `skipped` keys;
-- an `order`, `topology` or `expected` kind outside the listed values;
-- a non-null `tolerance`.
+The runner rejects:
+- unknown top-level, `action`, `comparison`, `requirements` and `skipped` keys;
+- an `order`, `topology`, `context` or `expected` kind outside the listed values;
+- a non-null `tolerance`;
+- a `name` that isn't the scenario's folder, a non-string `expected.none`, and an alternative with
+  keys other than its kind's command keys;
+- a missing `title` or a malformed `source`, except on the runner's self-tests.
 
-It does not yet check:
-- that `name` matches the folder;
-- `context` and `source`, or unknown `requirements` keys;
-- that `expected.none` holds a string;
-- an alternative's keys.
-
-The migration adds those checks, so that every key and value listed here is enforced. The runner's
-five self-test fixtures (`runner/…`) have no `title` and a `null` `source`; they are exempt, as test
+The runner's
+self-test fixtures (`runner/…`) have no `title` and a `null` `source`; they are exempt, as test
 inputs for the runner rather than docs examples.
 
 ### Top level

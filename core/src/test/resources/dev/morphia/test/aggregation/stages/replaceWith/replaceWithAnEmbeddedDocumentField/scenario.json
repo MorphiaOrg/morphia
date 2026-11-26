@@ -1,0 +1,212 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
+  "title": "``$replaceWith`` an Embedded Document Field",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+    "path": "source/reference/operator/aggregation/replaceWith.txt",
+    "blob": "74e9aeb819a72b247549c707e224b08914c5b858"
+  },
+  "dataset": null,
+  "collections": {
+    "people": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Arlene",
+        "age": {
+          "$numberInt": "34"
+        },
+        "pets": {
+          "dogs": {
+            "$numberInt": "2"
+          },
+          "cats": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Sam",
+        "age": {
+          "$numberInt": "41"
+        },
+        "pets": {
+          "cats": {
+            "$numberInt": "1"
+          },
+          "fish": {
+            "$numberInt": "3"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Maria",
+        "age": {
+          "$numberInt": "25"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "people",
+    "pipeline": [
+      {
+        "$replaceWith": {
+          "$mergeObjects": [
+            {
+              "dogs": {
+                "$numberInt": "0"
+              },
+              "cats": {
+                "$numberInt": "0"
+              },
+              "birds": {
+                "$numberInt": "0"
+              },
+              "fish": {
+                "$numberInt": "0"
+              }
+            },
+            "$pets"
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "dogs",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "cats",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "birds",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "fish",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "dogs",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "cats",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "birds",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "fish",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "dogs",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "cats",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "birds",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "fish",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.stages;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.changestream.FullDocument;
@@ -21,26 +22,23 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
-import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 
 public class TestChangeStream extends TemplatedTestBase {
     @Test
-    @SuppressWarnings("unchecked")
     public void testChangeStream() {
         checkForReplicaSet();
 
-        Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
+        List<Document> input = Stream.of("{ '_id': 1, 'name': 'Jim Halpert' }", "{ '_id': 2, 'name': 'Pam Beesley' }",
+                "{ '_id': 3, 'name': 'Michael Scott' }", "{ '_id': 4, 'name': 'Dwight Schrute' }").map(Document::parse).toList();
         MongoCollection<Document> collection = getDatabase().getCollection(EXAMPLE_TEST_COLLECTION);
 
         try (MorphiaCursor<Document> cursor = getDs().aggregate(aggregationOptions().collection(EXAMPLE_TEST_COLLECTION))
                 .pipeline(changeStream())
                 .iterator()) {
-            while (input.hasNext()) {
-                Document inserted = input.next();
+            for (Document inserted : input) {
                 collection.insertOne(inserted);
-                Document next = cursor.next();
-                assertDocumentEquals(next.get("fullDocument"), inserted);
+                assertDocumentEquals(cursor.next().get("fullDocument"), inserted);
             }
         }
     }

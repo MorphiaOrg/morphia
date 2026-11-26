@@ -1,0 +1,117 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
+  "title": "Extend Regex Options to Match Characters Outside of ASCII",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "dc702637685119e48f0f7980de92e0bea87afd54",
+    "path": "source/reference/operator/query/regex.txt",
+    "blob": "77b0633b93d27b990ed4bf848da8629144fd5e73"
+  },
+  "dataset": null,
+  "collections": {
+    "songs": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "artist": "Blue Öyster Cult",
+        "title": "The Reaper"
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "artist": "Blue Öyster Cult",
+        "title": "Godzilla"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "artist": "Blue Oyster Cult",
+        "title": "Take Me Away"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "songs",
+    "filter": {
+      "artist": {
+        "$regex": {
+          "$regularExpression": {
+            "pattern": "\\byster",
+            "options": ""
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "artist",
+            "value": {
+              "text": "Blue Öyster Cult"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "The Reaper"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "artist",
+            "value": {
+              "text": "Blue Öyster Cult"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Godzilla"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "7.0.0",
+    "topology": "STANDALONE"
+  }
+}

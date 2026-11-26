@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toLong/toLongExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
+    "path": "source/reference/operator/aggregation/toLong.txt",
+    "blob": "0e95704326f3ccb1c2afeec425ae8f3b0df18e21"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "apple",
+        "qty": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pie",
+        "qty": "100"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ice cream",
+        "qty": {
+          "$numberLong": "500"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "almonds",
+        "qty": "50"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedQty": {
+            "$toLong": "$qty"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "convertedQty": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ice cream"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "exact": {
+                "$numberLong": "500"
+              }
+            }
+          },
+          {
+            "name": "convertedQty",
+            "value": {
+              "exact": {
+                "$numberLong": "500"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pie"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "text": "100"
+            }
+          },
+          {
+            "name": "convertedQty",
+            "value": {
+              "exact": {
+                "$numberLong": "100"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "text": "50"
+            }
+          },
+          {
+            "name": "convertedQty",
+            "value": {
+              "exact": {
+                "$numberLong": "50"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "convertedQty",
+            "value": {
+              "exact": {
+                "$numberLong": "5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

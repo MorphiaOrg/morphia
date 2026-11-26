@@ -1,0 +1,251 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/avg/useInProjectStage",
+  "title": "Use in ``$project`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/avg.txt",
+    "blob": "74498fc5ffe36f042704a45c212ac777af935d95"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "7"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "80"
+        },
+        "midterm": {
+          "$numberInt": "75"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "9"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "95"
+        },
+        "midterm": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "final": {
+          "$numberInt": "78"
+        },
+        "midterm": {
+          "$numberInt": "70"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "students",
+    "pipeline": [
+      {
+        "$project": {
+          "quizAvg": {
+            "$avg": "$quizzes"
+          },
+          "labAvg": {
+            "$avg": "$labs"
+          },
+          "examAvg": {
+            "$avg": [
+              "$final",
+              "$midterm"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "quizAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "7.666666666666667"
+              }
+            }
+          },
+          {
+            "name": "labAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.5"
+              }
+            }
+          },
+          {
+            "name": "examAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "77.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "quizAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.5"
+              }
+            }
+          },
+          {
+            "name": "labAvg",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "examAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "87.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "quizAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "4.666666666666667"
+              }
+            }
+          },
+          {
+            "name": "labAvg",
+            "value": {
+              "exact": {
+                "$numberDouble": "5.5"
+              }
+            }
+          },
+          {
+            "name": "examAvg",
+            "value": {
+              "whole": {
+                "$numberInt": "74"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

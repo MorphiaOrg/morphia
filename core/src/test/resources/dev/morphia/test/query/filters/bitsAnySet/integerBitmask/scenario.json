@@ -1,0 +1,139 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/bitsAnySet/integerBitmask",
+  "title": "Integer Bitmask",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "1cf4196013fa93644ac656e716874c8f6d9248b6",
+    "path": "source/reference/operator/query/bitsAnySet.txt",
+    "blob": "d520b515dec6566e81ed71559966fde21a97539f"
+  },
+  "dataset": null,
+  "collections": {
+    "collection": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": {
+          "$numberInt": "54"
+        },
+        "binaryValueofA": "00110110"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "$numberInt": "20"
+        },
+        "binaryValueofA": "00010100"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": {
+          "$numberInt": "20"
+        },
+        "binaryValueofA": "00010100"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "a": {
+          "$binary": {
+            "base64": "Zg==",
+            "subType": "00"
+          }
+        },
+        "binaryValueofA": "01100110"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "collection",
+    "filter": {
+      "a": {
+        "$bitsAnySet": {
+          "$numberInt": "35"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "whole": {
+                "$numberInt": "54"
+              }
+            }
+          },
+          {
+            "name": "binaryValueofA",
+            "value": {
+              "text": "00110110"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "exact": {
+                "$binary": {
+                  "base64": "Zg==",
+                  "subType": "00"
+                }
+              }
+            }
+          },
+          {
+            "name": "binaryValueofA",
+            "value": {
+              "text": "01100110"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,5 +1,0 @@
-{
-      $addFields : {
-         "sinh_output" : { $sinh : "$angle" }
-      }
-   }

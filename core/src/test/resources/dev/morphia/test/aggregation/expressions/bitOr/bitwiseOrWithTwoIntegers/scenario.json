@@ -1,0 +1,143 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bitOr/bitwiseOrWithTwoIntegers",
+  "title": "Bitwise OR with Two Integers",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bitOr.txt",
+    "blob": "414da80438ede5f95bd76a9fd0edd3e8c5784aed"
+  },
+  "dataset": null,
+  "collections": {
+    "switches": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "a": {
+          "$numberInt": "0"
+        },
+        "b": {
+          "$numberInt": "127"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": {
+          "$numberInt": "2"
+        },
+        "b": {
+          "$numberInt": "3"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "$numberInt": "3"
+        },
+        "b": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "switches",
+    "pipeline": [
+      {
+        "$project": {
+          "result": {
+            "$bitOr": [
+              "$a",
+              "$b"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "127"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "7"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "6.3.0",
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/in/matchValues",
+  "title": "Match Values",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/in.txt",
+    "blob": "bac31808d1910fe9947955e65d193b3035f2e718"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "rated": {
+        "$in": [
+          "G",
+          "TV-G"
+        ]
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Great Train Robbery"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "A Corner in Wheat"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "From Hand to Mouth"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "One Week"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Devil to Pay!"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Footlight Parade"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Gold Diggers of 1935"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Naughty Marietta"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Modern Times"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Gone with the Wind"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Fantasia"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Man Who Came to Dinner"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "National Velvet"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Alice in Wonderland"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Member of the Wedding"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Seven Brides for Seven Brothers"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Around the World in Eighty Days"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The King and I"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "A King in New York"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Ben-Hur"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

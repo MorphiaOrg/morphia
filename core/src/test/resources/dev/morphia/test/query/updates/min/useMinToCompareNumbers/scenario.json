@@ -1,0 +1,90 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/min/useMinToCompareNumbers",
+  "title": "Use ``$min`` to Compare Numbers",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "586b6ced4b3f9ff24e16a6652d9e262ad20d969d",
+    "path": "source/reference/operator/update/min.txt",
+    "blob": "d320463178def6e317226ab6b26e1520af7dc5ac"
+  },
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "highScore": {
+          "$numberInt": "800"
+        },
+        "lowScore": {
+          "$numberInt": "200"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "scores",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$min": {
+        "lowScore": {
+          "$numberInt": "150"
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "highScore",
+            "value": {
+              "whole": {
+                "$numberInt": "800"
+              }
+            }
+          },
+          {
+            "name": "lowScore",
+            "value": {
+              "whole": {
+                "$numberInt": "150"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setField/addFieldsThatStartWithADollarSign",
+  "title": "Add Fields that Start with a Dollar Sign (``$``)",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "398ef570f38da834e738673bad67ced405635e8b",
+    "path": "content/manual/manual/source/reference/operator/aggregation/setField.txt",
+    "blob": "0c756073d9a38d90dca4a3728198157671886d24"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "sweatshirt",
+        "price": {
+          "$numberDouble": "45.99"
+        },
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "winter coat",
+        "price": {
+          "$numberDouble": "499.99"
+        },
+        "qty": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "sun dress",
+        "price": {
+          "$numberDouble": "199.99"
+        },
+        "qty": {
+          "$numberInt": "250"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "leather boots",
+        "price": {
+          "$numberDouble": "249.99"
+        },
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "bow tie",
+        "price": {
+          "$numberDouble": "9.99"
+        },
+        "qty": {
+          "$numberInt": "180"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$replaceWith": {
+          "$setField": {
+            "field": {
+              "$literal": "$price"
+            },
+            "input": "$$ROOT",
+            "value": "$price"
+          }
+        }
+      },
+      {
+        "$unset": "price"
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "sweatshirt"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "$price",
+            "value": {
+              "exact": {
+                "$numberDouble": "45.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "winter coat"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          },
+          {
+            "name": "$price",
+            "value": {
+              "exact": {
+                "$numberDouble": "499.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "sun dress"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "250"
+              }
+            }
+          },
+          {
+            "name": "$price",
+            "value": {
+              "exact": {
+                "$numberDouble": "199.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "leather boots"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "$price",
+            "value": {
+              "exact": {
+                "$numberDouble": "249.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "bow tie"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "180"
+              }
+            }
+          },
+          {
+            "name": "$price",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.99"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

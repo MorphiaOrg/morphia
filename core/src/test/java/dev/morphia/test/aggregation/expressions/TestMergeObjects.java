@@ -1,43 +1,33 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.SystemVariables.*;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
-import static dev.morphia.aggregation.stages.Lookup.lookup;
-import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
+import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestMergeObjects extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example1
-     * 
-     */
-    @Test
-    @DisplayName("``$mergeObjects``")
-    public void testExample1() {
-        loadData("items", 2);
-        testPipeline((aggregation) -> aggregation.pipeline(
-                lookup("items").foreignField("item").localField("item").as("fromItems"),
-                replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example2
+     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator
      * 
      */
     @Test
     @DisplayName("``$mergeObjects`` as an Accumulator")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testMergeObjectsAsAnAccumulator() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));
     }
 
+    @Test
+    @DisplayName("Merge the Ratings of Each Movie")
+    public void testMergeTheRatingsOfEachMovie() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                group(id("$title")).field("allRatings", mergeObjects().add("$data")),
+                sort().ascending("_id")));
+    }
 }

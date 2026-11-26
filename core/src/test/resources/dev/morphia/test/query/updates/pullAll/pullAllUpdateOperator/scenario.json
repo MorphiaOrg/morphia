@@ -1,0 +1,110 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/pullAll/pullAllUpdateOperator",
+  "title": "main",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+    "path": "source/reference/operator/update/pullAll.txt",
+    "blob": "cb2e4ee1aa278e9286aa842aed701f7f1db571a7"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "$numberInt": "0"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "0"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "survey",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$pullAll": {
+        "scores": [
+          {
+            "$numberInt": "0"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ]
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "2"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

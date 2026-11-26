@@ -1,0 +1,170 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/isoWeekYear.txt",
+    "blob": "1382e4dfb1f694eaad63993cfe3d19ab9b0a52b5"
+  },
+  "dataset": null,
+  "collections": {
+    "anniversaries": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1451606400000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1451865600000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1420070400000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1398038400000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "anniversaries",
+    "pipeline": [
+      {
+        "$project": {
+          "yearNumber": {
+            "$isoWeekYear": "$date"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "yearNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "2015"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "yearNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "2016"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "yearNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "2015"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "yearNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "2014"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "a page error: $isoWeekYear returns a Long, which mongosh prints as Long('2015'); the page prints 2015, which only an Int32 or a Double prints as; serialization and behavior pass"
+  }
+}

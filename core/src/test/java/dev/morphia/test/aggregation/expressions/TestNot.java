@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestNot extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/not/example1
+     * test data: dev/morphia/test/aggregation/expressions/not/notExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testNotExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("result", not(gt("$qty", 250)))));
     }

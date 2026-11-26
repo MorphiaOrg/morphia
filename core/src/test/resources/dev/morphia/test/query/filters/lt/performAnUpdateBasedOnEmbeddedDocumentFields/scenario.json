@@ -1,0 +1,256 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/lt/performAnUpdateBasedOnEmbeddedDocumentFields",
+  "title": "Perform an Update Based on Embedded Document Fields",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "defca05f4349cadea2c7ea2c00ef84b106625ab6",
+    "path": "source/reference/operator/query/lt.txt",
+    "blob": "a65ef20a008f37e804cddba70e064544969ff452"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "item": "nuts",
+        "quantity": {
+          "$numberInt": "30"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "3"
+          }
+        }
+      },
+      {
+        "item": "bolts",
+        "quantity": {
+          "$numberInt": "50"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "4"
+          }
+        }
+      },
+      {
+        "item": "washers",
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "inventory",
+    "filter": {
+      "carrier.fee": {
+        "$lt": {
+          "$numberInt": "20"
+        }
+      }
+    },
+    "update": {
+      "$set": {
+        "price": {
+          "$numberDouble": "9.99"
+        }
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "61ba634dfe687fce2f04241d"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "nuts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          },
+          {
+            "name": "carrier",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "Shipit"
+                  }
+                },
+                {
+                  "name": "fee",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "3"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "61ba634dfe687fce2f04241e"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "bolts"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          },
+          {
+            "name": "carrier",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "Shipit"
+                  }
+                },
+                {
+                  "name": "fee",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "4"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.99"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "61ba634dfe687fce2f04241f"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "washers"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "carrier",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "Shipit"
+                  }
+                },
+                {
+                  "name": "fee",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.99"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

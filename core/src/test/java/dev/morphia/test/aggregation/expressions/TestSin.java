@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestSin extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sin/example1
+     * test data: dev/morphia/test/aggregation/expressions/sin/sineOfValueInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Sine of Value in Degrees")
-    public void testExample1() {
+    public void testSineOfValueInDegrees() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_b", multiply(sin(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sin/example2
+     * test data: dev/morphia/test/aggregation/expressions/sin/sineOfValueInRadians
      * 
      */
     @Test
     @DisplayName("main :: Sine of Value in Radians")
-    public void testExample2() {
+    public void testSineOfValueInRadians() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_b", multiply(sin("$angle_a"), "$hypotenuse"))));
     }

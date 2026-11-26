@@ -1,0 +1,308 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/topN/setNDynamicallyBasedOnTheGroupKey",
+  "title": "Set n Dynamically Based on the Group Key",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/topN.txt",
+    "blob": "68fd3a1a63bbfa2718f454f01671d272aa12d972"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "rated": {
+            "$in": [
+              "G",
+              "PG",
+              "PG-13",
+              "R"
+            ]
+          },
+          "imdb.rating": {
+            "$gt": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "rated": "$rated"
+          },
+          "movies": {
+            "$topN": {
+              "output": {
+                "title": "$title",
+                "rating": "$imdb.rating"
+              },
+              "n": {
+                "$cond": {
+                  "if": {
+                    "$eq": [
+                      "$rated",
+                      "PG"
+                    ]
+                  },
+                  "then": {
+                    "$numberInt": "3"
+                  },
+                  "else": {
+                    "$numberInt": "1"
+                  }
+                }
+              },
+              "sortBy": {
+                "imdb.rating": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id.rated": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "G"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Modern Times"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "8.6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Life"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "9.2"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Star Wars: Episode V - The Empire Strikes Back"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "8.8"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "Andaz Apna Apna"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "8.8"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "PG-13"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "A Brave Heart: The Lizzie Velasquez Story"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "9.4"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "document": [
+                {
+                  "name": "rated",
+                  "value": {
+                    "text": "R"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "movies",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "The Shawshank Redemption"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "9.3"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "COND_ARRAY",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

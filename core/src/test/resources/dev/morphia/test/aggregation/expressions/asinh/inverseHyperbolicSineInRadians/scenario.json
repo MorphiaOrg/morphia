@@ -1,0 +1,79 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
+  "title": "main :: Inverse Hyperbolic Sine in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+    "path": "source/reference/operator/aggregation/asinh.txt",
+    "blob": "617094063df567086337b511fd70b27644e00184"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "x-coordinate": {
+          "$numberDecimal": "1"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "y-coordinate": {
+            "$asinh": "$x-coordinate"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "x-coordinate",
+            "value": {
+              "decimal": "1"
+            }
+          },
+          {
+            "name": "y-coordinate",
+            "value": {
+              "decimal": "0.8813735870195430252326093249797923"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

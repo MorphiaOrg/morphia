@@ -9,32 +9,32 @@ import static dev.morphia.aggregation.stages.Unset.unset;
 
 public class TestUnset extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/unset/example1
+     * test data: dev/morphia/test/aggregation/stages/unset/removeASingleField
      * 
      */
     @Test
     @DisplayName("Remove a Single Field")
-    public void testExample1() {
+    public void testRemoveASingleField() {
         testPipeline((aggregation) -> aggregation.pipeline(unset("copies")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unset/example2
+     * test data: dev/morphia/test/aggregation/stages/unset/removeTopLevelFields
      * 
      */
     @Test
     @DisplayName("Remove Top-Level Fields")
-    public void testExample2() {
+    public void testRemoveTopLevelFields() {
         testPipeline((aggregation) -> aggregation.pipeline(unset("isbn", "copies")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unset/example3
+     * test data: dev/morphia/test/aggregation/stages/unset/removeEmbeddedFields
      * 
      */
     @Test
     @DisplayName("Remove Embedded Fields")
-    public void testExample3() {
+    public void testRemoveEmbeddedFields() {
         testPipeline((aggregation) -> aggregation.pipeline(unset("isbn", "author.first", "copies.warehouse")));
     }
 }

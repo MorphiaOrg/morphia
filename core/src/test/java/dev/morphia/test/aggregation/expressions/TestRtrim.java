@@ -9,15 +9,11 @@ import static dev.morphia.aggregation.expressions.StringExpressions.rtrim;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestRtrim extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/rtrim/example1
-     * 
-     */
-    @Test
-    @DisplayName("main")
-    public void testExample1() {
-        testPipeline((aggregation) -> aggregation
-                .pipeline(project().include("item").include("description", rtrim("$description"))));
-    }
 
+    @Test
+    @DisplayName("Trim Trailing Whitespace")
+    public void testTrimTrailingWhitespace() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                project().include("item").include("description", rtrim("$description"))));
+    }
 }

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/first/findTheFirstMovieInEachGenre",
+  "title": "Find the First Movie in Each Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/first.txt",
+    "blob": "83ec8d6a7173ec8b9e2613dae6d82f74cb64a7e4"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$sort": {
+          "year": {
+            "$numberInt": "1"
+          },
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "firstMovieTitle": {
+            "$first": "$title"
+          },
+          "firstMovieYear": {
+            "$first": "$year"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$limit": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Action"
+            }
+          },
+          {
+            "name": "firstMovieTitle",
+            "value": {
+              "text": "The Perils of Pauline"
+            }
+          },
+          {
+            "name": "firstMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1914"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Adventure"
+            }
+          },
+          {
+            "name": "firstMovieTitle",
+            "value": {
+              "text": "Robin Hood"
+            }
+          },
+          {
+            "name": "firstMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1922"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Animation"
+            }
+          },
+          {
+            "name": "firstMovieTitle",
+            "value": {
+              "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+            }
+          },
+          {
+            "name": "firstMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1911"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Biography"
+            }
+          },
+          {
+            "name": "firstMovieTitle",
+            "value": {
+              "text": "Regeneration"
+            }
+          },
+          {
+            "name": "firstMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1915"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Comedy"
+            }
+          },
+          {
+            "name": "firstMovieTitle",
+            "value": {
+              "text": "Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics"
+            }
+          },
+          {
+            "name": "firstMovieYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1911"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

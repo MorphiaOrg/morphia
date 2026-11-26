@@ -1,0 +1,152 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
+  "title": "Adjust for Daylight Savings Time",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/dateSubtract.txt",
+    "blob": "b02f975cf6f9e7f37409b879a2fe5bcb7d3c2e73"
+  },
+  "dataset": null,
+  "collections": {
+    "billing": [
+      {
+        "location": "America/New_York",
+        "login": {
+          "$date": {
+            "$numberLong": "1615734000000"
+          }
+        },
+        "logout": {
+          "$date": {
+            "$numberLong": "1615762800000"
+          }
+        }
+      },
+      {
+        "location": "America/Mexico_City",
+        "login": {
+          "$date": {
+            "$numberLong": "1615716000000"
+          }
+        },
+        "logout": {
+          "$date": {
+            "$numberLong": "1615813200000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "billing",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "location": {
+            "$numberInt": "1"
+          },
+          "start": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": "$login"
+            }
+          },
+          "days": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": {
+                "$dateSubtract": {
+                  "startDate": "$login",
+                  "unit": "day",
+                  "amount": {
+                    "$numberInt": "1"
+                  },
+                  "timezone": "$location"
+                }
+              }
+            }
+          },
+          "hours": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": {
+                "$dateSubtract": {
+                  "startDate": "$login",
+                  "unit": "hour",
+                  "amount": {
+                    "$numberInt": "24"
+                  },
+                  "timezone": "$location"
+                }
+              }
+            }
+          },
+          "startTZInfo": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": "$login",
+              "timezone": "$location"
+            }
+          },
+          "daysTZInfo": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": {
+                "$dateSubtract": {
+                  "startDate": "$login",
+                  "unit": "day",
+                  "amount": {
+                    "$numberInt": "1"
+                  },
+                  "timezone": "$location"
+                }
+              },
+              "timezone": "$location"
+            }
+          },
+          "hoursTZInfo": {
+            "$dateToString": {
+              "format": "%Y-%m-%d %H:%M",
+              "date": {
+                "$dateSubtract": {
+                  "startDate": "$login",
+                  "unit": "hour",
+                  "amount": {
+                    "$numberInt": "24"
+                  },
+                  "timezone": "$location"
+                }
+              },
+              "timezone": "$location"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.0.0",
+    "topology": "STANDALONE"
+  }
+}

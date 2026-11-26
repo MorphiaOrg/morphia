@@ -1,0 +1,187 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/addFields/addElementToAnArray",
+  "title": "Add Element to an Array",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/addFields.txt",
+    "blob": "265803b8d934ddedd4f37e31f74afdf491f6f75f"
+  },
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "student": "Maya",
+        "homework": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ],
+        "quiz": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "extraCredit": {
+          "$numberInt": "0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "student": "Ryan",
+        "homework": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "quiz": [
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "extraCredit": {
+          "$numberInt": "8"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "scores",
+    "pipeline": [
+      {
+        "$match": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "homework": {
+            "$concatArrays": [
+              "$homework",
+              [
+                {
+                  "$numberInt": "7"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "student",
+            "value": {
+              "text": "Maya"
+            }
+          },
+          {
+            "name": "homework",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "7"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "quiz",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "10"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "8"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "extraCredit",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

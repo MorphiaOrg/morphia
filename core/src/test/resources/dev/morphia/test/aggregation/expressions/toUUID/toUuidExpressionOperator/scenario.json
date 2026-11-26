@@ -1,0 +1,91 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toUUID/toUuidExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b398344371658f682e0c3826a7a749b9fbf6c5e5",
+    "path": "source/reference/operator/aggregation/toUUID.txt",
+    "blob": "4f68f01dfb545ae6a819238129199229b13a5ce1"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "name": "laptop",
+        "price": {
+          "$numberInt": "400"
+        },
+        "UUID": "0e3b9063-8abd-4eb3-9f9f-f4c59fd30a60"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "products",
+    "pipeline": [
+      {
+        "$project": {
+          "name": {
+            "$numberInt": "1"
+          },
+          "price": {
+            "$numberInt": "1"
+          },
+          "UUID": {
+            "$toUUID": "$UUID"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "name",
+            "value": {
+              "text": "laptop"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "400"
+              }
+            }
+          },
+          {
+            "name": "UUID",
+            "value": {
+              "exact": {
+                "$binary": {
+                  "base64": "DjuQY4q9TrOfn/TFn9MKYA==",
+                  "subType": "04"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

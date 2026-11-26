@@ -1,0 +1,130 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/lte/matchDocumentFields",
+  "title": "Match Document Fields",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "defca05f4349cadea2c7ea2c00ef84b106625ab6",
+    "path": "source/reference/operator/query/lte.txt",
+    "blob": "f53348d5632a3d1d03ec96c9e8da3a6cae0ad17a"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "item": "nuts",
+        "quantity": {
+          "$numberInt": "30"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "3"
+          }
+        }
+      },
+      {
+        "item": "bolts",
+        "quantity": {
+          "$numberInt": "50"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "4"
+          }
+        }
+      },
+      {
+        "item": "washers",
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "carrier": {
+          "name": "Shipit",
+          "fee": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "inventory",
+    "filter": {
+      "quantity": {
+        "$lte": {
+          "$numberInt": "20"
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "61ba453ffe687fce2f04241c"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "washers"
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "carrier",
+            "value": {
+              "document": [
+                {
+                  "name": "name",
+                  "value": {
+                    "text": "Shipit"
+                  }
+                },
+                {
+                  "name": "fee",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

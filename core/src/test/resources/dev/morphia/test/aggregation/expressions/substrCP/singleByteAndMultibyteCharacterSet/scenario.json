@@ -1,0 +1,298 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/substrCP/singleByteAndMultibyteCharacterSet",
+  "title": "Single-Byte and Multibyte Character Set",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "f9ced034a782ef72646ae4362eca770d04f300b0",
+    "path": "source/reference/operator/aggregation/substrCP.txt",
+    "blob": "daa8be60d21792dadfd68bb4b9bf6c38c9000df5"
+  },
+  "dataset": null,
+  "collections": {
+    "food": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "apple"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "banana"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "éclair"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "hamburger"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "jalapeño"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "pizza"
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "name": "tacos"
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "name": "寿司sushi"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "food",
+    "pipeline": [
+      {
+        "$project": {
+          "name": {
+            "$numberInt": "1"
+          },
+          "menuCode": {
+            "$substrCP": [
+              "$name",
+              {
+                "$numberInt": "0"
+              },
+              {
+                "$numberInt": "3"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "app"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "banana"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "ban"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "éclair"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "écl"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "hamburger"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "ham"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "jalapeño"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "jal"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "pizza"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "piz"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "7"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "tacos"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "tac"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "寿司sushi"
+            }
+          },
+          {
+            "name": "menuCode",
+            "value": {
+              "text": "寿司s"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

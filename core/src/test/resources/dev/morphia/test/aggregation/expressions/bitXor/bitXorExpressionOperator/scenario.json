@@ -1,0 +1,143 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bitXor/bitXorExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "7c46c681bdd02aa8665f67621b451027d3c87dba",
+    "path": "source/reference/operator/aggregation/bitXor.txt",
+    "blob": "b681620e88dfa207e7f91d49f0775cd11410d8ab"
+  },
+  "dataset": null,
+  "collections": {
+    "switches": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "a": {
+          "$numberInt": "0"
+        },
+        "b": {
+          "$numberInt": "127"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": {
+          "$numberInt": "2"
+        },
+        "b": {
+          "$numberInt": "3"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "$numberInt": "3"
+        },
+        "b": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "switches",
+    "pipeline": [
+      {
+        "$project": {
+          "result": {
+            "$bitXor": [
+              "$a",
+              "$b"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "127"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "6.3.0",
+    "topology": "STANDALONE"
+  }
+}

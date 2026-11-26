@@ -9,14 +9,10 @@ import static dev.morphia.aggregation.expressions.MathExpressions.round;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestRound extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/round/example1
-     * 
-     */
+
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testRoundExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("roundedValue", round("$value", 1))));
     }
-
 }

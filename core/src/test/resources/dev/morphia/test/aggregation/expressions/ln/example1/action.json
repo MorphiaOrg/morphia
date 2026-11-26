@@ -1,1 +1,0 @@
-{ $project: { x: "$year", y: { $ln: "$sales"  } } }

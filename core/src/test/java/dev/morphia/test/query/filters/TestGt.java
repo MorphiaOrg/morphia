@@ -1,32 +1,28 @@
 package dev.morphia.test.query.filters;
 
-import dev.morphia.query.updates.UpdateOperators;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.gt;
+import static dev.morphia.query.updates.UpdateOperators.set;
 
 public class TestGt extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/gt/example1
+     * test data: dev/morphia/test/query/filters/gt/matchDocumentFields
      */
     @Test
     @DisplayName("Match Document Fields")
-    public void testExample1() {
-        testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(gt("quantity", 20)));
+    public void testMatchDocumentFields() {
+        testQuery((query) -> query.filter(gt("quantity", 20)));
     }
 
-    /**
-     * test data: dev/morphia/test/query/filters/gt/example2
-     */
     @Test
     @DisplayName("Perform an Update Based on Embedded Document Fields")
-    public void testExample2() {
-        testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(gt("carrier.fee", 2)),
-                UpdateOperators.set("price", 9.99));
+    public void testPerformAnUpdateBasedOnEmbeddedDocumentFields() {
+        testUpdate((query) -> query.filter(gt("imdb.rating", 9.5)),
+                set("highestRated", true));
     }
 }

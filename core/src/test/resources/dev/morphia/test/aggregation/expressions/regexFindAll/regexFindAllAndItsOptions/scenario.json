@@ -1,0 +1,334 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
+  "title": "``$regexFindAll`` and Its Options",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+    "path": "source/reference/operator/aggregation/regexFindAll.txt",
+    "blob": "42d41fe7d1a5a0e70c7303fd2b435cf337017b25"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "description": "Single LINE description."
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "description": "First lines\nsecond line"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "description": "Many spaces before     line"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "description": "Multiple\nline descriptions"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "description": "anchors, links and hyperlinks"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "description": "métier work vocation"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "products",
+    "pipeline": [
+      {
+        "$addFields": {
+          "returnObject": {
+            "$regexFindAll": {
+              "input": "$description",
+              "regex": {
+                "$regularExpression": {
+                  "pattern": "line",
+                  "options": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Single LINE description."
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "First lines\nsecond line"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "match",
+                      "value": {
+                        "text": "line"
+                      }
+                    },
+                    {
+                      "name": "idx",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "6"
+                        }
+                      }
+                    },
+                    {
+                      "name": "captures",
+                      "value": {
+                        "array": []
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "match",
+                      "value": {
+                        "text": "line"
+                      }
+                    },
+                    {
+                      "name": "idx",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "19"
+                        }
+                      }
+                    },
+                    {
+                      "name": "captures",
+                      "value": {
+                        "array": []
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Many spaces before     line"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "match",
+                      "value": {
+                        "text": "line"
+                      }
+                    },
+                    {
+                      "name": "idx",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "23"
+                        }
+                      }
+                    },
+                    {
+                      "name": "captures",
+                      "value": {
+                        "array": []
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Multiple\nline descriptions"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "match",
+                      "value": {
+                        "text": "line"
+                      }
+                    },
+                    {
+                      "name": "idx",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "9"
+                        }
+                      }
+                    },
+                    {
+                      "name": "captures",
+                      "value": {
+                        "array": []
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "anchors, links and hyperlinks"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "métier work vocation"
+            }
+          },
+          {
+            "name": "returnObject",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

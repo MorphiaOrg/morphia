@@ -16,45 +16,45 @@ import static dev.morphia.query.filters.Filters.gte;
 
 public class TestReplaceRoot extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example1
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField
      * 
      */
     @Test
     @DisplayName("``$replaceRoot`` with an Embedded Document Field")
-    public void testExample1() {
+    public void testReplaceRootWithAnEmbeddedDocumentField() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
                 .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example2
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray
      * 
      */
     @Test
     @DisplayName("``$replaceRoot`` with a Document Nested in an Array")
-    public void testExample2() {
+    public void testReplaceRootWithADocumentNestedInAnArray() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("grades"), match(gte("grades.grade", 90)),
                 replaceRoot("$grades")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example3
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument
      * 
      */
     @Test
     @DisplayName("``$replaceRoot`` with a newly created document")
-    public void testExample3() {
+    public void testReplaceRootWithANewlyCreatedDocument() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example4
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument
      * 
      */
     @Test
     @DisplayName("``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document")
-    public void testExample4() {
+    public void testReplaceRootWithANewDocumentCreatedFromRootAndADefaultDocument() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects().add(
                 document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))
                 .add(ROOT))));

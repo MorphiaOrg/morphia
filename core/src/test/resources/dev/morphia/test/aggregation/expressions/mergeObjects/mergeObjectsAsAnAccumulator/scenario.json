@@ -1,0 +1,225 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator",
+  "title": "``$mergeObjects`` as an Accumulator",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "37cb9ccbc400ffec4ed5fa8124d95871be3a816c",
+    "path": "source/reference/operator/aggregation/mergeObjects.txt",
+    "blob": "f7155a283dd2d0af04bfbeebc03e468040e7305c"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "year": {
+          "$numberInt": "2017"
+        },
+        "item": "A",
+        "quantity": {
+          "2017Q1": {
+            "$numberInt": "500"
+          },
+          "2017Q2": {
+            "$numberInt": "500"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "year": {
+          "$numberInt": "2016"
+        },
+        "item": "A",
+        "quantity": {
+          "2016Q1": {
+            "$numberInt": "400"
+          },
+          "2016Q2": {
+            "$numberInt": "300"
+          },
+          "2016Q3": {
+            "$numberInt": "0"
+          },
+          "2016Q4": {
+            "$numberInt": "0"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "year": {
+          "$numberInt": "2017"
+        },
+        "item": "B",
+        "quantity": {
+          "2017Q1": {
+            "$numberInt": "300"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "year": {
+          "$numberInt": "2016"
+        },
+        "item": "B",
+        "quantity": {
+          "2016Q3": {
+            "$numberInt": "100"
+          },
+          "2016Q4": {
+            "$numberInt": "250"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$item",
+          "mergedSales": {
+            "$mergeObjects": "$quantity"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "A"
+            }
+          },
+          {
+            "name": "mergedSales",
+            "value": {
+              "document": [
+                {
+                  "name": "2017Q1",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "500"
+                    }
+                  }
+                },
+                {
+                  "name": "2017Q2",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "500"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q1",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "400"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q2",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "300"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q3",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "0"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q4",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "0"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "B"
+            }
+          },
+          {
+            "name": "mergedSales",
+            "value": {
+              "document": [
+                {
+                  "name": "2017Q1",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "300"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q3",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "100"
+                    }
+                  }
+                },
+                {
+                  "name": "2016Q4",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "250"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

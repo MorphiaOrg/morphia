@@ -1,0 +1,202 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/push/usePushOperatorWithMultipleModifiers",
+  "title": "Use ``$push`` Operator with Multiple Modifiers",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/push.txt",
+    "blob": "518d8d6909c99fd6834c2bdbb53496043c831519"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "quizzes": [
+          {
+            "wk": {
+              "$numberInt": "1"
+            },
+            "score": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "wk": {
+              "$numberInt": "2"
+            },
+            "score": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "wk": {
+              "$numberInt": "3"
+            },
+            "score": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "wk": {
+              "$numberInt": "4"
+            },
+            "score": {
+              "$numberInt": "6"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "5"
+      }
+    },
+    "update": {
+      "$push": {
+        "quizzes": {
+          "$each": [
+            {
+              "wk": {
+                "$numberInt": "5"
+              },
+              "score": {
+                "$numberInt": "8"
+              }
+            },
+            {
+              "wk": {
+                "$numberInt": "6"
+              },
+              "score": {
+                "$numberInt": "7"
+              }
+            },
+            {
+              "wk": {
+                "$numberInt": "7"
+              },
+              "score": {
+                "$numberInt": "6"
+              }
+            }
+          ],
+          "$sort": {
+            "score": {
+              "$numberInt": "-1"
+            }
+          },
+          "$slice": {
+            "$numberInt": "3"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "quizzes",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "wk",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "10"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "wk",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "wk",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "5"
+                        }
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

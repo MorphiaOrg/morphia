@@ -1,0 +1,102 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/atan/inverseTangentOfValueInRadians",
+  "title": "main :: Inverse Tangent of Value in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8562c94b38de3e8c83552bcd41558548e5220eef",
+    "path": "source/reference/operator/aggregation/atan.txt",
+    "blob": "7a169f710991543e18ffbd138d5f72bbb9c2a245"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "side_a": {
+          "$numberDecimal": "3"
+        },
+        "side_b": {
+          "$numberDecimal": "4"
+        },
+        "hypotenuse": {
+          "$numberDecimal": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "angle_a": {
+            "$atan": {
+              "$divide": [
+                "$side_b",
+                "$side_a"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "side_a",
+            "value": {
+              "decimal": "3"
+            }
+          },
+          {
+            "name": "side_b",
+            "value": {
+              "decimal": "4"
+            }
+          },
+          {
+            "name": "hypotenuse",
+            "value": {
+              "decimal": "5"
+            }
+          },
+          {
+            "name": "angle_a",
+            "value": {
+              "decimal": "0.9272952180016122324285124629224287"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLet extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/let/example1
+     * test data: dev/morphia/test/aggregation/expressions/let/letExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLetExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("finalTotal",
                 let(multiply("$$total", "$$discounted")).variable("total", add("$price", "$tax")).variable("discounted",
                         condition("$applyDiscount", 0.9, 1)))));

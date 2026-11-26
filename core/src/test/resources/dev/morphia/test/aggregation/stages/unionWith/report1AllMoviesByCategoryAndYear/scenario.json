@@ -1,0 +1,252 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unionWith/report1AllMoviesByCategoryAndYear",
+  "title": "Report 1: All Movies by Category and Year",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unionWith.txt",
+    "blob": "df62ea1538e4db97d4a53249fa520b24eb54c63e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$lt": {
+              "$numberInt": "1910"
+            }
+          }
+        }
+      },
+      {
+        "$set": {
+          "category": "Early Cinema"
+        }
+      },
+      {
+        "$unionWith": {
+          "coll": "movies",
+          "pipeline": [
+            {
+              "$match": {
+                "runtime": {
+                  "$gt": {
+                    "$numberInt": "1000"
+                  }
+                }
+              }
+            },
+            {
+              "$set": {
+                "category": "Long Runtime"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "year": {
+            "$numberInt": "1"
+          },
+          "category": {
+            "$numberInt": "1"
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "category": {
+            "$numberInt": "1"
+          },
+          "year": {
+            "$numberInt": "1"
+          },
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Kiss"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1896"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Early Cinema"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Kiss"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1896"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Early Cinema"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Great Train Robbery"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1903"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Early Cinema"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "A Corner in Wheat"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1909"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Early Cinema"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1978"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Long Runtime"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1994"
+              }
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Long Runtime"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "6.0.0",
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

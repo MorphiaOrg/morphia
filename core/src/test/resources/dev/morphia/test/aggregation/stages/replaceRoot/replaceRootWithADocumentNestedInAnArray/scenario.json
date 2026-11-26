@@ -1,0 +1,263 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray",
+  "title": "``$replaceRoot`` with a Document Nested in an Array",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+    "path": "source/reference/operator/aggregation/replaceRoot.txt",
+    "blob": "f8c2929b446278e8fe95d37f5b21b670097511e4"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "test": {
+              "$numberInt": "1"
+            },
+            "grade": {
+              "$numberInt": "80"
+            },
+            "mean": {
+              "$numberInt": "75"
+            },
+            "std": {
+              "$numberInt": "6"
+            }
+          },
+          {
+            "test": {
+              "$numberInt": "2"
+            },
+            "grade": {
+              "$numberInt": "85"
+            },
+            "mean": {
+              "$numberInt": "90"
+            },
+            "std": {
+              "$numberInt": "4"
+            }
+          },
+          {
+            "test": {
+              "$numberInt": "3"
+            },
+            "grade": {
+              "$numberInt": "95"
+            },
+            "mean": {
+              "$numberInt": "85"
+            },
+            "std": {
+              "$numberInt": "6"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "grades": [
+          {
+            "test": {
+              "$numberInt": "1"
+            },
+            "grade": {
+              "$numberInt": "90"
+            },
+            "mean": {
+              "$numberInt": "75"
+            },
+            "std": {
+              "$numberInt": "6"
+            }
+          },
+          {
+            "test": {
+              "$numberInt": "2"
+            },
+            "grade": {
+              "$numberInt": "87"
+            },
+            "mean": {
+              "$numberInt": "90"
+            },
+            "std": {
+              "$numberInt": "3"
+            }
+          },
+          {
+            "test": {
+              "$numberInt": "3"
+            },
+            "grade": {
+              "$numberInt": "91"
+            },
+            "mean": {
+              "$numberInt": "85"
+            },
+            "std": {
+              "$numberInt": "4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "students",
+    "pipeline": [
+      {
+        "$unwind": "$grades"
+      },
+      {
+        "$match": {
+          "grades.grade": {
+            "$gte": {
+              "$numberInt": "90"
+            }
+          }
+        }
+      },
+      {
+        "$replaceRoot": {
+          "newRoot": "$grades"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "test",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "grade",
+            "value": {
+              "whole": {
+                "$numberInt": "95"
+              }
+            }
+          },
+          {
+            "name": "mean",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          },
+          {
+            "name": "std",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "test",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "grade",
+            "value": {
+              "whole": {
+                "$numberInt": "90"
+              }
+            }
+          },
+          {
+            "name": "mean",
+            "value": {
+              "whole": {
+                "$numberInt": "75"
+              }
+            }
+          },
+          {
+            "name": "std",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "test",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "grade",
+            "value": {
+              "whole": {
+                "$numberInt": "91"
+              }
+            }
+          },
+          {
+            "name": "mean",
+            "value": {
+              "whole": {
+                "$numberInt": "85"
+              }
+            }
+          },
+          {
+            "name": "std",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

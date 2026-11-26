@@ -1,6 +1,0 @@
-{
-      $project: {
-         name: 1,
-         length: { $strLenCP: "$name" }
-      }
-   }

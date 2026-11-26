@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Every operator example test owns a fixture, and every scenario has its test:
  * <ul>
- * <li>a {@link TemplatedTestBase} {@code @Test} method reads {@code <operator>/<stem>/} for its name, so that folder must
- * hold a {@code scenario.json}, or the legacy {@code action.json} until the test is converted;</li>
+ * <li>a {@link TemplatedTestBase} {@code @Test} method reads {@code <operator>/<stem>/scenario.json} for its name, so
+ * that file must exist;</li>
  * <li>a {@code scenario.json} under an operator folder names its test: {@code Test<Operator>#test<Stem>}, whose
  * {@code @DisplayName} must equal the scenario's {@code title}.</li>
  * </ul>
@@ -45,23 +45,25 @@ public class ExampleOwnersTest {
             Map.entry("TestBucket#testBucketWithoutOptions", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestBucketAuto#testWithGranularity", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestBucketAuto#testWithoutGranularity", "aggregates a mapped entity, not a documented example"),
-            Map.entry("TestChangeStream#testChangeStream", "watches a change stream fed from its own data file"),
+            Map.entry("TestChangeStream#testChangeStream", "watches a change stream fed from inline documents"),
             Map.entry("TestChangeStream#testChangeStreamOptions", "checks the $changeStream options' encoding"),
             Map.entry("TestLookup#testLookup", "aggregates a mapped entity, not a documented example"),
             Map.entry("TestMerge#keepExisting", "checks the server accepts whenMatched: keepExisting as Morphia writes it"),
-            Map.entry("TestPercentile#testExample5", "an empty placeholder for an example the page shows only in $setWindowFields"),
+            Map.entry("TestPercentile#testUsePercentileInASetWindowFieldStagePlaceholder",
+                    "an empty placeholder for an example the page shows only in $setWindowFields"),
             Map.entry("TestUnwind#testUnwind", "aggregates a mapped entity, not a documented example"));
 
     @Test
     public void everyExampleTestOwnsAFixture() throws IOException {
         Set<String> problems = new TreeSet<>();
+        Set<String> unused = new TreeSet<>(MANUAL.keySet());
         for (Class<?> type : exampleClasses()) {
             for (Method method : testMethods(type)) {
                 if (method.getAnnotation(Test.class) == null) {
                     continue;
                 }
                 String owner = type.getSimpleName() + "#" + method.getName();
-                if (MANUAL.containsKey(owner)) {
+                if (unused.remove(owner) || MANUAL.containsKey(owner)) {
                     continue;
                 }
                 String problem = CurrentTest.problem(method);
@@ -70,11 +72,12 @@ public class ExampleOwnersTest {
                     continue;
                 }
                 Path folder = folder(type, method);
-                if (!Files.exists(folder.resolve("scenario.json")) && !Files.exists(folder.resolve("action.json"))) {
+                if (!Files.exists(folder.resolve("scenario.json"))) {
                     problems.add(owner + " has no fixture at " + folder);
                 }
             }
         }
+        unused.forEach(owner -> problems.add(owner + " is reviewed in MANUAL but is not an example test"));
         assertEquals(Set.of(), problems);
     }
 

@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/lastN/findingTheLastThreePlayerScoresAcrossMultipleGames",
+  "title": "Finding the Last Three Player Scores Across Multiple Games",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
+    "path": "source/reference/operator/aggregation/lastN.txt",
+    "blob": "217de23af9b376bbf5094e1ba743c5a7a3ff96ad"
+  },
+  "dataset": null,
+  "collections": {
+    "gamescores": [
+      {
+        "playerId": "PlayerA",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "31"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "33"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "99"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "playerId": "PlayerA",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "14"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "66"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "gamescores",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$gameId",
+          "playerId": {
+            "$lastN": {
+              "input": [
+                "$playerId",
+                "$score"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G2"
+            }
+          },
+          {
+            "name": "playerId",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "PlayerB"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "14"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerC"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "66"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerD"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "80"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G1"
+            }
+          },
+          {
+            "name": "playerId",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "PlayerB"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "33"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerC"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "99"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerD"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "1"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

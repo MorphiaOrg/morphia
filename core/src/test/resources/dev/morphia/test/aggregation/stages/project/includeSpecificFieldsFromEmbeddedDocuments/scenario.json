@@ -1,0 +1,146 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+  "title": "Include Specific Fields from Embedded Documents",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/project.txt",
+    "blob": "6139e853557792da45aaaf91a90530d9221b5823"
+  },
+  "dataset": null,
+  "collections": {
+    "bookmarks": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "user": "1234",
+        "stop": {
+          "title": "book1",
+          "author": "xyz",
+          "page": {
+            "$numberInt": "32"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "user": "7890",
+        "stop": [
+          {
+            "title": "book2",
+            "author": "abc",
+            "page": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "title": "book3",
+            "author": "ijk",
+            "page": {
+              "$numberInt": "100"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "bookmarks",
+    "pipeline": [
+      {
+        "$project": {
+          "stop.title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "stop",
+            "value": {
+              "document": [
+                {
+                  "name": "title",
+                  "value": {
+                    "text": "book1"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "stop",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "book2"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "title",
+                      "value": {
+                        "text": "book3"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

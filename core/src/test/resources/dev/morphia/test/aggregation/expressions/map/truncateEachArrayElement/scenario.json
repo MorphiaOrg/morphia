@@ -1,0 +1,220 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/map/truncateEachArrayElement",
+  "title": "Truncate Each Array Element",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/map.txt",
+    "blob": "42cd94292518bce21ea6a17604a49007ddd649b2"
+  },
+  "dataset": null,
+  "collections": {
+    "deliveries": [
+      {
+        "city": "Bakersfield",
+        "distances": [
+          {
+            "$numberDouble": "34.57"
+          },
+          {
+            "$numberDouble": "81.96"
+          },
+          {
+            "$numberDouble": "44.24"
+          }
+        ]
+      },
+      {
+        "city": "Barstow",
+        "distances": [
+          {
+            "$numberDouble": "73.28"
+          },
+          {
+            "$numberDouble": "9.67"
+          },
+          {
+            "$numberDouble": "124.36"
+          }
+        ]
+      },
+      {
+        "city": "San Bernadino",
+        "distances": [
+          {
+            "$numberDouble": "16.04"
+          },
+          {
+            "$numberDouble": "3.25"
+          },
+          {
+            "$numberDouble": "6.82"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "deliveries",
+    "pipeline": [
+      {
+        "$project": {
+          "city": "$city",
+          "integerValues": {
+            "$map": {
+              "input": "$distances",
+              "as": "decimalValue",
+              "in": {
+                "$trunc": "$$decimalValue"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b9b1237da390c6869a65"
+              }
+            }
+          },
+          {
+            "name": "city",
+            "value": {
+              "text": "Bakersfield"
+            }
+          },
+          {
+            "name": "integerValues",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "34"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "81"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "44"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b9b1237da390c6869a66"
+              }
+            }
+          },
+          {
+            "name": "city",
+            "value": {
+              "text": "Barstow"
+            }
+          },
+          {
+            "name": "integerValues",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "73"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "9"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "124"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "6390b9b1237da390c6869a67"
+              }
+            }
+          },
+          {
+            "name": "city",
+            "value": {
+              "text": "San Bernadino"
+            }
+          },
+          {
+            "name": "integerValues",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "16"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "3"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "6"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

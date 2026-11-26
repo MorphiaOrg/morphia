@@ -1,0 +1,251 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sum/useInProjectStage",
+  "title": "Use in ``$project`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/sum.txt",
+    "blob": "1277de12edfeae3aac77c6c89ee730722b3bdc8f"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "7"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "80"
+        },
+        "midterm": {
+          "$numberInt": "75"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "9"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "95"
+        },
+        "midterm": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "final": {
+          "$numberInt": "78"
+        },
+        "midterm": {
+          "$numberInt": "70"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "students",
+    "pipeline": [
+      {
+        "$project": {
+          "quizTotal": {
+            "$sum": "$quizzes"
+          },
+          "labTotal": {
+            "$sum": "$labs"
+          },
+          "examTotal": {
+            "$sum": [
+              "$final",
+              "$midterm"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "quizTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "23"
+              }
+            }
+          },
+          {
+            "name": "labTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "examTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "155"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "quizTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "19"
+              }
+            }
+          },
+          {
+            "name": "labTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "16"
+              }
+            }
+          },
+          {
+            "name": "examTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "175"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "quizTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "labTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "11"
+              }
+            }
+          },
+          {
+            "name": "examTotal",
+            "value": {
+              "whole": {
+                "$numberInt": "148"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.0.0",
+    "topology": "STANDALONE"
+  }
+}

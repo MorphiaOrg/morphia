@@ -1,0 +1,126 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateDiff/elapsedTime",
+  "title": "Elapsed Time",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6c860eaa7d438e1355c61785a5adadc1ede12b55",
+    "path": "source/reference/operator/aggregation/dateDiff.txt",
+    "blob": "fc155fb0c7861c418cb7ffb6a44970262596b69f"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "custId": {
+          "$numberInt": "456"
+        },
+        "purchased": {
+          "$date": {
+            "$numberLong": "1609372800000"
+          }
+        },
+        "delivered": {
+          "$date": {
+            "$numberLong": "1609804800000"
+          }
+        }
+      },
+      {
+        "custId": {
+          "$numberInt": "457"
+        },
+        "purchased": {
+          "$date": {
+            "$numberLong": "1614470400000"
+          }
+        },
+        "delivered": {
+          "$date": {
+            "$numberLong": "1615075200000"
+          }
+        }
+      },
+      {
+        "custId": {
+          "$numberInt": "458"
+        },
+        "purchased": {
+          "$date": {
+            "$numberLong": "1613433600000"
+          }
+        },
+        "delivered": {
+          "$date": {
+            "$numberLong": "1613606400000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": null,
+          "averageTime": {
+            "$avg": {
+              "$dateDiff": {
+                "startDate": "$purchased",
+                "endDate": "$delivered",
+                "unit": "day"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "numDays": {
+            "$trunc": [
+              "$averageTime",
+              {
+                "$numberInt": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "numDays",
+            "value": {
+              "exact": {
+                "$numberDouble": "4.6"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

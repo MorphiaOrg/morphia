@@ -1,0 +1,428 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/fill/fillDataForDistinctPartitions",
+  "title": "Fill Data for Distinct Partitions",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+    "path": "source/reference/operator/aggregation/fill.txt",
+    "blob": "b0ee7dd39cf46de21e670976d3f6842a77c293ef"
+  },
+  "dataset": null,
+  "collections": {
+    "restaurantReviewsMultiple": [
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615161600000"
+          }
+        },
+        "restaurant": "Joe's Pizza",
+        "score": {
+          "$numberInt": "90"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615161600000"
+          }
+        },
+        "restaurant": "Sally's Deli",
+        "score": {
+          "$numberInt": "75"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615248000000"
+          }
+        },
+        "restaurant": "Joe's Pizza",
+        "score": {
+          "$numberInt": "92"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615248000000"
+          }
+        },
+        "restaurant": "Sally's Deli"
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615334400000"
+          }
+        },
+        "restaurant": "Joe's Pizza"
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615334400000"
+          }
+        },
+        "restaurant": "Sally's Deli",
+        "score": {
+          "$numberInt": "68"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615420800000"
+          }
+        },
+        "restaurant": "Joe's Pizza",
+        "score": {
+          "$numberInt": "93"
+        }
+      },
+      {
+        "date": {
+          "$date": {
+            "$numberLong": "1615420800000"
+          }
+        },
+        "restaurant": "Sally's Deli"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "restaurantReviewsMultiple",
+    "pipeline": [
+      {
+        "$fill": {
+          "sortBy": {
+            "date": {
+              "$numberInt": "1"
+            }
+          },
+          "partitionBy": {
+            "restaurant": "$restaurant"
+          },
+          "output": {
+            "score": {
+              "method": "locf"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b58f"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615161600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Joe's Pizza"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "90"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b591"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615248000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Joe's Pizza"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "92"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b593"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615334400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Joe's Pizza"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "92"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b595"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615420800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Joe's Pizza"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "93"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b590"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615161600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Sally's Deli"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "75"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b592"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615248000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Sally's Deli"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "75"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b594"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615334400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Sally's Deli"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "68"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "620559f4394d47411658b596"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615420800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "restaurant",
+            "value": {
+              "text": "Sally's Deli"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "68"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

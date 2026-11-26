@@ -1,2 +1,0 @@
-{ $match: { _id: 1 } },
-   { $set: { homework: { $concatArrays: [ "$homework", [ 7 ] ] } } }

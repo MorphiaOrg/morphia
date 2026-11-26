@@ -1,0 +1,152 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/setField/updateFieldsThatContainPeriods",
+  "title": "Update Fields that Contain Periods (``.``)",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b05704c36ffb3b3e362ad8115c163a83c442a0d0",
+    "path": "source/reference/operator/aggregation/setField.txt",
+    "blob": "fad92cd6f41cc809c7047f3a2b57b812e6c475bb"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "sweatshirt",
+        "qty": {
+          "$numberInt": "300"
+        },
+        "price.usd": {
+          "$numberDouble": "45.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "winter coat",
+        "qty": {
+          "$numberInt": "200"
+        },
+        "price.usd": {
+          "$numberDouble": "499.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "sun dress",
+        "qty": {
+          "$numberInt": "250"
+        },
+        "price.usd": {
+          "$numberDouble": "199.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "leather boots",
+        "qty": {
+          "$numberInt": "300"
+        },
+        "price.usd": {
+          "$numberDouble": "249.99"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "bow tie",
+        "qty": {
+          "$numberInt": "180"
+        },
+        "price.usd": {
+          "$numberDouble": "9.99"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$match": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$replaceWith": {
+          "$setField": {
+            "field": "price.usd",
+            "input": "$$ROOT",
+            "value": {
+              "$numberDouble": "49.99"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "sweatshirt"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "price.usd",
+            "value": {
+              "exact": {
+                "$numberDouble": "49.99"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

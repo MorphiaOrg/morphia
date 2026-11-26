@@ -1,0 +1,231 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toBool/toBoolExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toBool.txt",
+    "blob": "59fa09a0b133d3a8b3dc7ca5c6d8c291b04687af"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "apple",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "shipped": true
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pie",
+        "qty": {
+          "$numberInt": "10"
+        },
+        "shipped": {
+          "$numberInt": "0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ice cream",
+        "shipped": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "almonds",
+        "qty": {
+          "$numberInt": "2"
+        },
+        "shipped": "true"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "pecans",
+        "shipped": "false"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "item": "nougat",
+        "shipped": ""
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedShippedFlag": {
+            "$switch": {
+              "branches": [
+                {
+                  "case": {
+                    "$eq": [
+                      "$shipped",
+                      "false"
+                    ]
+                  },
+                  "then": false
+                },
+                {
+                  "case": {
+                    "$eq": [
+                      "$shipped",
+                      ""
+                    ]
+                  },
+                  "then": false
+                }
+              ],
+              "default": {
+                "$toBool": "$shipped"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$match": {
+          "convertedShippedFlag": false
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pie"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "shipped",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "convertedShippedFlag",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pecans"
+            }
+          },
+          {
+            "name": "shipped",
+            "value": {
+              "text": "false"
+            }
+          },
+          {
+            "name": "convertedShippedFlag",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "nougat"
+            }
+          },
+          {
+            "name": "shipped",
+            "value": {
+              "text": ""
+            }
+          },
+          {
+            "name": "convertedShippedFlag",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,13 +10,13 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateToString extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateToString/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateToString/dateToStringExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("7.0.0"), (aggregation) -> aggregation.pipeline(project()
+    public void testDateToStringExpressionOperator() {
+        testPipeline((aggregation) -> aggregation.pipeline(project()
                 .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
                 .include("timewithOffsetNY",
                         dateToString().date("$date").format("%H:%M:%S:%L%z").timeZone("America/New_York"))

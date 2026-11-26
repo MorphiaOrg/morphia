@@ -1,0 +1,228 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
+  "title": "Obtain the Number of Seconds from a Timestamp Field",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+    "path": "source/reference/operator/aggregation/tsSecond.txt",
+    "blob": "b6c831c1be6bdf210a7260dc64061dd3489039cb"
+  },
+  "dataset": null,
+  "collections": {
+    "stockSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "symbol": "ABC",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1622731060,
+            "i": 1
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "symbol": "ABC",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1622731060,
+            "i": 2
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "symbol": "DEF",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 1
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "symbol": "DEF",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 2
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "symbol": "DEF",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 3
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "stockSales",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "saleTimestamp": {
+            "$numberInt": "1"
+          },
+          "saleSeconds": {
+            "$tsSecond": "$saleTimestamp"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1622731060,
+                  "i": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "saleSeconds",
+            "value": {
+              "exact": {
+                "$numberLong": "1622731060"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1622731060,
+                  "i": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "saleSeconds",
+            "value": {
+              "exact": {
+                "$numberLong": "1622731060"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "saleSeconds",
+            "value": {
+              "exact": {
+                "$numberLong": "1714124193"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "saleSeconds",
+            "value": {
+              "exact": {
+                "$numberLong": "1714124193"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 3
+                }
+              }
+            }
+          },
+          {
+            "name": "saleSeconds",
+            "value": {
+              "exact": {
+                "$numberLong": "1714124193"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

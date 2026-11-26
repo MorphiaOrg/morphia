@@ -1,0 +1,167 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/convert/typeConversionExample",
+  "title": "Type Conversion Example",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/convert.txt",
+    "blob": "7519c400c6b5aa504d7de45c3e5d9f76e926df45"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "The Danish Girl",
+              "The Godfather",
+              "Gertie the Dinosaur"
+            ]
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "rating": {
+            "$convert": {
+              "input": "$imdb.rating",
+              "to": "double",
+              "onError": "Error",
+              "onNull": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          "metacritic": {
+            "$convert": {
+              "input": "$metacritic",
+              "to": "int",
+              "onError": "Error",
+              "onNull": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Gertie the Dinosaur"
+            }
+          },
+          {
+            "name": "rating",
+            "value": {
+              "exact": {
+                "$numberDouble": "7.3"
+              }
+            }
+          },
+          {
+            "name": "metacritic",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Danish Girl"
+            }
+          },
+          {
+            "name": "rating",
+            "value": {
+              "text": "Error"
+            }
+          },
+          {
+            "name": "metacritic",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Godfather"
+            }
+          },
+          {
+            "name": "rating",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.2"
+              }
+            }
+          },
+          {
+            "name": "metacritic",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

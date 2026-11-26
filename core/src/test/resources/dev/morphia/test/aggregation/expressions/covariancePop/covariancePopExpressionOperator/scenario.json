@@ -1,0 +1,522 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/covariancePop/covariancePopExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
+    "path": "source/reference/operator/aggregation/covariancePop.txt",
+    "blob": "c7188b12c024281ab218746ba560d99d2f53dbd6"
+  },
+  "dataset": null,
+  "collections": {
+    "cakeSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1616239805000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "14"
+        },
+        "quantity": {
+          "$numberInt": "140"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1610346675000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "145"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1581167603000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "104"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1558195741000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "41"
+        },
+        "quantity": {
+          "$numberInt": "162"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1546927923000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "43"
+        },
+        "quantity": {
+          "$numberInt": "134"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "cakeSales",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "partitionBy": "$state",
+          "sortBy": {
+            "orderDate": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "covariancePopForState": {
+              "$covariancePop": [
+                {
+                  "$year": "$orderDate"
+                },
+                "$quantity"
+              ],
+              "window": {
+                "documents": [
+                  "unbounded",
+                  "current"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "strawberry"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1558195741000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "41"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "162"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "chocolate"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811030000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "120"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "exact": {
+                "$numberDouble": "-10.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "vanilla"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1610346675000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "145"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "exact": {
+                "$numberDouble": "-5.666666666666671"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "strawberry"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1546927923000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "43"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "134"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "vanilla"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1581167603000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "104"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "exact": {
+                "$numberDouble": "-7.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "chocolate"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1616239805000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "140"
+              }
+            }
+          },
+          {
+            "name": "covariancePopForState",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

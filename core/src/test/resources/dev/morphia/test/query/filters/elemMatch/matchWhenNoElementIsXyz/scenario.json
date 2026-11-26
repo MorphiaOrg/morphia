@@ -1,0 +1,185 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/elemMatch/matchWhenNoElementIsXyz",
+  "title": "Match When No Element Is xyz",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/elemMatch.txt",
+    "blob": "dad451e32460ad48e14e220c45c4c4cf2475eaf0"
+  },
+  "dataset": null,
+  "collections": {
+    "survey": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "5"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "8"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "7"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "xyz",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "results": [
+          {
+            "product": "abc",
+            "score": {
+              "$numberInt": "7"
+            }
+          },
+          {
+            "product": "def",
+            "score": {
+              "$numberInt": "8"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "results": {
+          "product": "xyz",
+          "score": {
+            "$numberInt": "7"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "survey",
+    "filter": {
+      "results.product": {
+        "$ne": "xyz"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "results",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "abc"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "7"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "product",
+                      "value": {
+                        "text": "def"
+                      }
+                    },
+                    {
+                      "name": "score",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "8"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

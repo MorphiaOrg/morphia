@@ -1,0 +1,190 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/substrBytes/singleByteCharacterSet",
+  "title": "Single-Byte Character Set",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "aa69bf69af62328df889b039f98ffe5d2bede82b",
+    "path": "source/reference/operator/aggregation/substrBytes.txt",
+    "blob": "6c819b2b7e4628b69069950a87d6c9cdfbbd7b18"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "quarter": "13Q1",
+        "description": "product 1"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "quarter": "13Q4",
+        "description": "product 2"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "XYZ1",
+        "quarter": "14Q2",
+        "description": null
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "yearSubstring": {
+            "$substrBytes": [
+              "$quarter",
+              {
+                "$numberInt": "0"
+              },
+              {
+                "$numberInt": "2"
+              }
+            ]
+          },
+          "quarterSubtring": {
+            "$substrBytes": [
+              "$quarter",
+              {
+                "$numberInt": "2"
+              },
+              {
+                "$subtract": [
+                  {
+                    "$strLenBytes": "$quarter"
+                  },
+                  {
+                    "$numberInt": "2"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC1"
+            }
+          },
+          {
+            "name": "yearSubstring",
+            "value": {
+              "text": "13"
+            }
+          },
+          {
+            "name": "quarterSubtring",
+            "value": {
+              "text": "Q1"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC2"
+            }
+          },
+          {
+            "name": "yearSubstring",
+            "value": {
+              "text": "13"
+            }
+          },
+          {
+            "name": "quarterSubtring",
+            "value": {
+              "text": "Q4"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "XYZ1"
+            }
+          },
+          {
+            "name": "yearSubstring",
+            "value": {
+              "text": "14"
+            }
+          },
+          {
+            "name": "quarterSubtring",
+            "value": {
+              "text": "Q2"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

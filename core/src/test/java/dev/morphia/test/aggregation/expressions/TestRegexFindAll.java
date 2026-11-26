@@ -1,57 +1,58 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
-import static dev.morphia.aggregation.expressions.ArrayExpressions.reduce;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexFindAll;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
-import static dev.morphia.aggregation.stages.Set.set;
 
 public class TestRegexFindAll extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example1
+     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/regexFindAllAndItsOptions
      * 
      */
     @Test
     @DisplayName("``$regexFindAll`` and Its Options")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+    public void testRegexFindAllAndItsOptions() {
+        testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFindAll("$description").pattern("line"))));
 
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example2
-     * 
-     */
     @Test
-    @DisplayName("Use ``$regexFindAll`` to Parse Email from String")
-    public void testExample2() {
+    @DisplayName("Find Every Line or Link")
+    public void testFindEveryLineOrLink() {
         testPipeline((aggregation) -> aggregation.pipeline(
-                addFields().field("email",
-                        regexFindAll("$comment").pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
-                set().field("email", "$email.match")));
+                addFields().field("returnObject", regexFindAll("$description").pattern("lin(e|k)"))));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example3
-     * 
-     */
     @Test
-    @DisplayName("Use Captured Groupings to Parse User Name")
-    public void testExample3() {
-        testPipeline(
-                (aggregation) -> aggregation.pipeline(
-                        addFields().field("names",
-                                regexFindAll("$comment").pattern("([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+")
-                                        .options("i")),
-                        set().field("names", reduce("$names.captures", array(), concatArrays("$$value", "$$this")))));
+    @DisplayName("Find Every Tier")
+    public void testFindEveryTier() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFindAll("$description").pattern("tier"))));
     }
 
+    @Test
+    @DisplayName("i Option")
+    public void testIOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFindAll("$description").pattern("line").options("i"))));
+    }
+
+    @Test
+    @DisplayName("m Option")
+    public void testMOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFindAll("$description").pattern("^s").options("im"))));
+    }
+
+    @Test
+    @DisplayName("x Option")
+    public void testXOption() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                addFields().field("returnObject", regexFindAll("$description").pattern("lin(e|k) # matches line or link").options("x"))));
+    }
 }

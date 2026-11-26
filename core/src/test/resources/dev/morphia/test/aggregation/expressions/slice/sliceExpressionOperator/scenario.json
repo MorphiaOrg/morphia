@@ -1,0 +1,229 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/slice/sliceExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/slice.txt",
+    "blob": "3366177c15514b1b0f7c42bfde2ddbc7d670d81f"
+  },
+  "dataset": null,
+  "collections": {
+    "users": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "dave123",
+        "favorites": [
+          "chocolate",
+          "cake",
+          "butter",
+          "apples"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "li",
+        "favorites": [
+          "apples",
+          "pudding",
+          "pie"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "ahn",
+        "favorites": [
+          "pears",
+          "pecans",
+          "chocolate",
+          "cherries"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "ty",
+        "favorites": [
+          "ice cream"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "users",
+    "pipeline": [
+      {
+        "$project": {
+          "name": {
+            "$numberInt": "1"
+          },
+          "threeFavorites": {
+            "$slice": [
+              "$favorites",
+              {
+                "$numberInt": "3"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "dave123"
+            }
+          },
+          {
+            "name": "threeFavorites",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "cake"
+                },
+                {
+                  "text": "butter"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "li"
+            }
+          },
+          {
+            "name": "threeFavorites",
+            "value": {
+              "array": [
+                {
+                  "text": "apples"
+                },
+                {
+                  "text": "pudding"
+                },
+                {
+                  "text": "pie"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "ahn"
+            }
+          },
+          {
+            "name": "threeFavorites",
+            "value": {
+              "array": [
+                {
+                  "text": "pears"
+                },
+                {
+                  "text": "pecans"
+                },
+                {
+                  "text": "chocolate"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "ty"
+            }
+          },
+          {
+            "name": "threeFavorites",
+            "value": {
+              "array": [
+                {
+                  "text": "ice cream"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

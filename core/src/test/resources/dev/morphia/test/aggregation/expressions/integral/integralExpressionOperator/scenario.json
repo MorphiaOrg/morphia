@@ -1,0 +1,507 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/integral/integralExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8454aef6ad5fba8b4a910a4feca546c18e8a6340",
+    "path": "source/reference/operator/aggregation/integral.txt",
+    "blob": "ec554eb4f3b288020d53b64389882ed2ff8fc7af"
+  },
+  "dataset": null,
+  "collections": {
+    "powerConsumption": [
+      {
+        "powerMeterID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.95"
+        }
+      },
+      {
+        "powerMeterID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811060000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.7"
+        }
+      },
+      {
+        "powerMeterID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811090000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.6"
+        }
+      },
+      {
+        "powerMeterID": "1",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811120000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.98"
+        }
+      },
+      {
+        "powerMeterID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.5"
+        }
+      },
+      {
+        "powerMeterID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811060000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.25"
+        }
+      },
+      {
+        "powerMeterID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811090000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.75"
+        }
+      },
+      {
+        "powerMeterID": "2",
+        "timeStamp": {
+          "$date": {
+            "$numberLong": "1589811120000"
+          }
+        },
+        "kilowatts": {
+          "$numberDouble": "2.82"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "powerConsumption",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "partitionBy": "$powerMeterID",
+          "sortBy": {
+            "timeStamp": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "powerMeterKilowattHours": {
+              "$integral": {
+                "input": "$kilowatts",
+                "unit": "hour"
+              },
+              "window": {
+                "range": [
+                  "unbounded",
+                  "current"
+                ],
+                "unit": "hour"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62863"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811030000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.95"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62864"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811060000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.7"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.023541666666666666"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62865"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811090000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.6"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.045625"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62866"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "1"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811120000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.98"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.068875"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62867"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "2"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811030000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.5"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62868"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "2"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811060000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.25"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.019791666666666666"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e62869"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "2"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811090000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.75"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.040625"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "60cbdc3f833dfeadc8e6286a"
+              }
+            }
+          },
+          {
+            "name": "powerMeterID",
+            "value": {
+              "text": "2"
+            }
+          },
+          {
+            "name": "timeStamp",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811120000"
+                }
+              }
+            }
+          },
+          {
+            "name": "kilowatts",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.82"
+              }
+            }
+          },
+          {
+            "name": "powerMeterKilowattHours",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.06383333333333334"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

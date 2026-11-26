@@ -1,0 +1,235 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
+  "title": "``$regexMatch`` and Its Options",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+    "path": "source/reference/operator/aggregation/regexMatch.txt",
+    "blob": "7d7cb97c757085b76945febfc527419c58b3170a"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "description": "Single LINE description."
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "description": "First lines\nsecond line"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "description": "Many spaces before     line"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "description": "Multiple\nline descriptions"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "description": "anchors, links and hyperlinks"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "description": "métier work vocation"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "products",
+    "pipeline": [
+      {
+        "$addFields": {
+          "result": {
+            "$regexMatch": {
+              "input": "$description",
+              "regex": {
+                "$regularExpression": {
+                  "pattern": "line",
+                  "options": ""
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Single LINE description."
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "First lines\nsecond line"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Many spaces before     line"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Multiple\nline descriptions"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "anchors, links and hyperlinks"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "métier work vocation"
+            }
+          },
+          {
+            "name": "result",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

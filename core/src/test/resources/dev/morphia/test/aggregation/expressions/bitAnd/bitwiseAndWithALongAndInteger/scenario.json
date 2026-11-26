@@ -1,0 +1,84 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/bitAnd/bitwiseAndWithALongAndInteger",
+  "title": "Bitwise AND with a Long and Integer",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bitAnd.txt",
+    "blob": "918a0950ee157f6a0a8a92f6df669181c959784d"
+  },
+  "dataset": null,
+  "collections": {
+    "switches": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "a": {
+          "$numberInt": "0"
+        },
+        "b": {
+          "$numberInt": "127"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": {
+          "$numberInt": "2"
+        },
+        "b": {
+          "$numberInt": "3"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "$numberInt": "3"
+        },
+        "b": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "switches",
+    "pipeline": [
+      {
+        "$project": {
+          "result": {
+            "$bitAnd": [
+              "$a",
+              {
+                "$numberLong": "63"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "7.0.0",
+    "topology": "STANDALONE"
+  }
+}

@@ -1,39 +1,29 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.aggregation.expressions.StringExpressions;
+import java.util.List;
+
+import dev.morphia.aggregation.expressions.impls.ConvertType;
 import dev.morphia.test.TemplatedTestBase;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
-import static dev.morphia.aggregation.expressions.ConditionalExpressions.switchExpression;
-import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
-import static dev.morphia.aggregation.expressions.StringExpressions.concat;
 import static dev.morphia.aggregation.expressions.TypeExpressions.convert;
-import static dev.morphia.aggregation.expressions.TypeExpressions.type;
-import static dev.morphia.aggregation.expressions.impls.ConvertType.DECIMAL;
-import static dev.morphia.aggregation.expressions.impls.ConvertType.INT;
-import static dev.morphia.aggregation.stages.AddFields.addFields;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
+import static dev.morphia.aggregation.stages.Sort.sort;
+import static dev.morphia.query.filters.Filters.in;
 
 public class TestConvert extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/expressions/convert/example1
-     * 
-     */
-    @Test
-    @DisplayName("main")
-    public void testExample1() {
-        testPipeline((aggregation) -> aggregation.pipeline(
-                addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
-                        .field("convertedQty",
-                                convert("$qty", INT).onError(concat("Could not convert ",
-                                        StringExpressions.toString("$qty"), " to type integer.")).onNull(0)),
-                project().include("totalPrice",
-                        switchExpression().branch(eq(type("$convertedPrice"), "string"), "NaN")
-                                .branch(eq(type("$convertedQty"), "string"), "NaN")
-                                .defaultCase(multiply("$convertedPrice", "$convertedQty")))));
-    }
 
+    @Test
+    @DisplayName("Type Conversion Example")
+    public void testTypeConversionExample() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(in("title", List.of("The Danish Girl", "The Godfather", "Gertie the Dinosaur"))),
+                project().suppressId().include("title")
+                        .include("rating", convert("$imdb.rating", ConvertType.DOUBLE).onError("Error").onNull(0))
+                        .include("metacritic", convert("$metacritic", ConvertType.INT).onError("Error").onNull(0)),
+                sort().ascending("title")));
+    }
 }

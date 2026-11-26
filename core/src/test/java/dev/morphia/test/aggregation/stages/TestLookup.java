@@ -3,6 +3,7 @@ package dev.morphia.test.aggregation.stages;
 import java.util.List;
 
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
+import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.aggregation.model.Order;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.in;
 import static dev.morphia.aggregation.expressions.BooleanExpressions.and;
+import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
+import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
 import static dev.morphia.aggregation.expressions.SystemVariables.ROOT;
@@ -29,50 +32,46 @@ import static java.util.Arrays.asList;
 
 public class TestLookup extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example1
+     * test data: dev/morphia/test/aggregation/stages/lookup/performASingleEqualityJoinWithLookup
      * 
      */
     @Test
     @DisplayName("Perform a Single Equality Join with ``$lookup``")
-    public void testExample1() {
-        loadData("inventory", 2);
+    public void testPerformASingleEqualityJoinWithLookup() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example2
+     * test data: dev/morphia/test/aggregation/stages/lookup/useLookupWithAnArray
      * 
      */
     @Test
     @DisplayName("Use ``$lookup`` with an Array")
-    public void testExample2() {
-        loadData("members", 2);
+    public void testUseLookupWithAnArray() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example3
+     * test data: dev/morphia/test/aggregation/stages/lookup/useLookupWithMergeObjects
      * 
      */
     @Test
     @DisplayName("Use ``$lookup`` with ``$mergeObjects``")
-    public void testExample3() {
-        loadData("items", 2);
+    public void testUseLookupWithMergeObjects() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 lookup("items").localField("item").foreignField("item").as("fromItems"),
                 replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example4
+     * test data: dev/morphia/test/aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
-    public void testExample4() {
-        loadData("warehouses", 2);
+    public void testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup() {
         testPipeline(
                 (aggregation) -> aggregation
                         .pipeline(lookup("warehouses")
@@ -84,13 +83,12 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example5
+     * test data: dev/morphia/test/aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform an Uncorrelated Subquery with ``$lookup``")
-    public void testExample5() {
-        loadData("holidays", 2);
+    public void testPerformAnUncorrelatedSubqueryWithLookup() {
         testPipeline((aggregation) -> aggregation.pipeline(lookup("holidays")
                 .pipeline(match(eq("year", 2018)),
                         project().suppressId().include("date",
@@ -100,14 +98,13 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example6
+     * test data: dev/morphia/test/aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform a Concise Correlated Subquery with ``$lookup``")
-    public void testExample6() {
+    public void testPerformAConciseCorrelatedSubqueryWithLookup() {
         checkMinServerVersion("6.0.0");
-        loadData("restaurants", 2);
         testPipeline((aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
                 .foreignField("name").pipeline(match(expr(in("$$orders_drink", "$beverages"))))
                 .let("orders_drink", "$drink").as("matches")));
@@ -133,16 +130,37 @@ public class TestLookup extends TemplatedTestBase {
         Assertions.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example7
-     * 
-     * db.cakeFlavors.aggregate( [ { $lookup: { from: "cakeFlavors", pipeline: [ {
-     * $documents: [ {} ] } ], as: "test" } } ] )
-     */
     @Test
-    @DisplayName("Namespaces in Subpipelines")
-    public void testExample7() {
-        // this is just an error case in the docs. nothing to test.
+    @DisplayName("Correlate with Local and Foreign Fields")
+    public void testCorrelateWithLocalAndForeignFields() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(Filters.in("title", List.of("I Don't Kiss", "Lucky Luke", "Mississippi Masala"))),
+                lookup("comments").localField("_id").foreignField("movie_id").let("movie_year", "$year")
+                        .pipeline(match(expr(gt(year("$date"), "$$movie_year"))), project().suppressId().include("name").include("date"))
+                        .as("post_release_comments"),
+                project().suppressId().include("title").include("year").include("post_release_comments")));
     }
 
+    @Test
+    @DisplayName("Correlate with Variables Only")
+    public void testCorrelateWithVariablesOnly() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(Filters.in("title", List.of("I Don't Kiss", "Lucky Luke", "Mississippi Masala"))),
+                lookup("comments").let("movie_id", "$_id").let("movie_year", "$year")
+                        .pipeline(match(expr(and(ComparisonExpressions.eq("$movie_id", "$$movie_id"), gt(year("$date"), "$$movie_year")))),
+                                project().suppressId().include("name").include("date"))
+                        .as("post_release_comments"),
+                project().suppressId().include("title").include("year").include("post_release_comments")));
+    }
+
+    @Test
+    @DisplayName("Use Multiple Join Conditions and a Correlated Subquery")
+    public void testUseMultipleJoinConditionsAndACorrelatedSubquery() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(Filters.in("title", List.of("Class Action", "Kafka", "Corpse Bride"))),
+                lookup("comments").localField("_id").foreignField("movie_id").let("movie_year", "$year")
+                        .pipeline(match(expr(gt(year("$date"), "$$movie_year"))), project().suppressId().include("name").include("date"))
+                        .as("post_release_comments"),
+                project().suppressId().include("title").include("year").include("post_release_comments")));
+    }
 }

@@ -1,0 +1,237 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/first/useInGroupStage",
+  "title": "Use in ``$group`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b08efbdbfb6dbb10ff4c493d4646636213e10c36",
+    "path": "source/reference/operator/aggregation/first.txt",
+    "blob": "952e837274a06de838338fc35e3921d01cb7a1e8"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388563200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418000000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418300000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392451200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392455100000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392465910000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392473532000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$sort": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "date": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$item",
+          "firstSale": {
+            "$first": "$date"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "firstSale",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1391418000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "xyz"
+            }
+          },
+          {
+            "name": "firstSale",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1391418300000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "firstSale",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1388563200000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,29 +1,24 @@
 package dev.morphia.test.aggregation.stages;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.client.model.MergeOptions.WhenMatched;
+import com.mongodb.client.model.MergeOptions.WhenNotMatched;
+
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.mongodb.client.model.MergeOptions.WhenMatched.FAIL;
 import static com.mongodb.client.model.MergeOptions.WhenMatched.KEEP_EXISTING;
-import static com.mongodb.client.model.MergeOptions.WhenMatched.MERGE;
-import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
-import static dev.morphia.aggregation.expressions.MathExpressions.add;
-import static dev.morphia.aggregation.stages.AddFields.addFields;
+import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -31,118 +26,46 @@ import static dev.morphia.aggregation.stages.Merge.merge;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.gte;
-import static dev.morphia.query.filters.Filters.lt;
+import static dev.morphia.query.filters.Filters.lte;
+import static dev.morphia.query.filters.Filters.ne;
 
 public class TestMerge extends TemplatedTestBase {
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example1
-     * 
-     */
-    @Test
-    @DisplayName("On-Demand Materialized View: Initial Creation")
-    public void testExample1() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(
-                        group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
-                                sum("$salary")),
-                        merge("reporting", "budgets").on("_id").whenMatched(REPLACE).whenNotMatched(INSERT)));
-    }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example2
-     * 
-     */
-    @Test
-    @DisplayName("On-Demand Materialized View: Update/Replace Data")
-    public void testExample2() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(match(gte("fiscal_year", 2019)),
-                        group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
-                                sum("$salary")),
-                        merge("reporting", "budgets").on("_id").whenMatched(REPLACE).whenNotMatched(INSERT)));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example3
-     * 
-     */
-    @Test
-    @DisplayName("Only Insert New Data")
-    public void testExample3() {
-        loadData("orgArchive", 1);
-        loadData("salaries", 2);
-        loadIndex(discoverResourceName(), "orgArchive");
-        testPipeline(new ActionTestOptions().skipDataCheck(true).skipIndex(true),
-                (aggregation) -> aggregation.pipeline(match(eq("fiscal_year", 2019)),
-                        group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("employees",
-                                push("$employee")),
-                        project().suppressId().include("dept", "$_id.dept").include("fiscal_year", "$_id.fiscal_year")
-                                .include("employees"),
-                        merge("orgArchive").on("dept", "fiscal_year").whenMatched(FAIL)));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example4
-     * 
-     */
     @Test
     @DisplayName("Merge Results from Multiple Collections")
-    public void testExample4() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(group().field("_id", "$quarter").field("purchased", sum("$qty")),
-                        merge("quarterlyreport").on("_id").whenMatched(MERGE).whenNotMatched(INSERT)));
+    public void testMergeResultsFromMultipleCollections() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(eq("metacritic", 100), ne("rated", null), gte("year", 1970), lte("year", 1972)),
+                group(id("$year")).field("movieCount", sum(1)),
+                merge("yearlyStats").on("_id").whenMatched(WhenMatched.MERGE).whenNotMatched(WhenNotMatched.INSERT)));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example5
-     * 
-     */
     @Test
-    @DisplayName("Use the Pipeline to Customize the Merge")
-    public void testExample5() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
-                (aggregation) -> aggregation.pipeline(
-                        match(gte("date", LocalDate.of(2019, Month.MAY, 7)),
-                                lt("date", LocalDate.of(2019, Month.MAY, 8))),
-                        project().include("_id", dateToString().date("$date").format("%Y-%m")).include("thumbsup")
-                                .include("thumbsdown"),
-                        merge("monthlytotals").on("_id")
-                                .whenMatched(addFields().field("thumbsup", add("$thumbsup", "$$new.thumbsup"))
-                                        .field("thumbsdown", add("$thumbsdown", "$$new.thumbsdown")))
-                                .whenNotMatched(INSERT)));
+    @DisplayName("On-Demand Materialized View: Update/Replace Data")
+    public void testOnDemandMaterializedViewUpdateReplaceData() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(eq("metacritic", 100), ne("rated", null), gte("year", 1963)),
+                group(id(document().field("year", "$year").field("rated", "$rated"))).field("count", sum(1)),
+                merge("movieRatingSummary").on("_id").whenMatched(WhenMatched.REPLACE).whenNotMatched(WhenNotMatched.INSERT)));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example6
-     * 
-     */
     @Test
-    @DisplayName("Use Variables to Customize the Merge :: Merge Stage")
-    public void testExample6() {
-        // merging in to another db complicates the test infra and doesn't really
-        // provide much value as another test
+    @DisplayName("Only Insert New Data")
+    public void testOnlyInsertNewData() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(eq("metacritic", 100), ne("rated", null), gte("year", 1963)),
+                group(id("$year")).field("titles", push("$title")),
+                project().suppressId().include("year", "$_id").include("titles"),
+                merge("movieArchive").on("year").whenMatched(WhenMatched.FAIL)));
     }
 
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example7
-     * 
-     */
     @Test
-    @DisplayName("Use Variables to Customize the Merge :: Aggregate Command")
-    public void testExample7() {
-        // merging in to another db complicates the test infra and doesn't really
-        // provide much value as another test
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example8
-     * 
-     */
-    @Test
-    @DisplayName("Use Variables to Customize the Merge :: Merge and Aggregate")
-    public void testExample8() {
-        // merging in to another db complicates the test infra and doesn't really
-        // provide much value as another test
+    @DisplayName("Summarize Ratings into Another Collection")
+    public void testSummarizeRatingsIntoAnotherCollection() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(eq("metacritic", 100), ne("rated", null), lte("year", 1972)),
+                group(id(document().field("year", "$year").field("rated", "$rated"))).field("count", sum(1)),
+                merge("movieRatingSummary").on("_id").whenMatched(WhenMatched.REPLACE).whenNotMatched(WhenNotMatched.INSERT)));
     }
 
     @Test

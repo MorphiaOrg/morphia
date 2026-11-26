@@ -1,0 +1,149 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/subtract/subtractTwoDates",
+  "title": "Subtract Two Dates",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "774cb4844eed6dcb7cfa955b636bef4d8437e966",
+    "path": "source/reference/operator/aggregation/subtract.txt",
+    "blob": "b8015b74a6d43d19fd5277a285bb2c73ad82ccfa"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "fee": {
+          "$numberInt": "2"
+        },
+        "discount": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1393660800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "fee": {
+          "$numberInt": "1"
+        },
+        "discount": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1393664400000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "dateDifference": {
+            "$subtract": [
+              "$$NOW",
+              "$date"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "dateDifference",
+            "value": {
+              "exact": {
+                "$numberLong": "186136746187"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "dateDifference",
+            "value": {
+              "exact": {
+                "$numberLong": "186133146187"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

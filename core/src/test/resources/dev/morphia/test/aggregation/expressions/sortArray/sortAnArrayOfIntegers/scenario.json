@@ -1,0 +1,149 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
+  "title": "Sort an Array of Integers",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ee00283046ed2845155e52b20ffd1c5638d65d9c",
+    "path": "source/reference/operator/aggregation/sortArray.txt",
+    "blob": "3d856d55893b313e1ec9816fa52a234c43025c86"
+  },
+  "dataset": null,
+  "collections": {
+    "engineers": [
+      {
+        "team": [
+          {
+            "name": "pat",
+            "age": {
+              "$numberInt": "30"
+            },
+            "address": {
+              "street": "12 Baker St",
+              "city": "London"
+            }
+          },
+          {
+            "name": "dallas",
+            "age": {
+              "$numberInt": "36"
+            },
+            "address": {
+              "street": "12 Cowper St",
+              "city": "Palo Alto"
+            }
+          },
+          {
+            "name": "charlie",
+            "age": {
+              "$numberInt": "42"
+            },
+            "address": {
+              "street": "12 French St",
+              "city": "New Brunswick"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "engineers",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "result": {
+            "$sortArray": {
+              "input": [
+                {
+                  "$numberInt": "1"
+                },
+                {
+                  "$numberInt": "4"
+                },
+                {
+                  "$numberInt": "1"
+                },
+                {
+                  "$numberInt": "6"
+                },
+                {
+                  "$numberInt": "12"
+                },
+                {
+                  "$numberInt": "5"
+                }
+              ],
+              "sortBy": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "result",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "4"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "5"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "6"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "12"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

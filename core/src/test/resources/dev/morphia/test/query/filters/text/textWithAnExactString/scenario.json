@@ -1,0 +1,162 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/text/textWithAnExactString",
+  "title": "``$text`` with an Exact String",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "dabbeba3f7126b90d5a32ea66ca9b59c8a105a25",
+    "path": "source/reference/operator/query/text.txt",
+    "blob": "505c57dcb2997450154e0fe4433a193cfe35ac9d"
+  },
+  "dataset": null,
+  "collections": {
+    "articles": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "subject": "coffee",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "50"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "subject": "Coffee Shopping",
+        "author": "efg",
+        "views": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "subject": "Baking a cake",
+        "author": "abc",
+        "views": {
+          "$numberInt": "90"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "subject": "baking",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "100"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "subject": "Café Con Leche",
+        "author": "abc",
+        "views": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "subject": "Сырники",
+        "author": "jkl",
+        "views": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "subject": "coffee and cream",
+        "author": "efg",
+        "views": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "subject": "Cafe con Leche",
+        "author": "xyz",
+        "views": {
+          "$numberInt": "10"
+        }
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "articles",
+      "keys": {
+        "subject": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "articles",
+    "filter": {
+      "$text": {
+        "$search": "\"coffee shop\""
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "subject",
+            "value": {
+              "text": "Coffee Shopping"
+            }
+          },
+          {
+            "name": "author",
+            "value": {
+              "text": "efg"
+            }
+          },
+          {
+            "name": "views",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

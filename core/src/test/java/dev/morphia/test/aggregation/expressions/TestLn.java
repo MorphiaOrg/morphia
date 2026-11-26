@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLn extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/ln/example1
+     * test data: dev/morphia/test/aggregation/expressions/ln/lnExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLnExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("x", "$year").include("y", ln("$sales"))));
     }
 

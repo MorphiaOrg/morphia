@@ -1,0 +1,198 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/map/applyArithmeticOperatorsToEachArrayElement",
+  "title": "Apply Arithmetic Operators to Each Array Element",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/map.txt",
+    "blob": "e32fcad0e5cdb1baa3cfe863b23e04342fc157c3"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "genreScores": {
+            "$map": {
+              "input": "$genres",
+              "as": "genre",
+              "in": {
+                "$add": [
+                  {
+                    "$multiply": [
+                      {
+                        "$strLenCP": "$$genre"
+                      },
+                      {
+                        "$numberInt": "2"
+                      }
+                    ]
+                  },
+                  {
+                    "$numberInt": "1"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "genres": {
+            "$numberInt": "1"
+          },
+          "genreScores": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Documentary"
+                },
+                {
+                  "text": "History"
+                },
+                {
+                  "text": "Sport"
+                }
+              ]
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "genreScores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "23"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "15"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "11"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Action"
+                },
+                {
+                  "text": "Adventure"
+                },
+                {
+                  "text": "Drama"
+                }
+              ]
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "genreScores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "13"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "19"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "11"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

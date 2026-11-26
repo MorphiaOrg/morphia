@@ -1,0 +1,214 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unionWith/report2AggregatedRuntimeByGenre",
+  "title": "Report 2: Aggregated Runtime by Genre",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/unionWith.txt",
+    "blob": "df62ea1538e4db97d4a53249fa520b24eb54c63e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$lt": {
+              "$numberInt": "1910"
+            }
+          }
+        }
+      },
+      {
+        "$unionWith": {
+          "coll": "movies",
+          "pipeline": [
+            {
+              "$match": {
+                "runtime": {
+                  "$gt": {
+                    "$numberInt": "1000"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "totalRuntime": {
+            "$sum": "$runtime"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "totalRuntime": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "array": [
+                {
+                  "text": "Action"
+                },
+                {
+                  "text": "Adventure"
+                },
+                {
+                  "text": "Drama"
+                }
+              ]
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "1256"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "array": [
+                {
+                  "text": "Documentary"
+                },
+                {
+                  "text": "History"
+                },
+                {
+                  "text": "Sport"
+                }
+              ]
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "1140"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "array": [
+                {
+                  "text": "Short"
+                },
+                {
+                  "text": "Drama"
+                }
+              ]
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "array": [
+                {
+                  "text": "Short"
+                },
+                {
+                  "text": "Western"
+                }
+              ]
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "11"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "array": [
+                {
+                  "text": "Short"
+                },
+                {
+                  "text": "Romance"
+                }
+              ]
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "6.0.0",
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

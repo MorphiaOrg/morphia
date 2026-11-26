@@ -1,0 +1,145 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/position/useANegativeArrayIndexPositionToAddElementsToTheArray",
+  "title": "Use a Negative Array Index (Position) to Add Elements to the Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+    "path": "source/reference/operator/update/position.txt",
+    "blob": "87938971d5e3436475565a9a7fe444dfdc66b939"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "scores": [
+          {
+            "$numberInt": "50"
+          },
+          {
+            "$numberInt": "60"
+          },
+          {
+            "$numberInt": "20"
+          },
+          {
+            "$numberInt": "30"
+          },
+          {
+            "$numberInt": "70"
+          },
+          {
+            "$numberInt": "100"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "3"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [
+            {
+              "$numberInt": "90"
+            },
+            {
+              "$numberInt": "80"
+            }
+          ],
+          "$position": {
+            "$numberInt": "-2"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "60"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "20"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "30"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "90"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "70"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

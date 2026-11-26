@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
+  "title": "main :: Hyperbolic Cosine in Degrees",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+    "path": "source/reference/operator/aggregation/cosh.txt",
+    "blob": "c65f094653c41c8ad33d74beee2674c24373c8d7"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "angle": {
+          "$numberDecimal": "53.1301023541559787031443874490659"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "cosh_output": {
+            "$cosh": {
+              "$degreesToRadians": "$angle"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "angle",
+            "value": {
+              "decimal": "53.1301023541559787031443874490659"
+            }
+          },
+          {
+            "name": "cosh_output",
+            "value": {
+              "decimal": "1.461642741099671277595921778079396"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

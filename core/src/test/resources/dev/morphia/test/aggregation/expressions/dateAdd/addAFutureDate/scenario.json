@@ -1,0 +1,208 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateAdd/addAFutureDate",
+  "title": "Add a Future Date",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+    "path": "source/reference/operator/aggregation/dateAdd.txt",
+    "blob": "519060a66fe72371bda6fb78ae1cd15c8d50d63b"
+  },
+  "dataset": null,
+  "collections": {
+    "shipping": [
+      {
+        "custId": {
+          "$numberInt": "456"
+        },
+        "purchaseDate": {
+          "$date": {
+            "$numberLong": "1609372800000"
+          }
+        }
+      },
+      {
+        "custId": {
+          "$numberInt": "457"
+        },
+        "purchaseDate": {
+          "$date": {
+            "$numberLong": "1614470400000"
+          }
+        }
+      },
+      {
+        "custId": {
+          "$numberInt": "458"
+        },
+        "purchaseDate": {
+          "$date": {
+            "$numberLong": "1614297600000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "shipping",
+    "pipeline": [
+      {
+        "$project": {
+          "expectedDeliveryDate": {
+            "$dateAdd": {
+              "startDate": "$purchaseDate",
+              "unit": "day",
+              "amount": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$merge": "shipping"
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "603dd4b2044b995ad331c0b2"
+              }
+            }
+          },
+          {
+            "name": "custId",
+            "value": {
+              "whole": {
+                "$numberInt": "456"
+              }
+            }
+          },
+          {
+            "name": "purchaseDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1609372800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "expectedDeliveryDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1609632000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "603dd4b2044b995ad331c0b3"
+              }
+            }
+          },
+          {
+            "name": "custId",
+            "value": {
+              "whole": {
+                "$numberInt": "457"
+              }
+            }
+          },
+          {
+            "name": "purchaseDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1614470400000"
+                }
+              }
+            }
+          },
+          {
+            "name": "expectedDeliveryDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1614729600000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "603dd4b2044b995ad331c0b4"
+              }
+            }
+          },
+          {
+            "name": "custId",
+            "value": {
+              "whole": {
+                "$numberInt": "458"
+              }
+            }
+          },
+          {
+            "name": "purchaseDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1614297600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "expectedDeliveryDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1614556800000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

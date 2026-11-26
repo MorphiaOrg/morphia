@@ -1,0 +1,108 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/slice/sliceFromTheFrontOfTheArray",
+  "title": "Slice from the Front of the Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "23d941b5a8dda3b6408bfd3cb4cc79930c836dd1",
+    "path": "source/reference/operator/update/slice.txt",
+    "blob": "7d3869a48427f0dd75fe8949986ce58001bc7dae"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "scores": [
+          {
+            "$numberInt": "89"
+          },
+          {
+            "$numberInt": "90"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "2"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [
+            {
+              "$numberInt": "100"
+            },
+            {
+              "$numberInt": "20"
+            }
+          ],
+          "$slice": {
+            "$numberInt": "3"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "89"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "90"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

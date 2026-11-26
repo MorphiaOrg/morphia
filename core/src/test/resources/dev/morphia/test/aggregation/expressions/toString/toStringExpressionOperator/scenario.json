@@ -1,0 +1,206 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toString/toStringExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toString.txt",
+    "blob": "89b3c01ffb5a803027a5e42ea2f41e2828a823f5"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "apple",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "zipcode": {
+          "$numberInt": "93445"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "almonds",
+        "qty": {
+          "$numberInt": "2"
+        },
+        "zipcode": "12345-0030"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "peaches",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "zipcode": {
+          "$numberInt": "12345"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedZipCode": {
+            "$toString": "$zipcode"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "convertedZipCode": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "peaches"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "zipcode",
+            "value": {
+              "whole": {
+                "$numberInt": "12345"
+              }
+            }
+          },
+          {
+            "name": "convertedZipCode",
+            "value": {
+              "text": "12345"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "zipcode",
+            "value": {
+              "text": "12345-0030"
+            }
+          },
+          {
+            "name": "convertedZipCode",
+            "value": {
+              "text": "12345-0030"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "zipcode",
+            "value": {
+              "whole": {
+                "$numberInt": "93445"
+              }
+            }
+          },
+          {
+            "name": "convertedZipCode",
+            "value": {
+              "text": "93445"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

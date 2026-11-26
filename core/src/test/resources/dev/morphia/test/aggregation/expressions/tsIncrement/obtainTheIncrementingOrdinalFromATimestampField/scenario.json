@@ -1,0 +1,228 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
+  "title": "Obtain the Incrementing Ordinal from a Timestamp Field",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/tsIncrement.txt",
+    "blob": "ba7d86a85c20c04a96d967bb32ab09fb466ded9f"
+  },
+  "dataset": null,
+  "collections": {
+    "stockSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "symbol": "MDB",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1622731060,
+            "i": 1
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "symbol": "MDB",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1622731060,
+            "i": 2
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "symbol": "MSFT",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 1
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "symbol": "MSFT",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 2
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "symbol": "MSFT",
+        "saleTimestamp": {
+          "$timestamp": {
+            "t": 1714124193,
+            "i": 3
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "stockSales",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "saleTimestamp": {
+            "$numberInt": "1"
+          },
+          "saleIncrement": {
+            "$tsIncrement": "$saleTimestamp"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1622731060,
+                  "i": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "saleIncrement",
+            "value": {
+              "exact": {
+                "$numberLong": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1622731060,
+                  "i": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "saleIncrement",
+            "value": {
+              "exact": {
+                "$numberLong": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "saleIncrement",
+            "value": {
+              "exact": {
+                "$numberLong": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 2
+                }
+              }
+            }
+          },
+          {
+            "name": "saleIncrement",
+            "value": {
+              "exact": {
+                "$numberLong": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "saleTimestamp",
+            "value": {
+              "exact": {
+                "$timestamp": {
+                  "t": 1714124193,
+                  "i": 3
+                }
+              }
+            }
+          },
+          {
+            "name": "saleIncrement",
+            "value": {
+              "exact": {
+                "$numberLong": "3"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.1.0",
+    "topology": "STANDALONE"
+  }
+}

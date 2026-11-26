@@ -1,2 +1,0 @@
-{ $group : { _id : "$author", books: { $push: "$title" } } },
-    { $out : "authors" }

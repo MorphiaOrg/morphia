@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestArrayElemAt extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/arrayElemAt/example1
+     * test data: dev/morphia/test/aggregation/expressions/arrayElemAt/arrayElemAtExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testArrayElemAtExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("name")
                 .include("first", elementAt("$favorites", 0)).include("last", elementAt("$favorites", -1))));
     }

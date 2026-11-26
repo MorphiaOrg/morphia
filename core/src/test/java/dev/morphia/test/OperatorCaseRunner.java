@@ -23,7 +23,6 @@ import dev.morphia.query.Query;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.FormRules.Rule;
 import dev.morphia.test.FormRules.Shape;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
@@ -55,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  * published comparison only, a
  * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
  * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
- * and no tolerances, and a dataset only when the scenario skips its results; a scenario that needs either fails rather
+ * and no tolerances, and a dataset only when the scenario skips its behavior check; a scenario that needs either fails rather
  * than being checked loosely. Documented indexes are created on both databases after they are seeded. A write (an
  * update, or a pipeline that writes with {@code $merge} or {@code $out}) can carry {@code action.read}, the find the
  * page runs afterwards to show its effect: both sides run that find after the write, and its results replace the
@@ -74,16 +73,6 @@ public class OperatorCaseRunner {
         this.test = test;
     }
 
-    /**
-     * Runs a converted legacy case: its unchanged test body's options must say what its scenario says, because the
-     * scenario, not the options, now drives the run.
-     */
-    public void aggregate(OperatorCase operatorCase, ActionTestOptions options,
-            Function<Aggregation<Document>, Aggregation<Document>> dsl) {
-        options(operatorCase, options);
-        aggregate(operatorCase, dsl);
-    }
-
     public void aggregate(OperatorCase operatorCase, Function<Aggregation<Document>, Aggregation<Document>> dsl) {
         run(operatorCase, "aggregate", Shape.PIPELINE, (action, collection) -> {
             Aggregation<Document> aggregation = dsl.apply(test.getDs().aggregate(aggregationOptions().collection(collection)));
@@ -93,15 +82,6 @@ public class OperatorCaseRunner {
                             .into(new ArrayList<>())),
                     () -> bson(aggregation.toList()).getValues());
         });
-    }
-
-    /**
-     * Runs a converted legacy query case. The documented filter runs through the driver; Morphia's query runs as the
-     * test builds it.
-     */
-    public void find(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl) {
-        options(operatorCase, options);
-        find(operatorCase, dsl, options.findOptions());
     }
 
     /**
@@ -137,16 +117,6 @@ public class OperatorCaseRunner {
                         }
                     });
         });
-    }
-
-    /**
-     * Runs a converted legacy update case. As the legacy test did, the results are the documents its filter matches
-     * after the update; every collection is compared as well.
-     */
-    public void update(OperatorCase operatorCase, ActionTestOptions options, Function<Query<Document>, Query<Document>> dsl,
-            UpdateOperator... operators) {
-        options(operatorCase, options);
-        update(operatorCase, dsl, operators);
     }
 
     /**
@@ -213,45 +183,6 @@ public class OperatorCaseRunner {
         };
     }
 
-    private void options(OperatorCase operatorCase, ActionTestOptions options) {
-        BsonDocument scenario = operatorCase.scenario();
-        BsonDocument comparison = scenario.getDocument("comparison");
-        BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
-        BsonValue minimumServer = scenario.getDocument("requirements").get("minimumServer");
-        List<String> differences = new ArrayList<>();
-        if (options.orderMatters() != comparison.getString("order").getValue().equals("ORDERED")) {
-            differences.add("orderMatters");
-        }
-        if (options.removeIds() != comparison.getArray("ignore").contains(new BsonString("_id"))) {
-            differences.add("removeIds");
-        }
-        if (options.skipActionCheck() != skipped.containsKey("serialization")) {
-            differences.add("skipActionCheck");
-        }
-        if (options.skipDataCheck() != skipped.containsKey("results")) {
-            differences.add("skipDataCheck");
-        }
-        if (!options.serverVersion().equals(minimumServer.isNull() ? "0.0.0" : minimumServer.asString().getValue())) {
-            differences.add("serverVersion");
-        }
-        // skipDataCheck(true) also sets skipIndex; only an explicit skipIndex is unmapped.
-        if (options.skipIndex() && !options.skipDataCheck() || !options.minDriver().equals("0.0.0")) {
-            differences.add("skipIndex/minDriver");
-        }
-        // The runner builds its own find and update options, so a test's own would be silently dropped.
-        // FindOptions.equals leaves out timeoutMode, so it is checked on its own.
-        // A documented projection is Morphia's findOptions; any other find option changes the results, which the behavior
-        // check compares.
-        boolean projected = scenario.getDocument("action").containsKey("projection");
-        if (!projected && (!options.findOptions().equals(new FindOptions()) || options.findOptions().timeoutMode() != null)
-                || options.hasUpdateOptions()) {
-            differences.add("findOptions/updateOptions");
-        }
-        if (!differences.isEmpty()) {
-            fail(operatorCase.resource() + ": the test's options differ from its scenario: " + differences);
-        }
-    }
-
     private void run(OperatorCase operatorCase, String kind, Shape shape,
             BiFunction<BsonDocument, String, Execution> plan) {
         BsonDocument scenario = operatorCase.scenario();
@@ -316,8 +247,8 @@ public class OperatorCaseRunner {
             if (matched != null && matched != action) {
                 execution = plan.apply(matched, collection);
             }
-            // The legacy test did not run the action, so neither does its case; the scenario names why.
-            if (skipped.containsKey("results")) {
+            // The action is not run (a sample dataset, or results the server can't reproduce); the scenario names why.
+            if (skipped.containsKey("behavior")) {
                 return;
             }
 
@@ -388,8 +319,8 @@ public class OperatorCaseRunner {
     private static void supported(OperatorCase operatorCase, BsonDocument scenario) {
         BsonDocument comparison = scenario.getDocument("comparison");
         List<String> unsupported = new ArrayList<>();
-        // A sample dataset is not loaded, so a case that names one must skip its results.
-        if (!scenario.get("dataset").isNull() && !scenario.getDocument("skipped", new BsonDocument()).containsKey("results")) {
+        // A sample dataset is not loaded, so a case that names one must skip its behavior check.
+        if (!scenario.get("dataset").isNull() && !scenario.getDocument("skipped", new BsonDocument()).containsKey("behavior")) {
             unsupported.add("dataset");
         }
         for (BsonValue index : scenario.getArray("indexes")) {
@@ -422,7 +353,11 @@ public class OperatorCaseRunner {
             unsupported.add("scenario fields " + scenario.keySet());
         }
         BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
-        if (!Set.of("serialization", "results", "published").containsAll(skipped.keySet())
+        // Without the behavior run there are no results to compare with the published ones.
+        if (skipped.containsKey("behavior") && !skipped.containsKey("published")) {
+            unsupported.add("skipped behavior without skipping published");
+        }
+        if (!Set.of("serialization", "behavior", "published").containsAll(skipped.keySet())
                 || skipped.values().stream().anyMatch(reason -> !reason.isString() || reason.asString().getValue().isBlank())) {
             unsupported.add("skipped " + skipped);
         }
@@ -493,8 +428,42 @@ public class OperatorCaseRunner {
                 }
             }
         }
+        schema(operatorCase, scenario, unsupported);
         if (!unsupported.isEmpty()) {
             fail(operatorCase.resource() + ": not supported by this runner: " + unsupported);
+        }
+    }
+
+    /** The checks of the scenario schema that the run itself doesn't make. */
+    private static void schema(OperatorCase operatorCase, BsonDocument scenario, List<String> unsupported) {
+        String name = scenario.isString("name") ? scenario.getString("name").getValue() : "";
+        if (!operatorCase.resource().equals("/dev/morphia/test/" + name + "/scenario.json")) {
+            unsupported.add("name " + scenario.get("name") + " is not its folder");
+        }
+        if (!scenario.isString("context")
+                || !Set.of("EXPRESSION", "STAGE", "FILTER", "UPDATE").contains(scenario.getString("context").getValue())) {
+            unsupported.add("context " + scenario.get("context"));
+        }
+        // The runner's own self-tests are test inputs, not docs examples, so they carry no title or source.
+        boolean selfTest = operatorCase.resource().startsWith("/dev/morphia/test/runner/");
+        if (!selfTest) {
+            if (!scenario.isString("title") || scenario.getString("title").getValue().isBlank()) {
+                unsupported.add("title " + scenario.get("title"));
+            }
+            BsonValue source = scenario.get("source");
+            if (!(source instanceof BsonDocument document)
+                    || !document.keySet().equals(Set.of("repository", "commit", "path", "blob"))
+                    || document.values().stream().anyMatch(value -> !value.isString())
+                    || !document.getString("commit").getValue().matches("[0-9a-f]{40}")) {
+                unsupported.add("source " + source);
+            }
+        }
+        if (!scenario.getDocument("requirements").keySet().equals(Set.of("minimumServer", "topology"))) {
+            unsupported.add("requirements fields " + scenario.getDocument("requirements").keySet());
+        }
+        BsonDocument expected = scenario.getDocument("expected");
+        if (expected.containsKey("none") && !expected.isString("none")) {
+            unsupported.add("expected none " + expected.get("none"));
         }
     }
 

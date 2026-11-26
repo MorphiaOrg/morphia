@@ -1,0 +1,573 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample",
+  "title": "Comparison with Previous Values Example",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "dabbeba3f7126b90d5a32ea66ca9b59c8a105a25",
+    "path": "source/reference/operator/aggregation/setWindowFields.txt",
+    "blob": "e89357a9aea496a8a2c31f221d22760989d34425"
+  },
+  "dataset": null,
+  "collections": {
+    "cakeSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1616239805000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "14"
+        },
+        "quantity": {
+          "$numberInt": "140"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1610346675000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "145"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1581167603000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "104"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1558195741000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "41"
+        },
+        "quantity": {
+          "$numberInt": "162"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1546927923000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "43"
+        },
+        "quantity": {
+          "$numberInt": "134"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "cakeSales",
+    "pipeline": [
+      {
+        "$setWindowFields": {
+          "partitionBy": "$type",
+          "sortBy": {
+            "orderDate": {
+              "$numberInt": "1"
+            }
+          },
+          "output": {
+            "previousPrice": {
+              "$shift": {
+                "output": "$price",
+                "by": {
+                  "$numberInt": "-1"
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$set": {
+          "priceComparison": {
+            "$cond": [
+              {
+                "$eq": [
+                  "$price",
+                  "$previousPrice"
+                ]
+              },
+              "same",
+              {
+                "$cond": [
+                  {
+                    "$gt": [
+                      "$price",
+                      "$previousPrice"
+                    ]
+                  },
+                  "higher",
+                  "lower"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "chocolate"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811030000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "120"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "higher"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "chocolate"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1616239805000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "14"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "140"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "higher"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "strawberry"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1546927923000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "43"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "134"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "higher"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "strawberry"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1558195741000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "41"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "162"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "43"
+              }
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "lower"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "vanilla"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1581167603000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "WA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "104"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "higher"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "vanilla"
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1610346675000"
+                }
+              }
+            }
+          },
+          {
+            "name": "state",
+            "value": {
+              "text": "CA"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "12"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "145"
+              }
+            }
+          },
+          {
+            "name": "previousPrice",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "priceComparison",
+            "value": {
+              "text": "lower"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

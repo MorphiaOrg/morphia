@@ -1,0 +1,113 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/bitsAllSet/binDataBitmask",
+  "title": "BinData Bitmask",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "1cf4196013fa93644ac656e716874c8f6d9248b6",
+    "path": "source/reference/operator/query/bitsAllSet.txt",
+    "blob": "a42e9ed0cc32e891ca6377ca8e517560c2e1739d"
+  },
+  "dataset": null,
+  "collections": {
+    "collection": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": {
+          "$numberInt": "54"
+        },
+        "binaryValueofA": "00110110"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": {
+          "$numberInt": "20"
+        },
+        "binaryValueofA": "00010100"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": {
+          "$numberInt": "20"
+        },
+        "binaryValueofA": "00010100"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "a": {
+          "$binary": {
+            "base64": "Zg==",
+            "subType": "00"
+          }
+        },
+        "binaryValueofA": "01100110"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "collection",
+    "filter": {
+      "a": {
+        "$bitsAllSet": {
+          "$binary": {
+            "base64": "MA==",
+            "subType": "00"
+          }
+        }
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "a",
+            "value": {
+              "whole": {
+                "$numberInt": "54"
+              }
+            }
+          },
+          {
+            "name": "binaryValueofA",
+            "value": {
+              "text": "00110110"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

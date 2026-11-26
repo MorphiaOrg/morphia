@@ -2,80 +2,57 @@ package dev.morphia.test.aggregation.stages;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
+import java.util.List;
 
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.in;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 
 public class TestUnwind extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example1
+     * test data: dev/morphia/test/aggregation/stages/unwind/unwindArray
      * 
      */
     @Test
     @DisplayName("Unwind Array")
-    public void testExample1() {
+    public void testUnwindArray() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example2
+     * test data: dev/morphia/test/aggregation/stages/unwind/missingOrNonArrayValues
      * 
      */
     @Test
     @DisplayName("Missing or Non-array Values")
-    public void testExample2() {
+    public void testMissingOrNonArrayValues() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example3
+     * test data: dev/morphia/test/aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex
      * 
      */
     @Test
     @DisplayName("``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
-    public void testExample3() {
+    public void testPreserveNullAndEmptyArraysAndIncludeArrayIndex() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example4
-     * 
-     */
-    @Test
-    @DisplayName("Group by Unwound Values")
-    public void testExample4() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
-                        group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
-    }
-
-    /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example5
-     * 
-     */
-    @Test
-    @DisplayName("Unwind Embedded Arrays")
-    public void testExample5() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(unwind("items"),
-                unwind("items.tags"),
-                group(id("$items.tags")).field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
     }
 
     @Test
@@ -154,4 +131,43 @@ public class TestUnwind extends TemplatedTestBase {
         }
     }
 
+    @Test
+    @DisplayName("Group by Unwound Values")
+    public void testGroupByUnwoundValues() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(in("title", List.of("The Dark Knight", "Inception", "Interstellar", "Brave"))),
+                project().suppressId().include("title").include("genres"),
+                unwind("$genres"),
+                group(id("$genres")).field("movieCount", sum(1)),
+                sort().descending("movieCount")));
+    }
+
+    @Test
+    @DisplayName("includeArrayIndex")
+    public void testIncludeArrayIndex() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(eq("title", "Inception")),
+                project().suppressId().include("title").include("genres"),
+                unwind("$genres").includeArrayIndex("genreIndex")));
+    }
+
+    @Test
+    @DisplayName("preserveNullAndEmptyArrays")
+    public void testPreserveNullAndEmptyArrays() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(in("title", List.of("Inception", "Brave", "La porta del cielo", "Neecha Nagar"))),
+                project().suppressId().include("title").include("genres"),
+                unwind("$genres").preserveNullAndEmptyArrays(true)));
+    }
+
+    @Test
+    @DisplayName("Unwind Multiple Array Fields")
+    public void testUnwindMultipleArrayFields() {
+        testPipeline((aggregation) -> aggregation.pipeline(
+                match(in("title", List.of("Inception", "The Dark Knight", "Interstellar"))),
+                project().suppressId().include("title").include("genres").include("cast"),
+                unwind("$genres"),
+                unwind("$cast"),
+                group(id("$genres")).field("castAppearances", sum(1))));
+    }
 }

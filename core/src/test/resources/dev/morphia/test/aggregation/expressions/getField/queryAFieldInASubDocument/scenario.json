@@ -1,0 +1,216 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/getField/queryAFieldInASubDocument",
+  "title": "Query a Field in a Sub-document",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "111836fb23076857f0cf9bcce15e694fe4a169e4",
+    "path": "source/reference/operator/aggregation/getField.txt",
+    "blob": "899c62457ce159b0bf99eecaef4b51ca30ab7d24"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "sweatshirt",
+        "price.usd": {
+          "$numberDouble": "45.99"
+        },
+        "quantity": {
+          "$large": {
+            "$numberInt": "50"
+          },
+          "$medium": {
+            "$numberInt": "50"
+          },
+          "$small": {
+            "$numberInt": "25"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "winter coat",
+        "price.usd": {
+          "$numberDouble": "499.99"
+        },
+        "quantity": {
+          "$large": {
+            "$numberInt": "35"
+          },
+          "$medium": {
+            "$numberInt": "35"
+          },
+          "$small": {
+            "$numberInt": "35"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "sun dress",
+        "price.usd": {
+          "$numberDouble": "199.99"
+        },
+        "quantity": {
+          "$large": {
+            "$numberInt": "45"
+          },
+          "$medium": {
+            "$numberInt": "40"
+          },
+          "$small": {
+            "$numberInt": "5"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "leather boots",
+        "price.usd": {
+          "$numberDouble": "249.99"
+        },
+        "quantity": {
+          "$large": {
+            "$numberInt": "20"
+          },
+          "$medium": {
+            "$numberInt": "30"
+          },
+          "$small": {
+            "$numberInt": "40"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "bow tie",
+        "price.usd": {
+          "$numberDouble": "9.99"
+        },
+        "quantity": {
+          "$large": {
+            "$numberInt": "0"
+          },
+          "$medium": {
+            "$numberInt": "10"
+          },
+          "$small": {
+            "$numberInt": "75"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$match": {
+          "$expr": {
+            "$lte": [
+              {
+                "$getField": {
+                  "field": {
+                    "$literal": "$small"
+                  },
+                  "input": "$quantity"
+                }
+              },
+              {
+                "$numberInt": "20"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "sun dress"
+            }
+          },
+          {
+            "name": "price.usd",
+            "value": {
+              "exact": {
+                "$numberDouble": "199.99"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "document": [
+                {
+                  "name": "$large",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "45"
+                    }
+                  }
+                },
+                {
+                  "name": "$medium",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "40"
+                    }
+                  }
+                },
+                {
+                  "name": "$small",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "5"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

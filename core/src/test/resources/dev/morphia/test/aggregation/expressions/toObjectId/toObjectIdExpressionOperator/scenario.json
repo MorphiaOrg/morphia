@@ -1,0 +1,218 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toObjectId.txt",
+    "blob": "09cec0a9a44620357d55c8bf913799d96261f0b7"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": "5ab9cbe531c2ab715d42129a",
+        "item": "apple",
+        "qty": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "5ab9d0b831c2ab715d4212a8"
+        },
+        "item": "pie",
+        "qty": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$oid": "5ab9d2d331c2ab715d4212b3"
+        },
+        "item": "ice cream",
+        "qty": {
+          "$numberInt": "20"
+        }
+      },
+      {
+        "_id": "5ab9e16431c2ab715d4212b4",
+        "item": "almonds",
+        "qty": {
+          "$numberInt": "50"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedId": {
+            "$toObjectId": "$_id"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "convertedId": {
+            "$numberInt": "-1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "5ab9e16431c2ab715d4212b4"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          },
+          {
+            "name": "convertedId",
+            "value": {
+              "exact": {
+                "$oid": "5ab9e16431c2ab715d4212b4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5ab9d2d331c2ab715d4212b3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ice cream"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "convertedId",
+            "value": {
+              "exact": {
+                "$oid": "5ab9d2d331c2ab715d4212b3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5ab9d0b831c2ab715d4212a8"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pie"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "convertedId",
+            "value": {
+              "exact": {
+                "$oid": "5ab9d0b831c2ab715d4212a8"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "5ab9cbe531c2ab715d42129a"
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "convertedId",
+            "value": {
+              "exact": {
+                "$oid": "5ab9cbe531c2ab715d42129a"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

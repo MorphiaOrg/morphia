@@ -1,0 +1,173 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/log/logExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9cb7746797bc25762b5708767ee4038a4341e377",
+    "path": "source/reference/operator/aggregation/log.txt",
+    "blob": "7bf6dedfbef7205863c44755b35b29b4182e86b1"
+  },
+  "dataset": null,
+  "collections": {
+    "integers": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "int": {
+          "$numberInt": "5"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "int": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "int": {
+          "$numberInt": "23"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "int": {
+          "$numberInt": "10"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "integers",
+    "pipeline": [
+      {
+        "$project": {
+          "bitsNeeded": {
+            "$floor": {
+              "$add": [
+                {
+                  "$numberInt": "1"
+                },
+                {
+                  "$log": [
+                    "$int",
+                    {
+                      "$numberInt": "2"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "bitsNeeded",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "bitsNeeded",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "bitsNeeded",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "bitsNeeded",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

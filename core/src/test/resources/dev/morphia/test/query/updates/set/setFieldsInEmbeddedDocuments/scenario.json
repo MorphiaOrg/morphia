@@ -1,0 +1,164 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/set/setFieldsInEmbeddedDocuments",
+  "title": "Set Fields in Embedded Documents",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d7d022aabae13aeb5f6071c621d8023754c2b88a",
+    "path": "source/reference/operator/update/set.txt",
+    "blob": "3e3454c095eda294d30ab5fdc72c3c99c594e81d"
+  },
+  "dataset": null,
+  "collections": {
+    "products": [
+      {
+        "_id": {
+          "$numberInt": "100"
+        },
+        "quantity": {
+          "$numberInt": "250"
+        },
+        "instock": true,
+        "reorder": false,
+        "details": {
+          "model": "14QQ",
+          "make": "Clothes Corp"
+        },
+        "tags": [
+          "apparel",
+          "clothing"
+        ],
+        "ratings": [
+          {
+            "by": "Customer007",
+            "rating": {
+              "$numberInt": "4"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "products",
+    "filter": {
+      "_id": {
+        "$numberInt": "100"
+      }
+    },
+    "update": {
+      "$set": {
+        "details.make": "Kustom Kidz"
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          },
+          {
+            "name": "quantity",
+            "value": {
+              "whole": {
+                "$numberInt": "250"
+              }
+            }
+          },
+          {
+            "name": "instock",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "reorder",
+            "value": {
+              "exact": false
+            }
+          },
+          {
+            "name": "details",
+            "value": {
+              "document": [
+                {
+                  "name": "model",
+                  "value": {
+                    "text": "14QQ"
+                  }
+                },
+                {
+                  "name": "make",
+                  "value": {
+                    "text": "Kustom Kidz"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "tags",
+            "value": {
+              "array": [
+                {
+                  "text": "apparel"
+                },
+                {
+                  "text": "clothing"
+                }
+              ]
+            }
+          },
+          {
+            "name": "ratings",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "by",
+                      "value": {
+                        "text": "Customer007"
+                      }
+                    },
+                    {
+                      "name": "rating",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "4"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

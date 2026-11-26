@@ -1,0 +1,105 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateFromString/onNull",
+  "title": "``onNull``",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
+    "path": "source/reference/operator/aggregation/dateFromString.txt",
+    "blob": "d24517a6c3e5f96685d5fc3a474667d2569d57c7"
+  },
+  "dataset": null,
+  "collections": {
+    "dates": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": "2017-02-08T12:10:40.787",
+        "timezone": "America/New_York"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": null,
+        "timezone": "America/New_York"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "dates",
+    "pipeline": [
+      {
+        "$project": {
+          "date": {
+            "$dateFromString": {
+              "dateString": "$date",
+              "timezone": "$timezone",
+              "onNull": "oops"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1486573840787"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "text": "oops"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

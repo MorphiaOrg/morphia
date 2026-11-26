@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLog extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/log/example1
+     * test data: dev/morphia/test/aggregation/expressions/log/logExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLogExpressionOperator() {
         Expression value;
         testPipeline(
                 (aggregation) -> aggregation.pipeline(project().include("bitsNeeded", floor(add(1, log("$int", 2))))));

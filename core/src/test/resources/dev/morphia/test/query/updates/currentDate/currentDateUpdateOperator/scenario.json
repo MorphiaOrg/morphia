@@ -1,0 +1,123 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/currentDate/currentDateUpdateOperator",
+  "title": "main",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/update/currentDate.txt",
+    "blob": "dee53d1135d5a5315297a778ebf4bc6a93c5399c"
+  },
+  "dataset": null,
+  "collections": {
+    "customers": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "status": "a",
+        "lastModified": {
+          "$date": {
+            "$numberLong": "1380676278965"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "customers",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$currentDate": {
+        "lastModified": true,
+        "cancellation.date": {
+          "$type": "timestamp"
+        }
+      },
+      "$set": {
+        "cancellation.reason": "user request",
+        "status": "D"
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "status",
+            "value": {
+              "text": "D"
+            }
+          },
+          {
+            "name": "lastModified",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1579728101052"
+                }
+              }
+            }
+          },
+          {
+            "name": "cancellation",
+            "value": {
+              "document": [
+                {
+                  "name": "date",
+                  "value": {
+                    "exact": {
+                      "$timestamp": {
+                        "t": 1579728101,
+                        "i": 1
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "reason",
+                  "value": {
+                    "text": "user request"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

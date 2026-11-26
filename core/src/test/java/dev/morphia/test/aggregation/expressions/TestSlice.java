@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSlice extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/slice/example1
+     * test data: dev/morphia/test/aggregation/expressions/slice/sliceExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSliceExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name").include("threeFavorites", slice("$favorites", 3))));
     }

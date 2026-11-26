@@ -1,4 +1,0 @@
-db.articles.find(
-   { $text: { $search: "cake" } },
-   { score: { $meta: "textScore" } }
-)

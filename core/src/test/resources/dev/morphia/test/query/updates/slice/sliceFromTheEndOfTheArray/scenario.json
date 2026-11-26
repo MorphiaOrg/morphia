@@ -1,0 +1,124 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/slice/sliceFromTheEndOfTheArray",
+  "title": "Slice from the End of the Array",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "23d941b5a8dda3b6408bfd3cb4cc79930c836dd1",
+    "path": "source/reference/operator/update/slice.txt",
+    "blob": "7d3869a48427f0dd75fe8949986ce58001bc7dae"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "$numberInt": "40"
+          },
+          {
+            "$numberInt": "50"
+          },
+          {
+            "$numberInt": "60"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [
+            {
+              "$numberInt": "80"
+            },
+            {
+              "$numberInt": "78"
+            },
+            {
+              "$numberInt": "86"
+            }
+          ],
+          "$slice": {
+            "$numberInt": "-5"
+          }
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "scores",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "60"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "80"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "78"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "86"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

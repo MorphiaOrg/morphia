@@ -1,0 +1,233 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/gte/gteExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b89791d6434ba071253241c8b38dd683d332ba69",
+    "path": "source/reference/operator/aggregation/gte.txt",
+    "blob": "18230f5639cd5638df0cfab9bc416b2352c1293c"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc1",
+        "description": "product 1",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "abc2",
+        "description": "product 2",
+        "qty": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz1",
+        "description": "product 3",
+        "qty": {
+          "$numberInt": "250"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "VWZ1",
+        "description": "product 4",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "VWZ2",
+        "description": "product 5",
+        "qty": {
+          "$numberInt": "180"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "qty": {
+            "$numberInt": "1"
+          },
+          "qtyGte250": {
+            "$gte": [
+              "$qty",
+              {
+                "$numberInt": "250"
+              }
+            ]
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "abc1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "qtyGte250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "abc2"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          },
+          {
+            "name": "qtyGte250",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "xyz1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "250"
+              }
+            }
+          },
+          {
+            "name": "qtyGte250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "qtyGte250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ2"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "180"
+              }
+            }
+          },
+          {
+            "name": "qtyGte250",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

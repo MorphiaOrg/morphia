@@ -1,0 +1,251 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/max/useInProjectStage",
+  "title": "Use in ``$project`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/max.txt",
+    "blob": "5d1a75ffee6c641b70fe3ec8a562b543ab2c2b20"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "10"
+          },
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "7"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "80"
+        },
+        "midterm": {
+          "$numberInt": "75"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "9"
+          },
+          {
+            "$numberInt": "10"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "8"
+          },
+          {
+            "$numberInt": "8"
+          }
+        ],
+        "final": {
+          "$numberInt": "95"
+        },
+        "midterm": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "quizzes": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "labs": [
+          {
+            "$numberInt": "6"
+          },
+          {
+            "$numberInt": "5"
+          }
+        ],
+        "final": {
+          "$numberInt": "78"
+        },
+        "midterm": {
+          "$numberInt": "70"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "students",
+    "pipeline": [
+      {
+        "$project": {
+          "quizMax": {
+            "$max": "$quizzes"
+          },
+          "labMax": {
+            "$max": "$labs"
+          },
+          "examMax": {
+            "$max": [
+              "$final",
+              "$midterm"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "quizMax",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "labMax",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "examMax",
+            "value": {
+              "whole": {
+                "$numberInt": "80"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "quizMax",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "labMax",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "examMax",
+            "value": {
+              "whole": {
+                "$numberInt": "95"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "quizMax",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "labMax",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "examMax",
+            "value": {
+              "whole": {
+                "$numberInt": "78"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.0.0",
+    "topology": "STANDALONE"
+  }
+}

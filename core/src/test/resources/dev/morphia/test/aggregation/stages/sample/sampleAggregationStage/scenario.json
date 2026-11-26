@@ -1,0 +1,106 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/sample/sampleAggregationStage",
+  "title": "main",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/sample.txt",
+    "blob": "00f038d5f1eb26c12abaf86e262742bb0390304c"
+  },
+  "dataset": null,
+  "collections": {
+    "users": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "dave123",
+        "q1": true,
+        "q2": true
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "dave2",
+        "q1": false,
+        "q2": false
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "ahn",
+        "q1": true,
+        "q2": true
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "li",
+        "q1": true,
+        "q2": false
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "annT",
+        "q1": false,
+        "q2": true
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "li",
+        "q1": true,
+        "q2": true
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "name": "ty",
+        "q1": false,
+        "q2": true
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "users",
+    "pipeline": [
+      {
+        "$sample": {
+          "size": {
+            "$numberInt": "3"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

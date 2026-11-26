@@ -1,4 +1,0 @@
-db.createRole( { role: "Marketing", roles: [], privileges: [] } )
-db.createRole( { role: "Sales", roles: [], privileges: [] } )
-db.createRole( { role: "Development", roles: [], privileges: [] } )
-db.createRole( { role: "Operations", roles: [], privileges: [] } )

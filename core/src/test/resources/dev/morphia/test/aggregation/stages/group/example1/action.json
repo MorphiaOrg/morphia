@@ -1,8 +1,0 @@
- [
-  {
-    $group: {
-       _id: null,
-       count: { $count: { } }
-    }
-  }
-] 

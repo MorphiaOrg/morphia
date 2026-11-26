@@ -1,0 +1,194 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/ceil/ceilExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "744735632617f491f8d65071fae36735b6da1d8b",
+    "path": "source/reference/operator/aggregation/ceil.txt",
+    "blob": "6140b614f4c34853e361065bf605854b876d8c3b"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "value": {
+          "$numberDouble": "9.25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "value": {
+          "$numberDouble": "8.73"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "value": {
+          "$numberDouble": "4.32"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "value": {
+          "$numberDouble": "-5.34"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "value": {
+            "$numberInt": "1"
+          },
+          "ceilingValue": {
+            "$ceil": "$value"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.25"
+              }
+            }
+          },
+          {
+            "name": "ceilingValue",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "8.73"
+              }
+            }
+          },
+          {
+            "name": "ceilingValue",
+            "value": {
+              "whole": {
+                "$numberInt": "9"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "4.32"
+              }
+            }
+          },
+          {
+            "name": "ceilingValue",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "value",
+            "value": {
+              "exact": {
+                "$numberDouble": "-5.34"
+              }
+            }
+          },
+          {
+            "name": "ceilingValue",
+            "value": {
+              "whole": {
+                "$numberInt": "-5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toDouble/toDoubleExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toDouble.txt",
+    "blob": "841cf871bf27156a2df51a01f374e4fc94484ff5"
+  },
+  "dataset": null,
+  "collections": {
+    "weather": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1527811200000"
+          }
+        },
+        "temp": "26.1C"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1527897600000"
+          }
+        },
+        "temp": "25.1C"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1527984000000"
+          }
+        },
+        "temp": "25.4C"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "weather",
+    "pipeline": [
+      {
+        "$addFields": {
+          "degrees": {
+            "$toDouble": {
+              "$substrBytes": [
+                "$temp",
+                {
+                  "$numberInt": "0"
+                },
+                {
+                  "$numberInt": "4"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1527811200000"
+                }
+              }
+            }
+          },
+          {
+            "name": "temp",
+            "value": {
+              "text": "26.1C"
+            }
+          },
+          {
+            "name": "degrees",
+            "value": {
+              "exact": {
+                "$numberDouble": "26.1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1527897600000"
+                }
+              }
+            }
+          },
+          {
+            "name": "temp",
+            "value": {
+              "text": "25.1C"
+            }
+          },
+          {
+            "name": "degrees",
+            "value": {
+              "exact": {
+                "$numberDouble": "25.1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1527984000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "temp",
+            "value": {
+              "text": "25.4C"
+            }
+          },
+          {
+            "name": "degrees",
+            "value": {
+              "exact": {
+                "$numberDouble": "25.4"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

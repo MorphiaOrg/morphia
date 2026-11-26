@@ -1,0 +1,107 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument",
+  "title": "``$replaceRoot`` with a newly created document",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+    "path": "source/reference/operator/aggregation/replaceRoot.txt",
+    "blob": "f8c2929b446278e8fe95d37f5b21b670097511e4"
+  },
+  "dataset": null,
+  "collections": {
+    "contacts": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "first_name": "Gary",
+        "last_name": "Sheffield",
+        "city": "New York"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "first_name": "Nancy",
+        "last_name": "Walker",
+        "city": "Anaheim"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "first_name": "Peter",
+        "last_name": "Sumner",
+        "city": "Toledo"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "contacts",
+    "pipeline": [
+      {
+        "$replaceRoot": {
+          "newRoot": {
+            "full_name": {
+              "$concat": [
+                "$first_name",
+                " ",
+                "$last_name"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "full_name",
+            "value": {
+              "text": "Gary Sheffield"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "full_name",
+            "value": {
+              "text": "Nancy Walker"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "full_name",
+            "value": {
+              "text": "Peter Sumner"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

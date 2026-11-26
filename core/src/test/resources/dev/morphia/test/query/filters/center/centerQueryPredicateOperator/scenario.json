@@ -1,0 +1,57 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/center/centerQueryPredicateOperator",
+  "title": "main",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+    "path": "source/reference/operator/query/center.txt",
+    "blob": "fe3865f2c9c9fc0c385856bb9099be6adf5d7da0"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$geoWithin": {
+          "$center": [
+            [
+              {
+                "$numberDouble": "-74.0"
+              },
+              {
+                "$numberDouble": "40.74"
+              }
+            ],
+            {
+              "$numberDouble": "10.0"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the legacy test skipped its data check (skipDataCheck)",
+    "published": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

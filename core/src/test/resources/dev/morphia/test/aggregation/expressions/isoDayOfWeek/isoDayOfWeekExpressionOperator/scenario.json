@@ -1,0 +1,109 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isoDayOfWeek/isoDayOfWeekExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/isoDayOfWeek.txt",
+    "blob": "e0f34a5a2c5ad8eaa346fd7187b90f17d212bd10"
+  },
+  "dataset": null,
+  "collections": {
+    "dates": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Betty",
+        "birthday": {
+          "$date": {
+            "$numberLong": "748569600000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Veronica",
+        "birthday": {
+          "$date": {
+            "$numberLong": "373939200000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "dates",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "name": "$name",
+          "dayOfWeek": {
+            "$isoDayOfWeek": "$birthday"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "name",
+            "value": {
+              "text": "Betty"
+            }
+          },
+          {
+            "name": "dayOfWeek",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "name",
+            "value": {
+              "text": "Veronica"
+            }
+          },
+          {
+            "name": "dayOfWeek",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

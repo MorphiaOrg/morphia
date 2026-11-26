@@ -1,0 +1,197 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/arrayToObject/objectToArrayArrayToObjectExample",
+  "title": "``$objectToArray`` + ``$arrayToObject`` Example",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "bcf7bcc3704b04da5262f9aa5a89bfe27097b1fa",
+    "path": "source/reference/operator/aggregation/arrayToObject.txt",
+    "blob": "c4d6b97a52ee8b788ab99262f08e8a7a41059f6b"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "instock": {
+          "warehouse1": {
+            "$numberInt": "2500"
+          },
+          "warehouse2": {
+            "$numberInt": "500"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "instock": {
+          "warehouse2": {
+            "$numberInt": "500"
+          },
+          "warehouse3": {
+            "$numberInt": "200"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$addFields": {
+          "instock": {
+            "$objectToArray": "$instock"
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "instock": {
+            "$concatArrays": [
+              "$instock",
+              [
+                {
+                  "k": "total",
+                  "v": {
+                    "$sum": "$instock.v"
+                  }
+                }
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "instock": {
+            "$arrayToObject": "$instock"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC1"
+            }
+          },
+          {
+            "name": "instock",
+            "value": {
+              "document": [
+                {
+                  "name": "warehouse1",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2500"
+                    }
+                  }
+                },
+                {
+                  "name": "warehouse2",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "500"
+                    }
+                  }
+                },
+                {
+                  "name": "total",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "3000"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC2"
+            }
+          },
+          {
+            "name": "instock",
+            "value": {
+              "document": [
+                {
+                  "name": "warehouse2",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "500"
+                    }
+                  }
+                },
+                {
+                  "name": "warehouse3",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "200"
+                    }
+                  }
+                },
+                {
+                  "name": "total",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "700"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

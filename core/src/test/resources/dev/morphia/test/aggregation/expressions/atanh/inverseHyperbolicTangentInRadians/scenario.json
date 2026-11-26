@@ -1,0 +1,79 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/atanh/inverseHyperbolicTangentInRadians",
+  "title": "main :: Inverse Hyperbolic Tangent in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+    "path": "source/reference/operator/aggregation/atanh.txt",
+    "blob": "3ad133726ade44ecc05819e6343d4d9964ced1e1"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "x-coordinate": {
+          "$numberDecimal": "0.5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "y-coordinate": {
+            "$atanh": "$x-coordinate"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "x-coordinate",
+            "value": {
+              "decimal": "0.5"
+            }
+          },
+          {
+            "name": "y-coordinate",
+            "value": {
+              "decimal": "0.5493061443340548456976226184612628"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

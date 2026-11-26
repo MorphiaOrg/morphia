@@ -1,0 +1,181 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments",
+  "title": "Create a Union with Specified Documents",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e48cdce2b7817d8d8042657c6ef83a6a5e32fcf8",
+    "path": "source/reference/operator/aggregation/unionWith.txt",
+    "blob": "c20e03deaeabdce3dbcc94d5c6b2c15664a340b3"
+  },
+  "dataset": null,
+  "collections": {
+    "cakeFlavors": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "flavor": "chocolate"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "flavor": "strawberry"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "flavor": "cherry"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "cakeFlavors",
+    "pipeline": [
+      {
+        "$unionWith": {
+          "pipeline": [
+            {
+              "$documents": [
+                {
+                  "_id": {
+                    "$numberInt": "4"
+                  },
+                  "flavor": "orange"
+                },
+                {
+                  "_id": {
+                    "$numberInt": "5"
+                  },
+                  "flavor": "vanilla",
+                  "price": {
+                    "$numberInt": "20"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "flavor",
+            "value": {
+              "text": "chocolate"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "flavor",
+            "value": {
+              "text": "strawberry"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "flavor",
+            "value": {
+              "text": "cherry"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "flavor",
+            "value": {
+              "text": "orange"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "flavor",
+            "value": {
+              "text": "vanilla"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

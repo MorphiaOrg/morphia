@@ -14,12 +14,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSwitch extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/switch/example1
+     * test data: dev/morphia/test/aggregation/expressions/switch/switchAggregationExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSwitchAggregationExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("name").include("summary",
                 switchExpression().branch(gte(avg("$scores"), 90), "Doing great!")
                         .branch(and(gte(avg("$scores"), 80), lt(avg("$scores"), 90)), "Doing pretty well.")

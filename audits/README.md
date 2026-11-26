@@ -56,7 +56,7 @@ Each runs through the exec plugin from the repository root:
 | `catalog/documented-examples.json` | Every example on the current operator pages; the inventory later steps check against. |
 | `catalog/example-names.json` | The 93 reviewed names for examples whose page title is generic (`main`) or shared. |
 | `catalog/name-backport-review.json` | Reviewed stems for name collisions. |
-| `catalog/name-backport.json` | The ledger renaming master's `testExampleN` tests and `exampleN` fixtures to descriptive names (step 4). |
+| `catalog/name-backport.json` | The ledger that renamed master's `testExampleN` tests and `exampleN` fixtures to descriptive names. |
 | `catalog/generation-review.json` | The reviewed page-error exclusions, until step 5 moves them into the overrides file. |
 
 The golden vectors in `core/src/test/resources/dev/morphia/test/vectors/` hold this module's strict

@@ -1,0 +1,130 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/group/groupByRating",
+  "title": "Group by Rating",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/group.txt",
+    "blob": "8a18fc90e2df0775fccd5531514e665a1a131341"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$rated",
+          "totalRuntime": {
+            "$sum": "$runtime"
+          }
+        }
+      },
+      {
+        "$match": {
+          "totalRuntime": {
+            "$gte": {
+              "$numberInt": "100000"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG-13"
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "250843"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "R"
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "582318"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "967127"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "PG"
+            }
+          },
+          {
+            "name": "totalRuntime",
+            "value": {
+              "whole": {
+                "$numberInt": "191204"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "5.0.0",
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

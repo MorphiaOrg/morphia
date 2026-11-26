@@ -1,0 +1,96 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/merge/onlyInsertNewData",
+  "title": "Only Insert New Data",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/merge.txt",
+    "blob": "6154426511a893c23664d8eb81e5ccca03331a2c"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [
+    {
+      "collection": "movieArchive",
+      "keys": {
+        "year": {
+          "$numberInt": "1"
+        }
+      },
+      "options": {
+        "unique": true
+      }
+    }
+  ],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "metacritic": {
+            "$numberInt": "100"
+          },
+          "rated": {
+            "$ne": null
+          },
+          "year": {
+            "$gte": {
+              "$numberInt": "1963"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "titles": {
+            "$push": "$title"
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "year": "$_id",
+          "titles": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$merge": {
+          "into": "movieArchive",
+          "on": "year",
+          "whenMatched": "fail"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "EQ_SHORTHAND",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

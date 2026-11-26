@@ -12,24 +12,24 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSubstrBytes extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/substrBytes/example1
+     * test data: dev/morphia/test/aggregation/expressions/substrBytes/singleByteCharacterSet
      * 
      */
     @Test
     @DisplayName("Single-Byte Character Set")
-    public void testExample1() {
+    public void testSingleByteCharacterSet() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("yearSubstring", substrBytes("$quarter", 0, 2))
                         .include("quarterSubtring", substrBytes("$quarter", 2, subtract(strLenBytes("$quarter"), 2)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/substrBytes/example2
+     * test data: dev/morphia/test/aggregation/expressions/substrBytes/singleByteAndMultibyteCharacterSet
      * 
      */
     @Test
     @DisplayName("Single-Byte and Multibyte Character Set")
-    public void testExample2() {
+    public void testSingleByteAndMultibyteCharacterSet() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name").include("menuCode", substrBytes("$name", 0, 3))));
     }

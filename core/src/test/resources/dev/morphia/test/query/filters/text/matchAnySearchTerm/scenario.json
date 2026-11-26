@@ -1,0 +1,141 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/text/matchAnySearchTerm",
+  "title": "Match Any Search Term",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/text.txt",
+    "blob": "e852e8a20ef2b64a293852991fb69d879a5b8f7d"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [
+    {
+      "collection": "movies",
+      "keys": {
+        "title": "text",
+        "fullplot": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "$text": {
+        "$search": "baseball colorado"
+      },
+      "runtime": {
+        "$gt": {
+          "$numberInt": "1000"
+        }
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "year": {
+        "$numberInt": "1"
+      },
+      "runtime": {
+        "$numberInt": "1"
+      },
+      "fullplot": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "runtime",
+            "value": {
+              "whole": {
+                "$numberInt": "1140"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "fullplot",
+            "value": {
+              "text": "Ken Burns relates the history of baseball in a fashion similar to that of his Civil War mini series. Old-time photos and illustrations depict the games early years, while newsreels and video clips highlight more recent developments. Players and participants speak in their own words, and sports writers and broadcasters offer commentary on the sport and events they witnessed."
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1994"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "runtime",
+            "value": {
+              "whole": {
+                "$numberInt": "1256"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "fullplot",
+            "value": {
+              "text": "This is the story of the evolution of the town Centennial, Colorado. It follows the paths of dozens of people who come to the area for many reasons: money, freedom, or crime. It also shows the bigoted treatment of the Native Indians by the advancing US colonists. It is topped off with a murder mystery that takes 100 years to solve."
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "1978"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST",
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

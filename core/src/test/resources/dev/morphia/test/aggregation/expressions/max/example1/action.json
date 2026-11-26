@@ -1,8 +1,0 @@
-{
-       $group:
-         {
-           _id: "$item",
-           maxTotalAmount: { $max: { $multiply: [ "$price", "$quantity" ] } },
-           maxQuantity: { $max: "$quantity" }
-         }
-     }

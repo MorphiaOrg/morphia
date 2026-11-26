@@ -1,0 +1,297 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
+  "title": "``preserveNullAndEmptyArrays`` and ``includeArrayIndex``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/unwind.txt",
+    "blob": "a48530d2f807435f11dbfb681202e04027bd0c1e"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory2": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC",
+        "price": {
+          "$numberDecimal": "80"
+        },
+        "sizes": [
+          "S",
+          "M",
+          "L"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "EFG",
+        "price": {
+          "$numberDecimal": "120"
+        },
+        "sizes": []
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "IJK",
+        "price": {
+          "$numberDecimal": "160"
+        },
+        "sizes": "M"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "LMN",
+        "price": {
+          "$numberDecimal": "10"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "XYZ",
+        "price": {
+          "$numberDecimal": "5.75"
+        },
+        "sizes": null
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory2",
+    "pipeline": [
+      {
+        "$unwind": {
+          "path": "$sizes",
+          "preserveNullAndEmptyArrays": true
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "80"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "S"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "80"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "M"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ABC"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "80"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "L"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "EFG"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "120"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "IJK"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "160"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "text": "M"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "LMN"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "10"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "XYZ"
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "decimal": "5.75"
+            }
+          },
+          {
+            "name": "sizes",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

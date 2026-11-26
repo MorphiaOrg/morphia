@@ -1,0 +1,393 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+  "title": "Perform an Uncorrelated Subquery with ``$lookup``",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c360d9dc787de55021969f368a0860be6008f706",
+    "path": "source/reference/operator/aggregation/lookup.txt",
+    "blob": "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f"
+  },
+  "dataset": null,
+  "collections": {
+    "absences": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "student": "Ann Aardvark",
+        "sickdays": [
+          {
+            "$date": {
+              "$numberLong": "1525132800000"
+            }
+          },
+          {
+            "$date": {
+              "$numberLong": "1534982400000"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "student": "Zoe Zebra",
+        "sickdays": [
+          {
+            "$date": {
+              "$numberLong": "1517443200000"
+            }
+          },
+          {
+            "$date": {
+              "$numberLong": "1527033600000"
+            }
+          }
+        ]
+      }
+    ],
+    "holidays": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "year": {
+          "$numberInt": "2018"
+        },
+        "name": "New Years",
+        "date": {
+          "$date": {
+            "$numberLong": "1514764800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "year": {
+          "$numberInt": "2018"
+        },
+        "name": "Pi Day",
+        "date": {
+          "$date": {
+            "$numberLong": "1520985600000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "year": {
+          "$numberInt": "2018"
+        },
+        "name": "Ice Cream Day",
+        "date": {
+          "$date": {
+            "$numberLong": "1531612800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "year": {
+          "$numberInt": "2017"
+        },
+        "name": "New Years",
+        "date": {
+          "$date": {
+            "$numberLong": "1483228800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "year": {
+          "$numberInt": "2017"
+        },
+        "name": "Ice Cream Day",
+        "date": {
+          "$date": {
+            "$numberLong": "1500163200000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "absences",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "holidays",
+          "pipeline": [
+            {
+              "$match": {
+                "year": {
+                  "$numberInt": "2018"
+                }
+              }
+            },
+            {
+              "$project": {
+                "_id": {
+                  "$numberInt": "0"
+                },
+                "date": {
+                  "name": "$name",
+                  "date": "$date"
+                }
+              }
+            },
+            {
+              "$replaceRoot": {
+                "newRoot": "$date"
+              }
+            }
+          ],
+          "as": "holidays"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "student",
+            "value": {
+              "text": "Ann Aardvark"
+            }
+          },
+          {
+            "name": "sickdays",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "1525132800000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "1534982400000"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "holidays",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "New Years"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1514764800000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Pi Day"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1520985600000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Ice Cream Day"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1531612800000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "student",
+            "value": {
+              "text": "Zoe Zebra"
+            }
+          },
+          {
+            "name": "sickdays",
+            "value": {
+              "array": [
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "1517443200000"
+                    }
+                  }
+                },
+                {
+                  "exact": {
+                    "$date": {
+                      "$numberLong": "1527033600000"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "holidays",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "New Years"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1514764800000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Pi Day"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1520985600000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Ice Cream Day"
+                      }
+                    },
+                    {
+                      "name": "date",
+                      "value": {
+                        "exact": {
+                          "$date": {
+                            "$numberLong": "1531612800000"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "6.0.0",
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/ne/useAnExactArrayComparison",
+  "title": "Use an Exact Array Comparison",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/ne.txt",
+    "blob": "cd85ca2d756fdf5575f2f4a58cbc6772d179ed3a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "genres": {
+        "$ne": [
+          "Drama"
+        ]
+      },
+      "runtime": {
+        "$gt": {
+          "$numberInt": "1000"
+        }
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "genres": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Action"
+                },
+                {
+                  "text": "Adventure"
+                },
+                {
+                  "text": "Drama"
+                }
+              ]
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "genres",
+            "value": {
+              "array": [
+                {
+                  "text": "Documentary"
+                },
+                {
+                  "text": "History"
+                },
+                {
+                  "text": "Sport"
+                }
+              ]
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}
