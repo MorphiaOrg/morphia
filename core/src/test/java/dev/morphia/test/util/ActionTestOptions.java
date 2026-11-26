@@ -91,6 +91,13 @@ public class ActionTestOptions {
         return updateOptions != null ? updateOptions : new UpdateOptions();
     }
 
+    /**
+     * @return whether the test set its own update options
+     */
+    public boolean hasUpdateOptions() {
+        return updateOptions != null;
+    }
+
     public ActionTestOptions updateOptions(UpdateOptions updateOptions) {
         this.updateOptions = updateOptions;
         return this;

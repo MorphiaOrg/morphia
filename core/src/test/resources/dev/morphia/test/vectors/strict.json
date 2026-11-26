@@ -20,7 +20,13 @@
     { "name": "same decimal128", "equal": true,
       "left": { "v": { "$numberDecimal": "13.7375" } }, "right": { "v": { "$numberDecimal": "13.7375" } } },
     { "name": "dates", "equal": true,
-      "left": { "v": { "$date": { "$numberLong": "1609459200000" } } }, "right": { "v": { "$date": { "$numberLong": "1609459200000" } } } }
+      "left": { "v": { "$date": { "$numberLong": "1609459200000" } } }, "right": { "v": { "$date": { "$numberLong": "1609459200000" } } } },
+    { "name": "scoped javascript with its scope's keys reordered", "equal": false,
+      "left": { "$code": "f()", "$scope": { "a": { "$numberInt": "1" }, "b": { "$numberInt": "2" } } },
+      "right": { "$code": "f()", "$scope": { "b": { "$numberInt": "2" }, "a": { "$numberInt": "1" } } } },
+    { "name": "scoped javascript with an equal scope", "equal": true,
+      "left": { "$code": "f()", "$scope": { "a": { "$numberInt": "1" } } },
+      "right": { "$code": "f()", "$scope": { "a": { "$numberInt": "1" } } } }
   ],
   "results": [
     { "name": "unordered permutation", "ordered": false, "equal": true,
@@ -58,6 +64,10 @@
       "right": [ { "b": [ "y", "x" ] } ] },
     { "name": "unordered array path escapes", "ordered": true, "equal": true, "unorderedArrays": [ "/a~1b" ],
       "left": [ { "a/b": [ "x", "y" ] } ],
-      "right": [ { "a/b": [ "y", "x" ] } ] }
+      "right": [ { "a/b": [ "y", "x" ] } ] },
+    { "name": "unordered array whose first item fits only one candidate", "ordered": true, "equal": true,
+      "unorderedArrays": ["/a", "/a/0/b"],
+      "left": [{ "a": [{ "b": [{ "$numberInt": "1" }, { "$numberInt": "2" }] }, { "b": [{ "$numberInt": "1" }, { "$numberInt": "2" }] }] }],
+      "right": [{ "a": [{ "b": [{ "$numberInt": "1" }, { "$numberInt": "2" }] }, { "b": [{ "$numberInt": "2" }, { "$numberInt": "1" }] }] }] }
   ]
 }

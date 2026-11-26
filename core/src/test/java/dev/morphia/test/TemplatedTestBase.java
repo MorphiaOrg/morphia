@@ -9,7 +9,6 @@ import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +32,6 @@ import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
@@ -46,7 +44,13 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 
-@ExtendWith(TestCoverageExtension.class)
+/**
+ * The base of the operator example tests. A test's fixture is found from its method name: {@code testRegexFlags} reads
+ * {@code <operator>/regexFlags/}. When that folder holds a {@code scenario.json}, {@link OperatorCaseRunner} checks the
+ * test against it; otherwise the legacy {@code action.json}, {@code data.json} and {@code expected.json} files are used
+ * until the test is converted.
+ */
+@ExtendWith({ TestCoverageExtension.class, CurrentTest.class })
 public abstract class TemplatedTestBase extends TestBase {
     public static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
             .indent(true)
@@ -90,6 +94,11 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testPipeline(ActionTestOptions options,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+        OperatorCase scenario = scenario();
+        if (scenario != null) {
+            new OperatorCaseRunner(this).aggregate(scenario, options, pipeline);
+            return;
+        }
         var resourceName = prepareDatabase(options);
 
         validateTestName(resourceName);
@@ -101,8 +110,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected String discoverResourceName() {
-        var method = findTestMethod();
-        String methodName = method.getName();
+        String methodName = CurrentTest.method().getName();
 
         if (methodName.startsWith("test")) {
             methodName = methodName.substring(4);
@@ -116,6 +124,14 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected void loadData(String collection, int index) {
+        OperatorCase scenario = scenario();
+        if (scenario != null) {
+            // The scenario seeds every documented collection; this only checks that it seeds this one.
+            if (!scenario.scenario().getDocument("collections").containsKey(collection)) {
+                Assertions.fail(scenario.resource() + " does not seed the collection " + collection);
+            }
+            return;
+        }
         insert(collection, loadJson(format("%s/%s/data%d.json", prefix(), discoverResourceName(), index), "data", true));
     }
 
@@ -124,11 +140,24 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     protected Method findTestMethod() {
-        return stream(new Exception().getStackTrace())
-                .map(this::isTestMethod)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .get();
+        return CurrentTest.method();
+    }
+
+    /**
+     * @param resourceName a fixture's folder name
+     * @return the absolute resource of that fixture's {@code scenario.json}
+     */
+    protected String scenarioResource(String resourceName) {
+        return "/%s/%s/%s/scenario.json".formatted(getClass().getPackageName().replace('.', '/'), prefix(), resourceName);
+    }
+
+    /**
+     * @return the running test's scenario, or null while its fixture is still in the legacy files
+     */
+    @Nullable
+    private OperatorCase scenario() {
+        String resource = scenarioResource(discoverResourceName());
+        return getClass().getResource(resource) != null ? OperatorCase.of(resource) : null;
     }
 
     @NotNull
@@ -165,24 +194,17 @@ public abstract class TemplatedTestBase extends TestBase {
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
-    @Nullable
-    private Method isTestMethod(StackTraceElement element) {
-        try {
-            Class<?> klass = Class.forName(element.getClassName());
-            Method method = klass.getDeclaredMethod(element.getMethodName());
-
-            return method.getAnnotation(Test.class) != null ? method : null;
-        } catch (ReflectiveOperationException e) {
-            return null;
-        }
-    }
-
     public void testQuery(Function<Query<Document>, Query<Document>> function) {
         testQuery(new ActionTestOptions(), function);
     }
 
     public void testQuery(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function) {
+        OperatorCase scenario = scenario();
+        if (scenario != null) {
+            new OperatorCaseRunner(this).find(scenario, options, function);
+            return;
+        }
 
         var resourceName = prepareDatabase(options);
 
@@ -199,6 +221,11 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testUpdate(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
+        OperatorCase scenario = scenario();
+        if (scenario != null) {
+            new OperatorCaseRunner(this).update(scenario, options, function, operators);
+            return;
+        }
 
         var resourceName = prepareDatabase(options);
 

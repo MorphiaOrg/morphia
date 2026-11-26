@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "name": "runner/filterAfterUpdate",
+  "context": "UPDATE",
+  "source": null,
+  "dataset": null,
+  "collections": {
+    "results": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "$numberInt": "85"
+          },
+          {
+            "$numberInt": "82"
+          },
+          {
+            "$numberInt": "80"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "grades": [
+          {
+            "$numberInt": "88"
+          },
+          {
+            "$numberInt": "90"
+          },
+          {
+            "$numberInt": "92"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "grades": [
+          {
+            "$numberInt": "85"
+          },
+          {
+            "$numberInt": "100"
+          },
+          {
+            "$numberInt": "90"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "results",
+    "filter": {
+      "grades": {
+        "$ne": {
+          "$numberInt": "100"
+        }
+      }
+    },
+    "update": {
+      "$inc": {
+        "grades.$[]": {
+          "$numberInt": "10"
+        }
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "documents": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "$numberInt": "95"
+          },
+          {
+            "$numberInt": "92"
+          },
+          {
+            "$numberInt": "90"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "grades": [
+          {
+            "$numberInt": "98"
+          },
+          {
+            "$numberInt": "100"
+          },
+          {
+            "$numberInt": "102"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "grades": [
+          {
+            "$numberInt": "85"
+          },
+          {
+            "$numberInt": "100"
+          },
+          {
+            "$numberInt": "90"
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}
