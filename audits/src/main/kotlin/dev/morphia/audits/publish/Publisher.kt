@@ -12,8 +12,6 @@ enum class FindingType {
     MISSING_API,
     /** A documented example that appeared upstream since the committed inventory, with no test. */
     NEW_EXAMPLE,
-    /** An in-scope example with no scenario and no reviewed exclusion. */
-    MISSING_SCENARIO,
     /** An operator test failing against a new docs commit's scenarios. */
     FAILING_AUDIT,
 }

@@ -36,11 +36,17 @@ fun main(args: Array<String>) {
                     AuditJson.exampleInventory(read(Path.of(args[2]))),
                     current,
                     ApiCoverage.missing(current, ApiCoverage.tags(tree), baseline),
-                    Coverage.missing(tree, current, overrides),
                     args[3].takeIf { it != "-" }?.let { read(Path.of(it)) },
                     args[4].takeIf { it != "-" }?.let { read(Path.of(it)) },
                 )
-            println(AuditJson.write(FindingsReport(findings = findings)))
+            println(
+                AuditJson.write(
+                    FindingsReport(
+                        findings = findings,
+                        missingScenarios = Coverage.missingScenarios(tree, current, overrides),
+                    )
+                )
+            )
         }
         "publish" -> {
             require(args.size == 6 || args.size == 7 && args.last() == "--publish") { USAGE }

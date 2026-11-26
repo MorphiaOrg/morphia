@@ -320,14 +320,15 @@ inventory rather than against fixtures.
    - `DiscoveryFindings` is rewritten, because it reads the generator's gaps and attestation.
    - So is `PublishMain`, which loads them. `Publisher` loses its use of the coverage code being
      deleted.
-   - `FindingType` and the publication policy's labels gain the two new types.
+   - `FindingType` and the publication policy's labels gain the new types.
    - The scheduled run itself (`audits/discover.sh`) runs the audits instead of candidate
      integration. Its test results are the input for `FAILING_AUDIT`.
    - The findings, each with a stable key so a recurring one updates its issue:
      - **`MISSING_API`:** one per documented operator with no tagged factory (item 4), listing the
        examples it blocks.
      - **`NEW_EXAMPLE`:** an example added upstream since the committed inventory, with no test.
-     - **`MISSING_SCENARIO`:** an in-scope example with no scenario and no exclusion (item 1).
+     - An in-scope example with no scenario and no exclusion (item 1) is not filed: it fails the
+       scheduled run, which lists it in its summary.
      - **`FAILING_AUDIT`:** a scenario test failing against the new docs commit.
    - The mutation tests against `evanchooly/morphia-audits-sandbox` stay with it.
 

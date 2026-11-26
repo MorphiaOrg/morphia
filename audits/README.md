@@ -45,13 +45,14 @@ pages, run `ExtractMainKt`, then review the scenario, inventory and baseline dif
 `.github/workflows/operator-discovery.yml` runs `audits/discover.sh` every Monday against the head
 of mongodb/docs. In a throwaway worktree, it bundles and parses the pages, runs extraction, and
 runs core's operator tests under both mappers against the result. The Publish job then files the
-findings as issues, each keyed so that a rerun updates its issue instead of filing it again:
+findings as issues, each keyed so that a rerun updates its issue instead of filing it again. An
+in-scope example with no scenario or exclusion fails the run instead: it is listed in the run's
+summary and `missing-scenarios.txt`, and is not filed.
 
 | Finding | Filed for |
 |---|---|
 | `MISSING_API` | A documented operator with no tagged Morphia factory, listing the scenarios it blocks. |
 | `NEW_EXAMPLE` | An example the docs gained since the committed inventory, with no scenario. |
-| `MISSING_SCENARIO` | An in-scope example with no scenario and no exclusion. |
 | `FAILING_AUDIT` | Operator tests failing against the current docs' scenarios. |
 
 Run it locally, without publishing:

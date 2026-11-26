@@ -8,7 +8,6 @@ import dev.morphia.audits.extraction.ExampleInventory
 import dev.morphia.audits.extraction.ExampleStatus
 import dev.morphia.audits.extraction.FormSource
 import dev.morphia.audits.extraction.MissingApi
-import dev.morphia.audits.extraction.MissingScenario
 import dev.morphia.audits.extraction.SourceBlock
 import dev.morphia.audits.publish.DiscoveryFindings
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -68,10 +67,9 @@ class DiscoveryFindingsTest {
         committed: ExampleInventory,
         current: ExampleInventory,
         missingApi: List<MissingApi> = emptyList(),
-        missing: List<MissingScenario> = emptyList(),
         auditLog: String? = null,
         extraction: String? = null,
-    ) = DiscoveryFindings.findings(committed, current, missingApi, missing, auditLog, extraction)
+    ) = DiscoveryFindings.findings(committed, current, missingApi, auditLog, extraction)
 
     @Test
     fun anExampleNewUpstreamIsFiledOnce() {
@@ -156,7 +154,7 @@ class DiscoveryFindingsTest {
     }
 
     @Test
-    fun missingApiAndScenariosHaveStableKeys() {
+    fun missingApiHasAStableKey() {
         val found =
             findings(
                 inventory(owned),
@@ -169,20 +167,9 @@ class DiscoveryFindingsTest {
                         listOf("aggregation/expressions/sigmoid/applySigmoid"),
                     )
                 ),
-                listOf(
-                    MissingScenario(
-                        "query/filters/gt/\$exists: false",
-                        "query/filters/gt \"\$exists: false\": UNSUPPORTED (SYNTAX)",
-                    )
-                ),
             )
-        assertEquals(
-            listOf(
-                "MISSING_API:aggregation/expressions/\$sigmoid",
-                "MISSING_SCENARIO:query/filters/gt/\$exists: false",
-            ),
-            found.map { it.key },
-        )
+        assertEquals(listOf("MISSING_API:aggregation/expressions/\$sigmoid"), found.map { it.key })
+
         assertTrue(found[0].body.contains("aggregation/expressions/sigmoid/applySigmoid"))
     }
 

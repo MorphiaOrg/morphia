@@ -37,7 +37,7 @@ class PublisherTest {
             labels =
                 mapOf(
                     FindingType.MISSING_API to listOf("enhancement"),
-                    FindingType.MISSING_SCENARIO to listOf("bug"),
+                    FindingType.FAILING_AUDIT to listOf("bug"),
                 )
         )
 

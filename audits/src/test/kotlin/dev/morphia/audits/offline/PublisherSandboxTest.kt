@@ -35,7 +35,7 @@ class PublisherSandboxTest {
             labels =
                 mapOf(
                     FindingType.MISSING_API to listOf("audit"),
-                    FindingType.MISSING_SCENARIO to listOf("audit"),
+                    FindingType.NEW_EXAMPLE to listOf("audit"),
                 )
         )
 
@@ -48,8 +48,8 @@ class PublisherSandboxTest {
                 "A gap.",
             ),
             Finding(
-                "MISSING_SCENARIO:sandbox/AGGREGATION_EXPRESSION/\$example",
-                FindingType.MISSING_SCENARIO,
+                "NEW_EXAMPLE:sandbox/AGGREGATION_EXPRESSION/\$example",
+                FindingType.NEW_EXAMPLE,
                 "Sandbox: version annotation",
                 "An annotation.",
             ),

@@ -3,7 +3,8 @@ name: Operator Example Discovery
 # Extracts the documented operator examples at the head of mongodb/docs and runs core's operator
 # tests against the result under both mappers, uploading every report. It never commits. The Publish
 # job then files its findings as issues in this repository: each documented operator with no Morphia
-# factory, each example that appeared upstream, each example with no scenario, and failing tests.
+# factory, each example that appeared upstream, and failing tests. An example with no scenario fails
+# the Discover job, and is listed in its summary rather than filed.
 # An issue's marker keeps reruns from filing it twice; a closed issue is not reopened.
 on:
   workflow_dispatch:
@@ -81,7 +82,8 @@ jobs:
 
   Publish:
     needs: Discover
-    # Discovery's reports are uploaded even when its tests fail, and that failure is a finding.
+    # Discovery's reports are uploaded even when it fails (failing tests, examples with no scenario),
+    # and the findings are still filed.
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:

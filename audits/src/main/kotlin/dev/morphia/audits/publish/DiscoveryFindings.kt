@@ -5,7 +5,6 @@ import dev.morphia.audits.extraction.ExampleInventory
 import dev.morphia.audits.extraction.ExampleStatus
 import dev.morphia.audits.extraction.Extraction
 import dev.morphia.audits.extraction.MissingApi
-import dev.morphia.audits.extraction.MissingScenario
 import dev.morphia.audits.extraction.Overrides
 
 /**
@@ -14,11 +13,17 @@ import dev.morphia.audits.extraction.Overrides
  * - `MISSING_API`: a documented operator with no tagged Morphia factory;
  * - `NEW_EXAMPLE`: an example the current docs have and the committed inventory doesn't, with no
  *   scenario;
- * - `MISSING_SCENARIO`: an in-scope example with neither a scenario nor an exclusion;
  * - `FAILING_AUDIT`: operator tests that fail against the current docs' scenarios.
  */
-/** What `PublishMainKt findings` writes and `publish` reads. */
-data class FindingsReport(val schemaVersion: Int = 1, val findings: List<Finding>)
+/**
+ * What `PublishMainKt findings` writes and `publish` reads. [missingScenarios] are the in-scope
+ * examples with no scenario or exclusion: they fail the run, but aren't filed as issues.
+ */
+data class FindingsReport(
+    val schemaVersion: Int = 1,
+    val findings: List<Finding>,
+    val missingScenarios: List<String> = emptyList(),
+)
 
 object DiscoveryFindings {
     private val failed = Regex("""^\[ERROR] (\S+) -- Time elapsed: .* <<< (FAILURE|ERROR)!$""")
@@ -37,13 +42,11 @@ object DiscoveryFindings {
         committed: ExampleInventory,
         current: ExampleInventory,
         missingApi: List<MissingApi>,
-        missingScenarios: List<MissingScenario>,
         auditLog: String?,
         extraction: String? = null,
     ): List<Finding> =
         (missingApi.map { api(current, it) } +
                 newExamples(committed, current) +
-                missingScenarios.map { scenario(current, it) } +
                 failing(current, auditLog) +
                 overrides(current, extraction))
             .sortedBy { it.key }
@@ -94,16 +97,6 @@ object DiscoveryFindings {
                     }
             }
     }
-
-    private fun scenario(current: ExampleInventory, missing: MissingScenario): Finding =
-        Finding(
-            "${FindingType.MISSING_SCENARIO}:${missing.key}",
-            FindingType.MISSING_SCENARIO,
-            "Extract the documented example ${missing.key}",
-            "At mongodb/docs `${current.commit.take(10)}` this in-scope example has no scenario " +
-                "and no exclusion:\n\n`${missing.line}`\n\nTeach the reader the example, or exclude it in " +
-                "`${Overrides.PATH}` with a reason.",
-        )
 
     /** One finding per failing test, so closing one doesn't hide another; and one if none ran. */
     private fun failing(current: ExampleInventory, log: String?): List<Finding> {
