@@ -1,0 +1,81 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toObject/convertStringToObject",
+  "title": "Convert String to Object",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/toObject.txt",
+    "blob": "cf5f94d1062adfe1341336f9834e173ac0b3dfed"
+  },
+  "dataset": null,
+  "collections": {
+    "jsonStrings": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "config": "{\"feature\": true, \"threshold\": 10}"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "jsonStrings",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "parsedConfig": {
+            "$toObject": "$config"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "parsedConfig",
+            "value": {
+              "document": [
+                {
+                  "name": "feature",
+                  "value": {
+                    "exact": true
+                  }
+                },
+                {
+                  "name": "threshold",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "10"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

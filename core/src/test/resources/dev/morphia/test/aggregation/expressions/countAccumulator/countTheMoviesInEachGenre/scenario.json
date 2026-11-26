@@ -1,0 +1,105 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/countAccumulator/countTheMoviesInEachGenre",
+  "title": "Count the Movies in Each Genre",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/count-accumulator.txt",
+    "blob": "9fdd885a07aacfb161e54f531d726ab6a7271938"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$match": {
+          "genres": {
+            "$in": [
+              "Drama",
+              "Short"
+            ]
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "countNumberOfMoviesForGenre": {
+            "$count": {}
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Drama"
+            }
+          },
+          {
+            "name": "countNumberOfMoviesForGenre",
+            "value": {
+              "whole": {
+                "$numberInt": "12385"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "Short"
+            }
+          },
+          {
+            "name": "countNumberOfMoviesForGenre",
+            "value": {
+              "whole": {
+                "$numberInt": "442"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

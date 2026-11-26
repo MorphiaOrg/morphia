@@ -1,0 +1,115 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toArray/convertStringToArray",
+  "title": "Convert String to Array",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/toArray.txt",
+    "blob": "cc79af753b38dd104405734a5b966d4533b2963f"
+  },
+  "dataset": null,
+  "collections": {
+    "jsonStrings": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "jsonStrings",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "numbers": {
+            "$toArray": "[1, 2, 3]"
+          },
+          "documents": {
+            "$toArray": "[{\"a\": 1}, {\"b\": 2}]"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "numbers",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "1"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "2"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "3"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "documents",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "a",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "b",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

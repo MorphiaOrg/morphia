@@ -1,0 +1,571 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/listSearchIndexes/returnASingleSearchIndexById",
+  "title": "Return a Single Search Index by id",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/listSearchIndexes.txt",
+    "blob": "7869e7ae0f16daa421ebbe7718ec943e9b892e39"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$listSearchIndexes": {
+          "id": "6524096020da840844a4c4a7"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "id",
+            "value": {
+              "text": "6524096020da840844a4c4a7"
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "default"
+            }
+          },
+          {
+            "name": "status",
+            "value": {
+              "text": "BUILDING"
+            }
+          },
+          {
+            "name": "queryable",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "latestDefinitionVersion",
+            "value": {
+              "document": [
+                {
+                  "name": "version",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                },
+                {
+                  "name": "createdAt",
+                  "value": {
+                    "exact": {
+                      "$date": {
+                        "$numberLong": "1696863117355"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "latestDefinition",
+            "value": {
+              "document": [
+                {
+                  "name": "mappings",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "dynamic",
+                        "value": {
+                          "exact": true
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "storedSource",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "include",
+                        "value": {
+                          "array": [
+                            {
+                              "text": "awards.text"
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "statusDetail",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-02"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "BUILDING"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696860512000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "stagedIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "PENDING"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": false
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "1"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696863089000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "storedSource",
+                                  "value": {
+                                    "exact": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-01"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "BUILDING"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696860512000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "stagedIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "PENDING"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": false
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "1"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696863089000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                },
+                                {
+                                  "name": "storedSource",
+                                  "value": {
+                                    "exact": true
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "hostname",
+                      "value": {
+                        "text": "atlas-n1cm1j-shard-00-00"
+                      }
+                    },
+                    {
+                      "name": "status",
+                      "value": {
+                        "text": "BUILDING"
+                      }
+                    },
+                    {
+                      "name": "queryable",
+                      "value": {
+                        "exact": true
+                      }
+                    },
+                    {
+                      "name": "mainIndex",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "status",
+                            "value": {
+                              "text": "READY"
+                            }
+                          },
+                          {
+                            "name": "queryable",
+                            "value": {
+                              "exact": true
+                            }
+                          },
+                          {
+                            "name": "definitionVersion",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "version",
+                                  "value": {
+                                    "whole": {
+                                      "$numberInt": "0"
+                                    }
+                                  }
+                                },
+                                {
+                                  "name": "createdAt",
+                                  "value": {
+                                    "exact": {
+                                      "$date": {
+                                        "$numberLong": "1696860512000"
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          {
+                            "name": "definition",
+                            "value": {
+                              "document": [
+                                {
+                                  "name": "mappings",
+                                  "value": {
+                                    "document": [
+                                      {
+                                        "name": "dynamic",
+                                        "value": {
+                                          "exact": true
+                                        }
+                                      },
+                                      {
+                                        "name": "fields",
+                                        "value": {
+                                          "document": []
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/substr/splitTitlesIntoTwoParts",
+  "title": "Split Titles into Two Parts",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/substr.txt",
+    "blob": "50f0632e1786705720336b269338291716348268"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "titleStart": {
+            "$substr": [
+              "$title",
+              {
+                "$numberInt": "0"
+              },
+              {
+                "$numberInt": "3"
+              }
+            ]
+          },
+          "titleRest": {
+            "$substr": [
+              "$title",
+              {
+                "$numberInt": "3"
+              },
+              {
+                "$numberInt": "-1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Centennial"
+            }
+          },
+          {
+            "name": "titleStart",
+            "value": {
+              "text": "Cen"
+            }
+          },
+          {
+            "name": "titleRest",
+            "value": {
+              "text": "tennial"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "titleStart",
+            "value": {
+              "text": "Bas"
+            }
+          },
+          {
+            "name": "titleRest",
+            "value": {
+              "text": "eball"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

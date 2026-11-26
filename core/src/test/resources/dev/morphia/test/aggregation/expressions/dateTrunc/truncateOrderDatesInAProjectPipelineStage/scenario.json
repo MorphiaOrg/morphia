@@ -1,0 +1,361 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage",
+  "title": "Truncate Order Dates in a $project Pipeline Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/dateTrunc.txt",
+    "blob": "769f45e8ce75acc795cd903efa4dae3b0b5e6f2a"
+  },
+  "dataset": null,
+  "collections": {
+    "cakeSales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1589811030000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "120"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "type": "chocolate",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1616239805000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "14"
+        },
+        "quantity": {
+          "$numberInt": "140"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1610346675000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "12"
+        },
+        "quantity": {
+          "$numberInt": "145"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "type": "vanilla",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1581167603000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "13"
+        },
+        "quantity": {
+          "$numberInt": "104"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1558195741000"
+          }
+        },
+        "state": "CA",
+        "price": {
+          "$numberInt": "41"
+        },
+        "quantity": {
+          "$numberInt": "162"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "type": "strawberry",
+        "orderDate": {
+          "$date": {
+            "$numberLong": "1546927923000"
+          }
+        },
+        "state": "WA",
+        "price": {
+          "$numberInt": "43"
+        },
+        "quantity": {
+          "$numberInt": "134"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "cakeSales",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "1"
+          },
+          "orderDate": {
+            "$numberInt": "1"
+          },
+          "truncatedOrderDate": {
+            "$dateTrunc": {
+              "date": "$orderDate",
+              "unit": "week",
+              "binSize": {
+                "$numberInt": "2"
+              },
+              "timezone": "America/Los_Angeles",
+              "startOfWeek": "Monday"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589811030000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1589180400000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1616239805000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1615791600000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1610346675000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1609747200000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1581167603000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1580716800000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1558195741000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1557730800000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "orderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1546927923000"
+                }
+              }
+            }
+          },
+          {
+            "name": "truncatedOrderDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1546848000000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

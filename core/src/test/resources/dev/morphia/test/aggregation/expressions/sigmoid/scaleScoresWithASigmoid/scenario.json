@@ -1,0 +1,177 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/sigmoid/scaleScoresWithASigmoid",
+  "title": "Scale Scores with a Sigmoid",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/sigmoid.txt",
+    "blob": "87fa7ba000b3acc534b2d135fe96ae8a121da819"
+  },
+  "dataset": null,
+  "collections": {
+    "myScores": [
+      {
+        "score": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "score": {
+          "$numberInt": "5"
+        }
+      },
+      {},
+      {
+        "score": {
+          "$numberInt": "13"
+        }
+      },
+      {
+        "score": null
+      },
+      {
+        "score": {
+          "$numberInt": "21"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "myScores",
+    "pipeline": [
+      {
+        "$set": {
+          "scaled": {
+            "$sigmoid": "$score"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "scaled",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.7310585786"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "scaled",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.9933071491"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "scaled",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "13"
+              }
+            }
+          },
+          {
+            "name": "scaled",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.9999977397"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "score",
+            "value": {
+              "exact": null
+            }
+          },
+          {
+            "name": "scaled",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "score",
+            "value": {
+              "whole": {
+                "$numberInt": "19"
+              }
+            }
+          },
+          {
+            "name": "scaled",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.9999999992"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

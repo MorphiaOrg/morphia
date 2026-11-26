@@ -51,6 +51,13 @@
       "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
+      "page": "aggregation/expressions/filter",
+      "title": "Filter Based on Number Comparison",
+      "actionSha256": "036f442b57874916cff9d0ece5fdaa1224c041c7f0892823a2da12fdbd2a4985",
+      "owner": "aggregation/expressions/filter/filterExpressionOperator",
+      "reason": "The page retitled this example since filterExpressionOperator was written; its action is unchanged, so that scenario and its test keep it."
+    },
+    {
       "page": "aggregation/expressions/first",
       "title": "main",
       "actionSha256": "84d4c5beb3b9d3f385f9b604ad5623d2789047d3b5e132dc1de32d8325a847ec",
@@ -182,6 +189,20 @@
       "actionSha256": "e71976556699627cfcb553fa9797bd3cb851b76d2b6228ca80ed3d85fed44eb6",
       "name": "Match Line or Link",
       "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/replaceAll",
+      "title": "Replace Using a String",
+      "actionSha256": "34c7003e09d976c87fb82ad72b5148021f7325c23d765d5acc38df99808b5dbf",
+      "owner": "aggregation/expressions/replaceAll/replaceAllExpressionOperator",
+      "reason": "The page retitled this example since replaceAllExpressionOperator was written; its action is unchanged, so that scenario and its test keep it."
+    },
+    {
+      "page": "aggregation/expressions/replaceOne",
+      "title": "Replace Using a String",
+      "actionSha256": "2451d256d674043d7aca4a65a4ebcdaa377f766ce51274f007fe1982c5464fca",
+      "owner": "aggregation/expressions/replaceOne/replaceOneExpressionOperator",
+      "reason": "The page retitled this example since replaceOneExpressionOperator was written; its action is unchanged, so that scenario and its test keep it."
     },
     {
       "page": "aggregation/expressions/round",
@@ -581,6 +602,13 @@
       "actionSha256": "eb02ab366f7905689b11d7ad68b88a1af9fc4bb4b4ee6cd88cd8064b3b994455",
       "name": "Match Lines That Start with S",
       "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/text",
+      "title": "Case-Sensitive Term Search",
+      "actionSha256": "1d009e6d51ab29d9375561482c4373ec93215c3f3da9c764cf5b5358b6a0996d",
+      "owner": "query/filters/text/caseSensitivity",
+      "reason": "The page retitled this example since caseSensitivity was written; its action is unchanged, so that scenario and its test keep it."
     },
     {
       "page": "query/filters/text",

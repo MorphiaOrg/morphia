@@ -1,0 +1,340 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "scenario": "aggregation/expressions/convert/baseConversionExample",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/countAccumulator/countTheMoviesInEachGenre",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/createObjectId/generateIdentifiersInAView",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$createObjectId has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/dateDiff/weeksPerMonth",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/deserializeEJSON/deserializeExtendedJsonDocument",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$deserializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/deserializeEJSON/deserializeSpecificFields",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$deserializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/deserializeEJSON/useOnErrorForErrorHandling",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$deserializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/filter/accessTheIndexOfEachItemInAnArray",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/hexHash/hashAFieldValue",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$hexHash has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/map/accessTheIndexOfEachItemInAnArray",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/median/calculateTheMedianRatingByYear",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/meta/groupByTextScore",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/meta/returnTheIndexKeyOfAMatchedTypeInAnAggregation",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/meta/returnTheIndexKeyOfAPriceRangeInAFind",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/meta/returnTheIndexKeyOfAPriceRangeInAnAggregation",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/percentile/calculateRatingPercentilesByGenre",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/reduce/accessTheIndexOfEachItemInAnArray",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/reduce/useIdxToAccessTheIndex",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/round/roundToAWholeNumber",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/round/roundToTheNearestTen",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/serializeEJSON/canonicalExtendedJsonExample",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$serializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/serializeEJSON/relaxedExtendedJsonExample",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$serializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/serializeEJSON/serializeSpecificFields",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$serializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/serializeEJSON/useOnErrorForErrorHandling",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$serializeEJSON has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/sigmoid/scaleScoresWithASigmoid",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$sigmoid has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/similarityCosine/computeRawAndNormalizedCosineSimilarity",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$similarityCosine has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/similarityDotProduct/computeRawAndNormalizedDotProducts",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$similarityDotProduct has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/similarityEuclidean/computeRawAndNormalizedEuclideanDistances",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$similarityEuclidean has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/sortArray/sortOnMixedTypeFields",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/expressions/substr/splitTitlesIntoTwoParts",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "deprecated on the server side and aliased to $substrBytes"
+    },
+    {
+      "scenario": "aggregation/expressions/toArray/convertBinDataToArray",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$toArray has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/toArray/convertStringToArray",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$toArray has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/expressions/toObject/convertStringToObject",
+      "reason": "NO_MORPHIA_API",
+      "detail": "$toObject has no tagged Morphia factory"
+    },
+    {
+      "scenario": "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/collStats/storageStats",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "an admin function and not generally suited for morphia"
+    },
+    {
+      "scenario": "aggregation/stages/densify/densifyTheFullRangeOfValues",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/densify/densifyTimeSeriesData",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/densify/densifyValuesWithinEachPartition",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/facet/categorizeMoviesSeveralWays",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/geoNear/geoNearWithBoundLetOption",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/geoNear/maximumDistance",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/geoNear/minimumDistance",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/geoNear/specifyWhichGeospatialIndexToUse",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/graphLookup/acrossMultipleCollections",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/group/countTheNumberOfDocumentsInACollection",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/listSearchIndexes/returnASingleSearchIndexById",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "an admin function and not generally suited for morphia"
+    },
+    {
+      "scenario": "aggregation/stages/listSearchIndexes/returnASingleSearchIndexByName",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "an admin function and not generally suited for morphia"
+    },
+    {
+      "scenario": "aggregation/stages/listSearchIndexes/returnAllSearchIndexes",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "an admin function and not generally suited for morphia"
+    },
+    {
+      "scenario": "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "a diagnostic stage: it reports the query plan cache"
+    },
+    {
+      "scenario": "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
+      "reason": "OUT_OF_SCOPE",
+      "detail": "a diagnostic stage: it reports the query plan cache"
+    },
+    {
+      "scenario": "aggregation/stages/project/excludeAnEmbeddedFieldWithANestedDocument",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "aggregation/stages/unset/removeAFieldListedInAnArray",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/and/requireTwoValuesOfOneField",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/elemMatch/matchAnElementThatIsnTXyz",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/elemMatch/matchAnElementWithElemMatch",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/eq/regexMatchBehavior",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/maxDistance/findPlacesNearAPointWithinADistance",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/minDistance/useWithNear",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/minDistance/useWithNearSphere",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/mod/divideBy45",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/mod/divideBy499",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/mod/negativeDividend",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/near/queryOnLegacyCoordinates",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/nearSphere/case2dIndex",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/nearSphere/case2dsphereIndex",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/regex/matchUnicodeWordBoundaries",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/type/matchNumericRatings",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/type/matchSeveralTypesByNumber",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/filters/type/matchStringRatingsByTypeNumber",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/bit/bitwiseAnd",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/bit/bitwiseOr",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/bit/bitwiseXor",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/each/useEachWithPushOperator",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/mul/applyMulOperatorToANonExistingField",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/mul/multiplyTheValueOfAField",
+      "reason": "NOT_WRITTEN"
+    },
+    {
+      "scenario": "query/updates/push/appendMultipleValuesToAnArray",
+      "reason": "NOT_WRITTEN"
+    }
+  ]
+}

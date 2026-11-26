@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "sampleDatasets": {
+    "movies": "sample_mflix"
+  },
+  "overrides": [
+    {
+      "page": "aggregation/expressions/binarySize",
+      "title": "Find Largest Binary Data",
+      "blocksSha256": "0619cf51175a8937a616361879d3055a3772e823960bea521e6d68fbc17ff512",
+      "reason": "The pipeline sorts by imageSize and keeps one document, but the page prints every image's size from the $project stage alone. The server returns concert.jpg (269), which Morphia matches. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/bitOr",
+      "title": "Bitwise OR with a Long and Integer",
+      "blocksSha256": "dae05c1858cd637c8de894514a43283b36c31f6f02cba087eb8571be3f5d7e5e",
+      "reason": "The page prints $bitAnd's results: it shows Long(\"0\"), Long(\"2\") and Long(\"3\"), but a | 63 is 63 for each document, which is what the server returns. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/bsonSize",
+      "title": "Return Document with Largest Specified Field",
+      "blocksSha256": "25a499bb6b1416abd9758b9fd078ed3ac330be6603a3dc4d7ec0a8d7f00e6e2e",
+      "reason": "The pipeline sorts by task_object_size and keeps one document, but the page prints every employee's size from the $project stage alone, and its sizes are off (152 for Bob, where the server returns 140). Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/dateDiff",
+      "title": "Year Boundary Crossing",
+      "blocksSha256": "1aa8b1396d7623cf1751e18b7a5d01d6423cea39fe82077b215e00a6f8901e05",
+      "reason": "$dateDiff returns a long, which mongosh prints as Long('1'); the page prints 1, which only an Int32 or a Double prints as. Serialization and behavior pass.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/dateSubtract",
+      "title": "Filter by Relative Dates",
+      "blocksSha256": "a4e05e2a78f349ca13f4b50c0ee18dbcacf1ab3fb7d365d0fa284457bba8455b",
+      "reason": "The pipeline keeps logouts within a week of $$NOW, so its result depends on the day it runs; the page's 2021 logouts are never within a week of today, and the server returns nothing. Serialization passes.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/divide",
+      "title": "main",
+      "blocksSha256": "eba93cf601f377453b0f2f1e791b6c0fe086084e80a7bc702a999f1ac167e7f1",
+      "reason": "The page inserts into conferencePlanning but aggregates planning, so the server returns nothing. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/filter",
+      "title": "Use $$IDX to Access the Index",
+      "blocksSha256": "bbc1c9afcf6cd3eb256b54b0d116d7cefd862d68c7b37747005ee5f34f244970",
+      "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912).",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/indexOfBytes",
+      "title": "main",
+      "blocksSha256": "74aeb7f0f14d306ffb38b70f8b69cdf9c6f12757135c0b22776da304c58905be",
+      "reason": "The page prints each byteLocation as a string (\"0\", \"4\", \"-1\"), but $indexOfBytes returns an integer, which the server returns and Morphia matches. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"indexKey\"",
+      "blocksSha256": "a98eaea31a4e9131c4d3b9cbbd14642248239fab710529da4a07c033239c8bd9",
+      "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/reduce",
+      "title": "Discounted Merchandise",
+      "blocksSha256": "cc967d9e3cbfd98c6d9bd129c578d16ae192afe73d8e7ecbdc3d9f3bf27c92b2",
+      "reason": "The page prints ObjectId _ids, but its seed inserts integer _ids 1 to 5. The computed discountedPrice values match. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/reduce",
+      "title": "Probability",
+      "blocksSha256": "5631455a148057940343271d25dcb6d507a592fc382ac2c35a783813cdf470e1",
+      "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFind",
+      "title": "Apply $regexFind to String Elements of an Array",
+      "blocksSha256": "5973ef37daf5692fa497f252e85f901530923318c6d68e5ccfe001948838c264",
+      "reason": "The page prints the $unwind stage's output (one document per details item), not the pipeline's, which groups each contact's matches back into one details document. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFind",
+      "title": "Use $regexFind to Parse Email from String",
+      "blocksSha256": "78d96c61cc7b8cb50fedd6c572cf4b34f260d4b591d4b6a7ebdd9f4fc3109b2c",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFind",
+      "title": "Use Captured Groupings to Parse User Name",
+      "blocksSha256": "e685ab6cfc16c9c16121720a1c782d30835931281a6cca6cb6b5d2a1c1cef4c7",
+      "reason": "The page prints the $addFields stage's output (the whole $regexFind match), not the pipeline's, whose $set replaces username with its first capture. Serialization passes; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFindAll",
+      "title": "Use $regexFindAll to Parse Email from String",
+      "blocksSha256": "5c740c956589b6cfcc06b65e33c7861c62d67a4e73c5d608d366e309a42a25a0",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFindAll",
+      "title": "Use Captured Groupings to Parse User Name",
+      "blocksSha256": "042bbeed7417e64708dfd1ce278c4b2e23f591c498485068eb4819fd834e92e8",
+      "reason": "The page prints the output of the $addFields stage alone, with each name as {match, idx, captures}; the pipeline's next stage, $set, reduces it to the captured names, which is what the server returns. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/regexFindAll",
+      "title": "s Option",
+      "blocksSha256": "eea261045fb0d9201af68851dc4ed6149114823d2b48d880963ca7ed8f7af75c",
+      "reason": "The page prints the third product's match as \"Many spaces before line\", with one space; its description, and the match the server returns, has five. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/geoNear",
+      "title": "$geoNear with Bound let Option",
+      "blocksSha256": "b81ea6264134ff3c47606c5ca83920ffabc6139f9bf5fcf0eea34b63d553331e",
+      "reason": "The page creates the places collection's 2dsphere index in its setup section, outside the example, and $geoNear needs it.",
+      "patches": [
+        {
+          "pointer": "/indexes",
+          "fromSha256": "ea901b692e0075fd3aa505be2746eb24aa6a7ccfec5956f5ba081eedb4d4fb15",
+          "value": [
+            {
+              "collection": "places",
+              "keys": {
+                "location": "2dsphere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "aggregation/stages/geoNear",
+      "title": "Maximum Distance",
+      "blocksSha256": "bb4d29b31424e9005205ddc5a9a421c0e687ee0d56f16d174979801cc8f44aa9",
+      "reason": "The page creates the places collection's 2dsphere index in its setup section, outside the example, and $geoNear needs it.",
+      "patches": [
+        {
+          "pointer": "/indexes",
+          "fromSha256": "ea901b692e0075fd3aa505be2746eb24aa6a7ccfec5956f5ba081eedb4d4fb15",
+          "value": [
+            {
+              "collection": "places",
+              "keys": {
+                "location": "2dsphere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "aggregation/stages/geoNear",
+      "title": "Minimum Distance",
+      "blocksSha256": "abcb45eef25b64030f8d080603c98724060a48d1e1a8356d45882ac1858544ff",
+      "reason": "The page creates the places collection's 2dsphere index in its setup section, outside the example, and $geoNear needs it.",
+      "patches": [
+        {
+          "pointer": "/indexes",
+          "fromSha256": "ea901b692e0075fd3aa505be2746eb24aa6a7ccfec5956f5ba081eedb4d4fb15",
+          "value": [
+            {
+              "collection": "places",
+              "keys": {
+                "location": "2dsphere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "aggregation/stages/geoNear",
+      "title": "Specify Which Geospatial Index to Use",
+      "blocksSha256": "e5b3e721a82f530462a1757d9ed9d57a44f4c5cd1d34fdf199e11bc685d5ad63",
+      "reason": "The page creates the places collection's 2dsphere index in its setup section, outside the example, and $geoNear needs it.",
+      "patches": [
+        {
+          "pointer": "/indexes",
+          "fromSha256": "ea901b692e0075fd3aa505be2746eb24aa6a7ccfec5956f5ba081eedb4d4fb15",
+          "value": [
+            {
+              "collection": "places",
+              "keys": {
+                "location": "2dsphere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "aggregation/stages/replaceWith",
+      "title": "main",
+      "blocksSha256": "70d1e255eea4f95241a3f27e8c18c64f6789b08cf982236ff64fac0deb0bd766",
+      "reason": "The page prints one document, the output of the pipeline's first $addFields stage, as the result of the whole four-stage pipeline, which returns one pivoted document per quarter. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "query/filters/mod",
+      "title": "Array with Single Element",
+      "blocksSha256": "be0a12e928cb90110bfc5a791a68ce983eb8ed9bd419a0e4b6130f805015a4c4",
+      "reason": "The example documents the error an invalid $mod argument raises; the runner checks results, not errors.",
+      "exclude": true
+    },
+    {
+      "page": "query/filters/mod",
+      "title": "Empty Array",
+      "blocksSha256": "ad613a89222cc19280a1ace692cd121d9fbd8ab79f984839881c224a7b83a2e3",
+      "reason": "The example documents the error an invalid $mod argument raises; the runner checks results, not errors.",
+      "exclude": true
+    },
+    {
+      "page": "query/filters/mod",
+      "title": "Too Many Elements Error",
+      "blocksSha256": "2a39a413023ee42ee709466004bd57174687db86036170013fc138f429fa52ad",
+      "reason": "The example documents the error an invalid $mod argument raises; the runner checks results, not errors.",
+      "exclude": true
+    },
+    {
+      "page": "query/filters/regex",
+      "title": "Match Whole Words Only",
+      "blocksSha256": "4a8f66ad7ddb255907b2fac180e62e9829d74044e611543f854af2fc18f013b7",
+      "reason": "The page prints three of the four products whose description has the whole word line: it leaves out _id 103, \"Multiple\\nline description\", which /\\bline\\b/ matches and the server returns. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "query/updates/mul",
+      "title": "Apply $mul Operator to a Non-existing Field",
+      "blocksSha256": "73141f7d543ec0866e98f4ac30f4898c18ab9d665653286722f852877f843668",
+      "reason": "The page prints Long(0) for the missing field, but multiplying a missing field by Decimal128(\"100\") stores Decimal128 0, which the server returns.",
+      "skipped": {
+        "published": "the page prints Long(0) where the server stores Decimal128 0"
+      }
+    },
+    {
+      "page": "query/updates/positional-all",
+      "title": "Update Arrays Specified Using a Negation Query Operator",
+      "blocksSha256": "4b5d740ad923a7db2e485541eaef4682579eabc319e53d2732859b7b74dd152b",
+      "reason": "The page prints the whole collection after the update but shows no read, so the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass. Lift once the page shows its find, which the case then runs.",
+      "exclude": true
+    }
+  ]
+}

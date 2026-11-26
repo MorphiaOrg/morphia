@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/hexHash/hashAFieldValue",
+  "title": "Hash a Field Value",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/hexHash.txt",
+    "blob": "04f787f8bac85a8e6348cd5f9f310080cfc916ba"
+  },
+  "dataset": null,
+  "collections": {
+    "files": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "filename": "report.pdf"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "files",
+    "pipeline": [
+      {
+        "$project": {
+          "filename": {
+            "$numberInt": "1"
+          },
+          "hexHash": {
+            "$hexHash": {
+              "input": "$filename",
+              "algorithm": "sha256"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "filename",
+            "value": {
+              "text": "report.pdf"
+            }
+          },
+          {
+            "name": "hexHash",
+            "value": {
+              "text": "6466E450A16B77B865C5829D6B6C56D9F892956475642DBEB9CCC4340FE01B15"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

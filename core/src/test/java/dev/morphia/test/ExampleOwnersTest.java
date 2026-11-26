@@ -33,6 +33,9 @@ public class ExampleOwnersTest {
     /** The compiled test classes, wherever the build runs from; the module's sources are two levels up. */
     private static final Path CLASSES = classes();
     private static final Path RESOURCES = CLASSES.resolve("../../src/test/resources").normalize();
+    /** The audits' reviewed baseline of scenarios with no test yet. */
+    private static final Path BASELINE = RESOURCES.resolve("../../../../audits/catalog/untested-examples.json").normalize();
+    private static final Set<String> UNTESTED = untested();
     private static final List<String> FAMILIES = List.of("aggregation/expressions", "aggregation/stages", "query/filters",
             "query/updates");
 
@@ -111,8 +114,14 @@ public class ExampleOwnersTest {
             method = testMethods(Class.forName(className)).stream().filter(it -> it.getName().equals(methodName)).findFirst()
                     .orElseThrow(NoSuchMethodException::new);
         } catch (ClassNotFoundException | NoSuchMethodException e) {
-            problems.add(where + " has no test " + className + "#" + methodName);
+            // A scenario extraction wrote before anyone wrote its test is reviewed in the audits' baseline.
+            if (!UNTESTED.contains(where)) {
+                problems.add(where + " has no test " + className + "#" + methodName + ", and isn't in " + BASELINE);
+            }
             return problems;
+        }
+        if (UNTESTED.contains(where)) {
+            problems.add(where + " has its test now: remove it from " + BASELINE);
         }
         String problem = CurrentTest.problem(method);
         if (problem != null) {
@@ -175,6 +184,17 @@ public class ExampleOwnersTest {
             }
         }
         return methods;
+    }
+
+    private static Set<String> untested() {
+        try {
+            Set<String> names = new TreeSet<>();
+            BsonDocument.parse(Files.readString(BASELINE)).getArray("examples")
+                    .forEach(entry -> names.add(entry.asDocument().getString("scenario").getValue()));
+            return names;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot read " + BASELINE, e);
+        }
     }
 
     /** A missing root would let both checks pass without looking at anything. */

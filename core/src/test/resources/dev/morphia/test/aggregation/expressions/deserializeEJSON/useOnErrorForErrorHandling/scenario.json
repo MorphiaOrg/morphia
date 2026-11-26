@@ -1,0 +1,48 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/deserializeEJSON/useOnErrorForErrorHandling",
+  "title": "Use onError for Error Handling",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/deserializeEJSON.txt",
+    "blob": "7afb19ace9bb64d16331d041e46e3483951978f2"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "data",
+    "pipeline": [
+      {
+        "$project": {
+          "result": {
+            "$deserializeEJSON": {
+              "input": "$ejsonField",
+              "onError": {
+                "error": "Invalid EJSON format"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

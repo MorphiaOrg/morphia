@@ -1,0 +1,334 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/densify/densifyValuesWithinEachPartition",
+  "title": "Densify Values within Each Partition",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/densify.txt",
+    "blob": "288e50c2279fbe39dc3a750985b9f5708e82e8c3"
+  },
+  "dataset": null,
+  "collections": {
+    "coffee": [
+      {
+        "altitude": {
+          "$numberInt": "600"
+        },
+        "variety": "Arabica Typica",
+        "score": {
+          "$numberDouble": "68.3"
+        }
+      },
+      {
+        "altitude": {
+          "$numberInt": "750"
+        },
+        "variety": "Arabica Typica",
+        "score": {
+          "$numberDouble": "69.5"
+        }
+      },
+      {
+        "altitude": {
+          "$numberInt": "950"
+        },
+        "variety": "Arabica Typica",
+        "score": {
+          "$numberDouble": "70.5"
+        }
+      },
+      {
+        "altitude": {
+          "$numberInt": "1250"
+        },
+        "variety": "Gesha",
+        "score": {
+          "$numberDouble": "88.15"
+        }
+      },
+      {
+        "altitude": {
+          "$numberInt": "1700"
+        },
+        "variety": "Gesha",
+        "score": {
+          "$numberDouble": "95.5"
+        },
+        "price": {
+          "$numberInt": "1029"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "coffee",
+    "pipeline": [
+      {
+        "$densify": {
+          "field": "altitude",
+          "partitionByFields": [
+            "variety"
+          ],
+          "range": {
+            "bounds": "partition",
+            "step": {
+              "$numberInt": "200"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618c031814fbe03334480475"
+              }
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "600"
+              }
+            }
+          },
+          {
+            "name": "variety",
+            "value": {
+              "text": "Arabica Typica"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "68.3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618c031814fbe03334480476"
+              }
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "750"
+              }
+            }
+          },
+          {
+            "name": "variety",
+            "value": {
+              "text": "Arabica Typica"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "69.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "variety",
+            "value": {
+              "text": "Arabica Typica"
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "800"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618c031814fbe03334480477"
+              }
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "950"
+              }
+            }
+          },
+          {
+            "name": "variety",
+            "value": {
+              "text": "Arabica Typica"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "70.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618c031814fbe03334480478"
+              }
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "1250"
+              }
+            }
+          },
+          {
+            "name": "variety",
+            "value": {
+              "text": "Gesha"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "88.15"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "variety",
+            "value": {
+              "text": "Gesha"
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "1450"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "variety",
+            "value": {
+              "text": "Gesha"
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "1650"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "618c031814fbe03334480479"
+              }
+            }
+          },
+          {
+            "name": "altitude",
+            "value": {
+              "whole": {
+                "$numberInt": "1700"
+              }
+            }
+          },
+          {
+            "name": "variety",
+            "value": {
+              "text": "Gesha"
+            }
+          },
+          {
+            "name": "score",
+            "value": {
+              "exact": {
+                "$numberDouble": "95.5"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "1029"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

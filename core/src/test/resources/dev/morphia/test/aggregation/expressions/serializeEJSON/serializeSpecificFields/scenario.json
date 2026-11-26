@@ -1,0 +1,118 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/serializeEJSON/serializeSpecificFields",
+  "title": "Serialize Specific Fields",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/serializeEJSON.txt",
+    "blob": "ee40af96a05b38c3b3102d51e89b13c8cb195a5e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": {
+              "$numberInt": "2010"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "metadataEJSON": {
+            "$serializeEJSON": {
+              "input": {
+                "releaseDate": "$released",
+                "runtime": "$runtime",
+                "imdbRating": "$imdb.rating"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "573a13c5f29313caabd6ee61"
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Inception"
+            }
+          },
+          {
+            "name": "metadataEJSON",
+            "value": {
+              "document": [
+                {
+                  "name": "releaseDate",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "$date",
+                        "value": {
+                          "text": "2010-07-16T00:00:00.000Z"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "runtime",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "148"
+                    }
+                  }
+                },
+                {
+                  "name": "imdbRating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "8.8"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

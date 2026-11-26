@@ -1,0 +1,49 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/nearSphere/case2dsphereIndex",
+  "title": "2dsphere Index",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/nearSphere.txt",
+    "blob": "a6eb8122244a781bd436ba5bc1f2192a3d6cd00b"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "legacyPlaces",
+    "filter": {
+      "location": {
+        "$nearSphere": [
+          {
+            "$numberDouble": "-73.9667"
+          },
+          {
+            "$numberDouble": "40.78"
+          }
+        ],
+        "$minDistance": {
+          "$numberDouble": "4.0E-4"
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

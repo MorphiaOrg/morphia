@@ -1,0 +1,151 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/convert/baseConversionExample",
+  "title": "Base Conversion Example",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/convert.txt",
+    "blob": "7519c400c6b5aa504d7de45c3e5d9f76e926df45"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "title": {
+            "$in": [
+              "The Godfather",
+              "Toy Story",
+              "Metropolis"
+            ]
+          }
+        }
+      },
+      {
+        "$sort": {
+          "title": {
+            "$numberInt": "1"
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "title": {
+            "$numberInt": "1"
+          },
+          "imdbId": "$imdb.id",
+          "hexId": {
+            "$convert": {
+              "input": "$imdb.id",
+              "to": "string",
+              "base": {
+                "$numberInt": "16"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Metropolis"
+            }
+          },
+          {
+            "name": "imdbId",
+            "value": {
+              "whole": {
+                "$numberInt": "293416"
+              }
+            }
+          },
+          {
+            "name": "hexId",
+            "value": {
+              "text": "47A28"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Godfather"
+            }
+          },
+          {
+            "name": "imdbId",
+            "value": {
+              "whole": {
+                "$numberInt": "68646"
+              }
+            }
+          },
+          {
+            "name": "hexId",
+            "value": {
+              "text": "10C26"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Toy Story"
+            }
+          },
+          {
+            "name": "imdbId",
+            "value": {
+              "whole": {
+                "$numberInt": "114709"
+              }
+            }
+          },
+          {
+            "name": "hexId",
+            "value": {
+              "text": "1C015"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

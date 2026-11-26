@@ -1,0 +1,132 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/reduce/useIdxToAccessTheIndex",
+  "title": "Use $$IDX to Access the Index",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/reduce.txt",
+    "blob": "01571ab3b83305ca7de00d3ce33edc927ccf4c93"
+  },
+  "dataset": null,
+  "collections": {
+    "people": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Melissa",
+        "hobbies": [
+          "softball",
+          "drawing",
+          "reading"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Brad",
+        "hobbies": [
+          "gaming",
+          "skateboarding"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "name": "Scott",
+        "hobbies": [
+          "basketball",
+          "music",
+          "fishing"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "name": "Tracey",
+        "hobbies": [
+          "acting",
+          "yoga"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "name": "Josh",
+        "hobbies": [
+          "programming"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "name": "Claire"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "people",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "name": {
+            "$numberInt": "1"
+          },
+          "text": {
+            "$reduce": {
+              "input": "$hobbies",
+              "initialValue": "My hobbies include:",
+              "valueAs": "accumulatedText",
+              "as": "hobby",
+              "in": {
+                "$concat": [
+                  "$$accumulatedText",
+                  " ",
+                  {
+                    "$toString": {
+                      "$add": [
+                        "$$IDX",
+                        {
+                          "$numberInt": "1"
+                        }
+                      ]
+                    }
+                  },
+                  ") ",
+                  "$$hobby"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

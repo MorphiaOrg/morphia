@@ -1,0 +1,149 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/eq/regexMatchBehavior",
+  "title": "Regex Match Behavior",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/eq.txt",
+    "blob": "833cb20778a655fe9152395c1bd33475ffe603e9"
+  },
+  "dataset": null,
+  "collections": {
+    "companies": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "company": "MongoDB"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "company": "MongoDB2"
+      }
+    ],
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": {
+          "name": "ab",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "15"
+        },
+        "tags": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": {
+          "name": "cd",
+          "code": "123"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": {
+          "name": "ij",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "25"
+        },
+        "tags": [
+          "A",
+          "B"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": {
+          "name": "xy",
+          "code": "456"
+        },
+        "qty": {
+          "$numberInt": "30"
+        },
+        "tags": [
+          "B",
+          "A"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": {
+          "name": "mn",
+          "code": "000"
+        },
+        "qty": {
+          "$numberInt": "20"
+        },
+        "tags": [
+          [
+            "A",
+            "B"
+          ],
+          "C"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "companies",
+    "filter": {
+      "company": {
+        "$eq": {
+          "$regularExpression": {
+            "pattern": "MongoDB",
+            "options": ""
+          }
+        }
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

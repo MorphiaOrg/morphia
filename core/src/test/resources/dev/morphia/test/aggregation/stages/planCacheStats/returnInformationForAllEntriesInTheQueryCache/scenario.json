@@ -1,0 +1,107 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
+  "title": "Return Information for All Entries in the Query Cache",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/planCacheStats.txt",
+    "blob": "ba70d2f0a94a12546a83b861dc17e04191a74998"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "12"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "type": "apparel"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberDecimal": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "type": "electronics"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "10"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "type": "apparel"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "abc",
+        "price": {
+          "$numberDecimal": "8"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "type": "apparel"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberDecimal": "15"
+        },
+        "quantity": {
+          "$numberInt": "15"
+        },
+        "type": "electronics"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$planCacheStats": {}
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

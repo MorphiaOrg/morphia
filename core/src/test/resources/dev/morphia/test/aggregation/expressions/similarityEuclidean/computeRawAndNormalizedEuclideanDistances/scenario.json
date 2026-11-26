@@ -1,0 +1,224 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/similarityEuclidean/computeRawAndNormalizedEuclideanDistances",
+  "title": "Compute Raw and Normalized Euclidean Distances",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/similarityEuclidean.txt",
+    "blob": "cc07a8e6749cdece266894fb10d82d12a89a3f0c"
+  },
+  "dataset": null,
+  "collections": {
+    "vectors": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "3"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "1"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "a": [
+          {
+            "$numberInt": "1"
+          },
+          {
+            "$numberInt": "2"
+          },
+          {
+            "$numberInt": "3"
+          }
+        ],
+        "b": [
+          {
+            "$numberInt": "4"
+          },
+          {
+            "$numberInt": "5"
+          },
+          {
+            "$numberInt": "6"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "vectors",
+    "pipeline": [
+      {
+        "$project": {
+          "raw": {
+            "$similarityEuclidean": [
+              "$a",
+              "$b"
+            ]
+          },
+          "normalized": {
+            "$similarityEuclidean": {
+              "vectors": [
+                "$a",
+                "$b"
+              ],
+              "score": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.8284271247461903"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.2612038749637415"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "raw",
+            "value": {
+              "exact": {
+                "$numberDouble": "5.196152422706632"
+              }
+            }
+          },
+          {
+            "name": "normalized",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.16139702886038895"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

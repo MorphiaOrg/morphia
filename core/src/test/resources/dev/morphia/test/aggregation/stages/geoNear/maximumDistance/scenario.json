@@ -1,0 +1,215 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/geoNear/maximumDistance",
+  "title": "Maximum Distance",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/geoNear.txt",
+    "blob": "e4d89f1859b69d8537bba15c21665374d67dd83d"
+  },
+  "dataset": null,
+  "collections": {
+    "places": [
+      {
+        "name": "Central Park",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.97"
+            },
+            {
+              "$numberDouble": "40.77"
+            }
+          ]
+        },
+        "category": "Parks"
+      },
+      {
+        "name": "Sara D. Roosevelt Park",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.9928"
+            },
+            {
+              "$numberDouble": "40.7193"
+            }
+          ]
+        },
+        "category": "Parks"
+      },
+      {
+        "name": "Polo Grounds",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.9375"
+            },
+            {
+              "$numberDouble": "40.8303"
+            }
+          ]
+        },
+        "category": "Stadiums"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "places",
+      "keys": {
+        "location": "2dsphere"
+      }
+    }
+  ],
+  "action": {
+    "kind": "aggregate",
+    "collection": "places",
+    "pipeline": [
+      {
+        "$geoNear": {
+          "near": {
+            "type": "Point",
+            "coordinates": [
+              {
+                "$numberDouble": "-73.99279"
+              },
+              {
+                "$numberDouble": "40.719296"
+              }
+            ]
+          },
+          "distanceField": "dist.calculated",
+          "maxDistance": {
+            "$numberInt": "2"
+          },
+          "query": {
+            "category": "Parks"
+          },
+          "includeLocs": "dist.location",
+          "spherical": true
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Sara D. Roosevelt Park"
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Parks"
+            }
+          },
+          {
+            "name": "location",
+            "value": {
+              "document": [
+                {
+                  "name": "type",
+                  "value": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coordinates",
+                  "value": {
+                    "array": [
+                      {
+                        "exact": {
+                          "$numberDouble": "-73.9928"
+                        }
+                      },
+                      {
+                        "exact": {
+                          "$numberDouble": "40.7193"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "dist",
+            "value": {
+              "document": [
+                {
+                  "name": "calculated",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "0.9539931676365992"
+                    }
+                  }
+                },
+                {
+                  "name": "location",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "type",
+                        "value": {
+                          "text": "Point"
+                        }
+                      },
+                      {
+                        "name": "coordinates",
+                        "value": {
+                          "array": [
+                            {
+                              "exact": {
+                                "$numberDouble": "-73.9928"
+                              }
+                            },
+                            {
+                              "exact": {
+                                "$numberDouble": "40.7193"
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

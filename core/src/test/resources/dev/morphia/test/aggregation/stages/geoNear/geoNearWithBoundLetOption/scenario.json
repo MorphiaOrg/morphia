@@ -1,0 +1,361 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/geoNear/geoNearWithBoundLetOption",
+  "title": "$geoNear with Bound let Option",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/geoNear.txt",
+    "blob": "e4d89f1859b69d8537bba15c21665374d67dd83d"
+  },
+  "dataset": null,
+  "collections": {
+    "places": [
+      {
+        "name": "Central Park",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.97"
+            },
+            {
+              "$numberDouble": "40.77"
+            }
+          ]
+        },
+        "category": "Parks"
+      },
+      {
+        "name": "Sara D. Roosevelt Park",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.9928"
+            },
+            {
+              "$numberDouble": "40.7193"
+            }
+          ]
+        },
+        "category": "Parks"
+      },
+      {
+        "name": "Polo Grounds",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            {
+              "$numberDouble": "-73.9375"
+            },
+            {
+              "$numberDouble": "40.8303"
+            }
+          ]
+        },
+        "category": "Stadiums"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "places",
+      "keys": {
+        "location": "2dsphere"
+      }
+    }
+  ],
+  "action": {
+    "kind": "aggregate",
+    "collection": "places",
+    "pipeline": [
+      {
+        "$lookup": {
+          "from": "places",
+          "let": {
+            "pt": "$location"
+          },
+          "pipeline": [
+            {
+              "$geoNear": {
+                "near": "$$pt",
+                "distanceField": "distance"
+              }
+            }
+          ],
+          "as": "joinedField"
+        }
+      },
+      {
+        "$match": {
+          "name": "Sara D. Roosevelt Park"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "61715cf9b0c1d171bb498fd7"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Sara D. Roosevelt Park"
+            }
+          },
+          {
+            "name": "location",
+            "value": {
+              "document": [
+                {
+                  "name": "type",
+                  "value": {
+                    "text": "Point"
+                  }
+                },
+                {
+                  "name": "coordinates",
+                  "value": {
+                    "array": [
+                      {
+                        "exact": {
+                          "$numberDouble": "-73.9928"
+                        }
+                      },
+                      {
+                        "exact": {
+                          "$numberDouble": "40.7193"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "value": {
+              "text": "Parks"
+            }
+          },
+          {
+            "name": "joinedField",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "exact": {
+                          "$oid": "61715cf9b0c1d171bb498fd7"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Sara D. Roosevelt Park"
+                      }
+                    },
+                    {
+                      "name": "location",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "type",
+                            "value": {
+                              "text": "Point"
+                            }
+                          },
+                          {
+                            "name": "coordinates",
+                            "value": {
+                              "array": [
+                                {
+                                  "exact": {
+                                    "$numberDouble": "-73.9928"
+                                  }
+                                },
+                                {
+                                  "exact": {
+                                    "$numberDouble": "40.7193"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "category",
+                      "value": {
+                        "text": "Parks"
+                      }
+                    },
+                    {
+                      "name": "distance",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "exact": {
+                          "$oid": "61715cf9b0c1d171bb498fd6"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Central Park"
+                      }
+                    },
+                    {
+                      "name": "location",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "type",
+                            "value": {
+                              "text": "Point"
+                            }
+                          },
+                          {
+                            "name": "coordinates",
+                            "value": {
+                              "array": [
+                                {
+                                  "exact": {
+                                    "$numberDouble": "-73.97"
+                                  }
+                                },
+                                {
+                                  "exact": {
+                                    "$numberDouble": "40.77"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "category",
+                      "value": {
+                        "text": "Parks"
+                      }
+                    },
+                    {
+                      "name": "distance",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "5962.448255234964"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "_id",
+                      "value": {
+                        "exact": {
+                          "$oid": "61715cfab0c1d171bb498fd8"
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Polo Grounds"
+                      }
+                    },
+                    {
+                      "name": "location",
+                      "value": {
+                        "document": [
+                          {
+                            "name": "type",
+                            "value": {
+                              "text": "Point"
+                            }
+                          },
+                          {
+                            "name": "coordinates",
+                            "value": {
+                              "array": [
+                                {
+                                  "exact": {
+                                    "$numberDouble": "-73.9375"
+                                  }
+                                },
+                                {
+                                  "exact": {
+                                    "$numberDouble": "40.8303"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "category",
+                      "value": {
+                        "text": "Stadiums"
+                      }
+                    },
+                    {
+                      "name": "distance",
+                      "value": {
+                        "exact": {
+                          "$numberDouble": "13206.535424939102"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

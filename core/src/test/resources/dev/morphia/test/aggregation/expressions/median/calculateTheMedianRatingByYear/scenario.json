@@ -1,0 +1,177 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/median/calculateTheMedianRatingByYear",
+  "title": "Calculate the Median Rating by Year",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/median.txt",
+    "blob": "51fbb9e2791e9a6db7333b2b04e5d777af77d308"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "genres": "Action",
+          "year": {
+            "$gte": {
+              "$numberInt": "2000"
+            },
+            "$lte": {
+              "$numberInt": "2004"
+            }
+          },
+          "imdb.rating": {
+            "$gt": {
+              "$numberInt": "0"
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "medianRating": {
+            "$median": {
+              "input": "$imdb.rating",
+              "method": "approximate"
+            }
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2000"
+              }
+            }
+          },
+          {
+            "name": "medianRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2001"
+              }
+            }
+          },
+          {
+            "name": "medianRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2002"
+              }
+            }
+          },
+          {
+            "name": "medianRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.2"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2003"
+              }
+            }
+          },
+          {
+            "name": "medianRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.4"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2004"
+              }
+            }
+          },
+          {
+            "name": "medianRating",
+            "value": {
+              "exact": {
+                "$numberDouble": "6.5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

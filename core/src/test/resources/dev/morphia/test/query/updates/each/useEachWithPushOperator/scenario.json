@@ -1,0 +1,55 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/each/useEachWithPushOperator",
+  "title": "Use $each  with $push Operator",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/each.txt",
+    "blob": "e2851e9447803390d3d0b55305339dffd4b4e1ea"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {
+      "name": "joe"
+    },
+    "update": {
+      "$push": {
+        "scores": {
+          "$each": [
+            {
+              "$numberInt": "90"
+            },
+            {
+              "$numberInt": "92"
+            },
+            {
+              "$numberInt": "85"
+            }
+          ]
+        }
+      }
+    },
+    "multi": false
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/maxDistance/findPlacesNearAPointWithinADistance",
+  "title": "Find Places Near a Point Within a Distance",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/maxDistance.txt",
+    "blob": "c54bcd198688f254b32c175a07edc056601761e6"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$near": [
+          {
+            "$numberInt": "-74"
+          },
+          {
+            "$numberInt": "40"
+          }
+        ],
+        "$maxDistance": {
+          "$numberInt": "10"
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

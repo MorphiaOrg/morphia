@@ -1,0 +1,162 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/meta/groupByTextScore",
+  "title": "Group by Text Score",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/meta.txt",
+    "blob": "6bcec1af90dce08be0daf31147ca3e92b4318333"
+  },
+  "dataset": null,
+  "collections": {
+    "articles": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "cakes and ale"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "more cakes"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "title": "bread"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "title": "some cakes"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "title": "two cakes to go"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "title": "pie"
+      }
+    ]
+  },
+  "indexes": [
+    {
+      "collection": "articles",
+      "keys": {
+        "title": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "aggregate",
+    "collection": "articles",
+    "pipeline": [
+      {
+        "$match": {
+          "$text": {
+            "$search": "cake"
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "$meta": "textScore"
+          },
+          "count": {
+            "$sum": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.75"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.6666666666666666"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

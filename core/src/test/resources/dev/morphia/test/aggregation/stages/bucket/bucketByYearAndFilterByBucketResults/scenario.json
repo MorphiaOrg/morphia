@@ -1,0 +1,455 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
+  "title": "Bucket by Year and Filter by Bucket Results",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/bucket.txt",
+    "blob": "d51b4b3bdf75adad21fc761cbe601da623d8d122"
+  },
+  "dataset": null,
+  "collections": {
+    "artists": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "last_name": "Bernard",
+        "first_name": "Emil",
+        "year_born": {
+          "$numberInt": "1868"
+        },
+        "year_died": {
+          "$numberInt": "1941"
+        },
+        "nationality": "France"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "last_name": "Rippl-Ronai",
+        "first_name": "Joszef",
+        "year_born": {
+          "$numberInt": "1861"
+        },
+        "year_died": {
+          "$numberInt": "1927"
+        },
+        "nationality": "Hungary"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "last_name": "Ostroumova",
+        "first_name": "Anna",
+        "year_born": {
+          "$numberInt": "1871"
+        },
+        "year_died": {
+          "$numberInt": "1955"
+        },
+        "nationality": "Russia"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "last_name": "Van Gogh",
+        "first_name": "Vincent",
+        "year_born": {
+          "$numberInt": "1853"
+        },
+        "year_died": {
+          "$numberInt": "1890"
+        },
+        "nationality": "Holland"
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "last_name": "Maurer",
+        "first_name": "Alfred",
+        "year_born": {
+          "$numberInt": "1868"
+        },
+        "year_died": {
+          "$numberInt": "1932"
+        },
+        "nationality": "USA"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "last_name": "Munch",
+        "first_name": "Edvard",
+        "year_born": {
+          "$numberInt": "1863"
+        },
+        "year_died": {
+          "$numberInt": "1944"
+        },
+        "nationality": "Norway"
+      },
+      {
+        "_id": {
+          "$numberInt": "7"
+        },
+        "last_name": "Redon",
+        "first_name": "Odilon",
+        "year_born": {
+          "$numberInt": "1840"
+        },
+        "year_died": {
+          "$numberInt": "1916"
+        },
+        "nationality": "France"
+      },
+      {
+        "_id": {
+          "$numberInt": "8"
+        },
+        "last_name": "Diriks",
+        "first_name": "Edvard",
+        "year_born": {
+          "$numberInt": "1855"
+        },
+        "year_died": {
+          "$numberInt": "1930"
+        },
+        "nationality": "Norway"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "artists",
+    "pipeline": [
+      {
+        "$bucket": {
+          "groupBy": "$year_born",
+          "boundaries": [
+            {
+              "$numberInt": "1840"
+            },
+            {
+              "$numberInt": "1850"
+            },
+            {
+              "$numberInt": "1860"
+            },
+            {
+              "$numberInt": "1870"
+            },
+            {
+              "$numberInt": "1880"
+            }
+          ],
+          "default": "Other",
+          "output": {
+            "count": {
+              "$sum": {
+                "$numberInt": "1"
+              }
+            },
+            "artists": {
+              "$push": {
+                "name": {
+                  "$concat": [
+                    "$first_name",
+                    " ",
+                    "$last_name"
+                  ]
+                },
+                "year_born": "$year_born"
+              }
+            }
+          }
+        }
+      },
+      {
+        "$match": {
+          "count": {
+            "$gt": {
+              "$numberInt": "3"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1840"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "artists",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Odilon Redon"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1840"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1850"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "artists",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Vincent Van Gogh"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1853"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Edvard Diriks"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1855"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1860"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "artists",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Emil Bernard"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1868"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Joszef Rippl-Ronai"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1861"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Alfred Maurer"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1868"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Edvard Munch"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1863"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1870"
+              }
+            }
+          },
+          {
+            "name": "count",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "artists",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "name",
+                      "value": {
+                        "text": "Anna Ostroumova"
+                      }
+                    },
+                    {
+                      "name": "year_born",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1871"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

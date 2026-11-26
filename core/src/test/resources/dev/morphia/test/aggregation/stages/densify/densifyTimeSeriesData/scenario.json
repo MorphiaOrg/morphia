@@ -1,0 +1,126 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/stages/densify/densifyTimeSeriesData",
+  "title": "Densify Time Series Data",
+  "context": "STAGE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/densify.txt",
+    "blob": "288e50c2279fbe39dc3a750985b9f5708e82e8c3"
+  },
+  "dataset": null,
+  "collections": {
+    "weather": [
+      {
+        "metadata": {
+          "sensorId": {
+            "$numberInt": "5578"
+          },
+          "type": "temperature"
+        },
+        "timestamp": {
+          "$date": {
+            "$numberLong": "1621296000000"
+          }
+        },
+        "temp": {
+          "$numberInt": "12"
+        }
+      },
+      {
+        "metadata": {
+          "sensorId": {
+            "$numberInt": "5578"
+          },
+          "type": "temperature"
+        },
+        "timestamp": {
+          "$date": {
+            "$numberLong": "1621310400000"
+          }
+        },
+        "temp": {
+          "$numberInt": "11"
+        }
+      },
+      {
+        "metadata": {
+          "sensorId": {
+            "$numberInt": "5578"
+          },
+          "type": "temperature"
+        },
+        "timestamp": {
+          "$date": {
+            "$numberLong": "1621324800000"
+          }
+        },
+        "temp": {
+          "$numberInt": "11"
+        }
+      },
+      {
+        "metadata": {
+          "sensorId": {
+            "$numberInt": "5578"
+          },
+          "type": "temperature"
+        },
+        "timestamp": {
+          "$date": {
+            "$numberLong": "1621339200000"
+          }
+        },
+        "temp": {
+          "$numberInt": "12"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "weather",
+    "pipeline": [
+      {
+        "$densify": {
+          "field": "timestamp",
+          "range": {
+            "step": {
+              "$numberInt": "1"
+            },
+            "unit": "hour",
+            "bounds": [
+              {
+                "$date": {
+                  "$numberLong": "1621296000000"
+                }
+              },
+              {
+                "$date": {
+                  "$numberLong": "1621324800000"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}
