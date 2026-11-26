@@ -1,6 +1,7 @@
 package dev.morphia.aggregation.codecs.stages;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -73,9 +74,17 @@ public class MergeCodec extends StageCodec<Merge> {
         }
     }
 
+    /**
+     * Writes the MQL spelling of a driver merge option: {@code KEEP_EXISTING} is {@code keepExisting}.
+     */
     private void writeEnum(BsonWriter writer, String name, Enum<?> value) {
         if (value != null) {
-            writer.writeString(name, value.name().toLowerCase());
+            String[] words = value.name().toLowerCase(Locale.ROOT).split("_");
+            StringBuilder mql = new StringBuilder(words[0]);
+            for (int i = 1; i < words.length; i++) {
+                mql.append(Character.toUpperCase(words[i].charAt(0))).append(words[i].substring(1));
+            }
+            writer.writeString(name, mql.toString());
         }
     }
 

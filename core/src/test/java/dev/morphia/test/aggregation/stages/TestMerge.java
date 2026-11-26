@@ -2,17 +2,23 @@ package dev.morphia.test.aggregation.stages;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.bson.Document;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.FAIL;
+import static com.mongodb.client.model.MergeOptions.WhenMatched.KEEP_EXISTING;
 import static com.mongodb.client.model.MergeOptions.WhenMatched.MERGE;
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
@@ -137,5 +143,22 @@ public class TestMerge extends TemplatedTestBase {
     public void testExample8() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
+    }
+
+    @Test
+    @DisplayName("whenMatched: keepExisting keeps the target's document")
+    public void keepExisting() {
+        getDatabase().getCollection("mergeSource").insertMany(List.of(
+                new Document("_id", 1).append("value", "new"),
+                new Document("_id", 2).append("value", "new")));
+        getDatabase().getCollection("mergeTarget").insertOne(new Document("_id", 1).append("value", "old"));
+
+        getDs().aggregate(aggregationOptions().collection("mergeSource"))
+                .pipeline(merge("mergeTarget").on("_id").whenMatched(KEEP_EXISTING).whenNotMatched(INSERT))
+                .toList();
+
+        Assertions.assertEquals(
+                List.of(new Document("_id", 1).append("value", "old"), new Document("_id", 2).append("value", "new")),
+                getDatabase().getCollection("mergeTarget").find().sort(new Document("_id", 1)).into(new ArrayList<>()));
     }
 }
