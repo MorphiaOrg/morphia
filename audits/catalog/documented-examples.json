@@ -1,5 +1,1194 @@
 {
   "commit" : "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+  "operators" : [ {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/abs",
+    "token" : "$abs"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/accumulator",
+    "token" : "$accumulator"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/acos",
+    "token" : "$acos"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/acosh",
+    "token" : "$acosh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/add",
+    "token" : "$add"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/addToSet",
+    "token" : "$addToSet"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/allElementsTrue",
+    "token" : "$allElementsTrue"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/and",
+    "token" : "$and"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/anyElementTrue",
+    "token" : "$anyElementTrue"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/arrayElemAt",
+    "token" : "$arrayElemAt"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/arrayToObject",
+    "token" : "$arrayToObject"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/asin",
+    "token" : "$asin"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/asinh",
+    "token" : "$asinh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/atan",
+    "token" : "$atan"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/atan2",
+    "token" : "$atan2"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/atanh",
+    "token" : "$atanh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/avg",
+    "token" : "$avg"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/binarySize",
+    "token" : "$binarySize"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bitAnd",
+    "token" : "$bitAnd"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bitNot",
+    "token" : "$bitNot"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bitOr",
+    "token" : "$bitOr"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bitXor",
+    "token" : "$bitXor"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bottom",
+    "token" : "$bottom"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bottomN",
+    "token" : "$bottomN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/bsonSize",
+    "token" : "$bsonSize"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/ceil",
+    "token" : "$ceil"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/cmp",
+    "token" : "$cmp"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/concat",
+    "token" : "$concat"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/concatArrays",
+    "token" : "$concatArrays"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/cond",
+    "token" : "$cond"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/convert",
+    "token" : "$convert"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/cos",
+    "token" : "$cos"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/cosh",
+    "token" : "$cosh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/count-accumulator",
+    "token" : "$count"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/covariancePop",
+    "token" : "$covariancePop"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/covarianceSamp",
+    "token" : "$covarianceSamp"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/createObjectId",
+    "token" : "$createObjectId"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateAdd",
+    "token" : "$dateAdd"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateDiff",
+    "token" : "$dateDiff"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateFromParts",
+    "token" : "$dateFromParts"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateFromString",
+    "token" : "$dateFromString"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateSubtract",
+    "token" : "$dateSubtract"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateToParts",
+    "token" : "$dateToParts"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateToString",
+    "token" : "$dateToString"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dateTrunc",
+    "token" : "$dateTrunc"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dayOfMonth",
+    "token" : "$dayOfMonth"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dayOfWeek",
+    "token" : "$dayOfWeek"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/dayOfYear",
+    "token" : "$dayOfYear"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/degreesToRadians",
+    "token" : "$degreesToRadians"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/denseRank",
+    "token" : "$denseRank"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/derivative",
+    "token" : "$derivative"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/deserializeEJSON",
+    "token" : "$deserializeEJSON"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/divide",
+    "token" : "$divide"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/documentNumber",
+    "token" : "$documentNumber"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/encStrContains",
+    "token" : "$encStrContains"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/encStrEndsWith",
+    "token" : "$encStrEndsWith"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/encStrNormalizedEq",
+    "token" : "$encStrNormalizedEq"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/encStrStartsWith",
+    "token" : "$encStrStartsWith"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/eq",
+    "token" : "$eq"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/exp",
+    "token" : "$exp"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/expMovingAvg",
+    "token" : "$expMovingAvg"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/filter",
+    "token" : "$filter"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/first",
+    "token" : "$first"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/firstN",
+    "token" : "$firstN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/floor",
+    "token" : "$floor"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/function",
+    "token" : "$function"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/getField",
+    "token" : "$getField"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/gt",
+    "token" : "$gt"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/gte",
+    "token" : "$gte"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/hash",
+    "token" : "$hash"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/hexHash",
+    "token" : "$hexHash"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/hour",
+    "token" : "$hour"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/ifNull",
+    "token" : "$ifNull"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/in",
+    "token" : "$in"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/indexOfArray",
+    "token" : "$indexOfArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/indexOfBytes",
+    "token" : "$indexOfBytes"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/indexOfCP",
+    "token" : "$indexOfCP"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/integral",
+    "token" : "$integral"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/isArray",
+    "token" : "$isArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/isNumber",
+    "token" : "$isNumber"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/isoDayOfWeek",
+    "token" : "$isoDayOfWeek"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/isoWeek",
+    "token" : "$isoWeek"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/isoWeekYear",
+    "token" : "$isoWeekYear"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/last",
+    "token" : "$last"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/lastN",
+    "token" : "$lastN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/let",
+    "token" : "$let"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/linearFill",
+    "token" : "$linearFill"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/literal",
+    "token" : "$literal"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/ln",
+    "token" : "$ln"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/locf",
+    "token" : "$locf"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/log",
+    "token" : "$log"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/log10",
+    "token" : "$log10"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/lt",
+    "token" : "$lt"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/lte",
+    "token" : "$lte"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/ltrim",
+    "token" : "$ltrim"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/map",
+    "token" : "$map"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/max",
+    "token" : "$max"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/maxN",
+    "token" : "$maxN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/maxN-array-element",
+    "token" : "$maxN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/median",
+    "token" : "$median"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/mergeObjects",
+    "token" : "$mergeObjects"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/meta",
+    "token" : "$meta"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/millisecond",
+    "token" : "$millisecond"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/min",
+    "token" : "$min"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/minMaxScaler",
+    "token" : "$minMaxScaler"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/minN",
+    "token" : "$minN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/minute",
+    "token" : "$minute"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/mod",
+    "token" : "$mod"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/month",
+    "token" : "$month"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/multiply",
+    "token" : "$multiply"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/ne",
+    "token" : "$ne"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/not",
+    "token" : "$not"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/objectToArray",
+    "token" : "$objectToArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/or",
+    "token" : "$or"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/percentile",
+    "token" : "$percentile"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/pow",
+    "token" : "$pow"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/push",
+    "token" : "$push"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/radiansToDegrees",
+    "token" : "$radiansToDegrees"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/rand",
+    "token" : "$rand"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/range",
+    "token" : "$range"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/rank",
+    "token" : "$rank"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/reduce",
+    "token" : "$reduce"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/regexFind",
+    "token" : "$regexFind"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/regexFindAll",
+    "token" : "$regexFindAll"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/regexMatch",
+    "token" : "$regexMatch"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/replaceAll",
+    "token" : "$replaceAll"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/replaceOne",
+    "token" : "$replaceOne"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/reverseArray",
+    "token" : "$reverseArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/round",
+    "token" : "$round"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/rtrim",
+    "token" : "$rtrim"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sampleRate",
+    "token" : "$sampleRate"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/second",
+    "token" : "$second"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/serializeEJSON",
+    "token" : "$serializeEJSON"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setDifference",
+    "token" : "$setDifference"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setEquals",
+    "token" : "$setEquals"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setField",
+    "token" : "$setField"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setIntersection",
+    "token" : "$setIntersection"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setIsSubset",
+    "token" : "$setIsSubset"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/setUnion",
+    "token" : "$setUnion"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/shift",
+    "token" : "$shift"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sigmoid",
+    "token" : "$sigmoid"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/similarityCosine",
+    "token" : "$similarityCosine"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/similarityDotProduct",
+    "token" : "$similarityDotProduct"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/similarityEuclidean",
+    "token" : "$similarityEuclidean"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sin",
+    "token" : "$sin"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sinh",
+    "token" : "$sinh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/size",
+    "token" : "$size"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/slice",
+    "token" : "$slice"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sortArray",
+    "token" : "$sortArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/split",
+    "token" : "$split"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sqrt",
+    "token" : "$sqrt"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/stdDevPop",
+    "token" : "$stdDevPop"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/stdDevSamp",
+    "token" : "$stdDevSamp"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/strLenBytes",
+    "token" : "$strLenBytes"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/strLenCP",
+    "token" : "$strLenCP"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/strcasecmp",
+    "token" : "$strcasecmp"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/substr",
+    "token" : "$substr"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/substrBytes",
+    "token" : "$substrBytes"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/substrCP",
+    "token" : "$substrCP"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/subtract",
+    "token" : "$subtract"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/subtype",
+    "token" : "$subtype"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/sum",
+    "token" : "$sum"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/switch",
+    "token" : "$switch"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/tan",
+    "token" : "$tan"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/tanh",
+    "token" : "$tanh"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toArray",
+    "token" : "$toArray"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toBool",
+    "token" : "$toBool"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toDate",
+    "token" : "$toDate"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toDecimal",
+    "token" : "$toDecimal"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toDouble",
+    "token" : "$toDouble"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toHashedIndexKey",
+    "token" : "$toHashedIndexKey"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toInt",
+    "token" : "$toInt"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toLong",
+    "token" : "$toLong"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toLower",
+    "token" : "$toLower"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toObject",
+    "token" : "$toObject"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toObjectId",
+    "token" : "$toObjectId"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toString",
+    "token" : "$toString"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toUUID",
+    "token" : "$toUUID"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/toUpper",
+    "token" : "$toUpper"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/top",
+    "token" : "$top"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/topN",
+    "token" : "$topN"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/trim",
+    "token" : "$trim"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/trunc",
+    "token" : "$trunc"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/tsIncrement",
+    "token" : "$tsIncrement"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/tsSecond",
+    "token" : "$tsSecond"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/type",
+    "token" : "$type"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/unsetField",
+    "token" : "$unsetField"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/vectorSearch",
+    "token" : "$vectorSearch"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/week",
+    "token" : "$week"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/year",
+    "token" : "$year"
+  }, {
+    "context" : "aggregation/expressions",
+    "page" : "aggregation/expressions/zip",
+    "token" : "$zip"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/addFields",
+    "token" : "$addFields"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/bucket",
+    "token" : "$bucket"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/bucketAuto",
+    "token" : "$bucketAuto"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/changeStream",
+    "token" : "$changeStream"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/changeStreamSplitLargeEvent",
+    "token" : "$changeStreamSplitLargeEvent"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/collStats",
+    "token" : "$collStats"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/count",
+    "token" : "$count"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/currentOp",
+    "token" : "$currentOp"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/densify",
+    "token" : "$densify"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/documents",
+    "token" : "$documents"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/facet",
+    "token" : "$facet"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/fill",
+    "token" : "$fill"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/geoNear",
+    "token" : "$geoNear"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/graphLookup",
+    "token" : "$graphLookup"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/group",
+    "token" : "$group"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/indexStats",
+    "token" : "$indexStats"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/limit",
+    "token" : "$limit"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/listClusterCatalog",
+    "token" : "$listClusterCatalog"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/listLocalSessions",
+    "token" : "$listLocalSessions"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/listSampledQueries",
+    "token" : "$listSampledQueries"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/listSearchIndexes",
+    "token" : "$listSearchIndexes"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/listSessions",
+    "token" : "$listSessions"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/lookup",
+    "token" : "$lookup"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/match",
+    "token" : "$match"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/merge",
+    "token" : "$merge"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/out",
+    "token" : "$out"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/planCacheStats",
+    "token" : "$planCacheStats"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/project",
+    "token" : "$project"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/querySettings",
+    "token" : "$querySettings"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/queryStats",
+    "token" : "$queryStats"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/rankFusion",
+    "token" : "$rankFusion"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/redact",
+    "token" : "$redact"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/replaceRoot",
+    "token" : "$replaceRoot"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/replaceWith",
+    "token" : "$replaceWith"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/sample",
+    "token" : "$sample"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/score",
+    "token" : "$score"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/scoreFusion",
+    "token" : "$scoreFusion"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/set",
+    "token" : "$set"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/setWindowFields",
+    "token" : "$setWindowFields"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/shardedDataDistribution",
+    "token" : "$shardedDataDistribution"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/skip",
+    "token" : "$skip"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/sort",
+    "token" : "$sort"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/sortByCount",
+    "token" : "$sortByCount"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/unionWith",
+    "token" : "$unionWith"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/unset",
+    "token" : "$unset"
+  }, {
+    "context" : "aggregation/stages",
+    "page" : "aggregation/stages/unwind",
+    "token" : "$unwind"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/all",
+    "token" : "$all"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/and",
+    "token" : "$and"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/bitsAllClear",
+    "token" : "$bitsAllClear"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/bitsAllSet",
+    "token" : "$bitsAllSet"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/bitsAnyClear",
+    "token" : "$bitsAnyClear"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/bitsAnySet",
+    "token" : "$bitsAnySet"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/box",
+    "token" : "$box"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/center",
+    "token" : "$center"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/centerSphere",
+    "token" : "$centerSphere"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/elemMatch",
+    "token" : "$elemMatch"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/eq",
+    "token" : "$eq"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/exists",
+    "token" : "$exists"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/expr",
+    "token" : "$expr"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/geoIntersects",
+    "token" : "$geoIntersects"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/geoWithin",
+    "token" : "$geoWithin"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/geometry",
+    "token" : "$geometry"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/gt",
+    "token" : "$gt"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/gte",
+    "token" : "$gte"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/in",
+    "token" : "$in"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/jsonSchema",
+    "token" : "$jsonSchema"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/lt",
+    "token" : "$lt"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/lte",
+    "token" : "$lte"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/maxDistance",
+    "token" : "$maxDistance"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/minDistance",
+    "token" : "$minDistance"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/mod",
+    "token" : "$mod"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/ne",
+    "token" : "$ne"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/near",
+    "token" : "$near"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/nearSphere",
+    "token" : "$nearSphere"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/nin",
+    "token" : "$nin"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/nor",
+    "token" : "$nor"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/not",
+    "token" : "$not"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/or",
+    "token" : "$or"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/polygon",
+    "token" : "$polygon"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/regex",
+    "token" : "$regex"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/size",
+    "token" : "$size"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/text",
+    "token" : "$text"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/type",
+    "token" : "$type"
+  }, {
+    "context" : "query/filters",
+    "page" : "query/filters/where",
+    "token" : "$where"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/positional",
+    "token" : "$"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/positional-filtered",
+    "token" : "$[<identifier>]"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/positional-all",
+    "token" : "$[]"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/addToSet",
+    "token" : "$addToSet"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/bit",
+    "token" : "$bit"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/currentDate",
+    "token" : "$currentDate"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/each",
+    "token" : "$each"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/inc",
+    "token" : "$inc"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/max",
+    "token" : "$max"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/min",
+    "token" : "$min"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/mul",
+    "token" : "$mul"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/pop",
+    "token" : "$pop"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/position",
+    "token" : "$position"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/pull",
+    "token" : "$pull"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/pullAll",
+    "token" : "$pullAll"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/push",
+    "token" : "$push"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/rename",
+    "token" : "$rename"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/set",
+    "token" : "$set"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/setOnInsert",
+    "token" : "$setOnInsert"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/slice",
+    "token" : "$slice"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/sort",
+    "token" : "$sort"
+  }, {
+    "context" : "query/updates",
+    "page" : "query/updates/unset",
+    "token" : "$unset"
+  } ],
   "pages" : [ {
     "context" : "aggregation/expressions",
     "examples" : [ {

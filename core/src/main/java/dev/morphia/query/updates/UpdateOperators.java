@@ -13,7 +13,14 @@ import static java.util.Collections.singletonList;
 
 /**
  * Defines helper methods for specifying operations for updates or findAndModify
+ * <p>
+ * A field path given to any of these operators can use the positional operators: {@code $} updates the first array element the
+ * query matched, {@code $[]} updates every element, and {@code $[<identifier>]} updates the elements an array filter matches (see
+ * {@link dev.morphia.UpdateOptions#arrayFilters(java.util.List)}).
  *
+ * @update.operator $
+ * @update.operator $[]
+ * @update.operator $[&lt;identifier&gt;]
  * @see Query#update(UpdateOperator...)
  * @see Query#modify(UpdateOperator, UpdateOperator...)
  * @since 2.0
