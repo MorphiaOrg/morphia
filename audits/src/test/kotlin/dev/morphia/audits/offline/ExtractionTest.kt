@@ -300,4 +300,107 @@ class ExtractionTest {
             missing,
         )
     }
+
+    @Test
+    fun aChangedExampleIsRefreshedAndKeepsItsReviewedFields() {
+        val first = Extraction.extract(repository, inventory(), ExampleOverrides())
+        val reviewed =
+            BsonDocument.parse(first.written.getValue(path)).apply {
+                getDocument("comparison")["order"] = BsonString("ORDERED")
+            }
+        Files.createDirectories(repository.resolve(path).parent)
+        Files.writeString(repository.resolve(path), reviewed.toJson())
+        val committed = first.inventory
+        val page = committed.pages[0]
+        val changed =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1, qty: 9 }])"),
+                block(BlockRole.ACTION, "db.items.find({ qty: { \$gt: 8 } })"),
+                block(BlockRole.EXPECTED, "[ { _id: 1, qty: 9 } ]"),
+            )
+        val current =
+            committed.copy(
+                pages =
+                    listOf(page.copy(examples = listOf(page.examples[0].copy(blocks = changed))))
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        val scenario = BsonDocument.parse(refreshed.written.getValue(path))
+        assertEquals(
+            BsonDocument.parse("{qty: {\$gt: 8}}"),
+            scenario.getDocument("action").getDocument("filter"),
+        )
+        assertEquals("ORDERED", scenario.getDocument("comparison").getString("order").value)
+        // An unchanged example isn't rewritten.
+        assertEquals(
+            emptyMap<String, String>(),
+            Extraction.refresh(repository, committed, committed, ExampleOverrides()).written,
+        )
+    }
+
+    @Test
+    fun anExampleWhoseCodeVanishedIsAFailure() {
+        val committed = Extraction.extract(repository, inventory(), ExampleOverrides()).inventory
+        val page = committed.pages[0]
+        val current =
+            committed.copy(
+                pages =
+                    listOf(
+                        page.copy(examples = listOf(page.examples[0].copy(blocks = emptyList())))
+                    )
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        assertEquals(
+            listOf("its source changed, and the reader no longer finds the example's code"),
+            refreshed.failures.map { it.detail },
+        )
+    }
+
+    @Test
+    fun aRetitledExampleIsRefreshedByItsOwner() {
+        val first = Extraction.extract(repository, inventory(), ExampleOverrides())
+        Files.createDirectories(repository.resolve(path).parent)
+        Files.writeString(repository.resolve(path), first.written.getValue(path))
+        val committed = first.inventory
+        val page = committed.pages[0]
+        val changed =
+            listOf(
+                block(BlockRole.DATA, "db.items.insertMany([{ _id: 1, qty: 9 }])"),
+                block(BlockRole.ACTION, "db.items.find({ qty: { \$gt: 8 } })"),
+            )
+        val current =
+            committed.copy(
+                pages =
+                    listOf(
+                        page.copy(
+                            examples =
+                                listOf(
+                                    page.examples[0].copy(
+                                        title = "Match Larger Quantities",
+                                        blocks = changed,
+                                    )
+                                )
+                        )
+                    )
+            )
+        val refreshed = Extraction.refresh(repository, current, committed, ExampleOverrides())
+        assertTrue(path in refreshed.written, refreshed.toString())
+    }
+
+    @Test
+    fun siblingsWithOneTitleFailSeparately() {
+        val unreadable = listOf(block(BlockRole.ACTION, "db.items.find({ qty: 1 }).limit(1)"))
+        val page = inventory().pages[0]
+        val siblings =
+            listOf(
+                page.examples[0].copy(title = "main", stem = "first", blocks = unreadable),
+                page.examples[0].copy(title = "main", stem = "second", blocks = unreadable),
+            )
+        val result =
+            Extraction.extract(
+                repository,
+                inventory().copy(pages = listOf(page.copy(examples = siblings))),
+                ExampleOverrides(),
+            )
+        assertEquals(listOf("main", "main#2"), result.failures.map { it.title })
+    }
 }

@@ -43,6 +43,9 @@ data class UntestedExample(
 /** `audits/catalog/untested-examples.json`: the reviewed baseline of untested scenarios. */
 data class UntestedExamples(val schemaVersion: Int = 1, val examples: List<UntestedExample>)
 
+/** An in-scope example, or a page, with no scenario: [line] says why; [key] names it stably. */
+data class MissingScenario(val key: String, val line: String)
+
 /** One entry of the work queue: a scenario with no test, and the test it needs. */
 data class UntestedScenario(
     val scenario: String,
@@ -75,7 +78,14 @@ object Coverage {
         repository: Path,
         inventory: ExampleInventory,
         overrides: ExampleOverrides,
-    ): List<String> {
+    ): List<String> = missing(repository, inventory, overrides).map { it.line }
+
+    /** [missingScenarios], each with a key that stays the same while the example does. */
+    fun missing(
+        repository: Path,
+        inventory: ExampleInventory,
+        overrides: ExampleOverrides,
+    ): List<MissingScenario> {
         val excluded =
             overrides.overrides
                 .filter { it.exclude }
@@ -84,23 +94,52 @@ object Coverage {
         return inventory.pages
             .filter { it.context in Extraction.FAMILIES }
             .flatMap { page ->
-                page.problems.map { "${page.id}: the reader couldn't read the page: $it" } +
+                val problems =
+                    page.problems.mapIndexed { index, problem ->
+                        val code = problem.substringBefore(':')
+                        // A code the page reports twice keeps the two apart by order.
+                        val ordinal =
+                            page.problems.take(index).count { it.substringBefore(':') == code }
+                        MissingScenario(
+                            "${page.id}#$code" + if (ordinal > 0) "#${ordinal + 1}" else "",
+                            "${page.id}: the reader couldn't read the page: $problem",
+                        )
+                    }
+                problems +
                     page.examples
+                        .zip(exampleKeys(page))
                         // An owned example must still have its scenario.
-                        .filter {
-                            it.status != ExampleStatus.OWNED ||
+                        .filter { (example, _) ->
+                            example.status != ExampleStatus.OWNED ||
                                 !Files.isRegularFile(
-                                    repository.resolve("$RESOURCES/${it.owner}/scenario.json")
+                                    repository.resolve("$RESOURCES/${example.owner}/scenario.json")
                                 )
                         }
-                        .filter {
-                            Triple(page.id, it.title, Overrides.identity(it.blocks)) !in excluded
+                        .filter { (example, _) ->
+                            Triple(page.id, example.title, Overrides.identity(example.blocks)) !in
+                                excluded
                         }
-                        .map {
-                            "${page.id} \"${it.title}\": ${it.status}${it.detail?.let { d -> " ($d)" } ?: ""}"
+                        .map { (example, key) ->
+                            MissingScenario(
+                                key,
+                                "${page.id} \"${example.title}\": ${example.status}" +
+                                    (example.detail?.let { " ($it)" } ?: ""),
+                            )
                         }
             }
     }
+
+    /**
+     * Each example's key: its page and title, and its place among the page's examples with that
+     * title when it isn't the first. It leaves the example's source out, so an edit upstream keeps
+     * the key, and an issue filed for it is updated rather than filed again.
+     */
+    fun exampleKeys(page: DocumentedPage): List<String> =
+        page.examples.mapIndexed { index, example ->
+            val ordinal =
+                page.examples.take(index).count { it.title.trim() == example.title.trim() }
+            "${page.id}/${example.title.trim()}" + if (ordinal > 0) "#${ordinal + 1}" else ""
+        }
 
     /**
      * Every committed scenario of the operator families with no test method, as the work queue

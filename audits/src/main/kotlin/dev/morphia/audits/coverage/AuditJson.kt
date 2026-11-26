@@ -18,6 +18,10 @@ import dev.morphia.audits.extraction.UntestedExamples
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.publish.Finding
+import dev.morphia.audits.publish.FindingsReport
+import dev.morphia.audits.publish.PublicationJournal
+import dev.morphia.audits.publish.PublicationPolicy
 import dev.morphia.audits.scenarios.ScenarioExtractionPlan
 import dev.morphia.audits.shell.ShellProgramRequest
 import dev.morphia.audits.sources.GitSourceManifest
@@ -126,6 +130,14 @@ object AuditJson {
     fun overrides(json: String): ExampleOverrides = read(json, ExampleOverrides::class.java)
 
     fun untested(json: String): UntestedExamples = read(json, UntestedExamples::class.java)
+
+    fun publicationJournal(json: String): PublicationJournal =
+        read(json, PublicationJournal::class.java)
+
+    fun publicationPolicy(json: String): PublicationPolicy =
+        read(json, PublicationPolicy::class.java)
+
+    fun findings(json: String): List<Finding> = read(json, FindingsReport::class.java).findings
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

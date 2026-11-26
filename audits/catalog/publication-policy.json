@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "FAILING_AUDIT": [
+      "bug"
+    ],
+    "MISSING_API": [
+      "enhancement",
+      "proposed"
+    ],
+    "NEW_EXAMPLE": [
+      "Task",
+      "proposed"
+    ]
+  },
+  "schemaVersion": 1
+}

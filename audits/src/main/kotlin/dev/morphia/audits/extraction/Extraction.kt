@@ -45,7 +45,8 @@ object Extraction {
                 if (page.context !in FAMILIES) return@map page
                 page.copy(
                     examples =
-                        page.examples.map examples@{ example ->
+                        page.examples.zip(Coverage.exampleKeys(page)).map examples@{ (example, key)
+                            ->
                             val override =
                                 byIdentity[
                                     Triple(
@@ -55,7 +56,12 @@ object Extraction {
                                     )]
                             override?.let { used += it }
                             fun fail(detail: String): DocumentedExample {
-                                failures += ExtractionFailure(page.id, example.title, detail)
+                                failures +=
+                                    ExtractionFailure(
+                                        page.id,
+                                        key.removePrefix("${page.id}/"),
+                                        detail,
+                                    )
                                 return example
                             }
                             if (override?.exclude == true) return@examples example
@@ -168,6 +174,110 @@ object Extraction {
                         },
             ),
         )
+    }
+
+    /** The fields a refresh takes from the page: everything the page documents. */
+    private val DOCUMENTED =
+        listOf("source", "dataset", "collections", "indexes", "action", "expected")
+
+    /**
+     * Re-extracts each owned example whose source changed since [committed] recorded it: what a
+     * docs bump, or the weekly run against the docs' head, needs so that the tests run against what
+     * the page now says. Only the documented fields are replaced; a scenario's title, comparison,
+     * requirements and skips are reviewed decisions, and stay.
+     */
+    fun refresh(
+        repository: Path,
+        current: ExampleInventory,
+        committed: ExampleInventory,
+        overrides: ExampleOverrides,
+    ): ExtractionResult {
+        val byIdentity =
+            overrides.overrides.associateBy { Triple(it.page, it.title, it.blocksSha256) }
+        val pairs =
+            committed.pages.flatMap { page -> page.examples.zip(Coverage.exampleKeys(page)) }
+        val before = pairs.associate { (example, key) -> key to example }
+        // A retitled example keeps its scenario, so its owner finds it when its key doesn't.
+        val byOwner =
+            pairs.mapNotNull { (example, _) -> example.owner?.let { it to example } }.toMap()
+        val written = sortedMapOf<String, String>()
+        val failures = mutableListOf<ExtractionFailure>()
+        current.pages
+            .filter { it.context in FAMILIES }
+            .forEach { page ->
+                page.examples.zip(Coverage.exampleKeys(page)).forEach { (example, key) ->
+                    val owner = example.owner
+                    val was = owner?.let { byOwner[it] } ?: before[key]
+                    // Examples that share a title are told apart by their place, as their keys are.
+                    val label = key.removePrefix("${page.id}/")
+                    // A page edit that leaves the reader nothing to extract would otherwise keep
+                    // the
+                    // old scenario passing silently.
+                    if (
+                        example.status == ExampleStatus.OWNED &&
+                            example.blocks.isEmpty() &&
+                            was?.blocks.orEmpty().isNotEmpty()
+                    ) {
+                        failures +=
+                            ExtractionFailure(
+                                page.id,
+                                label,
+                                "its source changed, and the reader no longer finds the example's code",
+                            )
+                        return@forEach
+                    }
+                    if (
+                        example.status != ExampleStatus.OWNED ||
+                            owner == null ||
+                            example.blocks.isEmpty() ||
+                            was == null ||
+                            Overrides.identity(was.blocks) == Overrides.identity(example.blocks)
+                    ) {
+                        return@forEach
+                    }
+                    val path = "core/src/test/resources/dev/morphia/test/$owner/scenario.json"
+                    val file = repository.resolve(path)
+                    if (!Files.isRegularFile(file)) return@forEach
+                    val override =
+                        byIdentity[
+                            Triple(page.id, example.title, Overrides.identity(example.blocks))]
+                    try {
+                        val documented =
+                            Documented.documented(
+                                owner,
+                                null,
+                                example.blocks,
+                                override?.alternatives == true,
+                            )
+                        val fresh =
+                            BsonDocument.parse(
+                                ScenarioWriter.render(
+                                    ScenarioInput(
+                                        page,
+                                        owner.substringAfterLast('/'),
+                                        example.name ?: example.title,
+                                        documented,
+                                        overrides.sampleDatasets[documented.collection].takeIf {
+                                            example.blocks.none { it.role == BlockRole.DATA }
+                                        },
+                                        override,
+                                    )
+                                )
+                            )
+                        val scenario = BsonDocument.parse(Files.readString(file))
+                        DOCUMENTED.forEach { field -> scenario[field] = fresh[field]!! }
+                        written[path] = ScenarioWriter.text(scenario)
+                    } catch (failure: IllegalArgumentException) {
+                        failures +=
+                            ExtractionFailure(
+                                page.id,
+                                label,
+                                "its source changed, and ${failure.message}",
+                            )
+                    }
+                }
+            }
+        return ExtractionResult(written, failures, current)
     }
 
     /** The committed scenario in [path]'s operator folder whose action equals [text]'s, if any. */
