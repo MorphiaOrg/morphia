@@ -1,0 +1,656 @@
+{
+  "schemaVersion": 1,
+  "examples": [
+    {
+      "page": "aggregation/expressions/addToSet",
+      "title": "main",
+      "actionSha256": "53bb87e0636c400287f1545fc1dae534098282224a350345c81b33016d785919",
+      "name": "Collect the Genres of Each Director",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/allElementsTrue",
+      "title": "main",
+      "actionSha256": "d854e31b8c480746f81651ea0db98b83585c1c74bbdf058cf20c45dc33a96d1a",
+      "name": "Check Whether Every Response Is True",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/anyElementTrue",
+      "title": "main",
+      "actionSha256": "ac564cbc13801311506b58471c649960fe7817f376979a21be3a5d2cee52f9fd",
+      "name": "Check Whether Any Response Is True",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/count-accumulator",
+      "title": "main",
+      "actionSha256": "1a94a92286a9b4a4439f4ba6dd23a6f7ac0cf8489d6955256b37fc17d8649645",
+      "name": "Count the Movies in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/dateFromParts",
+      "title": "main",
+      "actionSha256": "865b4da61f04423a7735782cdefd35f7d8dce3e2d0826daeb32e0a7120986778",
+      "name": "Build Dates from Their Parts",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/dateFromString",
+      "title": "Converting Dates",
+      "actionSha256": "ce57a2769a72071daff953cfb8ba1e515b848a4f82331367ff8dce121fa50a24",
+      "name": "Convert Dates in Each Document's Time Zone",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/divide",
+      "title": "main",
+      "actionSha256": "802367d4ce0b501d7fa38509c295bd9d34d8849cd82ecf3a3a43d67be37c32a0",
+      "name": "Divide Hours into Workdays",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/first",
+      "title": "main",
+      "actionSha256": "84d4c5beb3b9d3f385f9b604ad5623d2789047d3b5e132dc1de32d8325a847ec",
+      "name": "Find the First Movie in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/indexOfBytes",
+      "title": "main",
+      "actionSha256": "c2e4b37daf4c7037b5b3f3339d23d1c4bc4674d4748b43410953ad629186b1ac",
+      "name": "Find a Substring's Byte Index",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/indexOfCP",
+      "title": "main",
+      "actionSha256": "26abb3b56b8f489bcbc5c690066ffb31daee26b701dd4c5cda812edfac805970",
+      "name": "Find a Substring's Code Point Index",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/last",
+      "title": "main",
+      "actionSha256": "e13e16c1f6b2543bd6075cd3d454e3fc4751561eb2db79a45dcffaac540dad49",
+      "name": "Find the Last Movie in Each Genre",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/ltrim",
+      "title": "main",
+      "actionSha256": "461e55ebeebca43925fb687cd5b71690c26bcf8372ae42f1401cef167b4b040b",
+      "name": "Trim Leading Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/maxN-array-element",
+      "title": "main",
+      "actionSha256": "8f413a1f4dd1e0b75d78ff4e98a813b8f6b786c38b4993c35a72d5f09d36cffe",
+      "name": "Find the Top Two Cast Members",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/median",
+      "title": "main",
+      "actionSha256": "188ea803f7e116fa0d014b50c932d5ee561af4fbd905d8af7acab77b7068a2c8",
+      "name": "Calculate the Median Rating by Year",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/mergeObjects",
+      "title": "main",
+      "actionSha256": "877dcd95130975d42cd33a17a3903417d91bc5f3d4cc13411330aa26ab47cc4e",
+      "name": "Merge the Ratings of Each Movie",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"indexKey\"",
+      "actionSha256": "280fae49c4693652fdc247ce37dcf2b342f7862d15d118dbd03211cf4eadb61c",
+      "name": "Return the Index Key of a Matched Type in an Aggregation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"indexKey\"",
+      "actionSha256": "9a03d252106277e10ce8a3ea7f02c5a4a85a3b76b91387124186acc5a1e19738",
+      "name": "Return the Index Key of a Matched Type in a Find",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"indexKey\"",
+      "actionSha256": "9c26bf665b74b46a1b1fe1f9194bbf1f40aeb85f89a26d38dd6f2601ec8b789c",
+      "name": "Return the Index Key of a Price Range in an Aggregation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"indexKey\"",
+      "actionSha256": "ce238b656775a55c3bee23905ff8fbd1656a47c746bd6a1d1706be6cc1168adf",
+      "name": "Return the Index Key of a Price Range in a Find",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/meta",
+      "title": "$meta: \"textScore\"",
+      "actionSha256": "58f7d9ff2811de1222d82760f6bd6b8fb1aec513068fb94e9fdad7755a52df79",
+      "name": "Group by Text Score",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/push",
+      "title": "main",
+      "actionSha256": "08d0e38c94df21c3d78edc77666013e7d4e056c46fb3582cd939e798856ad3b2",
+      "name": "Collect the First Genre of Each Director's Movies",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/regexFind",
+      "title": "$regexFind and Its Options",
+      "actionSha256": "1f2f7891906c9b6c5c06ccceb58ed22c3bc1eb2ca7e4886c3158a982eec9a4ce",
+      "name": "Find the First Line or Link",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/regexFind",
+      "title": "$regexFind and Its Options",
+      "actionSha256": "24c1c746b2f6fd9901735f7bc30d5746505114fe597c17463b54cb9ded748d06",
+      "name": "Find the First Tier",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/regexFindAll",
+      "title": "$regexFindAll and Its Options",
+      "actionSha256": "1f04ac6bf1584e79290aa03c41508ed82d069cd8152115357e399412aaf0caa1",
+      "name": "Find Every Line or Link",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/regexFindAll",
+      "title": "$regexFindAll and Its Options",
+      "actionSha256": "6ef2436039f65b91884b9e03e3c18fef963f33750c2133b5178cc7903967c7a8",
+      "name": "Find Every Tier",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/regexMatch",
+      "title": "$regexMatch and Its Options",
+      "actionSha256": "e71976556699627cfcb553fa9797bd3cb851b76d2b6228ca80ed3d85fed44eb6",
+      "name": "Match Line or Link",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/round",
+      "title": "main",
+      "actionSha256": "7a309af5d7e8414c924d39dde4efd2f1eaf4d9dac7f34fe37a251eb516a482d9",
+      "name": "Round to the Nearest Ten",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/round",
+      "title": "main",
+      "actionSha256": "c99f1f78637050f6d44a1b6e75e1702eff73d5070d5fcfcb84bf60a8a959e5ef",
+      "name": "Round to a Whole Number",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/rtrim",
+      "title": "main",
+      "actionSha256": "1ab8ee6b5ac5c6da2e6f6565971f2ddb539b9a760bbb396ac683a25ec3c54d70",
+      "name": "Trim Trailing Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/sampleRate",
+      "title": "main",
+      "actionSha256": "9eb16fc0d6e747192d63d389b1034d7b803eb3913a9e84b1b88f6414d764dcab",
+      "name": "Count a Random Sample",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/setField",
+      "title": "Remove Fields that Contain Periods (.)",
+      "actionSha256": "65b4bbe2c01fb04c1d545d70153703e261dc6bf4113e027abd56e51e10f113bc",
+      "name": "Remove a Field with a Period Using $unsetField",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/setField",
+      "title": "Remove Fields that Start with a Dollar Sign ($)",
+      "actionSha256": "e9d87a42974717b0aaf85b7560e1dea855a5f9f67e2de26a48ec8ef8f06c886a",
+      "name": "Remove a Dollar-Prefixed Field with $unsetField",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/setField",
+      "title": "Remove Fields that Start with a Dollar Sign ($)",
+      "actionSha256": "f2e9f9c7161b780ad19d31d3e0fde654012a50bb4b7e177de5a7c1ae44ccfec6",
+      "name": "Remove a Dollar-Prefixed Field with $setField",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/sigmoid",
+      "title": "main",
+      "actionSha256": "fc237c4d2252310228970e1c493c3dd128a2730f29c7b8901d1534ec0b538f20",
+      "name": "Scale Scores with a Sigmoid",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityCosine",
+      "title": "main",
+      "actionSha256": "761c882c498b557b206107249e2fbcfe23ff60f1f26e646e4210f79134cbd98a",
+      "name": "Compute Raw and Normalized Cosine Similarity",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityDotProduct",
+      "title": "main",
+      "actionSha256": "7d7f0bf63a3871a56df88c55d6d5e81c4404a7447cebae6a713f498db15e635e",
+      "name": "Compute Raw and Normalized Dot Products",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/similarityEuclidean",
+      "title": "main",
+      "actionSha256": "039cd71bf2c4e59b2a61141123e73452d0c6796e82e828d280be950e501f9384",
+      "name": "Compute Raw and Normalized Euclidean Distances",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/stdDevPop",
+      "title": "main",
+      "actionSha256": "97b389aad0872aa5aba9904db093b1b5836d7e7e0439dd05c537d67e3f431a07",
+      "name": "Find the Directors with the Most Varied Ratings",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/stdDevSamp",
+      "title": "main",
+      "actionSha256": "4b5801d1d06f8a15b1728cc4d91f204188c911ae13fb157f6119e05f2f2e2b1e",
+      "name": "Find the Directors with the Most Varied Sampled Ratings",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/substr",
+      "title": "main",
+      "actionSha256": "ccf8881fbc74bf2bcb5aa4933e1b43ccbf2990fe6e9bddb16a9593e1fff9532c",
+      "name": "Split Titles into Two Parts",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/sum",
+      "title": "main",
+      "actionSha256": "8ab0a79d619ee161ed1fc77568652b6cc43b36183c23e55e80efafb2e4ebb0f8",
+      "name": "Total the Votes by Rating",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/trim",
+      "title": "main",
+      "actionSha256": "2b53649596e636143a08204e97a41eedbd7d57f08b860f013318d74e2ac4b0c7",
+      "name": "Trim Surrounding Whitespace",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/expressions/trunc",
+      "title": "main",
+      "actionSha256": "79f7d9c090a22304aa9eab96018c85298ab2939d45d9119f82675fafed32ab80",
+      "name": "Truncate to Tens",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/expressions/trunc",
+      "title": "main",
+      "actionSha256": "dd795ae32c1afe8dfa1213eb899da281c63541ef88308249a20aabfce8931fa1",
+      "name": "Truncate to a Whole Number",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/addFields",
+      "title": "Overwriting an Existing Field",
+      "actionSha256": "89993056e3ee816d2a66650430801b9323e422be1ac9ed843c585c4af5b46d5d",
+      "name": "Add Fifteen Minutes to the Runtime",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/addFields",
+      "title": "Overwriting an Existing Field",
+      "actionSha256": "ce9390daa8cef8eeb28c3f171f03c8bc90b900b64edd09203230f9f85f216479",
+      "name": "Replace the Id and Title",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/addFields",
+      "title": "Remove Fields",
+      "actionSha256": "88447f5cea6ecee25abd4c19418487c1421cc00485371800894545a10ebcb51f",
+      "name": "Remove the Plot",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/addFields",
+      "title": "Remove Fields",
+      "actionSha256": "9eecd139e361e16def8d11fd536b36868ed36842300bae2a3b56259d16d79b8f",
+      "name": "Remove a Missing Rating",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/bucketAuto",
+      "title": "Multi-Faceted Aggregation",
+      "actionSha256": "49c497fa22b49783b1df464f3eb1938f1e8ca2f690771b7bb759cf6042ca1313",
+      "owner": "aggregation/stages/bucketAuto/multiFacetedAggregation",
+      "reason": "the AsPipeline fixture tests the same example as a pipeline list"
+    },
+    {
+      "page": "aggregation/stages/facet",
+      "title": "main",
+      "actionSha256": "acad323ef8f2bdea722a8a0908b578b88e6f87364f865e6276d188cd56b7ee51",
+      "name": "Categorize Movies Several Ways",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/stages/limit",
+      "title": "main",
+      "actionSha256": "0d9a3c4499ee595a0a63b9a4088cec3be70a9d0d4ddc6c8b66d6650c94d089ec",
+      "name": "Return the First Five Movies",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "aggregation/stages/lookup",
+      "title": "Perform a Concise Correlated Subquery with $lookup",
+      "actionSha256": "52a9b7a58a3cd5157bcce4f87531b2779238a7a7cbc2f97b2fc7c2d48e42feda",
+      "name": "Correlate with Variables Only",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/lookup",
+      "title": "Perform a Concise Correlated Subquery with $lookup",
+      "actionSha256": "ea6a4bd51f0bf6b368429b16ad4969761587d7b89a34300a7febf37132915a33",
+      "name": "Correlate with Local and Foreign Fields",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "On-Demand Materialized View: Initial Creation",
+      "actionSha256": "3e1b19c5bba77b08ea6a2736e8d91b31e58aa4ac5fea7a9fd981133791c93752",
+      "name": "Summarize Ratings into Another Collection",
+      "reason": "the page gives its only example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Exclude Fields from Embedded Documents",
+      "actionSha256": "bc9e5846612ed185f1e844e17bf3b7b56bd9765ec58c0b2c340ddc5402f37d7e",
+      "name": "Exclude an Embedded Field with Dot Notation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Exclude Fields from Embedded Documents",
+      "actionSha256": "ffa88523b3f7a9f1cdd3bf100024fd67c73c882ddd76643cd809df5719138deb",
+      "name": "Exclude an Embedded Field with a Nested Document",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Include Specific Fields from Embedded Documents",
+      "actionSha256": "9c35dfd848afeb3ec171c245311bc786d7927a67e8ad276d557faa52d15f4b0c",
+      "name": "Include an Embedded Field with Dot Notation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Include Specific Fields from Embedded Documents",
+      "actionSha256": "e47aeb3bb067f2c7ec12485123b4181d97b1972439d92492693b5c44db88dfed",
+      "name": "Include an Embedded Field with a Nested Document",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Project New Array Fields",
+      "actionSha256": "645c17272ec42fa05029805ee61247e40a8272b2bb4b9321f32c7a9f9120a0eb",
+      "name": "Project an Array of Fields",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/project",
+      "title": "Project New Array Fields",
+      "actionSha256": "b35cf2bed3d12a030f02661715b377c64960b89b179a918ce60965b55abb45fe",
+      "name": "Project an Array with a Missing Field",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/replaceWith",
+      "title": "main",
+      "actionSha256": "bcb7cb77b65de38c219114b6a2748f3e91d440a108fc44ba4166b29cb19dbad7",
+      "name": "Pivot Sales by Quarter",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/unset",
+      "title": "Remove a Single Field",
+      "actionSha256": "ece2a983c98fad3ac7eb876b2c7aaa0af140051a35199fe2bb04dc065d310903",
+      "name": "Remove a Field Listed in an Array",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/all",
+      "title": "Use $all with $elemMatch",
+      "actionSha256": "9df4c250c25187aa89ed3bc35a07830b6b2270c5145c56113b22a02d72913ec8",
+      "name": "Match an Embedded Value with $all",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/all",
+      "title": "Use $all with $elemMatch",
+      "actionSha256": "db71c785bd9d2b8cc50cfeaa1354b9a5cc0c115cd28b3f187c33c55d4f01f023",
+      "name": "Match an Embedded Value by Equality",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/and",
+      "title": "main",
+      "actionSha256": "01c4c2bdf27ece8ae1c7fb76cb7a4e391da68e3504fb218451945f2e0a05fb23",
+      "name": "Exclude Values with $nin",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/and",
+      "title": "main",
+      "actionSha256": "28a99f0a8e170bca63b8ffa9b9d3b8ab8dff105974ae92ec3e5e8d7c4fae3f39",
+      "name": "Combine Conditions on One Field",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/and",
+      "title": "main",
+      "actionSha256": "45bbfcbf2f4dc2eefa58e9b3c891291e8263ae66eedc3d9bde2cadba67e731b7",
+      "name": "Require Two Values of One Field",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/and",
+      "title": "main",
+      "actionSha256": "52f711d8006cd8dd53d6e04cf64af1c390ef6a4b323b8e139a84dc1354d57a83",
+      "name": "Match Either Value with $in",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/and",
+      "title": "main",
+      "actionSha256": "d8d657b3619f44da4b125870bb74e8a29c2af06aa1da887a4f42ab3f4619fa53",
+      "name": "Require Both Values with $all",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/elemMatch",
+      "title": "main",
+      "actionSha256": "b40eaf38890d9f3c8b3e2f425bb8a0a034addeb69019e1f92100e25e63c0f398",
+      "name": "Match an Element with $elemMatch",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/elemMatch",
+      "title": "main",
+      "actionSha256": "d4ee8e7e028a7949ac7541f34ed9d3c5df6fd510697da063ee7950c872233c40",
+      "name": "Match When No Element Is xyz",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/elemMatch",
+      "title": "main",
+      "actionSha256": "d5529215930ae1f790336fcfd9dda0a8fa427a734b279be5b9798da979ae396d",
+      "name": "Match an Element That Isn't xyz",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/elemMatch",
+      "title": "main",
+      "actionSha256": "e0d42a14f07c83ab23e2dc5ce14829ab9984fa6f2ddf734b6d36e8f65d89bf5f",
+      "name": "Match an Element with Dot Notation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/eq",
+      "title": "Array Element Equals a Value",
+      "actionSha256": "cec796547f5dedb0a18f94df5235860d4e5a48bd9dd47188ca8b8a4d2e7c472f",
+      "name": "Match One Array Element",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/eq",
+      "title": "Equals a Specified Value",
+      "actionSha256": "e1ffe9129e84a91107a98566d5c0ac064cf528a52979b8b5dd5e4d3ef986e143",
+      "name": "Match a Quantity Exactly",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/eq",
+      "title": "Equals an Array Value",
+      "actionSha256": "0ce698bb9952fdaac5d2408b468a47e287157a7df3a6a17d7d635ed2fefab7df",
+      "name": "Match an Array Exactly",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/eq",
+      "title": "Field in Embedded Document Equals a Value",
+      "actionSha256": "c6d631398ae13f757366fbf1e152f3eae1ce476102154fceca2b6749a93945dc",
+      "name": "Match an Embedded Field with Dot Notation",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/maxDistance",
+      "title": "main",
+      "actionSha256": "e3fb3ac1b0efdb68839ea35fb58eb46bf0c4f3ad8abdb8e4f8cbcc259451e86a",
+      "name": "Find Places Near a Point Within a Distance",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/filters/mod",
+      "title": "Floating Point Arguments",
+      "actionSha256": "b13dab4c8fe93e0961a7fe82edaee694d6dffd44f261fcc548158bdcec5dfaa5",
+      "name": "Divide by 4.99",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/mod",
+      "title": "Floating Point Arguments",
+      "actionSha256": "f5a5fdbfcabd816d91a158316ecea5e4d19992cba29d0441c9d3c8680c7bf128",
+      "name": "Divide by 4.5",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/regex",
+      "title": "Extend Regex Options to Match Characters Outside of ASCII",
+      "actionSha256": "3429e1aa070529af34a8b0eb137b3a2ceb84768a1ab75362e9c55979f6ffc92e",
+      "name": "Match Unicode Word Boundaries",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/regex",
+      "title": "Multiline Match for Lines Starting with Specified Pattern",
+      "actionSha256": "1acd8d3a1163dfe5b84c15df570ab9bdcb091914a04c08e699599ed78483d337",
+      "name": "Match S Anywhere",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/regex",
+      "title": "Multiline Match for Lines Starting with Specified Pattern",
+      "actionSha256": "eb02ab366f7905689b11d7ad68b88a1af9fc4bb4b4ee6cd88cd8064b3b994455",
+      "name": "Match Lines That Start with S",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/text",
+      "title": "Search for an Exact String",
+      "actionSha256": "7eba1d3738880c9b3088f906cb063bebcb2621d3c4680220935d330161141dcd",
+      "name": "Search for Two Exact Phrases",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/text",
+      "title": "Search for an Exact String",
+      "actionSha256": "8250e19f1852c00634324e88654e165a8cc4c4b6255cfcbeb8861d845bda945d",
+      "name": "Search for One Exact Phrase",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/text",
+      "title": "Sort by Relevance Score",
+      "actionSha256": "f4d0c0955b7346d657c3064678dea3cfe5168f5c242bdb85eeab69df2ff16c85",
+      "name": "Sort Articles by Their Text Score",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/type",
+      "title": "Querying by Data Type",
+      "actionSha256": "84685dfc533e691999db75301acb565b6a2fc8a01b20b43b693da7a4a4895320",
+      "name": "Match String Ratings by Type Alias",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/type",
+      "title": "Querying by Data Type",
+      "actionSha256": "99d54bcc38b997f26cf339b3870c9f5d19d2cae4aaf12fa56b3bbc500a01efa5",
+      "name": "Match String Ratings by Type Number",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/type",
+      "title": "Querying by Data Type",
+      "actionSha256": "cf5ce41e809c86ef9cc77e0f38db84a35b5c48ab443502f8c044eb6061d72ad9",
+      "name": "Match Numeric Ratings",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/type",
+      "title": "Querying by Multiple Data Types",
+      "actionSha256": "82ad4fb869ecad965f29dd67a368136d45754148039a9186787933f83f036a96",
+      "name": "Match Several Types by Number",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/filters/type",
+      "title": "Querying by Multiple Data Types",
+      "actionSha256": "9eb1d96bcd464f0204a39dac12f6b245d764915699b0dadf8f4b1b27f65c424f",
+      "name": "Match Several Types by Alias",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "query/updates/setOnInsert",
+      "title": "main",
+      "actionSha256": "3c1d798a7f89d1ab9cb3560e375bfa2dce8ff409a34e46df2b175920c257b4d0",
+      "name": "Set Fields Only on Insert",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    },
+    {
+      "page": "query/updates/unset",
+      "title": "main",
+      "actionSha256": "3f133162ba5d24e43586fa330c54726ac13e7c0a655413a1ff74eaa686cf27cc",
+      "name": "Remove Fields from a Document",
+      "reason": "the page gives its only example no title; the name says what the example does"
+    }
+  ]
+}

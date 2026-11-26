@@ -25,7 +25,7 @@ public class SortArrayExpressionCodec extends BaseExpressionCodec<SortArrayExpre
             } else {
                 document(writer, "sortBy", () -> {
                     for (Sort s : sort) {
-                        writer.writeInt64(s.getField(), s.getOrder());
+                        writer.writeInt32(s.getField(), s.getOrder());
                     }
                 });
             }

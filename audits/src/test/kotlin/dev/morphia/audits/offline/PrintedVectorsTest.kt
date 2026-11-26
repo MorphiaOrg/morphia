@@ -1,0 +1,103 @@
+package dev.morphia.audits.offline
+
+import dev.morphia.audits.published.PublishedArray
+import dev.morphia.audits.published.PublishedComparison
+import dev.morphia.audits.published.PublishedDocument
+import dev.morphia.audits.published.PublishedEncoding
+import dev.morphia.audits.published.PublishedKind
+import dev.morphia.audits.published.PublishedValue
+import dev.morphia.audits.semantics.ResultOrder
+import java.nio.file.Files
+import java.nio.file.Path
+import org.bson.BsonDocument
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+
+/**
+ * Pins the printed-result comparison; core's `PrintedResults` will run the same vectors (step 3).
+ */
+class PrintedVectorsTest {
+    @Test
+    fun goldenVectorsMatchThePublishedComparison() {
+        val root =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("core/src/test/resources")) }
+        val vectors =
+            BsonDocument.parse(
+                Files.readString(
+                    root.resolve("core/src/test/resources/dev/morphia/test/vectors/printed.json")
+                )
+            )
+        val kinds = mutableSetOf<PublishedKind>()
+        val verdicts = mutableSetOf<String>()
+        vectors
+            .getArray("vectors")
+            .map { it.asDocument() }
+            .forEach { vector ->
+                val verdict =
+                    try {
+                        val constraints =
+                            vector.getArray("constraints").map {
+                                PublishedEncoding.decode(it) as PublishedDocument
+                            }
+                        constraints.forEach { collect(it, kinds) }
+                        // Encoding is lossless, so scenarios read back what migration wrote.
+                        assertEquals(
+                            vector.getArray("constraints").values,
+                            constraints.map { PublishedEncoding.encode(it) },
+                        )
+                        PublishedComparison.compareResults(
+                                constraints,
+                                vector.getArray("actual").map { it.asDocument() },
+                                ResultOrder.valueOf(vector.getString("order").value),
+                                unorderedArrays = StrictVectorsTest.unorderedArrays(vector),
+                            )
+                            .state
+                            .name
+                    } catch (_: IllegalArgumentException) {
+                        "INVALID"
+                    }
+                verdicts += verdict
+                assertEquals(
+                    vector.getString("verdict").value,
+                    verdict,
+                    vector.getString("name").value,
+                )
+            }
+        assertEquals(PublishedKind.entries.toSet(), kinds)
+        assertEquals(setOf("EQUAL", "DIFFERENT", "INVALID"), verdicts)
+    }
+
+    private fun collect(value: PublishedValue, kinds: MutableSet<PublishedKind>) {
+        kinds += value.kind
+        when (value) {
+            is PublishedDocument -> value.fields.forEach { collect(it.value, kinds) }
+            is PublishedArray -> value.items.forEach { collect(it, kinds) }
+            else -> Unit
+        }
+    }
+
+    /** What mongosh would print for a value: number types it does not show become whole numbers. */
+    @Test
+    fun printedValuesProveWhatMongoshShows() {
+        val printed =
+            PublishedEncoding.printed(
+                BsonDocument.parse(
+                    """{"b": 4.0, "1": {"${'$'}numberLong": "5"}, "a": 4.5, "s": "x", "n": NaN, "d": {"${'$'}numberDecimal": "1.50"}, "z": -0.0}"""
+                )
+            ) as PublishedDocument
+        assertEquals(listOf("1", "b", "a", "s", "n", "d", "z"), printed.fields.map { it.name })
+        assertEquals(
+            listOf(
+                PublishedKind.EXACT_SCALAR,
+                PublishedKind.WHOLE_NUMBER,
+                PublishedKind.EXACT_SCALAR,
+                PublishedKind.TEXT,
+                PublishedKind.DOUBLE_NAN,
+                PublishedKind.DECIMAL128_TEXT,
+                PublishedKind.EXACT_SCALAR,
+            ),
+            printed.fields.map { it.value.kind },
+        )
+    }
+}

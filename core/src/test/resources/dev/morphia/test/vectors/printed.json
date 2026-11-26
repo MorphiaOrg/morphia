@@ -1,0 +1,1249 @@
+{
+  "vectors": [
+    {
+      "name": "whole number matches an Int32",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberInt": "4"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "whole number matches an integral Double",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDouble": "4.0"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "whole number does not match a Long",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberLong": "4"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "whole zero does not match negative zero",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDouble": "-0.0"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "whole number differs in value",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberInt": "5"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "text matches a string and a symbol",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "text": "s"
+              }
+            },
+            {
+              "name": "b",
+              "value": {
+                "text": "s"
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": "s",
+          "b": {
+            "$symbol": "s"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "text does not match a number",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "text": "4"
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "4"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "nan matches a Double NaN",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "nan": true
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDouble": "NaN"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "nan does not match a Decimal128 NaN",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "nan": true
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDecimal": "NaN"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "decimal keeps its quantum",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "decimal": "1.50"
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDecimal": "1.50"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "decimal with another quantum differs",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "decimal": "1.50"
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDecimal": "1.5"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "exact Long matches a Long",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "exact": {
+                  "$numberLong": "5"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberLong": "5"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "exact Long does not match an Int32",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "exact": {
+                  "$numberLong": "5"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberInt": "5"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "exact date and object id",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "_id",
+              "value": {
+                "exact": {
+                  "$oid": "5c50782193f833234ba90d85"
+                }
+              }
+            },
+            {
+              "name": "d",
+              "value": {
+                "exact": {
+                  "$date": {
+                    "$numberLong": "1527811200000"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "_id": {
+            "$oid": "5c50782193f833234ba90d85"
+          },
+          "d": {
+            "$date": {
+              "$numberLong": "1527811200000"
+            }
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "missing field",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "b",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unexpected field",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "1"
+          },
+          "b": {
+            "$numberInt": "2"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "key order differs",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "b",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "b": {
+            "$numberInt": "2"
+          },
+          "a": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "index keys print first",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "1",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "2"
+          },
+          "1": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "nested arrays and documents",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "document": [
+                      {
+                        "name": "b",
+                        "value": {
+                          "text": "c"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberDouble": "1.0"
+            },
+            {
+              "b": "c"
+            }
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "array length differs",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberInt": "1"
+            },
+            {
+              "$numberInt": "2"
+            }
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "result counts differ",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "1"
+          }
+        },
+        {
+          "a": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered results need a matching, not the first match",
+      "order": "UNORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "4"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "exact": {
+                  "$numberDouble": "4.0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDouble": "4.0"
+          }
+        },
+        {
+          "x": {
+            "$numberInt": "4"
+          }
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "unordered results without a matching",
+      "order": "UNORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "exact": {
+                  "$numberDouble": "4.0"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "exact": {
+                  "$numberDouble": "4.0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDouble": "4.0"
+          }
+        },
+        {
+          "x": {
+            "$numberInt": "4"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "ordered results in another order",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberInt": "2"
+          }
+        },
+        {
+          "x": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "invalid: duplicate field",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "invalid: fields not in ECMAScript order",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "1",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "$numberInt": "1"
+          },
+          "1": {
+            "$numberInt": "2"
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "invalid: DBRef shape",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "$ref",
+              "value": {
+                "text": "c"
+              }
+            },
+            {
+              "name": "$id",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "$ref": "c",
+          "$id": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "invalid: exact document",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "exact": {
+                  "b": {
+                    "$numberInt": "1"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": {
+            "b": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "invalid: decimal not in canonical text",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "decimal": "1.5E0"
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberDecimal": "1.5"
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "invalid: unknown kind",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "x",
+              "value": {
+                "number": {
+                  "$numberInt": "1"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "x": {
+            "$numberInt": "1"
+          }
+        }
+      ],
+      "verdict": "INVALID"
+    },
+    {
+      "name": "unordered array reordered",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "document": [
+                      {
+                        "name": "n",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "1"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "document": [
+                      {
+                        "name": "n",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "2"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "n": {
+                "$numberInt": "2"
+              }
+            },
+            {
+              "n": {
+                "$numberInt": "1"
+              }
+            }
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "undeclared printed array reordered",
+      "order": "ORDERED",
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberInt": "2"
+            },
+            {
+              "$numberInt": "1"
+            }
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array multiplicity",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberInt": "1"
+            },
+            {
+              "$numberInt": "2"
+            },
+            {
+              "$numberInt": "2"
+            }
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array item type",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "x"
+                  },
+                  {
+                    "whole": {
+                      "$numberInt": "2"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberLong": "2"
+            },
+            "x"
+          ]
+        }
+      ],
+      "verdict": "DIFFERENT"
+    },
+    {
+      "name": "unordered array matches overlapping constraints",
+      "order": "ORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "whole": {
+                      "$numberInt": "4"
+                    }
+                  },
+                  {
+                    "exact": {
+                      "$numberDouble": "4.0"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "a": [
+            {
+              "$numberDouble": "4.0"
+            },
+            {
+              "$numberInt": "4"
+            }
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    },
+    {
+      "name": "unordered array path is per row",
+      "order": "UNORDERED",
+      "unorderedArrays": [
+        "/a"
+      ],
+      "constraints": [
+        {
+          "document": [
+            {
+              "name": "_id",
+              "value": {
+                "whole": {
+                  "$numberInt": "1"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "x"
+                  },
+                  {
+                    "text": "y"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "document": [
+            {
+              "name": "_id",
+              "value": {
+                "whole": {
+                  "$numberInt": "2"
+                }
+              }
+            },
+            {
+              "name": "a",
+              "value": {
+                "array": [
+                  {
+                    "text": "z"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "actual": [
+        {
+          "_id": {
+            "$numberInt": "2"
+          },
+          "a": [
+            "z"
+          ]
+        },
+        {
+          "_id": {
+            "$numberInt": "1"
+          },
+          "a": [
+            "y",
+            "x"
+          ]
+        }
+      ],
+      "verdict": "EQUAL"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "families": [
+    "aggregation/expressions",
+    "aggregation/stages",
+    "query/filters",
+    "query/updates"
+  ],
+  "excluded": [
+    {
+      "name": "aggregation/expressions/binarySize/findLargestBinaryData",
+      "reason": "The pipeline sorts by imageSize and keeps one document, but the page prints every image's size from the $project stage alone. The server returns concert.jpg (269), which Morphia matches. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
+      "reason": "The page prints $bitAnd's results: it shows Long(\"0\"), Long(\"2\") and Long(\"3\"), but a | 63 is 63 for each document, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/bsonSize/returnDocumentWithLargestSpecifiedField",
+      "reason": "The pipeline sorts by task_object_size and keeps one document, but the page prints every employee's size from the $project stage alone, and its sizes are off (152 for Bob, where the server returns 140). Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/dateDiff/yearBoundaryCrossing",
+      "reason": "$dateDiff returns a long, which mongosh prints as Long('1'); the page prints 1, which only an Int32 or a Double prints as. Serialization and behavior pass."
+    },
+    {
+      "name": "aggregation/expressions/dateSubtract/filterByRelativeDates",
+      "reason": "The pipeline keeps logouts within a week of $$NOW, so its result depends on the day it runs; the page's 2021 logouts are never within a week of today, and the server returns nothing. Serialization passes."
+    },
+    {
+      "name": "aggregation/expressions/divide/divideHoursIntoWorkdays",
+      "reason": "The page inserts into conferencePlanning but aggregates planning, so the server returns nothing. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/filter/useIdxToAccessTheIndex",
+      "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912)."
+    },
+    {
+      "name": "aggregation/expressions/indexOfBytes/findASubstringSByteIndex",
+      "reason": "The page prints each byteLocation as a string (\"0\", \"4\", \"-1\"), but $indexOfBytes returns an integer, which the server returns and Morphia matches. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/meta/returnTheIndexKeyOfAMatchedTypeInAFind",
+      "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass."
+    },
+    {
+      "name": "aggregation/expressions/reduce/discountedMerchandise",
+      "reason": "The page prints ObjectId _ids, but its seed inserts integer _ids 1 to 5. The computed discountedPrice values match. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/reduce/probability",
+      "reason": "The page inserts its events into db.events but aggregates db.probability, an empty collection, so the printed results can't be reproduced. Lift once the page uses one collection."
+    },
+    {
+      "name": "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
+      "reason": "The page prints the $unwind stage's output (one document per details item), not the pipeline's, which groups each contact's matches back into one details document. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
+      "reason": "The page prints the $addFields stage's output (the whole $regexFind match), not the pipeline's, whose $set replaces username with its first capture. Serialization passes; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFindAll/sOption",
+      "reason": "The page prints the third product's match as \"Many spaces before line\", with one space; its description, and the match the server returns, has five. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
+      "reason": "The page prints the output of the $addFields stage alone, with each name as {match, idx, captures}; the pipeline's next stage, $set, reduces it to the captured names, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
+      "reason": "The page prints the output of the $addFields stage alone, with each email as {match, idx, captures}; the pipeline's next stage, $set: {email: \"$email.match\"}, replaces it with the match, which is what the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "aggregation/stages/replaceWith/pivotSalesByQuarter",
+      "reason": "The page prints one document, the output of the pipeline's first $addFields stage, as the result of the whole four-stage pipeline, which returns one pivoted document per quarter. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "query/filters/regex/matchWholeWordsOnly",
+      "reason": "The page prints three of the four products whose description has the whole word line: it leaves out _id 103, \"Multiple\\nline description\", which /\\bline\\b/ matches and the server returns. Serialization and behavior pass; the page is wrong."
+    },
+    {
+      "name": "query/updates/positional-all/updateArraysSpecifiedUsingANegationQueryOperator",
+      "reason": "The page prints the whole collection after the update but shows no read, so the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass. Lift once the page shows its find, which the case then runs."
+    }
+  ],
+  "sampleDatasets": {
+    "movies": "sample_mflix"
+  }
+}

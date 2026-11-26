@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Explicit reviewed source roles for the printed-results probe; not automatic section assembly or an accepted execution baseline",
+  "sourceSha256": "9632a61a4f77b83161d81b7da8fc63e11ab94112d7b73c3bcf49da6ced5e165a",
+  "documentInputSha256": "08992fea5b191dde64035beeba3524d02e020f9621e28f7f349b0e106f173675",
+  "expectedExtractionState": "PARTIAL",
+  "request": "audits/src/test/resources/programs/absolute-temperature-changes.json",
+  "blocks": [
+    {
+      "id": "seedTemperatures",
+      "role": "SETUP",
+      "sha256": "a206d60c96c4e2d588ce2343ee1c4c73b2fbae9b8acc1914ead33c9105f5b430",
+      "origin": {
+        "includeChain": [
+          "content/manual/manual/source/reference/operator/aggregation/abs.txt"
+        ],
+        "path": "content/manual/manual/source/reference/operator/aggregation/abs.txt",
+        "precision": "PARSER_REPORTED",
+        "reportedLine": 59,
+        "sha256": "3a493a0177fe145ee18ff5468f7cbd35173f231a554ca54ba8bfe2fb649cdccc"
+      }
+    },
+    {
+      "id": "absoluteTemperatureChanges",
+      "role": "ACTION",
+      "sha256": "582fa1662262c884954544443540729959fa46078686e3c4e2b532b20f928965",
+      "origin": {
+        "includeChain": [
+          "content/manual/manual/source/reference/operator/aggregation/abs.txt"
+        ],
+        "path": "content/manual/manual/source/reference/operator/aggregation/abs.txt",
+        "precision": "PARSER_REPORTED",
+        "reportedLine": 71,
+        "sha256": "3a493a0177fe145ee18ff5468f7cbd35173f231a554ca54ba8bfe2fb649cdccc"
+      }
+    },
+    {
+      "id": "publishedChanges",
+      "role": "EXPECTED",
+      "sha256": "9adcd5ff4709f4f06a4c57d9faa50307c1ebf1d899f762cfb5ecfa2822c27f10",
+      "origin": {
+        "includeChain": [
+          "content/manual/manual/source/reference/operator/aggregation/abs.txt"
+        ],
+        "path": "content/manual/manual/source/reference/operator/aggregation/abs.txt",
+        "precision": "PARSER_REPORTED",
+        "reportedLine": 81,
+        "sha256": "3a493a0177fe145ee18ff5468f7cbd35173f231a554ca54ba8bfe2fb649cdccc"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[project]
+name = "morphia-document-adapter"
+version = "1.0.0"
+requires-python = "==3.12.*"
+dependencies = [
+  "snooty @ git+https://github.com/mongodb/snooty-parser.git@0c26866083a02177a52ade1ccb17cc61a2816be7",
+  # Imported by Snooty but omitted from its published dependency declarations.
+  "typing-extensions==4.16.0",
+]
+
+[tool.uv]
+package = false

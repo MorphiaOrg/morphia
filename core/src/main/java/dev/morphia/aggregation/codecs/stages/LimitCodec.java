@@ -6,6 +6,8 @@ import dev.morphia.aggregation.stages.Limit;
 import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
+import static dev.morphia.mapping.codec.CodecHelper.whole;
+
 public class LimitCodec extends StageCodec<Limit> {
     public LimitCodec(MorphiaDatastore datastore) {
         super(datastore);
@@ -13,7 +15,7 @@ public class LimitCodec extends StageCodec<Limit> {
 
     @Override
     public void encodeStage(BsonWriter writer, Limit value, EncoderContext encoderContext) {
-        writer.writeInt64(value.limit());
+        whole(writer, value.limit());
     }
 
     @Override
