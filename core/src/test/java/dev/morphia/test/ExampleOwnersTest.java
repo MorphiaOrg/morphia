@@ -48,6 +48,7 @@ public class ExampleOwnersTest {
             Map.entry("TestChangeStream#testChangeStream", "watches a change stream fed from its own data file"),
             Map.entry("TestChangeStream#testChangeStreamOptions", "checks the $changeStream options' encoding"),
             Map.entry("TestLookup#testLookup", "aggregates a mapped entity, not a documented example"),
+            Map.entry("TestMerge#keepExisting", "checks the server accepts whenMatched: keepExisting as Morphia writes it"),
             Map.entry("TestPercentile#testExample5", "an empty placeholder for an example the page shows only in $setWindowFields"),
             Map.entry("TestUnwind#testUnwind", "aggregates a mapped entity, not a documented example"));
 
