@@ -104,7 +104,7 @@ class ScenarioExtractionTest {
             "index.txt",
             ScenarioScope(
                 CapabilityRef(
-                    CapabilityKey("mongodb-server", OperatorContext.QUERY_PREDICATE, "${'$'}eq"),
+                    CapabilityKey("mongodb-server", OperatorContext.QUERY_PREDICATE, $$"$eq"),
                     null,
                 ),
                 "mongosh",
@@ -626,7 +626,7 @@ class ScenarioExtractionTest {
         val otherScope =
             firstRule.scope.copy(
                 capability =
-                    CapabilityRef(firstRule.scope.capability.key.copy(token = "${'$'}ne"), null)
+                    CapabilityRef(firstRule.scope.capability.key.copy(token = $$"$ne"), null)
             )
         val secondRule =
             firstRule.copy(id = "other", scope = otherScope, sections = listOf("missing"))
@@ -813,7 +813,7 @@ class ScenarioExtractionTest {
         val snippet = scenario.blocks.first().snippets.single()
         assertEquals(path, snippet.canonicalPath)
         assertEquals("manual/source/index.txt", snippet.directive.origin.path)
-        assertEquals(listOf(path), scenario.naming!!.trace.location.snippetIds)
+        assertEquals(listOf(path), scenario.naming.trace.location.snippetIds)
     }
 
     @Test
@@ -996,8 +996,8 @@ class ScenarioExtractionTest {
         assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
         val scenario = report.scenarios.single()
         assertEquals(ShellLiteralState.UNSUPPORTED, scenario.program!!.state)
-        assertEquals("STORED_VALUE_LIMIT", scenario.program!!.problems.single().code)
-        assertTrue(scenario.program!!.commands.isEmpty())
+        assertEquals("STORED_VALUE_LIMIT", scenario.program.problems.single().code)
+        assertTrue(scenario.program.commands.isEmpty())
         assertNotNull(scenario.naming)
     }
 
@@ -1016,7 +1016,7 @@ class ScenarioExtractionTest {
         assertEquals(2, report.scenarios.size)
         report.scenarios.forEach {
             assertEquals("STORED_VALUE_LIMIT", it.program!!.problems.single().code)
-            assertTrue(it.program!!.commands.isEmpty())
+            assertTrue(it.program.commands.isEmpty())
             assertNotNull(it.naming)
         }
     }
@@ -1097,7 +1097,7 @@ class ScenarioExtractionTest {
             assertEquals(
                 ShellLiteralState.NORMALIZED,
                 it.program!!.state,
-                it.program!!.problems.toString(),
+                it.program.problems.toString(),
             )
             assertEquals(
                 listOf(
@@ -1169,7 +1169,7 @@ class ScenarioExtractionTest {
         val scenario = report.scenarios.single()
         assertEquals(ProgramRole.SETUP, scenario.blocks.first().role)
         assertEquals(ShellLiteralState.NORMALIZED, scenario.program!!.state)
-        assertEquals(2, scenario.program!!.commands.size)
+        assertEquals(2, scenario.program.commands.size)
     }
 
     @Test
@@ -1312,7 +1312,7 @@ class ScenarioExtractionTest {
         fun updates(vararg blocks: String) =
             extract(root(standalone("Update Items", "update", *blocks)), assembledRule()).scenarios
         val insert = "db.items.insertOne({v:1});"
-        val update = "db.items.updateOne({}, {${'$'}set: {v: 2}});"
+        val update = $$"db.items.updateOne({}, {$set: {v: 2}});"
         // The find a page runs right after an update is that update's read: one scenario, whose
         // published result is the find's.
         val paired = updates(insert, update, "db.items.find({});", "[{v:2}]").single()
@@ -1352,7 +1352,7 @@ class ScenarioExtractionTest {
             unprinted.map { it.normalizationProblem }.toSet(),
         )
         // A write after a write sees its effect, so it isn't run alone either.
-        val twice = updates(insert, update, "db.items.updateOne({}, {${'$'}set: {v: 3}});")
+        val twice = updates(insert, update, $$"db.items.updateOne({}, {$set: {v: 3}});")
         assertEquals(
             setOf(null, "AFTER_EARLIER_WRITE"),
             twice.map { it.normalizationProblem }.toSet(),
@@ -1406,7 +1406,7 @@ class ScenarioExtractionTest {
                             "Merge Items",
                             "merge-items",
                             insert,
-                            "db.items.aggregate([{${'$'}merge: \"totals\"}]);",
+                            $$"db.items.aggregate([{$merge: \"totals\"}]);",
                             "db.totals.find({});",
                             "[{_id: 2, v: 10}]",
                         ),
@@ -1467,7 +1467,7 @@ class ScenarioExtractionTest {
                         standalone(
                             "Merge Declared",
                             "merge-declared",
-                            "db.items.aggregate([{${'$'}merge: \"totals\"}]);",
+                            $$"db.items.aggregate([{$merge: \"totals\"}]);",
                             "db.totals.find({});",
                             "[{v: 1}]",
                         ),
@@ -1490,7 +1490,7 @@ class ScenarioExtractionTest {
                         section(
                             "Merge Totals",
                             "merge",
-                            code("db.items.aggregate([{${'$'}merge: {into: \"totals\"}}]);"),
+                            code($$"db.items.aggregate([{$merge: {into: \"totals\"}}]);"),
                             io("db.totals.find({});", "[{v:1}]"),
                         )
                     ),
@@ -1655,7 +1655,7 @@ class ScenarioExtractionTest {
                             "Project",
                             "project",
                             "db.items.insertOne({v:1});",
-                            "db.items.aggregate([{${'$'}project: {v: '${'$'}out'}}]);",
+                            $$"db.items.aggregate([{$project: {v: '$out'}}]);",
                             "db.items.find({});",
                         )
                     ),
@@ -1784,7 +1784,7 @@ class ScenarioExtractionTest {
         // A displayed operator expression is neither data nor a result.
         val shown =
             scenarios(
-                    code("// Specify i\n{ ${'$'}regexMatch: { input: 'a', regex: /a/i } }"),
+                    code($$"// Specify i\n{ $regexMatch: { input: 'a', regex: /a/i } }"),
                     code("db.items.find({});"),
                 )
                 .single()
@@ -1887,7 +1887,7 @@ class ScenarioExtractionTest {
         )
         // A syntax template is skipped, and so is setup no action follows.
         val template =
-            scenarios("{ ${'$'}match: { <query> } }", "db.items.find({});", "const n=1;").single()
+            scenarios($$"{ $match: { <query> } }", "db.items.find({});", "const n=1;").single()
         assertEquals(listOf(ProgramRole.ACTION), roles(template))
         assertEquals(
             listOf("SYNTAX_TEMPLATE", "TRAILING_SETUP"),
@@ -1897,7 +1897,7 @@ class ScenarioExtractionTest {
         val update =
             scenarios(
                     "db.items.insertOne({v:1});",
-                    "db.items.updateOne({}, {${'$'}set: {v: 2}});",
+                    $$"db.items.updateOne({}, {$set: {v: 2}});",
                     "[{v:2}]",
                 )
                 .single()

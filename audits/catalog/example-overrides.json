@@ -47,6 +47,34 @@
       "exclude": true
     },
     {
+      "page": "aggregation/expressions/encStrContains",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The encrypted string expressions need a Queryable Encryption deployment with encrypted fields and keys; the audit runs unencrypted. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/encStrEndsWith",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The encrypted string expressions need a Queryable Encryption deployment with encrypted fields and keys; the audit runs unencrypted. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/encStrNormalizedEq",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The encrypted string expressions need a Queryable Encryption deployment with encrypted fields and keys; the audit runs unencrypted. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/encStrStartsWith",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The encrypted string expressions need a Queryable Encryption deployment with encrypted fields and keys; the audit runs unencrypted. Out of scope.",
+      "exclude": true
+    },
+    {
       "page": "aggregation/expressions/filter",
       "title": "Use $$IDX to Access the Index",
       "blocksSha256": "bbc1c9afcf6cd3eb256b54b0d116d7cefd862d68c7b37747005ee5f34f244970",
@@ -121,6 +149,125 @@
       "title": "s Option",
       "blocksSha256": "eea261045fb0d9201af68851dc4ed6149114823d2b48d880963ca7ed8f7af75c",
       "reason": "The page prints the third product's match as \"Many spaces before line\", with one space; its description, and the match the server returns, has five. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Create the collection",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Create the roles",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Create the users",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Examine the documents",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Log in as Jane",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/setIntersection",
+      "title": "Log in as John",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This walkthrough creates roles and users, logs in as each and reads $$USER_ROLES; it needs authentication and user management, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/tsIncrement",
+      "title": "Use $tsIncrement in a Change Stream Cursor to Monitor Collection Changes",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The example reads $tsIncrement from a change stream cursor's clusterTime; its events and timestamps depend on concurrent writes and need a replica set. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/tsSecond",
+      "title": "Use $tsSecond in a Change Stream Cursor to Monitor Collection Changes",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "The example reads $tsSecond from a change stream cursor's clusterTime; its events and timestamps depend on concurrent writes and need a replica set. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/changeStream",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$changeStream opens a change stream cursor, whose events depend on concurrent writes and need a replica set; there is no fixed result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/collStats",
+      "title": "$collStats on Sharded Collections",
+      "blocksSha256": "bf59d2867806bce4bed4717b1254c78ef2e266e35b59ddd1244e595c6c609072",
+      "reason": "$collStats reports storage, latency and count statistics with host names, timestamps and sizes that depend on the server; there is no comparable result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/collStats",
+      "title": "count",
+      "blocksSha256": "85295f3fcc4d856f1da54e4988d5136893fadf7ce94794babcf4d72aeff6913e",
+      "reason": "$collStats reports storage, latency and count statistics with host names, timestamps and sizes that depend on the server; there is no comparable result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/collStats",
+      "title": "latencyStats",
+      "blocksSha256": "f8c2bedaf723117117305acb0e44bfa89ef7661f209ca98e76e31961989e9596",
+      "reason": "$collStats reports storage, latency and count statistics with host names, timestamps and sizes that depend on the server; there is no comparable result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/collStats",
+      "title": "queryExecStats",
+      "blocksSha256": "a8a1f5aef7f4abc19c48b9f03540458999cc64da3e42010c37b87d2d48006830",
+      "reason": "$collStats reports storage, latency and count statistics with host names, timestamps and sizes that depend on the server; there is no comparable result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/collStats",
+      "title": "storageStats on Time Series Collections",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$collStats reports storage, latency and count statistics with host names, timestamps and sizes that depend on the server; there is no comparable result. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/currentOp",
+      "title": "Count Collection Connections",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$currentOp reports the server's in-progress operations and sessions, not stored data; its output depends on what else the server is running. Out of scope: there is no collection data to seed or result to compare.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/currentOp",
+      "title": "Inactive Sessions",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$currentOp reports the server's in-progress operations and sessions, not stored data; its output depends on what else the server is running. Out of scope: there is no collection data to seed or result to compare.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/currentOp",
+      "title": "Sampled Queries",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$currentOp reports the server's in-progress operations and sessions, not stored data; its output depends on what else the server is running. Out of scope: there is no collection data to seed or result to compare.",
       "exclude": true
     },
     {
@@ -204,10 +351,171 @@
       ]
     },
     {
+      "page": "aggregation/stages/indexStats",
+      "title": "main",
+      "blocksSha256": "a865544789cab7e41e06c8dd7c2100138ea52bbbe7f5224c2b6cde6f04da3717",
+      "reason": "$indexStats reports per-index access counts, host and timestamps the page elides with '...'; the result depends on the server's history, not on seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listClusterCatalog",
+      "title": "Balancing Configuration",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listClusterCatalog reports the cluster's catalog and balancing configuration, which depend on the deployment rather than seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listClusterCatalog",
+      "title": "List Information from All Collections",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listClusterCatalog reports the cluster's catalog and balancing configuration, which depend on the deployment rather than seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listLocalSessions",
+      "title": "List All Local Sessions",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listLocalSessions reports the sessions cached in the server's memory, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listLocalSessions",
+      "title": "List All Local Sessions for the Current User",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listLocalSessions reports the sessions cached in the server's memory, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listLocalSessions",
+      "title": "List All Local Sessions for the Specified Users",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listLocalSessions reports the sessions cached in the server's memory, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listSampledQueries",
+      "title": "List Sampled Queries for A Specific Collection",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listSampledQueries returns queries sampled for shard key analysis, which needs configureQueryAnalyzer on a replica set or sharded cluster; nothing seeds it. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listSampledQueries",
+      "title": "List Sampled Queries for All Collections",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listSampledQueries returns queries sampled for shard key analysis, which needs configureQueryAnalyzer on a replica set or sharded cluster; nothing seeds it. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listSessions",
+      "title": "List All Sessions",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listSessions reads the config.system.sessions collection the server maintains, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listSessions",
+      "title": "List All Sessions for the Current User",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listSessions reads the config.system.sessions collection the server maintains, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/listSessions",
+      "title": "List All Sessions for the Specified Users",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$listSessions reads the config.system.sessions collection the server maintains, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/planCacheStats",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$planCacheStats reports the query planner's cache, which depends on the queries the server has run, not on seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/querySettings",
+      "title": "Add the query settings",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$querySettings walks through setQuerySettings admin commands and reads back the cluster's query settings; it's server configuration, not collection data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/querySettings",
+      "title": "Create the example collection and indexes",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$querySettings walks through setQuerySettings admin commands and reads back the cluster's query settings; it's server configuration, not collection data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/querySettings",
+      "title": "Return the query settings",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$querySettings walks through setQuerySettings admin commands and reads back the cluster's query settings; it's server configuration, not collection data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/queryStats",
+      "title": "Transformed Example",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$queryStats reports the server's recorded query statistics, which needs a configured Atlas or cluster deployment and depends on the server's query history. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/queryStats",
+      "title": "Untransformed Example",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$queryStats reports the server's recorded query statistics, which needs a configured Atlas or cluster deployment and depends on the server's query history. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/queryStats",
+      "title": "main",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$queryStats reports the server's recorded query statistics, which needs a configured Atlas or cluster deployment and depends on the server's query history. Out of scope.",
+      "exclude": true
+    },
+    {
       "page": "aggregation/stages/replaceWith",
       "title": "main",
       "blocksSha256": "70d1e255eea4f95241a3f27e8c18c64f6789b08cf982236ff64fac0deb0bd766",
       "reason": "The page prints one document, the output of the pipeline's first $addFields stage, as the result of the whole four-stage pipeline, which returns one pivoted document per quarter. Serialization and behavior pass; the page is wrong.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/shardedDataDistribution",
+      "title": "Confirm No Orphaned Documents Remain",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$shardedDataDistribution reports the data distribution across a sharded cluster's shards; the audit runs on a single server. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/shardedDataDistribution",
+      "title": "Return All Sharded Data Distibution Metrics",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$shardedDataDistribution reports the data distribution across a sharded cluster's shards; the audit runs on a single server. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/shardedDataDistribution",
+      "title": "Return Metrics for a Namespace",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$shardedDataDistribution reports the data distribution across a sharded cluster's shards; the audit runs on a single server. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/shardedDataDistribution",
+      "title": "Return Metrics for a Specific Shard",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "$shardedDataDistribution reports the data distribution across a sharded cluster's shards; the audit runs on a single server. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "query/filters/exists",
+      "title": "Use a Sparse Index to Improve $exists Performance",
+      "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reason": "This section is about index tuning: it creates a sparse index and shows that a query uses it. The query's results don't change, so there is no scenario to check. Out of scope.",
       "exclude": true
     },
     {
