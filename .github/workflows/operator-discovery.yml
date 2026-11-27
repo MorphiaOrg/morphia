@@ -53,7 +53,7 @@ jobs:
           git -C "$RUNNER_TEMP/docs" checkout -q
 
       - name: Setup the pinned parser's Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12.16'
 
@@ -102,7 +102,7 @@ jobs:
           cache: maven
 
       - name: Download reports
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: operator-discovery
           path: ${{ runner.temp }}/discovery
