@@ -40,6 +40,13 @@
       "exclude": true
     },
     {
+      "page": "aggregation/expressions/deserializeEJSON",
+      "title": "Parse JSON String and Deserialize",
+      "blocksSha256": "b997ad4af7c13c360e314a9641741864f9567b1f310a019b70c8803431eeea73",
+      "reason": "The example runs a database-level db.aggregate() whose $documents stage supplies its input, so it has no collection; core's scenarios run each action against a seeded collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
       "page": "aggregation/expressions/divide",
       "title": "main",
       "blocksSha256": "eba93cf601f377453b0f2f1e791b6c0fe086084e80a7bc702a999f1ac167e7f1",
@@ -79,6 +86,27 @@
       "title": "Use $$IDX to Access the Index",
       "blocksSha256": "bbc1c9afcf6cd3eb256b54b0d116d7cefd862d68c7b37747005ee5f34f244970",
       "reason": "$$IDX is newer than the tests' MongoDB 8.2, which rejects it (Use of undefined variable: IDX); 8.3 cannot run on the test hosts' kernels (SERVER-121912).",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/hash",
+      "title": "Hash a Literal String",
+      "blocksSha256": "2af502c4432b2fa30ac3daa4abd5759e37635f50574fd34993d8ac2ea9a0d688",
+      "reason": "The example runs a database-level db.aggregate() whose $documents stage supplies its input, so it has no collection; core's scenarios run each action against a seeded collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/hash",
+      "title": "Null or Missing Input",
+      "blocksSha256": "e5df7d9df51e195fcff51c8e122ae3d44653cba4479a0a6d6e9874ebc70a8013",
+      "reason": "The example runs a database-level db.aggregate() whose $documents stage supplies its input, so it has no collection; core's scenarios run each action against a seeded collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/hexHash",
+      "title": "Null or Missing Input",
+      "blocksSha256": "a8cd2161d071f39de41ddceb65806a256eedd5ad7be5c57512ac1a9e2e987902",
+      "reason": "The example runs a database-level db.aggregate() whose $documents stage supplies its input, so it has no collection; core's scenarios run each action against a seeded collection. Out of scope for the audit.",
       "exclude": true
     },
     {
@@ -425,6 +453,34 @@
       "title": "List All Sessions for the Specified Users",
       "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "reason": "$listSessions reads the config.system.sessions collection the server maintains, filtered by authenticated users; the result depends on live sessions, not seeded data. Out of scope.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/match",
+      "title": "Match Array Elements",
+      "blocksSha256": "1b66d6fe1c95cf1dbb3d9cff300807780bd6a34ca1c3f307feb5071dba939183",
+      "reason": "The example runs a database-level db.aggregate() whose $documents stage supplies its input, so it has no collection; core's scenarios run each action against a seeded collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "Use Variables Defined in the Aggregate Command",
+      "blocksSha256": "8acf179d2816a39836c8eb82901fcbf919a8a5a99bcfb28b5da86f59a16bac81",
+      "reason": "The example runs a raw db.runCommand({ aggregate: ... }) that names its collections through db.movieDetails.getName() and reads back another collection; core's scenarios run a collection's aggregate, and $merge's let variables are covered by the stage's other examples. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "Use Variables Defined in the Merge Stage",
+      "blocksSha256": "d1bdacaade49dd6208fa39d710fab006a49147c76e8ae3fede38ef1e300a88b2",
+      "reason": "The example runs a raw db.runCommand({ aggregate: ... }) that names its collections through db.movieDetails.getName() and reads back another collection; core's scenarios run a collection's aggregate, and $merge's let variables are covered by the stage's other examples. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "Use Variables Defined in the Merge Stage and Aggregate Command",
+      "blocksSha256": "dc531662552e7703185281421b04f204e580bcb8c32d9dcc0d8969afcf7ba9ab",
+      "reason": "The example runs a raw db.runCommand({ aggregate: ... }) that names its collections through db.movieDetails.getName() and reads back another collection; core's scenarios run a collection's aggregate, and $merge's let variables are covered by the stage's other examples. Out of scope for the audit.",
       "exclude": true
     },
     {
