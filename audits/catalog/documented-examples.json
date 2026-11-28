@@ -14205,9 +14205,9 @@
         "text" : "db.movies.find( { rated: { $exists: true, $nin: [ \"R\", \"PG-13\" ] } } ).limit(5)\n"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "existsAndNotEqualTo",
+      "owner" : "query/filters/exists/existsAndNotEqualTo",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Exists and Not Equal To"
     }, {
       "blocks" : [ {
@@ -14220,9 +14220,9 @@
         "text" : "[\n  { title: 'The Great Train Robbery', rated: 'TV-G' },\n  { title: 'A Corner in Wheat', rated: 'G' },\n  { title: 'Traffic in Souls', rated: 'TV-PG' }\n]"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "existsTrue",
+      "owner" : "query/filters/exists/existsTrue",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "$exists: true"
     }, {
       "blocks" : [ {
@@ -14235,9 +14235,9 @@
         "text" : "[\n  {\n    title: 'Winsor McCay, the Famous Cartoonist of the N.Y. Herald and His Moving Comics',\n    year: 1911\n  },\n  { title: 'Gertie the Dinosaur', year: 1914 },\n  { title: 'In the Land of the Head Hunters', year: 1914 }\n]"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "existsFalse",
+      "owner" : "query/filters/exists/existsFalse",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "$exists: false"
     }, {
       "blocks" : [ ],
@@ -14291,9 +14291,9 @@
         "text" : "[\n  { title: 'I Am Maria', tomatoes: { viewer: { rating: 5 } } },\n  { title: 'Kadin Hamlet', tomatoes: { viewer: { rating: 5 } } },\n  { title: 'The Seine Meets Paris', tomatoes: { viewer: { rating: 5 } } }\n]"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "compareTwoFieldsFromASingleDocument",
+      "owner" : "query/filters/expr/compareTwoFieldsFromASingleDocument",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Compare Two Fields from a Single Document"
     }, {
       "blocks" : [ {
@@ -14306,9 +14306,9 @@
         "text" : "[\n  { title: 'Band of Brothers', imdb: { rating: 9.6, votes: 183802 } },\n  { title: 'Baseball', imdb: { rating: 9.1, votes: 2460 } },\n  { title: 'Cosmos', imdb: { rating: 9.3, votes: 17174 } },\n  { title: 'Frozen Planet', imdb: { rating: 9.2, votes: 5903 } },\n  { title: 'Human Planet', imdb: { rating: 9.2, votes: 9057 } }\n]"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "useExprWithConditionalStatements",
+      "owner" : "query/filters/expr/useExprWithConditionalStatements",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Use $expr With Conditional Statements"
     } ],
     "includes" : [ {
@@ -15491,9 +15491,9 @@
         "text" : "[\n  { title: 'Baseball', year: 1994, score: ... },\n  { title: 'Centennial', year: 1978, score: ... }\n]\n"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "returnTop2MatchingDocuments",
+      "owner" : "query/filters/text/returnTop2MatchingDocuments",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Return Top 2 Matching Documents"
     }, {
       "blocks" : [ {
@@ -15510,9 +15510,9 @@
         "text" : "[\n  { title: 'Centennial', year: 1978, score: ... },\n  { title: 'Baseball', year: 1994, score: ... }\n]\n"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "combineTextWithOtherQueryAndSortOperations",
+      "owner" : "query/filters/text/combineTextWithOtherQueryAndSortOperations",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Combine $text with Other Query and Sort Operations"
     }, {
       "blocks" : [ {
@@ -15565,9 +15565,9 @@
       } ],
       "detail" : null,
       "name" : "Sort Articles by Their Text Score",
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "sortArticlesByTheirTextScore",
+      "owner" : "query/filters/text/sortArticlesByTheirTextScore",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Sort by Relevance Score"
     }, {
       "blocks" : [ {
@@ -15591,10 +15591,10 @@
         "sha256" : "f6622adf94299c63dd05343f76020d96457b729795244e884479236b73dbca54",
         "text" : "db.articles.find(\n   { $text: { $search: \"cake\" } },\n   { score: { $meta: \"textScore\" } }\n).sort( { ignoredName: { $meta: \"textScore\" } } )"
       } ],
-      "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "sortByRelevanceScore",
+      "detail" : "matched by name",
+      "owner" : "query/filters/text/sortByRelevanceScore",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Sort by Relevance Score"
     }, {
       "blocks" : [ {
@@ -17558,9 +17558,9 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 549,
+    "examples.owned" : 558,
     "examples.unnamed" : 6,
-    "examples.unowned" : 50,
+    "examples.unowned" : 41,
     "examples.unsupported" : 86,
     "pages" : 290,
     "pages.skipped" : 10,

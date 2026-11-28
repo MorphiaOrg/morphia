@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -9,7 +10,9 @@ import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.lang.Nullable;
 
@@ -92,9 +95,9 @@ public class OperatorCaseRunner {
     }
 
     /**
-     * Runs a query case whose page documents a projection: Morphia's is {@code options}', compared with the page's
-     * after the filter. Any other option would change the results, which the behavior check compares with the
-     * documented query's.
+     * Runs a query case whose page documents a projection or cursor modifiers: Morphia's projection is
+     * {@code options}', compared with the page's after the filter, and its sort, skip and limit are compared with the
+     * scenario's {@code options}. The reference runs the documented find with the same modifiers.
      */
     public void find(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, FindOptions options) {
         run(operatorCase, "find", Shape.FIND, (action, collection) -> {
@@ -108,9 +111,21 @@ public class OperatorCaseRunner {
             if (mapped != null || projection != null) {
                 emitted.add(mapped != null ? mapped : new Document());
             }
-            return new Execution(bson(emitted),
-                    reference -> new ArrayList<>(reference.getCollection(collection, BsonDocument.class).find(filter)
-                            .projection(projection).into(new ArrayList<>())),
+            BsonDocument documentedOptions = action.getDocument("options", new BsonDocument());
+            return new Execution(bson(emitted), findOptions(found),
+                    reference -> {
+                        var find = reference.getCollection(collection, BsonDocument.class).find(filter).projection(projection);
+                        if (documentedOptions.containsKey("sort")) {
+                            find = find.sort(documentedOptions.getDocument("sort"));
+                        }
+                        if (documentedOptions.containsKey("skip")) {
+                            find = find.skip(documentedOptions.getNumber("skip").intValue());
+                        }
+                        if (documentedOptions.containsKey("limit")) {
+                            find = find.limit(documentedOptions.getNumber("limit").intValue());
+                        }
+                        return new ArrayList<>(find.into(new ArrayList<>()));
+                    },
                     () -> {
                         try (var cursor = query.iterator()) {
                             return bson(cursor.toList()).getValues();
@@ -168,8 +183,50 @@ public class OperatorCaseRunner {
     }
 
     /** What one kind of action contributes to a run: Morphia's command, and each side's results. */
-    private record Execution(BsonArray emitted, Function<MongoDatabase, List<BsonValue>> reference,
+    private record Execution(BsonArray emitted, BsonDocument options, Function<MongoDatabase, List<BsonValue>> reference,
             Supplier<List<BsonValue>> morphia) {
+        Execution(BsonArray emitted, Function<MongoDatabase, List<BsonValue>> reference, Supplier<List<BsonValue>> morphia) {
+            this(emitted, new BsonDocument(), reference, morphia);
+        }
+    }
+
+    /**
+     * The sort, skip and limit Morphia's {@code options} give the driver's find, as a scenario's {@code options} spells
+     * them: what {@link FindOptions#apply} sets on the cursor, so a field mapping or a {@code $meta} sort shows as sent.
+     */
+    private BsonDocument findOptions(FindOptions options) {
+        Document sent = new Document();
+        @SuppressWarnings("unchecked")
+        FindIterable<Document> cursor = (FindIterable<Document>) Proxy.newProxyInstance(getClass().getClassLoader(),
+                new Class<?>[] { FindIterable.class }, (proxy, method, arguments) -> {
+                    switch (method.getName()) {
+                        case "sort" -> {
+                            if (arguments[0] != null) {
+                                sent.put("sort", arguments[0]);
+                            }
+                        }
+                        case "skip", "limit" -> {
+                            if ((Integer) arguments[0] != 0) {
+                                sent.put(method.getName(), arguments[0]);
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+                    return method.getReturnType().isInstance(proxy) ? proxy : null;
+                });
+        FindOptions copy = options.copy();
+        // Its documents are plain Documents, as the query's are.
+        copy.disableValidation(true);
+        copy.apply(cursor, test.getMapper(), Document.class);
+        // The documented order: the sort, then the skip, then the limit.
+        Document ordered = new Document();
+        for (String name : List.of("sort", "skip", "limit")) {
+            if (sent.containsKey(name)) {
+                ordered.put(name, sent.get(name));
+            }
+        }
+        return ordered.toBsonDocument(BsonDocument.class, test.getDs().getCodecRegistry());
     }
 
     /** The documented command of each action kind, in the order its shape reads it. */
@@ -243,6 +300,12 @@ public class OperatorCaseRunner {
             if (!skipped.containsKey("serialization") && matched == null) {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
                         + json(execution.emitted()));
+            }
+            // The command's options (a find's sort, skip and limit) are the action's, whichever spelling matched.
+            BsonDocument documentedOptions = action.getDocument("options", new BsonDocument());
+            if (!skipped.containsKey("serialization") && !StrictBson.equal(documentedOptions, execution.options())) {
+                fail(operatorCase.resource() + ": options differ\ndocumented: " + json(List.of(documentedOptions))
+                        + "\nmorphia:    " + json(List.of(execution.options())));
             }
             if (matched != null && matched != action) {
                 execution = plan.apply(matched, collection);
@@ -402,6 +465,17 @@ public class OperatorCaseRunner {
         }
         Set<String> present = new TreeSet<>(action.keySet());
         present.remove("alternatives");
+        // A find's sort, skip and limit, in that order.
+        if (present.remove("options")) {
+            BsonValue options = action.get("options");
+            List<String> names = options.isDocument() ? new ArrayList<>(options.asDocument().keySet()) : List.of();
+            if (!action.getString("kind").getValue().equals("find") || names.isEmpty()
+                    || !Stream.of("sort", "skip", "limit").filter(names::contains).toList().equals(names)
+                    || names.contains("sort") && !options.asDocument().isDocument("sort")
+                    || Stream.of("skip", "limit").anyMatch(name -> names.contains(name) && !options.asDocument().isInt32(name))) {
+                unsupported.add("options " + options);
+            }
+        }
         // Only a write has a read after it.
         if (present.remove("read") && (action.getString("kind").getValue().equals("find")
                 || !action.get("read").isDocument()

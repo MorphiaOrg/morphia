@@ -77,4 +77,46 @@ class DocumentedTest {
             }
         assertTrue("command outside the current database" in failure.message!!, failure.message)
     }
+
+    @Test
+    fun `a find's sort, skip and limit are its options, in the order the cursor applies them`() {
+        val documented =
+            documented(
+                block(BlockRole.DATA, "db.items.insertMany([ { a: 1 } ])"),
+                block(
+                    BlockRole.ACTION,
+                    "db.items.find({ a: 1 }, { a: 1 }).limit(2).sort({ a: -1 }).skip(1)",
+                ),
+            )
+        assertEquals(
+            BsonDocument.parse("{ sort: { a: -1 }, skip: 1, limit: 2 }"),
+            documented.options,
+        )
+        assertEquals(
+            listOf(BsonDocument.parse("{ a: 1 }"), BsonDocument.parse("{ a: 1 }")),
+            documented.action,
+        )
+    }
+
+    @Test
+    fun `a find modifier the scenario can't carry is a gap`() {
+        val failure =
+            assertThrows<IllegalArgumentException> {
+                documented(
+                    block(BlockRole.DATA, "db.items.insertMany([ { a: 1 } ])"),
+                    block(BlockRole.ACTION, "db.items.find({ a: 1 }).hint({ a: 1 })"),
+                )
+            }
+        assertTrue("a find with HINT" in failure.message!!, failure.message)
+    }
+
+    @Test
+    fun `a skip or limit of 0 is no option`() {
+        val documented =
+            documented(
+                block(BlockRole.DATA, "db.items.insertMany([ { a: 1 } ])"),
+                block(BlockRole.ACTION, "db.items.find({ a: 1 }).skip(0).limit(0)"),
+            )
+        assertEquals(null, documented.options)
+    }
 }

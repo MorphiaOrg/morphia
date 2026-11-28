@@ -624,10 +624,37 @@
     },
     {
       "page": "query/filters/exists",
+      "title": "$exists: false",
+      "blocksSha256": "97010c25e625caa1d7a7c36b76b33f859fd9f6133320aec2b7ff2f1f4ce58df3",
+      "reason": "Morphia's Projection writes included fields before the excluded _id; the page puts _id first, which the server reads alike.",
+      "rules": [
+        "PROJECT_ID_FIRST"
+      ]
+    },
+    {
+      "page": "query/filters/exists",
+      "title": "$exists: true",
+      "blocksSha256": "b951839e8f522d6bb035bc082dcc05da3125fa7c782b9100a609589c982613dd",
+      "reason": "Morphia's Projection writes included fields before the excluded _id; the page puts _id first, which the server reads alike.",
+      "rules": [
+        "PROJECT_ID_FIRST"
+      ]
+    },
+    {
+      "page": "query/filters/exists",
       "title": "Use a Sparse Index to Improve $exists Performance",
       "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "reason": "This section is about index tuning: it creates a sparse index and shows that a query uses it. The query's results don't change, so there is no scenario to check. Out of scope.",
       "exclude": true
+    },
+    {
+      "page": "query/filters/expr",
+      "title": "Compare Two Fields from a Single Document",
+      "blocksSha256": "46008a2930dba301708495657d834aa8ceb8754e3e9e734db6895e36913b93bb",
+      "reason": "Morphia's Projection writes included fields before the excluded _id; the page puts _id first, which the server reads alike.",
+      "rules": [
+        "PROJECT_ID_FIRST"
+      ]
     },
     {
       "page": "query/filters/in",

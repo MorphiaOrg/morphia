@@ -1,0 +1,169 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/expr/compareTwoFieldsFromASingleDocument",
+  "title": "Compare Two Fields from a Single Document",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/expr.txt",
+    "blob": "4519033a980db04d52052393546309f8fd45d33e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "$expr": {
+        "$gt": [
+          "$tomatoes.viewer.rating",
+          "$tomatoes.critic.rating"
+        ]
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "tomatoes.viewer.rating": {
+        "$numberInt": "1"
+      },
+      "tomatoes.critic.rating": {
+        "$numberInt": "1"
+      }
+    },
+    "options": {
+      "sort": {
+        "tomatoes.viewer.rating": {
+          "$numberInt": "-1"
+        }
+      },
+      "limit": {
+        "$numberInt": "3"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "I Am Maria"
+            }
+          },
+          {
+            "name": "tomatoes",
+            "value": {
+              "document": [
+                {
+                  "name": "viewer",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "rating",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "5"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Kadin Hamlet"
+            }
+          },
+          {
+            "name": "tomatoes",
+            "value": {
+              "document": [
+                {
+                  "name": "viewer",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "rating",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "5"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Seine Meets Paris"
+            }
+          },
+          {
+            "name": "tomatoes",
+            "value": {
+              "document": [
+                {
+                  "name": "viewer",
+                  "value": {
+                    "document": [
+                      {
+                        "name": "rating",
+                        "value": {
+                          "whole": {
+                            "$numberInt": "5"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}
