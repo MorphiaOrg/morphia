@@ -4598,9 +4598,9 @@
         "text" : "{ \"_id\" : 1, \"reading\" : Decimal128(\"26.0000000000000\"), \"isNum \" : true, \"type\" : \"decimal\" }\n{ \"_id\" : 2, \"reading\" : Long(25), \"isNum \" : true, \"type\" : \"long\" }\n{ \"_id\" : 3, \"reading\" : 24, \"isNum \" : true, \"type\" : \"int\" }\n{ \"_id\" : 4, \"reading\" : 24, \"isNum \" : true, \"type\" : \"double\" }\n{ \"_id\" : 5, \"reading\" : \"24\", \"isNum \" : false, \"type\" : \"string\" }\n{ \"_id\" : 6, \"reading\" : [ Decimal128(\"26.0000000000000\") ], \"isNum \" : false, \"type\" : \"array\" }"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "useIsNumberToCheckIfAFieldIsNumeric",
+      "owner" : "aggregation/expressions/isNumber/useIsNumberToCheckIfAFieldIsNumeric",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Use $isNumber to Check if a Field is Numeric"
     }, {
       "blocks" : [ {
@@ -4617,9 +4617,9 @@
         "text" : "{ \"_id\" : 457864153, \"GPA\" : 3.5 }\n{ \"_id\" : 978451637, \"GPA\" : 3 }"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "conditionallyModifyFieldsUsingIsNumber",
+      "owner" : "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Conditionally Modify Fields using $isNumber"
     } ],
     "includes" : [ ],
@@ -8593,9 +8593,9 @@
         "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $tan : {$degreesToRadians : \"$angle_a\"} },\n          \"$side_a\"\n        ]\n      }\n    }\n  }\n])"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "mainTangentOfValueInDegrees",
+      "owner" : "aggregation/expressions/tan/mainTangentOfValueInDegrees",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "main :: Tangent of Value in Degrees"
     }, {
       "blocks" : [ {
@@ -8608,9 +8608,9 @@
         "text" : "db.trigonometry.aggregate([\n  {\n    $addFields : {\n      \"side_b\" : {\n        $multiply : [\n          { $tan : \"$angle_a\" },\n          \"$side_a\"\n        ]\n      }\n    }\n  }\n])"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "mainTangentOfValueInRadians",
+      "owner" : "aggregation/expressions/tan/mainTangentOfValueInRadians",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "main :: Tangent of Value in Radians"
     } ],
     "includes" : [ ],
@@ -16283,9 +16283,9 @@
         "text" : "{\n  _id: 2,\n  item: \"cable\",\n  tags: [ \"electronics\", \"supplies\", \"camera\", \"accessories\" ]\n}"
       } ],
       "detail" : null,
-      "owner" : null,
-      "status" : "UNOWNED",
-      "stem" : "useEachWithAddToSetOperator",
+      "owner" : "query/updates/each/useEachWithAddToSetOperator",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Use $each  with $addToSet Operator"
     } ],
     "includes" : [ ],
@@ -17558,9 +17558,9 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 544,
+    "examples.owned" : 549,
     "examples.unnamed" : 6,
-    "examples.unowned" : 55,
+    "examples.unowned" : 50,
     "examples.unsupported" : 86,
     "pages" : 290,
     "pages.skipped" : 10,

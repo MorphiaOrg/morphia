@@ -1,0 +1,291 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isNumber/useIsNumberToCheckIfAFieldIsNumeric",
+  "title": "Use $isNumber to Check if a Field is Numeric",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/isNumber.txt",
+    "blob": "85387638087f90e9e6ee786098da61bf83b88a0a"
+  },
+  "dataset": null,
+  "collections": {
+    "sensors": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "reading": {
+          "$numberDecimal": "26.0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "reading": {
+          "$numberLong": "25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "reading": {
+          "$numberInt": "24"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "reading": {
+          "$numberInt": "24"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "reading": "24"
+      },
+      {
+        "_id": {
+          "$numberInt": "6"
+        },
+        "reading": [
+          {
+            "$numberDecimal": "26"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sensors",
+    "pipeline": [
+      {
+        "$addFields": {
+          "isNumber": {
+            "$isNumber": "$reading"
+          },
+          "hasType": {
+            "$type": "$reading"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "decimal": "26.0000000000000"
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "decimal"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "exact": {
+                "$numberLong": "25"
+              }
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "long"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "whole": {
+                "$numberInt": "24"
+              }
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "int"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "whole": {
+                "$numberInt": "24"
+              }
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": true
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "double"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "text": "24"
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": false
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "string"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "6"
+              }
+            }
+          },
+          {
+            "name": "reading",
+            "value": {
+              "array": [
+                {
+                  "decimal": "26.0000000000000"
+                }
+              ]
+            }
+          },
+          {
+            "name": "isNum ",
+            "value": {
+              "exact": false
+            }
+          },
+          {
+            "name": "type",
+            "value": {
+              "text": "array"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "the page prints fields its pipeline doesn't name, and a type mongosh doesn't store"
+  }
+}

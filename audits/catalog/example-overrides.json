@@ -33,6 +33,13 @@
       "exclude": true
     },
     {
+      "page": "aggregation/expressions/dateFromParts",
+      "title": "main",
+      "blocksSha256": "08030a3c2840ebe0db8f4c35991608c35917f45eabad333fccc84136c51e5a2a",
+      "reason": "The page prints results for sales, but no insert on the page seeds it, so a scenario would run against an empty collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
       "page": "aggregation/expressions/dateSubtract",
       "title": "Filter by Relative Dates",
       "blocksSha256": "a4e05e2a78f349ca13f4b50c0ee18dbcacf1ab3fb7d365d0fa284457bba8455b",
@@ -117,10 +124,42 @@
       "exclude": true
     },
     {
+      "page": "aggregation/expressions/isNumber",
+      "title": "Conditionally Modify Fields using $isNumber",
+      "blocksSha256": "5ac8f474e075d5d76525209ac369c88cba0be027c24c78db6052a874c196901c",
+      "reason": "Morphia's condition() writes $cond in its array form; the page writes the document form, which the server reads alike.",
+      "rules": [
+        "COND_ARRAY"
+      ]
+    },
+    {
+      "page": "aggregation/expressions/isNumber",
+      "title": "Use $isNumber to Check if a Field is Numeric",
+      "blocksSha256": "c40dc59089fd8ab19ec225459b24b2ac52fe564c4b206f4f9a22422b1eaa873f",
+      "reason": "The page prints fields named isNum and type, which its pipeline names isNumber and hasType, and prints the type of reading 24.0 as double, which mongosh stores as an Int32. Serialization and behavior pass; the page is wrong.",
+      "skipped": {
+        "published": "the page prints fields its pipeline doesn't name, and a type mongosh doesn't store"
+      }
+    },
+    {
       "page": "aggregation/expressions/meta",
       "title": "$meta: \"indexKey\"",
       "blocksSha256": "a98eaea31a4e9131c4d3b9cbbd14642248239fab710529da4a07c033239c8bd9",
       "reason": "The page's seed documents have no _id, so the server generates new ObjectIds when they are inserted; the page prints the ObjectIds its own run generated. Serialization and behavior pass.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/reduce",
+      "title": "Computing a Multiple Reductions",
+      "blocksSha256": "5ce054ebe115c80814973454c8b0eaa654beabd34de0c489c42cd2ec49e5b083",
+      "reason": "The page prints results for arrayconcat, but no insert on the page seeds it, so a scenario would run against an empty collection. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/expressions/reduce",
+      "title": "Computing a Single Reduction",
+      "blocksSha256": "a4a548a727396ca21559d5188dea120aecbfd098bd13bfb27a862b5fb0006030",
+      "reason": "The page prints results for arrayconcat, but no insert on the page seeds it, so a scenario would run against an empty collection. Out of scope for the audit.",
       "exclude": true
     },
     {
@@ -481,6 +520,13 @@
       "title": "Use Variables Defined in the Merge Stage and Aggregate Command",
       "blocksSha256": "dc531662552e7703185281421b04f204e580bcb8c32d9dcc0d8969afcf7ba9ab",
       "reason": "The example runs a raw db.runCommand({ aggregate: ... }) that names its collections through db.movieDetails.getName() and reads back another collection; core's scenarios run a collection's aggregate, and $merge's let variables are covered by the stage's other examples. Out of scope for the audit.",
+      "exclude": true
+    },
+    {
+      "page": "aggregation/stages/merge",
+      "title": "Use the Pipeline to Customize the Merge",
+      "blocksSha256": "72272b934a34e3ce30708cc674788a4cfc76fb695fe2d5c12eb3425447892112",
+      "reason": "The page prints results for comments, but no insert on the page seeds it, so a scenario would run against an empty collection. Out of scope for the audit.",
       "exclude": true
     },
     {
