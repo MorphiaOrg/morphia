@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "name": "runner/findOptionsOutOfOrder",
+  "context": "FILTER",
+  "source": null,
+  "dataset": null,
+  "collections": {
+    "scores": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "score": {
+          "$numberInt": "70"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "score": {
+          "$numberInt": "95"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "score": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "score": {
+          "$numberInt": "60"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "scores",
+    "filter": {
+      "score": {
+        "$gt": {
+          "$numberInt": "65"
+        }
+      }
+    },
+    "options": {
+      "limit": {
+        "$numberInt": "1"
+      },
+      "sort": {
+        "score": {
+          "$numberInt": "-1"
+        }
+      }
+    }
+  },
+  "expected": {
+    "documents": [
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "score": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

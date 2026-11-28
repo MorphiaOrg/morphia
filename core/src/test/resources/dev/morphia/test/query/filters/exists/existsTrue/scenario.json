@@ -1,0 +1,110 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/exists/existsTrue",
+  "title": "$exists: true",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/exists.txt",
+    "blob": "63f7dc39bcbd3fdad9722c35a191d8f12a958452"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "rated": {
+        "$exists": true
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "rated": {
+        "$numberInt": "1"
+      }
+    },
+    "options": {
+      "limit": {
+        "$numberInt": "3"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "The Great Train Robbery"
+            }
+          },
+          {
+            "name": "rated",
+            "value": {
+              "text": "TV-G"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "A Corner in Wheat"
+            }
+          },
+          {
+            "name": "rated",
+            "value": {
+              "text": "G"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Traffic in Souls"
+            }
+          },
+          {
+            "name": "rated",
+            "value": {
+              "text": "TV-PG"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

@@ -3,6 +3,7 @@ package dev.morphia.test.query.filters;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.TemplatedTestBase;
 
+import org.bson.Document;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -141,5 +142,27 @@ public class TestText extends TemplatedTestBase {
     public void testSearchForTwoExactPhrases() {
         testQuery((query) -> query.filter(text("'ken burns' 'centennial'"), gt("runtime", 1000)),
                 new FindOptions().projection().include("title", "year", "runtime", "fullplot").projection().exclude("_id"));
+    }
+
+    /**
+     * test data: dev/morphia/test/query/filters/text/sortArticlesByTheirTextScore
+     */
+    @Test
+    @DisplayName("Sort Articles by Their Text Score")
+    public void testSortArticlesByTheirTextScore() {
+        // sort(Meta) would also project the score, which the page leaves out.
+        testQuery((query) -> query.filter(text("cake")),
+                new FindOptions().sort(new Document("score", new Document("$meta", "textScore"))));
+    }
+
+    /**
+     * test data: dev/morphia/test/query/filters/text/sortByRelevanceScore
+     */
+    @Test
+    @DisplayName("Sort by Relevance Score")
+    public void testSortByRelevanceScore() {
+        // sort(Meta) would project the score under the sort's name, not the projection's.
+        testQuery((query) -> query.filter(text("cake")), new FindOptions().projection().project(textScore("score"))
+                .sort(new Document("ignoredName", new Document("$meta", "textScore"))));
     }
 }

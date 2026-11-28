@@ -1,0 +1,271 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/expr/useExprWithConditionalStatements",
+  "title": "Use $expr With Conditional Statements",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/expr.txt",
+    "blob": "4519033a980db04d52052393546309f8fd45d33e"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$type": "number"
+      },
+      "imdb.votes": {
+        "$type": "number"
+      },
+      "$expr": {
+        "$gt": [
+          {
+            "$cond": {
+              "if": {
+                "$gte": [
+                  "$imdb.votes",
+                  {
+                    "$numberInt": "1000"
+                  }
+                ]
+              },
+              "then": {
+                "$multiply": [
+                  "$imdb.rating",
+                  {
+                    "$numberInt": "1"
+                  }
+                ]
+              },
+              "else": {
+                "$multiply": [
+                  "$imdb.rating",
+                  {
+                    "$numberDouble": "0.5"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$numberInt": "9"
+          }
+        ]
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "imdb.rating": {
+        "$numberInt": "1"
+      },
+      "imdb.votes": {
+        "$numberInt": "1"
+      }
+    },
+    "options": {
+      "sort": {
+        "title": {
+          "$numberInt": "1"
+        }
+      },
+      "limit": {
+        "$numberInt": "5"
+      }
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Band of Brothers"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.6"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "183802"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Baseball"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.1"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2460"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Cosmos"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.3"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "17174"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Frozen Planet"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.2"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "5903"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "title",
+            "value": {
+              "text": "Human Planet"
+            }
+          },
+          {
+            "name": "imdb",
+            "value": {
+              "document": [
+                {
+                  "name": "rating",
+                  "value": {
+                    "exact": {
+                      "$numberDouble": "9.2"
+                    }
+                  }
+                },
+                {
+                  "name": "votes",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "9057"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

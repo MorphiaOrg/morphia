@@ -390,7 +390,8 @@ class ExtractionTest {
 
     @Test
     fun siblingsWithOneTitleFailSeparately() {
-        val unreadable = listOf(block(BlockRole.ACTION, "db.items.find({ qty: 1 }).limit(1)"))
+        val unreadable =
+            listOf(block(BlockRole.ACTION, "db.items.find({ qty: 1 }).hint({ qty: 1 })"))
         val page = inventory().pages[0]
         val siblings =
             listOf(

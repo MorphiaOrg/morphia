@@ -1,5 +1,9 @@
 package dev.morphia.test;
 
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.Sort;
+import dev.morphia.query.filters.Filters;
+
 import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
@@ -19,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class OperatorCaseRunnerTest extends TestBase {
     private static final OperatorCase ROUND = OperatorCase
             .of("/dev/morphia/test/runner/roundExpressionOperator/scenario.json");
+
+    private static final OperatorCase SORTED = OperatorCase.of("/dev/morphia/test/runner/sortedLimitedFind/scenario.json");
 
     private final OperatorCaseRunner runner = new OperatorCaseRunner(this);
 
@@ -92,6 +98,30 @@ public class OperatorCaseRunnerTest extends TestBase {
                 () -> runner.update(OperatorCase.of("/dev/morphia/test/runner/filterAfterUpdate/scenario.json"),
                         (query) -> query.filter(ne("grades", 100)), inc("grades.$[]", 10)));
         assertTrue(failure.getMessage().contains("results differ from the documented results"), failure.getMessage());
+    }
+
+    @Test
+    public void aFindsSortSkipAndLimitRunOnBothSides() {
+        // Only the sort, then the skip, then the limit leave the 80: an unsorted or unlimited find returns others.
+        runner.find(SORTED, (query) -> query.filter(Filters.gt("score", 65)),
+                new FindOptions().sort(Sort.descending("score")).skip(1).limit(1));
+    }
+
+    @Test
+    public void aMissingLimitFailsTheOptionsCheck() {
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.find(SORTED, (query) -> query.filter(Filters.gt("score", 65)),
+                        new FindOptions().sort(Sort.descending("score")).skip(1)));
+        assertTrue(failure.getMessage().contains("options differ"), failure.getMessage());
+    }
+
+    @Test
+    public void optionsOutOfOrderAreNotSupported() {
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.find(OperatorCase.of("/dev/morphia/test/runner/findOptionsOutOfOrder/scenario.json"),
+                        (query) -> query.filter(Filters.gt("score", 65)),
+                        new FindOptions().sort(Sort.descending("score")).limit(1)));
+        assertTrue(failure.getMessage().contains("not supported by this runner: [options"), failure.getMessage());
     }
 
     @Test
