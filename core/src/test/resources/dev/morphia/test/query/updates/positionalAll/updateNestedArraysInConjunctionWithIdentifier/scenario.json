@@ -1,0 +1,276 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/positionalAll/updateNestedArraysInConjunctionWithIdentifier",
+  "title": "Update Nested Arrays in Conjunction with $[<identifier>]",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/positional-all.txt",
+    "blob": "2132adf02cce83c6e597ccf578bc2990525a5c6e"
+  },
+  "dataset": null,
+  "collections": {
+    "students3": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "$numberInt": "10"
+              },
+              {
+                "$numberInt": "8"
+              },
+              {
+                "$numberInt": "5"
+              }
+            ]
+          },
+          {
+            "type": "quiz",
+            "questions": [
+              {
+                "$numberInt": "8"
+              },
+              {
+                "$numberInt": "9"
+              },
+              {
+                "$numberInt": "6"
+              }
+            ]
+          },
+          {
+            "type": "hw",
+            "questions": [
+              {
+                "$numberInt": "5"
+              },
+              {
+                "$numberInt": "4"
+              },
+              {
+                "$numberInt": "3"
+              }
+            ]
+          },
+          {
+            "type": "exam",
+            "questions": [
+              {
+                "$numberInt": "25"
+              },
+              {
+                "$numberInt": "10"
+              },
+              {
+                "$numberInt": "23"
+              },
+              {
+                "$numberInt": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students3",
+    "filter": {},
+    "update": {
+      "$inc": {
+        "grades.$[].questions.$[score]": {
+          "$numberInt": "2"
+        }
+      }
+    },
+    "multi": true,
+    "options": {
+      "arrayFilters": [
+        {
+          "score": {
+            "$gte": {
+              "$numberInt": "8"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "type",
+                      "value": {
+                        "text": "quiz"
+                      }
+                    },
+                    {
+                      "name": "questions",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "12"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "10"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "5"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "type",
+                      "value": {
+                        "text": "quiz"
+                      }
+                    },
+                    {
+                      "name": "questions",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "10"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "11"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "6"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "type",
+                      "value": {
+                        "text": "hw"
+                      }
+                    },
+                    {
+                      "name": "questions",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "5"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "4"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "3"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "type",
+                      "value": {
+                        "text": "exam"
+                      }
+                    },
+                    {
+                      "name": "questions",
+                      "value": {
+                        "array": [
+                          {
+                            "whole": {
+                              "$numberInt": "27"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "12"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "25"
+                            }
+                          },
+                          {
+                            "whole": {
+                              "$numberInt": "0"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

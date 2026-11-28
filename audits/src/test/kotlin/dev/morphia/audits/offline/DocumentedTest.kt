@@ -119,4 +119,42 @@ class DocumentedTest {
             )
         assertEquals(null, documented.options)
     }
+
+    @Test
+    fun `an update's arrayFilters and upsert are its options, and an upsert of false is none`() {
+        val data = block(BlockRole.DATA, "db.items.insertMany([ { _id: 1, a: [ 1 ] } ])")
+        val filtered =
+            documented(
+                data,
+                block(
+                    BlockRole.ACTION,
+                    "db.items.updateMany({}, { \$set: { \"a.\$[e]\": 2 } }, { upsert: false, arrayFilters: [ { e: 1 } ] })",
+                ),
+            )
+        assertEquals(BsonDocument.parse("{ arrayFilters: [ { e: 1 } ] }"), filtered.options)
+        val upserted =
+            documented(
+                data,
+                block(
+                    BlockRole.ACTION,
+                    "db.items.updateOne({ _id: 2 }, { \$set: { a: 2 } }, { upsert: true })",
+                ),
+            )
+        assertEquals(BsonDocument.parse("{ upsert: true }"), upserted.options)
+    }
+
+    @Test
+    fun `an update option the scenario can't carry is a gap`() {
+        val failure =
+            assertThrows<IllegalArgumentException> {
+                documented(
+                    block(BlockRole.DATA, "db.items.insertMany([ { _id: 1 } ])"),
+                    block(
+                        BlockRole.ACTION,
+                        "db.items.updateOne({}, { \$set: { a: 1 } }, { hint: { _id: 1 } })",
+                    ),
+                )
+            }
+        assertTrue("an update with hint" in failure.message!!, failure.message)
+    }
 }

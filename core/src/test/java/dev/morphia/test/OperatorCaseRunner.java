@@ -28,6 +28,7 @@ import dev.morphia.test.FormRules.Rule;
 import dev.morphia.test.FormRules.Shape;
 
 import org.bson.BsonArray;
+import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonObjectId;
 import org.bson.BsonString;
@@ -139,26 +140,43 @@ public class OperatorCaseRunner {
      * carries one, and otherwise the documents its filter matches afterwards. Every collection is compared as well.
      */
     public void update(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, UpdateOperator... operators) {
+        update(operatorCase, dsl, new UpdateOptions(), operators);
+    }
+
+    /**
+     * Runs an update case whose page passes options: Morphia's {@code arrayFilters} and {@code upsert} are
+     * {@code options}', compared with the scenario's {@code options}, and the reference runs the documented update with
+     * them. The case's {@code multi} is set on a copy of {@code options}.
+     */
+    public void update(OperatorCase operatorCase, Function<Query<Document>, Query<Document>> dsl, UpdateOptions options,
+            UpdateOperator... operators) {
         run(operatorCase, "update", Shape.UPDATE, (action, collection) -> {
             Query<Document> query = dsl.apply(test.getDs().find(collection, Document.class).disableValidation());
             Document updates = new Operations(test.getDs(), null, List.of(operators), false).toDocument(test.getDs());
             BsonDocument filter = action.getDocument("filter");
             BsonDocument update = action.getDocument("update");
             boolean multi = action.getBoolean("multi").getValue();
+            BsonDocument documentedOptions = action.getDocument("options", new BsonDocument());
+            var referenceOptions = new com.mongodb.client.model.UpdateOptions()
+                    .upsert(documentedOptions.getBoolean("upsert", BsonBoolean.FALSE).getValue());
+            if (documentedOptions.containsKey("arrayFilters")) {
+                referenceOptions.arrayFilters(new ArrayList<>(documentedOptions.getArray("arrayFilters").getValues().stream()
+                        .map(BsonValue::asDocument).toList()));
+            }
             // The page's read, when it shows one, gives the results; the filter isn't queried again.
             boolean read = action.containsKey("read");
-            return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument(), updates)),
+            return new Execution(bson(List.of(((MorphiaQuery<Document>) query).toDocument(), updates)), updateOptions(options),
                     reference -> {
                         var target = reference.getCollection(collection, BsonDocument.class);
                         if (multi) {
-                            target.updateMany(filter, update);
+                            target.updateMany(filter, update, referenceOptions);
                         } else {
-                            target.updateOne(filter, update);
+                            target.updateOne(filter, update, referenceOptions);
                         }
                         return read ? List.of() : new ArrayList<>(target.find(filter).into(new ArrayList<>()));
                     },
                     () -> {
-                        query.update(new UpdateOptions().multi(multi), operators);
+                        query.update(copy(options).multi(multi), operators);
                         if (read) {
                             return List.of();
                         }
@@ -167,6 +185,29 @@ public class OperatorCaseRunner {
                         }
                     });
         });
+    }
+
+    /** {@code options}' array filters and upsert, so a run never changes the caller's instance. */
+    private static UpdateOptions copy(UpdateOptions options) {
+        UpdateOptions copy = new UpdateOptions().upsert(options.isUpsert());
+        if (options.getArrayFilters() != null) {
+            copy.arrayFilters(new ArrayList<>(options.getArrayFilters()));
+        }
+        return copy;
+    }
+
+    /** The {@code arrayFilters} and {@code upsert} Morphia's {@code options} send, as a scenario's {@code options} spells them. */
+    private BsonDocument updateOptions(UpdateOptions options) {
+        BsonDocument sent = new BsonDocument();
+        if (options.getArrayFilters() != null) {
+            CodecRegistry registry = test.getDs().getCodecRegistry();
+            sent.put("arrayFilters", new BsonArray(options.getArrayFilters().stream()
+                    .map(filter -> (BsonValue) filter.toBsonDocument(BsonDocument.class, registry)).toList()));
+        }
+        if (options.isUpsert()) {
+            sent.put("upsert", BsonBoolean.TRUE);
+        }
+        return sent;
     }
 
     /** The documents the page's read after a write returns from {@code database}. */
@@ -301,9 +342,11 @@ public class OperatorCaseRunner {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
                         + json(execution.emitted()));
             }
-            // The command's options (a find's sort, skip and limit) are the action's, whichever spelling matched.
+            // The command's options (a find's sort, skip and limit, an update's arrayFilters and upsert) are the action's,
+            // whichever spelling matched; an update's array filters take the declared rules as its filter does.
             BsonDocument documentedOptions = action.getDocument("options", new BsonDocument());
-            if (!skipped.containsKey("serialization") && !StrictBson.equal(documentedOptions, execution.options())) {
+            if (!skipped.containsKey("serialization") && !StrictBson.equal(FormRules.options(documentedOptions, rules),
+                    FormRules.options(execution.options(), rules))) {
                 fail(operatorCase.resource() + ": options differ\ndocumented: " + json(List.of(documentedOptions))
                         + "\nmorphia:    " + json(List.of(execution.options())));
             }
@@ -465,14 +508,22 @@ public class OperatorCaseRunner {
         }
         Set<String> present = new TreeSet<>(action.keySet());
         present.remove("alternatives");
-        // A find's sort, skip and limit, in that order.
+        // A find's sort, skip and limit, or an update's arrayFilters and upsert, each in that order.
         if (present.remove("options")) {
             BsonValue options = action.get("options");
             List<String> names = options.isDocument() ? new ArrayList<>(options.asDocument().keySet()) : List.of();
-            if (!action.getString("kind").getValue().equals("find") || names.isEmpty()
-                    || !Stream.of("sort", "skip", "limit").filter(names::contains).toList().equals(names)
+            String kind = action.getString("kind").getValue();
+            List<String> optionOrder = switch (kind) {
+                case "find" -> List.of("sort", "skip", "limit");
+                case "update" -> List.of("arrayFilters", "upsert");
+                default -> List.of();
+            };
+            if (names.isEmpty() || !optionOrder.stream().filter(names::contains).toList().equals(names)
                     || names.contains("sort") && !options.asDocument().isDocument("sort")
-                    || Stream.of("skip", "limit").anyMatch(name -> names.contains(name) && !options.asDocument().isInt32(name))) {
+                    || Stream.of("skip", "limit").anyMatch(name -> names.contains(name) && !options.asDocument().isInt32(name))
+                    || names.contains("arrayFilters") && (!options.asDocument().isArray("arrayFilters")
+                            || options.asDocument().getArray("arrayFilters").stream().anyMatch(filter -> !filter.isDocument()))
+                    || names.contains("upsert") && !options.asDocument().get("upsert").equals(BsonBoolean.TRUE)) {
                 unsupported.add("options " + options);
             }
         }

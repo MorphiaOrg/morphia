@@ -3,6 +3,7 @@ package dev.morphia.audits.extraction
 import java.nio.file.Files
 import java.nio.file.Path
 import org.bson.BsonArray
+import org.bson.BsonBoolean
 import org.bson.BsonDocument
 import org.bson.BsonValue
 
@@ -100,10 +101,12 @@ object Extraction {
                                 overrides.sampleDatasets[documented.collection].takeIf {
                                     example.blocks.none { it.role == BlockRole.DATA }
                                 }
+                            // An upsert writes what it prints into the empty collection itself.
                             if (
                                 dataset == null &&
                                     documented.data.values.all { it.isEmpty() } &&
-                                    documented.printed?.isNotEmpty() == true
+                                    documented.printed?.isNotEmpty() == true &&
+                                    documented.options?.get("upsert") != BsonBoolean.TRUE
                             ) {
                                 return@examples fail(
                                     "the page prints results for ${documented.collection}, which nothing seeds"

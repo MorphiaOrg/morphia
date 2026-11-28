@@ -264,10 +264,9 @@ public class MorphiaQuery<T> implements Query<T> {
         Document updateOperations = operations.toDocument(datastore);
 
         final Document queryObject = toDocument();
-        if (options.isUpsert()) {
-            if (entityModel.useDiscriminator()) {
-                queryObject.put(entityModel.discriminatorKey(), entityModel.discriminator());
-            }
+        // A Document query has no entity model, so no discriminator to upsert.
+        if (options.isUpsert() && entityModel != null && entityModel.useDiscriminator()) {
+            queryObject.put(entityModel.discriminatorKey(), entityModel.discriminator());
         }
 
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);

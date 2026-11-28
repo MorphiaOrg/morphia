@@ -1,0 +1,169 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/positionalFiltered/updateArrayElementsUsingANegationOperator",
+  "title": "Update Array Elements Using a Negation Operator",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/positional-filtered.txt",
+    "blob": "856551f331869f4d0255fa6db0c32e0c92bd0230"
+  },
+  "dataset": null,
+  "collections": {
+    "alumni": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "name": "Christine Franklin",
+        "degrees": [
+          {
+            "level": "Master"
+          },
+          {
+            "level": "Bachelor"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "name": "Reyansh Sengupta",
+        "degrees": [
+          {
+            "level": "Bachelor"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "alumni",
+    "filter": {},
+    "update": {
+      "$set": {
+        "degrees.$[degree].gradcampaign": {
+          "$numberInt": "1"
+        }
+      }
+    },
+    "multi": true,
+    "options": {
+      "arrayFilters": [
+        {
+          "degree.level": {
+            "$ne": "Bachelor"
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Christine Franklin"
+            }
+          },
+          {
+            "name": "degrees",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "level",
+                      "value": {
+                        "text": "Master"
+                      }
+                    },
+                    {
+                      "name": "gradcampaign",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "level",
+                      "value": {
+                        "text": "Bachelor"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "name",
+            "value": {
+              "text": "Reyansh Sengupta"
+            }
+          },
+          {
+            "name": "degrees",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "level",
+                      "value": {
+                        "text": "Bachelor"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

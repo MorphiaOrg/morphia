@@ -95,6 +95,21 @@ public final class FormRules {
         return result;
     }
 
+    /**
+     * @return the canonical form of a command's {@code options} under {@code rules}: an update's array filters are
+     *         filters, and every other option compares as written; the input is not modified
+     */
+    public static BsonDocument options(BsonDocument options, Set<Rule> rules) {
+        FormRules canonicalizer = new FormRules(rules);
+        BsonDocument result = options.clone();
+        if (result.isArray("arrayFilters")) {
+            BsonArray filters = new BsonArray();
+            result.getArray("arrayFilters").forEach(filter -> filters.add(canonicalizer.filter(filter)));
+            result.put("arrayFilters", filters);
+        }
+        return result;
+    }
+
     private BsonValue pipeline(BsonValue value) {
         if (value instanceof BsonArray array) {
             BsonArray result = new BsonArray();

@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import dev.morphia.UpdateOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Sort;
 import dev.morphia.query.filters.Filters;
@@ -15,6 +16,7 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.expr;
 import static dev.morphia.query.filters.Filters.ne;
 import static dev.morphia.query.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -122,6 +124,15 @@ public class OperatorCaseRunnerTest extends TestBase {
                         (query) -> query.filter(Filters.gt("score", 65)),
                         new FindOptions().sort(Sort.descending("score")).limit(1)));
         assertTrue(failure.getMessage().contains("not supported by this runner: [options"), failure.getMessage());
+    }
+
+    @Test
+    public void aMissingArrayFilterFailsTheOptionsCheck() {
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.update(OperatorCase.of(
+                        "/dev/morphia/test/query/updates/positionalFiltered/updateAllArrayElementsThatMatchArrayFilters/scenario.json"),
+                        (query) -> query, new UpdateOptions(), set("grades.$[element]", 100)));
+        assertTrue(failure.getMessage().contains("options differ"), failure.getMessage());
     }
 
     @Test
