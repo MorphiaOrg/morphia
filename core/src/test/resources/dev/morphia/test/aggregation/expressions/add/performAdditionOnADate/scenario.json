@@ -1,0 +1,190 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/add/performAdditionOnADate",
+  "title": "Perform Addition on a Date",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/add.txt",
+    "blob": "23095b86f2007739485bb075654368533813ca11"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "fee": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1393660800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "fee": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1393664400000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "fee": {
+          "$numberInt": "0"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1394874000000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "billing_date": {
+            "$add": [
+              "$date",
+              {
+                "$numberInt": "259200000"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "billing_date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1393920000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "billing_date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1393923600000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "xyz"
+            }
+          },
+          {
+            "name": "billing_date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1395133200000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

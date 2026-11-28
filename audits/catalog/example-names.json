@@ -534,6 +534,13 @@
       "reason": "the section shows several examples under one title"
     },
     {
+      "page": "query/filters/centerSphere",
+      "title": "main",
+      "actionSha256": "963bdeceb39203228430f08c78f97836836db783f61a56b4a82fbef8d8efdbe0",
+      "name": "Find Places Within Ten Miles",
+      "reason": "the page gives its only example no title; the name says what the query does"
+    },
+    {
       "page": "query/filters/elemMatch",
       "title": "main",
       "actionSha256": "b40eaf38890d9f3c8b3e2f425bb8a0a034addeb69019e1f92100e25e63c0f398",

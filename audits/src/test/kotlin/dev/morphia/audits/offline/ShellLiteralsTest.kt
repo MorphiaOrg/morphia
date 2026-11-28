@@ -205,7 +205,9 @@ class ShellLiteralsTest {
                 "{a(){return 1}}",
                 "unknown",
                 "x.y",
-                "1+2",
+                // Constant arithmetic reads; a sum over a string or a binding never does.
+                "'1'+2",
+                "x+1",
                 "true?1:2",
                 "function(){return 1}",
                 "(()=>1)()",

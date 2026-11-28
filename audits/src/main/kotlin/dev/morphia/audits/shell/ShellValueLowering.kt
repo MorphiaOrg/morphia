@@ -49,6 +49,12 @@ internal class ShellValueBudget(private val maximumNodes: Int) {
     }
 
     fun take(): Boolean = ++nodes <= maximumNodes
+
+    /**
+     * How deep the lowering is inside printed results, bindings they reach included: arithmetic is
+     * read only outside them, since a printed result is what the server returned.
+     */
+    var printed = 0
 }
 
 internal class ShellValueLowering(
@@ -126,6 +132,21 @@ internal class ShellValueLowering(
                 "PUBLISHED_PROFILE",
                 "Published shell results require the pinned mongosh read-result profile",
             )
+        // Everything lowered inside a printed result, signs' operands and constructors' arguments
+        // too, is printed text: arithmetic there is never what the server returned.
+        budget.printed++
+        try {
+            return lowerPrinted(node, depth, snapshot)
+        } finally {
+            budget.printed--
+        }
+    }
+
+    private fun lowerPrinted(
+        node: AstNode,
+        depth: Int,
+        snapshot: (BsonValue) -> BsonSnapshot,
+    ): PublishedValue {
         return lower(
             node,
             depth,
@@ -194,6 +215,13 @@ internal class ShellValueLowering(
                         unsupported(node, "VALUE_LIMIT", "Numeric value exceeds depth limit")
                     syntax = syntax.expression
                 }
+                // A signed sum is constant arithmetic as a whole.
+                if (
+                    syntax is InfixExpression &&
+                        syntax.operator in arithmetic &&
+                        budget.printed == 0
+                )
+                    return factory.number(constant(node, depth), node)
                 if (syntax !is NumberLiteral && syntax !is UnaryExpression && syntax !is Name)
                     unsupported(
                         node,
@@ -317,11 +345,60 @@ internal class ShellValueLowering(
                     )
                 )
             }
+            // Pages spell durations as arithmetic, `3*24*60*60000`; the shell sends the number.
+            // Printed results are what the server returned, never a computation.
+            is InfixExpression ->
+                if (node.operator in arithmetic && budget.printed == 0)
+                    factory.number(constant(node, depth), node)
+                else
+                    unsupported(
+                        node,
+                        "UNSUPPORTED_AST",
+                        "Unsupported value syntax: ${node.javaClass.simpleName}",
+                    )
             else ->
                 unsupported(
                     node,
                     "UNSUPPORTED_AST",
                     "Unsupported value syntax: ${node.javaClass.simpleName}",
+                )
+        }
+    }
+
+    private val arithmetic = setOf(Token.ADD, Token.SUB, Token.MUL, Token.DIV, Token.MOD)
+
+    /**
+     * The value of constant arithmetic, as JavaScript computes it in doubles. Only number literals,
+     * signs, parentheses and `+ - * / %` over them are read: never a binding, call or string, so
+     * reading the value runs nothing and `+` never concatenates.
+     */
+    private fun constant(node: AstNode, depth: Int): Double {
+        if (!budget.take() || depth > limits.maximumDepth)
+            unsupported(node, "VALUE_LIMIT", "Shell value exceeds AST node/depth limit")
+        return when {
+            node is NumberLiteral -> node.number
+            node is ParenthesizedExpression -> constant(node.expression, depth + 1)
+            node is UnaryExpression && node.operator == Token.NEG ->
+                -constant(node.operand, depth + 1)
+            node is UnaryExpression && node.operator == Token.POS ->
+                constant(node.operand, depth + 1)
+            node is InfixExpression && node.operator in arithmetic -> {
+                val left = constant(node.left, depth + 1)
+                val right = constant(node.right, depth + 1)
+                when (node.operator) {
+                    Token.ADD -> left + right
+                    Token.SUB -> left - right
+                    Token.MUL -> left * right
+                    Token.DIV -> left / right
+                    // Kotlin's remainder truncates toward zero, as JavaScript's does.
+                    else -> left % right
+                }
+            }
+            else ->
+                unsupported(
+                    node,
+                    "COMPUTED_VALUE",
+                    "Arithmetic reads only numeric constants: ${node.javaClass.simpleName}",
                 )
         }
     }

@@ -81,6 +81,7 @@ object Overrides {
             "UNWIND_PATH",
             "REGEX_OPTIONS",
             "NAMED_ARGUMENTS",
+            "GEO_COORDINATES",
         )
 
     private val SKIPS = setOf("serialization", "behavior", "published")

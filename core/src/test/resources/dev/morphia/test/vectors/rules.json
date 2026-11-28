@@ -741,6 +741,205 @@
         }
       ],
       "canonical": "{\"v\": [{\"$addFields\": {\"a\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"$p\"}}, \"b\": {\"$regexMatch\": {\"input\": \"$s\", \"regex\": \"x\", \"options\": \"$o\"}}}}]}"
+    },
+    {
+      "name": "geo coordinates compare as doubles",
+      "shape": "FIND",
+      "rules": [
+        "GEO_COORDINATES"
+      ],
+      "input": [
+        {
+          "loc": {
+            "#geoWithin": {
+              "#centerSphere": [
+                [
+                  -88,
+                  30
+                ],
+                0.5
+              ]
+            }
+          },
+          "area": {
+            "#geoWithin": {
+              "#geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      3,
+                      6
+                    ],
+                    [
+                      6,
+                      1
+                    ],
+                    [
+                      0,
+                      0
+                    ]
+                  ]
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"loc\": {\"$geoWithin\": {\"$centerSphere\": [[{\"$numberDouble\": \"-88.0\"}, {\"$numberDouble\": \"30.0\"}], {\"$numberDouble\": \"0.5\"}]}}, \"area\": {\"$geoWithin\": {\"$geometry\": {\"type\": \"Polygon\", \"coordinates\": [[[{\"$numberDouble\": \"0.0\"}, {\"$numberDouble\": \"0.0\"}], [{\"$numberDouble\": \"3.0\"}, {\"$numberDouble\": \"6.0\"}], [{\"$numberDouble\": \"6.0\"}, {\"$numberDouble\": \"1.0\"}], [{\"$numberDouble\": \"0.0\"}, {\"$numberDouble\": \"0.0\"}]]]}}}}]}"
+    },
+    {
+      "name": "numbers outside coordinates keep their type",
+      "shape": "FIND",
+      "rules": [
+        "GEO_COORDINATES"
+      ],
+      "input": [
+        {
+          "qty": {
+            "#in": [
+              1,
+              2
+            ]
+          },
+          "loc": {
+            "#near": {
+              "#geometry": {
+                "type": "Point",
+                "coordinates": [
+                  1,
+                  2
+                ]
+              },
+              "#maxDistance": 10
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"qty\": {\"$in\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}]}, \"loc\": {\"$near\": {\"$geometry\": {\"type\": \"Point\", \"coordinates\": [{\"$numberDouble\": \"1.0\"}, {\"$numberDouble\": \"2.0\"}]}, \"$maxDistance\": {\"$numberInt\": \"10\"}}}}]}"
+    },
+    {
+      "name": "a circle's radius, data named coordinates and inexact longs keep their type",
+      "shape": "PIPELINE",
+      "rules": [
+        "GEO_COORDINATES"
+      ],
+      "input": [
+        {
+          "#match": {
+            "loc": {
+              "#geoWithin": {
+                "#center": [
+                  [
+                    1,
+                    2
+                  ],
+                  10
+                ]
+              }
+            },
+            "area": {
+              "#geoWithin": {
+                "#geometry": {
+                  "type": "Point",
+                  "coordinates": [
+                    {
+                      "$numberLong": "9007199254740993"
+                    },
+                    {
+                      "$numberLong": "3"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "#set": {
+            "p": {
+              "coordinates": [
+                1
+              ]
+            },
+            "q": {
+              "type": "metadata",
+              "coordinates": [
+                1,
+                2
+              ]
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$match\": {\"loc\": {\"$geoWithin\": {\"$center\": [[{\"$numberDouble\": \"1.0\"}, {\"$numberDouble\": \"2.0\"}], {\"$numberInt\": \"10\"}]}}, \"area\": {\"$geoWithin\": {\"$geometry\": {\"type\": \"Point\", \"coordinates\": [{\"$numberLong\": \"9007199254740993\"}, {\"$numberDouble\": \"3.0\"}]}}}}}, {\"$set\": {\"p\": {\"coordinates\": [{\"$numberInt\": \"1\"}]}, \"q\": {\"type\": \"metadata\", \"coordinates\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}]}}}]}"
+    },
+    {
+      "name": "a geoNear stage's point compares as doubles",
+      "shape": "PIPELINE",
+      "rules": [
+        "GEO_COORDINATES"
+      ],
+      "input": [
+        {
+          "#geoNear": {
+            "near": {
+              "type": "Point",
+              "coordinates": [
+                -73,
+                40
+              ]
+            },
+            "distanceField": "d",
+            "maxDistance": 2
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$geoNear\": {\"near\": {\"type\": \"Point\", \"coordinates\": [{\"$numberDouble\": \"-73.0\"}, {\"$numberDouble\": \"40.0\"}]}, \"distanceField\": \"d\", \"maxDistance\": {\"$numberInt\": \"2\"}}}]}"
+    },
+    {
+      "name": "geo operator names stored as fields keep their type",
+      "shape": "PIPELINE",
+      "rules": [
+        "GEO_COORDINATES"
+      ],
+      "input": [
+        {
+          "#set": {
+            "payload": {
+              "#geometry": {
+                "type": "Point",
+                "coordinates": [
+                  1,
+                  2
+                ]
+              },
+              "#center": [
+                [
+                  1,
+                  2
+                ],
+                3
+              ],
+              "#box": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  1,
+                  1
+                ]
+              ]
+            }
+          }
+        }
+      ],
+      "canonical": "{\"v\": [{\"$set\": {\"payload\": {\"$geometry\": {\"type\": \"Point\", \"coordinates\": [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}]}, \"$center\": [[{\"$numberInt\": \"1\"}, {\"$numberInt\": \"2\"}], {\"$numberInt\": \"3\"}], \"$box\": [[{\"$numberInt\": \"0\"}, {\"$numberInt\": \"0\"}], [{\"$numberInt\": \"1\"}, {\"$numberInt\": \"1\"}]]}}}]}"
     }
   ]
 }

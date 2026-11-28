@@ -10,7 +10,9 @@ import java.util.TreeSet;
 import org.bson.BsonArray;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
+import org.bson.BsonDouble;
 import org.bson.BsonInt32;
+import org.bson.BsonInt64;
 import org.bson.BsonRegularExpression;
 import org.bson.BsonString;
 import org.bson.BsonValue;
@@ -32,7 +34,8 @@ public final class FormRules {
         PROJECTION_FLAGS,
         UNWIND_PATH,
         REGEX_OPTIONS,
-        NAMED_ARGUMENTS
+        NAMED_ARGUMENTS,
+        GEO_COORDINATES
     }
 
     /** How the action's documents are read. */
@@ -49,6 +52,15 @@ public final class FormRules {
             "$lookup", "$ltrim", "$map", "$maxN", "$merge", "$minN", "$reduce", "$regexFind", "$regexFindAll", "$regexMatch", "$rtrim",
             "$setField", "$setWindowFields", "$sortArray", "$text", "$top", "$topN", "$trim", "$unionWith", "$unsetField", "$unwind",
             "$zip");
+
+    /**
+     * The arguments that hold coordinates: a driver {@code Point}'s {@code Position} holds doubles, so Morphia sends
+     * {@code -88.0} where a page writes {@code -88}, and the server reads both alike.
+     */
+    private static final Set<String> GEO_POINT_LISTS = Set.of("$box", "$polygon");
+
+    /** The legacy circles: a center point, then a radius, which keeps its type. */
+    private static final Set<String> GEO_CIRCLES = Set.of("$center", "$centerSphere");
 
     private static final Set<String> REGEX_OPERATORS = Set.of("$regexFind", "$regexFindAll", "$regexMatch");
 
@@ -122,6 +134,17 @@ public final class FormRules {
                         yield named(key, copy);
                     }
                     yield expression(argument, false);
+                }
+                case "$geoNear" -> {
+                    BsonValue converted = expression(argument, false);
+                    // The point a $geoNear stage measures from is GeoJSON, too.
+                    if (rules.contains(Rule.GEO_COORDINATES) && converted instanceof BsonDocument stage
+                            && stage.get("near") instanceof BsonDocument near) {
+                        BsonDocument copy = stage.clone();
+                        copy.put("near", geoJson(near));
+                        converted = copy;
+                    }
+                    yield named(key, converted);
                 }
                 default -> named(key, expression(argument, false));
             });
@@ -257,6 +280,23 @@ public final class FormRules {
                 if (rules.contains(Rule.REGEX_OPTIONS) && REGEX_OPERATORS.contains(key)) {
                     converted = regexOptions(converted);
                 }
+                // Geo operators are query operators: elsewhere, the same names are stored fields.
+                if (query && rules.contains(Rule.GEO_COORDINATES) && converted instanceof BsonArray array) {
+                    if (GEO_CIRCLES.contains(key) && !array.isEmpty()) {
+                        BsonArray circle = new BsonArray();
+                        circle.add(coordinates(array.get(0)));
+                        circle.addAll(array.subList(1, array.size()));
+                        converted = circle;
+                    } else if (GEO_POINT_LISTS.contains(key)) {
+                        converted = coordinates(array);
+                    }
+                }
+                // Only the GeoJSON a geo operator reads; any other field named coordinates is data.
+                if (query && rules.contains(Rule.GEO_COORDINATES) && converted instanceof BsonDocument operand) {
+                    if (key.equals("$geometry")) {
+                        converted = geoJson(operand);
+                    }
+                }
                 result.put(key, named(key, converted));
             });
             return result;
@@ -321,6 +361,35 @@ public final class FormRules {
             result.put("options", new BsonString(options));
         }
         return result;
+    }
+
+    /** A GeoJSON object with its coordinates as doubles. */
+    private static BsonDocument geoJson(BsonDocument value) {
+        BsonDocument result = value.clone();
+        if (result.get("coordinates") instanceof BsonArray coordinates) {
+            result.put("coordinates", coordinates(coordinates));
+        }
+        return result;
+    }
+
+    /**
+     * Every whole number in a coordinate array, at any depth, as the double a {@code Position} holds, where the double
+     * holds it exactly.
+     */
+    private static BsonValue coordinates(BsonValue value) {
+        if (value instanceof BsonArray array) {
+            BsonArray result = new BsonArray();
+            array.forEach(item -> result.add(coordinates(item)));
+            return result;
+        }
+        if (value instanceof BsonInt32 number) {
+            return new BsonDouble(number.getValue());
+        }
+        // Only a long a double holds exactly; two longs must never compare equal as one double.
+        if (value instanceof BsonInt64 number && Math.abs(number.getValue()) <= 1L << 53) {
+            return new BsonDouble(number.getValue());
+        }
+        return value;
     }
 
     private static BsonValue condition(BsonValue value) {

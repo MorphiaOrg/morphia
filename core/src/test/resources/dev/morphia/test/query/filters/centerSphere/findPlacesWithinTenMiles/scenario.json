@@ -1,0 +1,55 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/centerSphere/findPlacesWithinTenMiles",
+  "title": "Find Places Within Ten Miles",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/centerSphere.txt",
+    "blob": "9f74d15b869b494c43fed36371ee8724da2da22f"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "places",
+    "filter": {
+      "loc": {
+        "$geoWithin": {
+          "$centerSphere": [
+            [
+              {
+                "$numberInt": "-88"
+              },
+              {
+                "$numberInt": "30"
+              }
+            ],
+            {
+              "$numberDouble": "0.0025232135647961246"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "expected": {
+    "none": "the page publishes no result"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "GEO_COORDINATES"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

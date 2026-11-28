@@ -512,6 +512,15 @@
       "exclude": true
     },
     {
+      "page": "query/filters/centerSphere",
+      "title": "main",
+      "blocksSha256": "cf7476f24ee9ca940fda0e46187327fb86bdac74f0bfc330981776ad775e18c6",
+      "reason": "The page writes the center as the integers [ -88, 30 ]; Morphia's centerSphere takes a driver Point, whose Position holds doubles, so it sends [ -88.0, 30.0 ]. The server reads both alike.",
+      "rules": [
+        "GEO_COORDINATES"
+      ]
+    },
+    {
       "page": "query/filters/exists",
       "title": "Use a Sparse Index to Improve $exists Performance",
       "blocksSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",

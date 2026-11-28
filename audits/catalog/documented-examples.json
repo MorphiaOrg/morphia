@@ -1394,17 +1394,6 @@
         "role" : "DATA",
         "sha256" : "2b934cb463adbadb36e2ce4df791b631d2581b12dfe552ec2d2c16d81f45b5c6",
         "text" : "db.sales.insertMany( [\n   { _id : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, date: ISODate(\"2014-03-01T08:00:00Z\") },\n   { _id : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, date: ISODate(\"2014-03-01T09:00:00Z\") },\n   { _id : 3, \"item\" : \"xyz\", \"price\" : 5,  \"fee\" : 0, date: ISODate(\"2014-03-15T09:00:00Z\") }\n] )"
-      } ],
-      "detail" : "MISSING_COMMAND_OR_RESULT",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "performAdditionOnADate",
-      "title" : "Perform Addition on a Date"
-    }, {
-      "blocks" : [ {
-        "role" : "DATA",
-        "sha256" : "2b934cb463adbadb36e2ce4df791b631d2581b12dfe552ec2d2c16d81f45b5c6",
-        "text" : "db.sales.insertMany( [\n   { _id : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, date: ISODate(\"2014-03-01T08:00:00Z\") },\n   { _id : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, date: ISODate(\"2014-03-01T09:00:00Z\") },\n   { _id : 3, \"item\" : \"xyz\", \"price\" : 5,  \"fee\" : 0, date: ISODate(\"2014-03-15T09:00:00Z\") }\n] )"
       }, {
         "role" : "ACTION",
         "sha256" : "594f077951dad7ffd965cdb9c3a13cac9298b4294ef5f0cf8b722aebfc456607",
@@ -1419,6 +1408,25 @@
       "status" : "OWNED",
       "stem" : null,
       "title" : "Add Numbers"
+    }, {
+      "blocks" : [ {
+        "role" : "DATA",
+        "sha256" : "2b934cb463adbadb36e2ce4df791b631d2581b12dfe552ec2d2c16d81f45b5c6",
+        "text" : "db.sales.insertMany( [\n   { _id : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, date: ISODate(\"2014-03-01T08:00:00Z\") },\n   { _id : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, date: ISODate(\"2014-03-01T09:00:00Z\") },\n   { _id : 3, \"item\" : \"xyz\", \"price\" : 5,  \"fee\" : 0, date: ISODate(\"2014-03-15T09:00:00Z\") }\n] )"
+      }, {
+        "role" : "ACTION",
+        "sha256" : "d69cf5d528127c3ee5c9701fa05305204af7e5411aab91b6dc2771c613e954ca",
+        "text" : "db.sales.aggregate(\n   [\n     { $project: { item: 1, billing_date: { $add: [ \"$date\", 3*24*60*60000 ] } } }\n   ]\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "38b5204711d16a240819942ebaf275d27fa237346309d034979499d27ce22267",
+        "text" : "{ \"_id\" : 1, \"item\" : \"abc\", \"billing_date\" : ISODate(\"2014-03-04T08:00:00Z\") }\n{ \"_id\" : 2, \"item\" : \"jkl\", \"billing_date\" : ISODate(\"2014-03-04T09:00:00Z\") }\n{ \"_id\" : 3, \"item\" : \"xyz\", \"billing_date\" : ISODate(\"2014-03-18T09:00:00Z\") }"
+      } ],
+      "detail" : null,
+      "owner" : "aggregation/expressions/add/performAdditionOnADate",
+      "status" : "OWNED",
+      "stem" : null,
+      "title" : "Perform Addition on a Date"
     }, {
       "blocks" : [ {
         "role" : "DATA",
@@ -8436,17 +8444,6 @@
         "role" : "DATA",
         "sha256" : "bdd40f1297235c72695508739046ec3739dae8b96083a8aaa8722015ef18248b",
         "text" : "db.sales.insertMany([\n   { \"_id\" : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, \"discount\" : 5, \"date\" : ISODate(\"2014-03-01T08:00:00Z\") },\n   { \"_id\" : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, \"discount\" : 2, \"date\" : ISODate(\"2014-03-01T09:00:00Z\") }\n])"
-      } ],
-      "detail" : "MISSING_COMMAND_OR_RESULT",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "subtractMillisecondsFromADate",
-      "title" : "Subtract Milliseconds from a Date"
-    }, {
-      "blocks" : [ {
-        "role" : "DATA",
-        "sha256" : "bdd40f1297235c72695508739046ec3739dae8b96083a8aaa8722015ef18248b",
-        "text" : "db.sales.insertMany([\n   { \"_id\" : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, \"discount\" : 5, \"date\" : ISODate(\"2014-03-01T08:00:00Z\") },\n   { \"_id\" : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, \"discount\" : 2, \"date\" : ISODate(\"2014-03-01T09:00:00Z\") }\n])"
       }, {
         "role" : "ACTION",
         "sha256" : "f78df3419fddade3c0a35f2aaa37a175faf59973c1878e00b364c43c380b8c26",
@@ -8476,6 +8473,25 @@
       "status" : "OWNED",
       "stem" : null,
       "title" : "Subtract Two Dates"
+    }, {
+      "blocks" : [ {
+        "role" : "DATA",
+        "sha256" : "bdd40f1297235c72695508739046ec3739dae8b96083a8aaa8722015ef18248b",
+        "text" : "db.sales.insertMany([\n   { \"_id\" : 1, \"item\" : \"abc\", \"price\" : 10, \"fee\" : 2, \"discount\" : 5, \"date\" : ISODate(\"2014-03-01T08:00:00Z\") },\n   { \"_id\" : 2, \"item\" : \"jkl\", \"price\" : 20, \"fee\" : 1, \"discount\" : 2, \"date\" : ISODate(\"2014-03-01T09:00:00Z\") }\n])"
+      }, {
+        "role" : "ACTION",
+        "sha256" : "5b578e526cf4f43e6f695c5ee65c13fe9bdb6f4a8a21ce2038669064a506c636",
+        "text" : "db.sales.aggregate( [ { $project: { item: 1, dateDifference: { $subtract: [ \"$date\", 5 * 60 * 1000 ] } } } ] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "204f21ba2056ad87736f31d15bfe32b6d7d127b63c38c4f177d6b904ace1a361",
+        "text" : "{ \"_id\" : 1, \"item\" : \"abc\", \"dateDifference\" : ISODate(\"2014-03-01T07:55:00Z\") }\n{ \"_id\" : 2, \"item\" : \"jkl\", \"dateDifference\" : ISODate(\"2014-03-01T08:55:00Z\") }"
+      } ],
+      "detail" : null,
+      "owner" : "aggregation/expressions/subtract/subtractMillisecondsFromADate",
+      "status" : "OWNED",
+      "stem" : null,
+      "title" : "Subtract Milliseconds from a Date"
     } ],
     "includes" : [ ],
     "operator" : "subtract",
@@ -13864,10 +13880,15 @@
   }, {
     "context" : "query/filters",
     "examples" : [ {
-      "blocks" : [ ],
-      "detail" : "MISSING_COMMAND_OR_RESULT",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "963bdeceb39203228430f08c78f97836836db783f61a56b4a82fbef8d8efdbe0",
+        "text" : "db.places.find( {\n  loc: { $geoWithin: { $centerSphere: [ [ -88, 30 ], 10/3963.2 ] } }\n} )"
+      } ],
+      "detail" : null,
+      "name" : "Find Places Within Ten Miles",
+      "owner" : "query/filters/centerSphere/findPlacesWithinTenMiles",
+      "status" : "OWNED",
       "stem" : null,
       "title" : "main"
     } ],
@@ -17537,10 +17558,10 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 541,
+    "examples.owned" : 544,
     "examples.unnamed" : 6,
     "examples.unowned" : 55,
-    "examples.unsupported" : 89,
+    "examples.unsupported" : 86,
     "pages" : 290,
     "pages.skipped" : 10,
     "reviews.stale" : 0
