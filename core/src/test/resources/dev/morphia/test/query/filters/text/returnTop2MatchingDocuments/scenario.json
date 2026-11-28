@@ -1,0 +1,80 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/text/returnTop2MatchingDocuments",
+  "title": "Return Top 2 Matching Documents",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/text.txt",
+    "blob": "e852e8a20ef2b64a293852991fb69d879a5b8f7d"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [
+    {
+      "collection": "movies",
+      "keys": {
+        "title": "text",
+        "fullplot": "text"
+      }
+    }
+  ],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "$text": {
+        "$search": "baseball colorado"
+      },
+      "runtime": {
+        "$gt": {
+          "$numberInt": "1000"
+        }
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "year": {
+        "$numberInt": "1"
+      },
+      "score": {
+        "$meta": "textScore"
+      }
+    },
+    "options": {
+      "sort": {
+        "score": {
+          "$meta": "textScore"
+        }
+      },
+      "limit": {
+        "$numberInt": "2"
+      }
+    }
+  },
+  "expected": {
+    "none": "the page elides its printed results with ..., so they prove only part of them"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

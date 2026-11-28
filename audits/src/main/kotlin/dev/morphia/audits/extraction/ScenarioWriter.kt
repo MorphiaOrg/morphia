@@ -78,6 +78,7 @@ object ScenarioWriter {
             ActionShape.FIND -> {
                 action["filter"] = documented.action[0]
                 documented.action.getOrNull(1)?.let { action["projection"] = it }
+                documented.options?.let { action["options"] = it }
             }
             ActionShape.UPDATE -> {
                 require(documented.action.size == 2 && documented.action[1].isDocument) {

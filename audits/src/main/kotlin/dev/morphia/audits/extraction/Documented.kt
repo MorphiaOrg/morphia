@@ -20,6 +20,8 @@ import java.security.MessageDigest
 import java.util.HexFormat
 import org.bson.BsonArray
 import org.bson.BsonDocument
+import org.bson.BsonInt32
+import org.bson.BsonInt64
 import org.bson.BsonValue
 
 /** A page of the documentation repository at an exact commit. */
@@ -91,6 +93,11 @@ data class DocumentedScenario(
     val alternatives: List<List<BsonValue>> = emptyList(),
     /** The find the page runs after a write, whose result is the printed one. */
     val read: DocumentedRead? = null,
+    /**
+     * The command's options: a find's `sort`, `skip` and `limit`. Alternatives share them, since an
+     * alternative respells only the command's documents.
+     */
+    val options: BsonDocument? = null,
     /**
      * Whether the page elides its results with `...`, as the docs' tested examples do. They prove
      * only part of what the server returns, so [printed] is null and nothing checks them.
@@ -175,6 +182,7 @@ object Documented {
                 else emptyList(),
             read = read,
             elided = elided,
+            options = action.options,
         )
     }
 
@@ -245,6 +253,8 @@ object Documented {
         val shape: ActionShape,
         val values: List<BsonValue>,
         val many: Boolean,
+        /** The command's options the scenario carries, such as a find's sort and limit. */
+        val options: BsonDocument? = null,
     )
 
     /**
@@ -346,17 +356,47 @@ object Documented {
                                 operation.pipeline.value().asArray().values,
                                 false,
                             )
-                    is FindOperation ->
-                        if (operation.modifiers.isNotEmpty()) return gap("find modifiers")
-                        else
-                            Action(
-                                ActionShape.FIND,
-                                listOfNotNull(
-                                    operation.filter.value(),
-                                    operation.projection?.value(),
-                                ),
-                                false,
-                            )
+                    is FindOperation -> {
+                        val modifiers = operation.modifiers.groupBy { it.kind }
+                        (modifiers.keys - FIND_OPTIONS.keys - QueryModifierKind.PROJECT)
+                            .firstOrNull()
+                            ?.let {
+                                return gap("a find with $it")
+                            }
+                        val projections =
+                            listOfNotNull(operation.projection) +
+                                modifiers[QueryModifierKind.PROJECT].orEmpty().mapNotNull {
+                                    it.value
+                                }
+                        if (projections.size > 1 || modifiers.values.any { it.size > 1 }) {
+                            return gap("a find with repeated modifiers")
+                        }
+                        // The shell applies a cursor's modifiers in no order of its own: a sort
+                        // always precedes the skip and the limit.
+                        val options = BsonDocument()
+                        FIND_OPTIONS.forEach { (kind, name) ->
+                            val modifier = modifiers[kind]?.single() ?: return@forEach
+                            // A skip or limit of 0 is the cursor's default, which the driver sends
+                            // as no option at all.
+                            if (modifier.number == 0L) return@forEach
+                            options[name] =
+                                modifier.value?.value()
+                                    ?: BsonInt64(modifier.number!!).let {
+                                        if (it.value.toInt().toLong() == it.value)
+                                            BsonInt32(it.value.toInt())
+                                        else it
+                                    }
+                        }
+                        Action(
+                            ActionShape.FIND,
+                            listOfNotNull(
+                                operation.filter.value(),
+                                projections.singleOrNull()?.value(),
+                            ),
+                            false,
+                            options.takeUnless { it.isEmpty() },
+                        )
+                    }
                     is UpdateOperation ->
                         if (operation.options != null) return gap("update options")
                         else
@@ -368,7 +408,7 @@ object Documented {
                     else -> return gap("${operation.kind} action")
                 }
             }
-        if (alternatives.map { it.shape to it.many }.toSet().size != 1) {
+        if (alternatives.map { Triple(it.shape, it.many, it.options) }.toSet().size != 1) {
             return gap("action commands of different kinds")
         }
         return Documented(alternatives, collection, data, indexes)
@@ -430,6 +470,16 @@ object Documented {
 
     /** A shell insert, `db.c.insertOne(` or `db.c.insertMany(`, spaced before its paren or not. */
     private val INSERT = Regex("""\.insert(One|Many)\s*\(""")
+
+    /**
+     * The cursor modifiers a find's scenario carries, by their option name, in the order applied.
+     */
+    private val FIND_OPTIONS =
+        linkedMapOf(
+            QueryModifierKind.SORT to "sort",
+            QueryModifierKind.SKIP to "skip",
+            QueryModifierKind.LIMIT to "limit",
+        )
 
     fun sha256(bytes: ByteArray): String =
         HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes))
