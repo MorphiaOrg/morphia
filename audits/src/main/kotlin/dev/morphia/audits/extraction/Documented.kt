@@ -12,11 +12,13 @@ import dev.morphia.audits.shell.ProgramRole
 import dev.morphia.audits.shell.QueryModifierKind
 import dev.morphia.audits.shell.ShellDialect
 import dev.morphia.audits.shell.ShellLiteralState
+import dev.morphia.audits.shell.ShellLiterals
 import dev.morphia.audits.shell.ShellProgramRequest
 import dev.morphia.audits.shell.ShellPrograms
 import dev.morphia.audits.shell.UpdateOperation
 import java.security.MessageDigest
 import java.util.HexFormat
+import org.bson.BsonArray
 import org.bson.BsonDocument
 import org.bson.BsonValue
 
@@ -195,8 +197,7 @@ object Documented {
                             .filter {
                                 it.role == BlockRole.INDEX ||
                                     it.role == BlockRole.ACTION ||
-                                    it.role == BlockRole.DATA &&
-                                        (".insertOne(" in it.text || ".insertMany(" in it.text)
+                                    it.role == BlockRole.DATA && INSERT.containsMatchIn(it.text)
                             }
                             .mapIndexed { index, it ->
                                 ProgramBlock(
@@ -266,7 +267,7 @@ object Documented {
         val (programs, listings) =
             blocks
                 .filter { it.role == BlockRole.DATA }
-                .partition { ".insertOne(" in it.text || ".insertMany(" in it.text }
+                .partition { INSERT.containsMatchIn(it.text) }
         val program =
             ShellPrograms.normalize(
                 ShellProgramRequest(
@@ -312,7 +313,11 @@ object Documented {
             (commands + program.commands.filter { it.role == ProgramRole.SETUP }).map {
                 it.namespace
             }
-        if (namespaces.any { it.database != null }) {
+        // A page that names one database, as `db.getSiblingDB("examples")`, means the one it runs
+        // in, even beside a plain `db.sensors` that reads what it seeded there; the scenario runs
+        // in
+        // its own. A page that names several reaches outside it.
+        if (namespaces.mapNotNull { it.database }.toSet().size > 1) {
             return gap("command outside the current database")
         }
         val collection = commands.first().namespace.collection
@@ -403,8 +408,28 @@ object Documented {
         return program.expectations.flatMap { it.published.orEmpty() }
     }
 
-    private fun documents(text: String): List<BsonValue>? =
-        LegacyDocuments.parse(text).takeIf { it.state == ShellLiteralState.NORMALIZED }?.documents
+    /**
+     * The documents a listing holds: extended JSON, or else the shell's own value grammar, which
+     * also reads the constructors mongosh prints (`Decimal128("...")`) that extended JSON rejects.
+     */
+    private fun documents(text: String): List<BsonValue>? {
+        LegacyDocuments.parse(text)
+            .takeIf { it.state == ShellLiteralState.NORMALIZED }
+            ?.let {
+                return it.documents
+            }
+        val value =
+            ShellLiterals.normalize("[" + text + "\n]", ShellDialect.MONGOSH)
+                .takeIf { it.state == ShellLiteralState.NORMALIZED }
+                ?.value as? BsonArray ?: return null
+        val documents =
+            value.values.singleOrNull()?.takeIf { it is BsonArray }?.asArray()?.values
+                ?: value.values
+        return documents.takeIf { it.isNotEmpty() && it.all { d -> d is BsonDocument } }
+    }
+
+    /** A shell insert, `db.c.insertOne(` or `db.c.insertMany(`, spaced before its paren or not. */
+    private val INSERT = Regex("""\.insert(One|Many)\s*\(""")
 
     fun sha256(bytes: ByteArray): String =
         HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes))

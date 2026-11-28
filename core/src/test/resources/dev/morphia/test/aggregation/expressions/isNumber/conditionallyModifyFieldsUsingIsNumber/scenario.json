@@ -1,0 +1,199 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
+  "title": "Conditionally Modify Fields using $isNumber",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/isNumber.txt",
+    "blob": "85387638087f90e9e6ee786098da61bf83b88a0a"
+  },
+  "dataset": null,
+  "collections": {
+    "grades": [
+      {
+        "student_id": {
+          "$numberInt": "457864153"
+        },
+        "class_id": "01",
+        "class_desc": "Algebra",
+        "grade": "A"
+      },
+      {
+        "student_id": {
+          "$numberInt": "457864153"
+        },
+        "class_id": "02",
+        "class_desc": "Chemistry",
+        "grade": {
+          "$numberInt": "3"
+        }
+      },
+      {
+        "student_id": {
+          "$numberInt": "978451637"
+        },
+        "class_id": "03",
+        "class_desc": "Physics",
+        "grade": "C"
+      },
+      {
+        "student_id": {
+          "$numberInt": "978451637"
+        },
+        "class_id": "04",
+        "class_desc": "English",
+        "grade": {
+          "$numberInt": "4"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "grades",
+    "pipeline": [
+      {
+        "$addFields": {
+          "points": {
+            "$cond": {
+              "if": {
+                "$isNumber": "$grade"
+              },
+              "then": "$grade",
+              "else": {
+                "$switch": {
+                  "branches": [
+                    {
+                      "case": {
+                        "$eq": [
+                          "$grade",
+                          "A"
+                        ]
+                      },
+                      "then": {
+                        "$numberInt": "4"
+                      }
+                    },
+                    {
+                      "case": {
+                        "$eq": [
+                          "$grade",
+                          "B"
+                        ]
+                      },
+                      "then": {
+                        "$numberInt": "3"
+                      }
+                    },
+                    {
+                      "case": {
+                        "$eq": [
+                          "$grade",
+                          "C"
+                        ]
+                      },
+                      "then": {
+                        "$numberInt": "2"
+                      }
+                    },
+                    {
+                      "case": {
+                        "$eq": [
+                          "$grade",
+                          "D"
+                        ]
+                      },
+                      "then": {
+                        "$numberInt": "1"
+                      }
+                    },
+                    {
+                      "case": {
+                        "$eq": [
+                          "$grade",
+                          "F"
+                        ]
+                      },
+                      "then": {
+                        "$numberInt": "0"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$student_id",
+          "GPA": {
+            "$avg": "$points"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "457864153"
+              }
+            }
+          },
+          {
+            "name": "GPA",
+            "value": {
+              "exact": {
+                "$numberDouble": "3.5"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "978451637"
+              }
+            }
+          },
+          {
+            "name": "GPA",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "COND_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}
