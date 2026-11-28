@@ -94,8 +94,9 @@ data class DocumentedScenario(
     /** The find the page runs after a write, whose result is the printed one. */
     val read: DocumentedRead? = null,
     /**
-     * The command's options: a find's `sort`, `skip` and `limit`. Alternatives share them, since an
-     * alternative respells only the command's documents.
+     * The command's options: a find's `sort`, `skip` and `limit`, or an update's `arrayFilters` and
+     * `upsert`. Alternatives share them, since an alternative respells only the command's
+     * documents.
      */
     val options: BsonDocument? = null,
     /**
@@ -397,14 +398,32 @@ object Documented {
                             options.takeUnless { it.isEmpty() },
                         )
                     }
-                    is UpdateOperation ->
-                        if (operation.options != null) return gap("update options")
-                        else
-                            Action(
-                                ActionShape.UPDATE,
-                                listOf(operation.filter.value(), operation.update.value()),
-                                operation.sourceMethod == "updateMany",
-                            )
+                    is UpdateOperation -> {
+                        val options = operation.options?.value()?.asDocument() ?: BsonDocument()
+                        (options.keys - UPDATE_OPTIONS).firstOrNull()?.let {
+                            return gap("an update with $it")
+                        }
+                        if (
+                            options["arrayFilters"]?.let { filters ->
+                                !filters.isArray || filters.asArray().any { !it.isDocument }
+                            } == true || options["upsert"]?.let { !it.isBoolean } == true
+                        ) {
+                            return gap("update options $options")
+                        }
+                        // The scenario carries the options in one order, as the runner reads them;
+                        // an upsert of false is the default, which the driver sends as no option.
+                        val carried = BsonDocument()
+                        options["arrayFilters"]?.let { carried["arrayFilters"] = it }
+                        options["upsert"]
+                            ?.takeIf { it.asBoolean().value }
+                            ?.let { carried["upsert"] = it }
+                        Action(
+                            ActionShape.UPDATE,
+                            listOf(operation.filter.value(), operation.update.value()),
+                            operation.sourceMethod == "updateMany",
+                            carried.takeUnless { it.isEmpty() },
+                        )
+                    }
                     else -> return gap("${operation.kind} action")
                 }
             }
@@ -470,6 +489,9 @@ object Documented {
 
     /** A shell insert, `db.c.insertOne(` or `db.c.insertMany(`, spaced before its paren or not. */
     private val INSERT = Regex("""\.insert(One|Many)\s*\(""")
+
+    /** The options an update's scenario carries. */
+    private val UPDATE_OPTIONS = setOf("arrayFilters", "upsert")
 
     /**
      * The cursor modifiers a find's scenario carries, by their option name, in the order applied.

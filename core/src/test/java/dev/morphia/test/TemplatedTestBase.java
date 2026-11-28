@@ -3,6 +3,7 @@ package dev.morphia.test;
 import java.io.File;
 import java.util.function.Function;
 
+import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
@@ -55,6 +56,16 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testUpdate(Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
         new OperatorCaseRunner(this).update(scenario(), function, operators);
+    }
+
+    /**
+     * @param function  the query
+     * @param options   the update options carrying the documented arrayFilters and upsert
+     * @param operators the update operators
+     */
+    public void testUpdate(Function<Query<Document>, Query<Document>> function, UpdateOptions options,
+            UpdateOperator... operators) {
+        new OperatorCaseRunner(this).update(scenario(), function, options, operators);
     }
 
     public final String prefix() {

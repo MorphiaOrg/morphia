@@ -708,6 +708,24 @@
       "blocksSha256": "4b5d740ad923a7db2e485541eaef4682579eabc319e53d2732859b7b74dd152b",
       "reason": "The page prints the whole collection after the update but shows no read, so the runner's update results are the documents its filter still matches, as the legacy tests read them. Serialization and behavior pass. Lift once the page shows its find, which the case then runs.",
       "exclude": true
+    },
+    {
+      "page": "query/updates/positional-filtered",
+      "title": "Update Nested Arrays in Conjunction with $[]",
+      "blocksSha256": "8490de85dc5c3f85621d095e26aaad1c3fbd00939fbdc22cca324be676c23de0",
+      "reason": "Morphia's eq() writes the array filter { \"t.type\": \"quiz\" } as { \"t.type\": { $eq: \"quiz\" } }, which the server reads alike.",
+      "rules": [
+        "EQ_SHORTHAND"
+      ]
+    },
+    {
+      "page": "query/updates/setOnInsert",
+      "title": "main",
+      "blocksSha256": "7dadaa9fce4827960ad40ba61b648d5343dc4d3bf219f090e7344261c99471ae",
+      "reason": "The page prints the upserted document as { _id, item, defaultQty }; the server adds an upsert's new fields in field-name order and returns { _id, defaultQty, item }. Serialization and behavior pass; the page's field order is wrong.",
+      "skipped": {
+        "published": "the page prints the upserted fields in an order the server doesn't store"
+      }
     }
   ]
 }

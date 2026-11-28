@@ -1,0 +1,208 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/positionalFiltered/updateAllArrayElementsThatMatchArrayFilters",
+  "title": "Update All Array Elements That Match arrayFilters",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/positional-filtered.txt",
+    "blob": "856551f331869f4d0255fa6db0c32e0c92bd0230"
+  },
+  "dataset": null,
+  "collections": {
+    "students": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "grades": [
+          {
+            "$numberInt": "95"
+          },
+          {
+            "$numberInt": "92"
+          },
+          {
+            "$numberInt": "90"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "grades": [
+          {
+            "$numberInt": "98"
+          },
+          {
+            "$numberInt": "100"
+          },
+          {
+            "$numberInt": "102"
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "grades": [
+          {
+            "$numberInt": "95"
+          },
+          {
+            "$numberInt": "110"
+          },
+          {
+            "$numberInt": "100"
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "students",
+    "filter": {},
+    "update": {
+      "$set": {
+        "grades.$[element]": {
+          "$numberInt": "100"
+        }
+      }
+    },
+    "multi": true,
+    "options": {
+      "arrayFilters": [
+        {
+          "element": {
+            "$gte": {
+              "$numberInt": "100"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "95"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "92"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "90"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "98"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "grades",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "95"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

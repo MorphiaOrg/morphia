@@ -87,6 +87,7 @@ object ScenarioWriter {
                 action["filter"] = documented.action[0]
                 action["update"] = documented.action[1]
                 action["multi"] = BsonBoolean(documented.many)
+                documented.options?.let { action["options"] = it }
             }
         }
         // The find the page runs after a write: both sides run it, and its result is the one the

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/updates/setOnInsert/setFieldsOnlyOnInsert",
+  "title": "Set Fields Only on Insert",
+  "context": "UPDATE",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/update/setOnInsert.txt",
+    "blob": "6c89dec4ea1a7d3ef9d2b3633579f09423975f0c"
+  },
+  "dataset": null,
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "products",
+    "filter": {
+      "_id": {
+        "$numberInt": "1"
+      }
+    },
+    "update": {
+      "$set": {
+        "item": "apple"
+      },
+      "$setOnInsert": {
+        "defaultQty": {
+          "$numberInt": "100"
+        }
+      }
+    },
+    "multi": false,
+    "options": {
+      "upsert": true
+    }
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "defaultQty",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "the page prints the upserted fields in an order the server doesn't store"
+  }
+}
