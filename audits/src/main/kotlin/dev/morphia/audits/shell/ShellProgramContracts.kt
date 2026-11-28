@@ -1,5 +1,6 @@
 package dev.morphia.audits.shell
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.published.PublishedDocument
 import dev.morphia.audits.published.PublishedReadProfile
 import dev.morphia.audits.semantics.BsonSnapshot
@@ -175,9 +176,11 @@ data class ProgramExpectation(
     val source: ProgramLocation,
     val dependencies: List<String>,
     val published: List<PublishedDocument>? = null,
+    /** The page elides its printed results with `...` ([ShellEllipsis]), so none are checked. */
+    @get:JsonInclude(JsonInclude.Include.NON_DEFAULT) val elided: Boolean = false,
 ) {
     init {
-        require(listOf(documents, error, published).count { it != null } == 1)
+        require(listOf(documents, error, published).count { it != null } == if (elided) 0 else 1)
     }
 
     val publishedProfile: String? = if (published != null) PublishedReadProfile.ID else null

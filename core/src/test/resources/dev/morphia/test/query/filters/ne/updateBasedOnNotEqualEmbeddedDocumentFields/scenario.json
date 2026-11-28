@@ -1,0 +1,51 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
+  "title": "Update Based on Not Equal Embedded Document Fields",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/ne.txt",
+    "blob": "cd85ca2d756fdf5575f2f4a58cbc6772d179ed3a"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "update",
+    "collection": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$ne": {
+          "$numberDouble": "9.3"
+        }
+      }
+    },
+    "update": {
+      "$set": {
+        "highestRated": false
+      }
+    },
+    "multi": true
+  },
+  "expected": {
+    "none": "the page elides its printed results with ..., so they prove only part of them"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

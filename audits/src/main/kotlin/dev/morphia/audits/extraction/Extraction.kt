@@ -89,7 +89,7 @@ object Extraction {
                                         ScenarioWriter.name(page, stem),
                                         null,
                                         example.blocks,
-                                        override?.alternatives == true,
+                                        override?.alternatives == true || example.alternatives,
                                     )
                                 } catch (failure: IllegalArgumentException) {
                                     return@examples fail(failure.message!!)
@@ -247,7 +247,7 @@ object Extraction {
                                 owner,
                                 null,
                                 example.blocks,
-                                override?.alternatives == true,
+                                override?.alternatives == true || example.alternatives,
                             )
                         val fresh =
                             BsonDocument.parse(

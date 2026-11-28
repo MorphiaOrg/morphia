@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.ne;
+import static dev.morphia.query.updates.UpdateOperators.set;
 
 public class TestNe extends TemplatedTestBase {
 
@@ -34,5 +35,14 @@ public class TestNe extends TemplatedTestBase {
     public void testUseAnExactArrayComparison() {
         testQuery((query) -> query.filter(ne("genres", List.of("Drama")), gt("runtime", 1000)),
                 new FindOptions().projection().include("title", "genres").projection().exclude("_id"));
+    }
+
+    /**
+     * test data: dev/morphia/test/query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields
+     */
+    @Test
+    @DisplayName("Update Based on Not Equal Embedded Document Fields")
+    public void testUpdateBasedOnNotEqualEmbeddedDocumentFields() {
+        testUpdate((query) -> query.filter(ne("imdb.rating", 9.3)), set("highestRated", false));
     }
 }

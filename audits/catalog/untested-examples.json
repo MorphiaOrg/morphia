@@ -297,6 +297,14 @@
       "reason": "NOT_WRITTEN"
     },
     {
+      "scenario": "query/filters/text/returnTheRelevanceScore",
+      "reason": "NO_MORPHIA_API",
+      "detail": "The page projects { _id: 0, title: 1, year: 1, score: { $meta: \"textScore\" } }; Morphia's Projection rejects $meta beside included or excluded fields.",
+      "operator": "$meta",
+      "option": "beside included or excluded fields in a find projection",
+      "family": "aggregation/expressions"
+    },
+    {
       "scenario": "query/filters/type/matchNumericRatings",
       "reason": "NOT_WRITTEN"
     },

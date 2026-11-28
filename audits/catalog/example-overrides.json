@@ -519,6 +519,15 @@
       "exclude": true
     },
     {
+      "page": "query/filters/in",
+      "title": "Use $in with a Regular Expression",
+      "blocksSha256": "ad27556eee16f9b2526f604c7fbc452e1bdb794cfc3f14d2397222abbb3575d9",
+      "reason": "The page projects { _id: 0, title: 1, plot: 1 }; Morphia's projection emits its included fields before the excluded _id. Field order in a projection doesn't change what the server returns.",
+      "rules": [
+        "PROJECT_ID_FIRST"
+      ]
+    },
+    {
       "page": "query/filters/mod",
       "title": "Array with Single Element",
       "blocksSha256": "be0a12e928cb90110bfc5a791a68ce983eb8ed9bd419a0e4b6130f805015a4c4",

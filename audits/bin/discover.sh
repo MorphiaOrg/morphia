@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Usage: audits/discover.sh <docs-checkout> <out-dir> [--test]
+# Usage: audits/bin/discover.sh <docs-checkout> <out-dir> [--test]
 #
 # Report-only discovery against the head of a mongodb/docs checkout. In a throwaway worktree of
 # HEAD it bundles and parses the checkout's operator pages with the pinned parser, runs extraction
 # (which inventories the pages, writes a scenario for every new example, and refreshes each scenario
 # whose example changed upstream), and, with --test, runs
-# core's operator tests under both mappers against the result. It then writes the findings the
+# core's operator tests against the result. It then writes the findings the
 # Publish job files (missing Morphia API, new examples, failing tests), and fails while any in-scope
 # example has no scenario or exclusion; those are listed in missing-scenarios.txt, not filed.
 # Everything lands in <out-dir>, with summary.md on top; nothing in this checkout changes and
@@ -14,7 +14,9 @@
 set -euo pipefail
 
 [ $# -ge 2 ] || { sed -n 2,11p "$0"; exit 2; }
-repository=$(git rev-parse --show-toplevel)
+# Paths are anchored at this script, not the working directory.
+here=$(cd "$(dirname "$0")" && pwd)
+repository=$(cd "$here/../.." && pwd)
 docs=$(cd "$1" && pwd)
 mkdir -p "$2"
 out=$(cd "$2" && pwd)
@@ -27,45 +29,11 @@ cd "$tree"
 
 mvn() { ./mvnw -B -ntp -q "$@"; }
 audit() { mvn -Daudits -pl :morphia-audits exec:java -Daudits.mainClass="$1" -Dexec.args="$2"; }
-# Exit status 3 means the step finished and reported what it couldn't do.
-partial() { "$@" || [ $? -eq 3 ]; }
 export MAVEN_OPTS=-Xmx8g
 
 mvn install -pl :morphia-core -am -DskipTests -Ddeploy.skip=true -Dinvoker.skip=true
-mvn -Daudits -pl :morphia-audits compile
-uv sync --frozen --project audits/parser -q
-cp audits/catalog/documented-examples.json "$out/committed-inventory.json"
-
-# The pinned source bundle of the checkout's manual, at the checkout's commit.
-python3 -I - "$docs" "$out/sources-request.json" <<'EOF'
-import json, subprocess, sys
-request = json.load(open("audits/config/manual-baseline-sources.json"))
-request["revision"] = subprocess.run(["git", "-C", sys.argv[1], "rev-parse", "HEAD"], check=True,
-                                     capture_output=True, text=True).stdout.strip()
-request["id"] = "manual-weekly"
-request["label"] = "weekly"
-json.dump(request, open(sys.argv[2], "w"), indent=2)
-EOF
-audit dev.morphia.audits.sources.SourcesMainKt "$out/sources-request.json $out/bundle --repository $docs" \
-    > "$out/sources.json"
-content=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["manifest"]["contentSha256"])' "$out/sources.json")
-
-pages=$(python3 -I - "$out/sources.json" <<'EOF'
-import json, re, sys
-manifest = json.load(open(sys.argv[1]))["manifest"]
-source = manifest["request"]["projectRoot"] + "/source/"
-print(" ".join(sorted(r["path"][len(source):] for r in manifest["resources"]
-                      if re.fullmatch(re.escape(source) + r"reference/operator/(aggregation|query|update)/[^/]+\.txt", r["path"]))))
-EOF
-)
-# shellcheck disable=SC2086
-partial audit dev.morphia.audits.documents.DocumentsMainKt \
-    "$out/bundle $content $tree/audits/parser/.venv/bin/python $tree/audits/parser/adapter.py $pages" \
-    > "$out/documents.json"
-partial audit dev.morphia.audits.extraction.ExtractMainKt \
-    "$tree $out/bundle $content $out/documents.json --refresh $out/committed-inventory.json" \
-    > "$out/extraction.txt"
-rm -rf "$out/bundle"
+# This checkout's extract.sh, run against the worktree: the worktree holds only committed files.
+AUDITS_LABEL=weekly AUDITS_REPOSITORY="$tree" "$here/extract.sh" "$docs" "$out" > /dev/null
 cp audits/catalog/documented-examples.json "$out/documented-examples.json"
 git add -A -N
 git diff -- audits/catalog/documented-examples.json > "$out/inventory.diff"
@@ -75,16 +43,16 @@ log=-
 if [ "$test" = "--test" ]; then
     log="$out/audit.log"
     : > "$log"
-    for mapper in critter reflection; do
-        mvn test -pl :morphia-core -Dmorphia.mapper=$mapper -Ddeploy.skip=true -Dinvoker.skip=true \
-            -Dsurefire.failIfNoSpecifiedTests=false \
-            -Dtest='dev.morphia.test.aggregation.expressions.*,dev.morphia.test.aggregation.stages.*,dev.morphia.test.query.filters.*,dev.morphia.test.query.updates.*,ExampleOwnersTest' \
-            >> "$log" 2>&1 || {
-            # -q hides Maven's own failure banner; the findings read this marker instead.
-            echo "[DISCOVERY] $mapper: the operator tests exited non-zero" >> "$log"
-            echo "$mapper: operator tests failed" >> "$out/test-status.txt"
-        }
-    done
+    # One run under the default mapper: the scenarios run against plain Document collections, so
+    # the mapper doesn't change what they check, and build.yml covers mapper parity.
+    mvn test -pl :morphia-core -Ddeploy.skip=true -Dinvoker.skip=true \
+        -Dsurefire.failIfNoSpecifiedTests=false \
+        -Dtest='dev/morphia/test/aggregation/expressions/*,dev/morphia/test/aggregation/stages/*,dev/morphia/test/query/filters/*,dev/morphia/test/query/updates/*,ExampleOwnersTest' \
+        >> "$log" 2>&1 || {
+        # -q hides Maven's own failure banner; the findings read this marker instead.
+        echo "[DISCOVERY] the operator tests exited non-zero" >> "$log"
+        echo "operator tests failed" >> "$out/test-status.txt"
+    }
 fi
 audit dev.morphia.audits.publish.PublishMainKt "findings $tree $out/committed-inventory.json $log $out/extraction.txt" \
     > "$out/findings.json"

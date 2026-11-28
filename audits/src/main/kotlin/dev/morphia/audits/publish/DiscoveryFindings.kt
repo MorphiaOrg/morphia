@@ -8,8 +8,8 @@ import dev.morphia.audits.extraction.MissingApi
 import dev.morphia.audits.extraction.Overrides
 
 /**
- * The publishable findings of one scheduled discovery run (`audits/discover.sh`), each keyed so a
- * recurring finding updates its issue:
+ * The publishable findings of one scheduled discovery run (`audits/bin/discover.sh`), each keyed so
+ * a recurring finding updates its issue:
  * - `MISSING_API`: a documented operator with no tagged Morphia factory;
  * - `NEW_EXAMPLE`: an example the current docs have and the committed inventory doesn't, with no
  *   scenario;

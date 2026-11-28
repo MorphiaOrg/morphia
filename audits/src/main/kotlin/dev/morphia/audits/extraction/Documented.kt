@@ -89,6 +89,11 @@ data class DocumentedScenario(
     val alternatives: List<List<BsonValue>> = emptyList(),
     /** The find the page runs after a write, whose result is the printed one. */
     val read: DocumentedRead? = null,
+    /**
+     * Whether the page elides its results with `...`, as the docs' tested examples do. They prove
+     * only part of what the server returns, so [printed] is null and nothing checks them.
+     */
+    val elided: Boolean = false,
 )
 
 /** A find a page runs after a write: its collection, filter, projection and sort. */
@@ -109,6 +114,9 @@ data class FormInclude(val path: String, val blob: String)
 object Documented {
     private sealed interface Examined {
         data class Gap(val detail: String) : Examined
+
+        /** The page elides its results with `...`; see [DocumentedScenario.elided]. */
+        data object Elided : Examined
     }
 
     /**
@@ -139,13 +147,17 @@ object Documented {
             }
         require(read == null || action.shape != ActionShape.FIND) { "$label: a read after a find" }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
-        val printed =
+        val published =
             if (expected.isEmpty()) null
             else
                 when (val read = published(read?.collection ?: documented.collection, expected)) {
                     is Examined.Gap -> throw IllegalArgumentException("$label: ${read.detail}")
-                    else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
+                    else -> read
                 }
+        val elided = published == Examined.Elided
+        val printed =
+            @Suppress("UNCHECKED_CAST")
+            (published.takeUnless { elided } as List<PublishedDocument>?)
         val listed = expected.map { documents(it.text) }
         return DocumentedScenario(
             documented.collection,
@@ -160,6 +172,7 @@ object Documented {
                 if (alternatives) documented.alternatives.drop(1).map { it.values }
                 else emptyList(),
             read = read,
+            elided = elided,
         )
     }
 
@@ -286,7 +299,7 @@ object Documented {
                 .map {
                     val index = it.operation as IndexOperation
                     DocumentedIndex(
-                        it.namespace?.collection ?: return gap("an index without a collection"),
+                        it.namespace.collection,
                         index.keys.value().asDocument(),
                         index.options?.value()?.asDocument(),
                     )
@@ -299,13 +312,13 @@ object Documented {
             (commands + program.commands.filter { it.role == ProgramRole.SETUP }).map {
                 it.namespace
             }
-        if (namespaces.any { it == null || it.database != null }) {
+        if (namespaces.any { it.database != null }) {
             return gap("command outside the current database")
         }
-        val collection = commands.first().namespace!!.collection
+        val collection = commands.first().namespace.collection
         val inserted =
             inserts
-                .groupBy({ it.namespace!!.collection }) { command ->
+                .groupBy({ it.namespace.collection }) { command ->
                     (command.operation as InsertOperation).documents.map { it.value() }
                 }
                 .mapValues { (_, documents) -> documents.flatten() }
@@ -386,6 +399,7 @@ object Documented {
         if (program.state != ShellLiteralState.NORMALIZED) {
             return Examined.Gap("expected syntax")
         }
+        if (program.expectations.any { it.elided }) return Examined.Elided
         return program.expectations.flatMap { it.published.orEmpty() }
     }
 

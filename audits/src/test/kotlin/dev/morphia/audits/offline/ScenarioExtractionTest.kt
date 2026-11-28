@@ -1834,11 +1834,16 @@ class ScenarioExtractionTest {
         // A seed may use the printed constructors the extended JSON reader rejects.
         val decimal = scenario(code("{ v: Decimal128(\"1.5\") }"), code("db.items.find({});"))
         assertEquals(ShellLiteralState.NORMALIZED, decimal.program!!.state)
-        // A truncated listing leaves the example serialization-only.
+        // A truncated listing is the page's elided result, which leaves the example
+        // serialization-only.
         val truncated = scenario(code("db.items.find({});"), code("[ {v:1} ]\n..."))
         assertEquals(ShellLiteralState.NORMALIZED, truncated.program!!.state)
-        assertEquals(listOf(ProgramRole.ACTION), truncated.blocks.map { it.role })
-        assertEquals(listOf("UNREADABLE_RESULT"), truncated.skipped.map { it.reason })
+        assertEquals(
+            listOf(ProgramRole.ACTION, ProgramRole.EXPECTED),
+            truncated.blocks.map { it.role },
+        )
+        assertTrue(truncated.skipped.isEmpty())
+        assertTrue(truncated.program!!.expectations.single().elided)
         // Code the page leaves unhighlighted takes the reviewed language, when there is one.
         val unlabeled = code("db.items.find({});", "none")
         assertEquals(ScenarioVariant.UNRESOLVED, scenario(unlabeled).variant)

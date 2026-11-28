@@ -1,0 +1,69 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "query/filters/in/useInWithARegularExpression",
+  "title": "Use $in with a Regular Expression",
+  "context": "FILTER",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/query/in.txt",
+    "blob": "bac31808d1910fe9947955e65d193b3035f2e718"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "find",
+    "collection": "movies",
+    "filter": {
+      "plot": {
+        "$in": [
+          {
+            "$regularExpression": {
+              "pattern": "^Alien",
+              "options": ""
+            }
+          },
+          {
+            "$regularExpression": {
+              "pattern": "sci-fi",
+              "options": ""
+            }
+          }
+        ]
+      }
+    },
+    "projection": {
+      "_id": {
+        "$numberInt": "0"
+      },
+      "title": {
+        "$numberInt": "1"
+      },
+      "plot": {
+        "$numberInt": "1"
+      }
+    }
+  },
+  "expected": {
+    "none": "the page elides its printed results with ..., so they prove only part of them"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

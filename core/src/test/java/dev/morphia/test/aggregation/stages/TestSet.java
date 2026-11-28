@@ -13,6 +13,7 @@ import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.gt;
 
 public class TestSet extends TemplatedTestBase {
     /**
@@ -56,6 +57,26 @@ public class TestSet extends TemplatedTestBase {
     @DisplayName("Creating a New Field with Existing Fields")
     public void testCreatingANewFieldWithExistingFields() {
         testPipeline((aggregation) -> aggregation.pipeline(set().field("quizAverage", avg("$quiz"))));
+    }
+
+    /**
+     * test data: dev/morphia/test/aggregation/stages/set/overwriteTheRating
+     */
+    @Test
+    @DisplayName("Overwrite the Rating")
+    public void testOverwriteTheRating() {
+        testPipeline((aggregation) -> aggregation.pipeline(match(eq("title", "Baseball")),
+                set().field("rated", "UNRATED")));
+    }
+
+    /**
+     * test data: dev/morphia/test/aggregation/stages/set/replaceTheIdWithTheTitle
+     */
+    @Test
+    @DisplayName("Replace the Id with the Title")
+    public void testReplaceTheIdWithTheTitle() {
+        testPipeline((aggregation) -> aggregation.pipeline(match(gt("runtime", 1000)),
+                set().field("_id", "$title").field("title", "movie")));
     }
 
 }

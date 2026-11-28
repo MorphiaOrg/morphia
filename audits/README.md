@@ -9,15 +9,46 @@ This module reads the docs, writes scenarios, and checks that every documented e
 scenario and every scenario has its test. Nothing here runs during an ordinary build, fetches
 documentation implicitly, or writes core's tests.
 
-## Running the tests
+## Running it locally
 
-```sh
-./mvnw -Daudits -pl audits verify
-```
+Everything runs through `make`: `make <target>` here, or `make -C audits <target>` from the
+repository root. `make help` lists the targets.
 
-They need no MongoDB, docs checkout or token. Run them with `-Dmorphia.mapper=critter`, then
-`reflection`, like core's. The parser integration skips unless given the isolated parser runtime
-(see `.github/workflows/audits.yml`).
+| Target | What it does | Needs |
+|---|---|---|
+| `make test` | The module's offline tests. | A JDK 17 toolchain |
+| `make parser-test` | The parser's regressions, the shell-result probes, and the coordinator's integration with the parser. | uv |
+| `make docs` | Checks out the docs at the pinned commit, or moves an existing checkout to it. | Git, network |
+| `make extract` | Moves the checkout to `REVISION`, rebuilds the inventory and scenarios in place from it, then runs `make report`. Review the result with `git diff`. | uv |
+| `make report` | Writes the missing-scenario report, `target/missing-scenarios.md` and `.json`, without failing on what it lists. | |
+| `make core-test` | Core's operator tests against the scenarios in this tree, once, under the default mapper. | Docker |
+| `make discover` | The weekly discovery against the docs' head, in a throwaway worktree of the committed `HEAD`: nothing in this checkout changes. The audit's code and catalogs come from `HEAD`, so commit a change before discovery can see it; the `bin/` scripts run from this checkout. `make discover-test` also runs core's operator tests against its result. | uv; Docker for `discover-test` |
+| `make all` | `test`, `parser-test`, `extract` (with its report) and `core-test`, in that order. | All of the above |
+| `make clean-docs` | Removes the docs checkout. | |
+
+Variables:
+- `DOCS`: the docs checkout. The default is `target/mongodb-docs`, so each worktree has its own;
+  `mvn clean` removes it, and the next target that needs it checks it out again in seconds.
+- `REVISION`: the docs commit `docs` and `extract` check out. The default is the pin in
+  `config/manual-baseline-sources.json`; `HEAD` is the docs' head, which `discover` uses unless
+  `REVISION` is given. Each target moves the checkout to its own revision, so `make discover
+  extract` discovers at the head and extracts at the pin.
+- `OUT`: where `extract` and `discover` write their reports (`target/extraction`,
+  `target/discovery`).
+
+The tests alone need no MongoDB, docs checkout or token: `./mvnw -Daudits -pl audits verify` runs
+them without `make`.
+
+### The scripts
+
+The targets call the scripts in `bin/`, which also run on their own. Each resolves its paths from
+where it lives, so it works from any directory; relative arguments are relative to where it's run:
+
+| Script | What it does |
+|---|---|
+| `bin/checkout-docs.sh [--update] <docs-dir> [<revision>]` | A shallow, blobless, sparse checkout of the source bundle's roots at the revision (the pin by default). `--update` moves an existing checkout to the revision instead of cloning again. |
+| `bin/extract.sh <docs-checkout> <out-dir>` | Bundles and parses the checkout's operator pages, then runs extraction with `--refresh` in this repository: the inventory, new scenarios, and refreshed scenarios whose example changed. |
+| `bin/discover.sh <docs-checkout> <out-dir> [--test]` | `bin/extract.sh` in a throwaway worktree, then the findings the weekly Publish job files. |
 
 ## The audit
 
@@ -29,6 +60,12 @@ They need no MongoDB, docs checkout or token. Run them with `-Dmorphia.mapper=cr
   prints the untested scenarios by reason and writes all of them to
   `audits/target/untested-scenarios.json`, with the test each needs: the work queue.
 
+Each run of the first check also writes `audits/target/missing-scenarios.md` and `.json`: every
+missing example grouped by what it waits on, with what that category means, where in the sources it
+comes from, how to resolve it, and each example's page link, digest and source blocks. A category
+is a unit of work to hand to a person or an agent. `make report` writes it without the test run
+failing.
+
 `ApiCoverageTest` reads Morphia's operator tags (`@aggregation.expression $x`,
 `@aggregation.stage`, `@query.filter`, `@update.operator`) from core's sources:
 - every run reports the documented operators with no tagged factory, with the untested scenarios
@@ -37,14 +74,16 @@ They need no MongoDB, docs checkout or token. Run them with `-Dmorphia.mapper=cr
   tagged: its test can be written now. An entry that names an operator and an option stays until a
   test proves the option, since a tag says nothing about options.
 
-A docs bump: pin the new commit in `config/manual-baseline-sources.json`, bundle and parse the
-pages, run `ExtractMainKt`, then review the scenario, inventory and baseline diffs.
+A docs bump: pin the new commit in `config/manual-baseline-sources.json`, run `make extract` (it
+moves the existing checkout to the new pin), then review the scenario, inventory and baseline
+diffs. After a change to the reader, `make extract` is also what makes the change show up in the
+inventory and the missing-scenario report.
 
 ## Weekly discovery
 
-`.github/workflows/operator-discovery.yml` runs `audits/discover.sh` every Monday against the head
-of mongodb/docs. In a throwaway worktree, it bundles and parses the pages, runs extraction, and
-runs core's operator tests under both mappers against the result. The Publish job then files the
+`.github/workflows/operator-discovery.yml` runs `audits/bin/discover.sh` every Monday against the
+head of mongodb/docs. In a throwaway worktree, it bundles and parses the pages, runs extraction, and
+runs core's operator tests against the result. The Publish job then files the
 findings as issues, each keyed so that a rerun updates its issue instead of filing it again. An
 in-scope example with no scenario or exclusion fails the run instead: it is listed in the run's
 summary and `missing-scenarios.txt`, and is not filed.
@@ -55,12 +94,12 @@ summary and `missing-scenarios.txt`, and is not filed.
 | `NEW_EXAMPLE` | An example the docs gained since the committed inventory, with no scenario. |
 | `FAILING_AUDIT` | Operator tests failing against the current docs' scenarios. |
 
-Run it locally, without publishing:
+Run it locally with `make discover` (or `make discover-test`), then, from the repository root,
+see what the Publish job would file:
 
 ```sh
-audits/discover.sh <docs-checkout> <out-dir> [--test]
 ./mvnw -q -Daudits -pl audits exec:java -Daudits.mainClass=dev.morphia.audits.publish.PublishMainKt \
-  -Dexec.args="publish <out-dir>/findings.json audits/catalog/publication-policy.json <journal.json> pom.xml <OWNER/REPO>"
+  -Dexec.args="publish audits/target/discovery/findings.json audits/catalog/publication-policy.json <journal.json> pom.xml <OWNER/REPO>"
 ```
 
 Without `--publish`, `publish` only reports what it would file. The publisher's mutation tests run

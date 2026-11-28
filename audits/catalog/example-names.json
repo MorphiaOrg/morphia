@@ -23,6 +23,20 @@
       "reason": "the page gives its only example no title; the name says what the example does"
     },
     {
+      "page": "aggregation/expressions/cond",
+      "title": "main",
+      "actionSha256": "8fff4fb0364f1f3c8237436072c06206d4f193845c70109dd5b850d4e4f7d0e6",
+      "name": "Price Rentals by Rating",
+      "reason": "the page gives its example no title; the name says what the pipeline does"
+    },
+    {
+      "page": "aggregation/expressions/cond",
+      "title": "main",
+      "actionSha256": "ea7d58e9191d39a2b8ac89c2c0ff2737607f6c537a0818f66e793873d5e85a9c",
+      "alternativeOf": "8fff4fb0364f1f3c8237436072c06206d4f193845c70109dd5b850d4e4f7d0e6",
+      "reason": "the page shows the array syntax of the same $cond and says it returns the same results"
+    },
+    {
       "page": "aggregation/expressions/count-accumulator",
       "title": "main",
       "actionSha256": "1a94a92286a9b4a4439f4ba6dd23a6f7ac0cf8489d6955256b37fc17d8649645",
@@ -447,6 +461,20 @@
       "title": "main",
       "actionSha256": "bcb7cb77b65de38c219114b6a2748f3e91d440a108fc44ba4166b29cb19dbad7",
       "name": "Pivot Sales by Quarter",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/set",
+      "title": "Overwriting an Existing Field",
+      "actionSha256": "ffddecb23c7932269af3123afdf3e49be017872d2348b1da41ab36e25484bd27",
+      "name": "Overwrite the Rating",
+      "reason": "the section shows several examples under one title"
+    },
+    {
+      "page": "aggregation/stages/set",
+      "title": "Overwriting an Existing Field",
+      "actionSha256": "88e75851c233d5cfc21126a6949bd40d41b37bcf12df14268b185b6c33dff8c7",
+      "name": "Replace the Id with the Title",
       "reason": "the section shows several examples under one title"
     },
     {

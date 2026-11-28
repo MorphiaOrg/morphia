@@ -1,0 +1,114 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/cond/priceRentalsByRating",
+  "title": "Price Rentals by Rating",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e4b0c153a0f39829bb1c2e5195beee1e92a8eff7",
+    "path": "content/manual/manual/source/reference/operator/aggregation/cond.txt",
+    "blob": "2cf88506f960832fe4928735d7eef6f26367955d"
+  },
+  "dataset": "sample_mflix",
+  "collections": {},
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": {
+              "$numberInt": "1000"
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "rentalPrice": {
+            "$cond": {
+              "if": {
+                "$gte": [
+                  "$imdb.rating",
+                  {
+                    "$numberInt": "9"
+                  }
+                ]
+              },
+              "then": {
+                "$numberDouble": "5.99"
+              },
+              "else": {
+                "$numberDouble": "3.99"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "alternatives": [
+      {
+        "pipeline": [
+          {
+            "$match": {
+              "runtime": {
+                "$gt": {
+                  "$numberInt": "1000"
+                }
+              }
+            }
+          },
+          {
+            "$project": {
+              "title": {
+                "$numberInt": "1"
+              },
+              "rentalPrice": {
+                "$cond": [
+                  {
+                    "$gte": [
+                      "$imdb.rating",
+                      {
+                        "$numberInt": "9"
+                      }
+                    ]
+                  },
+                  {
+                    "$numberDouble": "5.99"
+                  },
+                  {
+                    "$numberDouble": "3.99"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "none": "the page elides its printed results with ..., so they prove only part of them"
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "behavior": "the example queries the sample_mflix sample dataset, which the tests do not load",
+    "published": "the example queries the sample_mflix sample dataset, which the tests do not load"
+  }
+}

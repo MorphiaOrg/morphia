@@ -53,13 +53,18 @@ data class DocumentedExample(
     val blocks: List<SourceBlock> = emptyList(),
     /** The reviewed name of an example whose title is generic; omitted when there is none. */
     @get:JsonInclude(JsonInclude.Include.NON_NULL) val name: String? = null,
+    /**
+     * Whether its action block holds the page's equivalent spellings of one command, folded in from
+     * the examples a review declared alternatives of it.
+     */
+    @get:JsonInclude(JsonInclude.Include.NON_DEFAULT) val alternatives: Boolean = false,
 )
 
 /**
  * A reviewed decision about one example, identified by its page (`context/operator`), its title and
  * the SHA-256 of its action block, so a changed example comes back for review. Exactly one of
- * [name] (a descriptive name for a generic title) and [owner] (the scenario that holds an example
- * several scenarios match) is set, with the [reason].
+ * [name] (a descriptive name for a generic title), [owner] (the scenario that holds an example
+ * several scenarios match) and [alternativeOf] is set, with the [reason].
  */
 data class ReviewedExample(
     val page: String,
@@ -67,6 +72,12 @@ data class ReviewedExample(
     val actionSha256: String,
     val name: String? = null,
     val owner: String? = null,
+    /**
+     * The action SHA-256 of the example on the same page that this one spells another way, as
+     * `$cond`'s array form spells its object form. Its action becomes one of that example's
+     * alternatives, and it is no longer an example of its own.
+     */
+    val alternativeOf: String? = null,
     val reason: String,
 )
 
@@ -129,7 +140,7 @@ object DocumentedExamples {
     const val REVIEWED = "audits/catalog/example-names.json"
 
     /** A committed scenario: its name (`<context>/<operator>/<stem>`) and its example's title. */
-    private data class Owned(val fixture: String, val title: String?)
+    internal data class Owned(val fixture: String, val title: String?)
 
     /**
      * Extracts every operator page [plan] names from the parsed [document] of [bundle], and matches
@@ -150,8 +161,12 @@ object DocumentedExamples {
                 ?.let { AuditJson.reviewedExamples(Files.readString(it)).examples }
                 .orEmpty()
         reviewed.forEach {
-            require((it.name == null) != (it.owner == null) && it.reason.isNotBlank()) {
-                "${it.page} ${it.title}: a review names an example or its owner, with a reason"
+            require(
+                listOfNotNull(it.name, it.owner, it.alternativeOf).size == 1 &&
+                    it.reason.isNotBlank()
+            ) {
+                "${it.page} ${it.title}: a review names an example, its owner or the example it" +
+                    " is an alternative of, with a reason"
             }
         }
         val manifest = bundle.manifest
@@ -320,7 +335,7 @@ object DocumentedExamples {
     }
 
     /** A scenario's source blocks, and why it has no program when it hasn't. */
-    private data class Unrunnable(val blocks: List<SourceBlock>, val problem: String?)
+    internal data class Unrunnable(val blocks: List<SourceBlock>, val problem: String?)
 
     /** Where a scenario's action sits on its page, so examples keep the page's order. */
     private fun position(scenario: ExtractedScenario): List<Int> =
@@ -333,18 +348,75 @@ object DocumentedExamples {
     }
 
     /** Assigns each of a page's examples its owner or status: first by title, then by name. */
-    private fun examples(
-        read: List<Pair<String, Unrunnable>>,
+    internal fun examples(
+        page: List<Pair<String, Unrunnable>>,
         owners: List<Owned>,
         reviewed: List<ReviewedExample>,
         used: MutableSet<ReviewedExample>,
     ): List<DocumentedExample> {
-        val reviews =
-            read.map { (title, example) ->
+        fun action(example: Unrunnable) =
+            example.blocks.singleOrNull { it.role == BlockRole.ACTION }
+        val found =
+            page.map { (title, example) ->
                 val action = example.blocks.firstOrNull { it.role == BlockRole.ACTION }?.sha256
                 reviewed.singleOrNull { it.title == title && it.actionSha256 == action }
             }
-        used += reviews.filterNotNull()
+        // An alternative folds into the example it spells another way: a runnable example whose
+        // only block is its action, into one on the page that is itself no alternative. Any other
+        // stays an example of its own, and its review is stale.
+        val into =
+            page.indices
+                .mapNotNull { index ->
+                    val of = found[index]?.alternativeOf ?: return@mapNotNull null
+                    val example = page[index].second
+                    if (
+                        example.problem != null ||
+                            example.blocks.size != 1 ||
+                            action(example) == null
+                    )
+                        return@mapNotNull null
+                    page.indices
+                        .singleOrNull { other ->
+                            other != index &&
+                                found[other]?.alternativeOf == null &&
+                                page[other].second.problem == null &&
+                                action(page[other].second)?.sha256 == of
+                        }
+                        ?.let { index to it }
+                }
+                .toMap()
+        used +=
+            found
+                .filterIndexed { index, review ->
+                    review != null && (review.alternativeOf == null || index in into)
+                }
+                .filterNotNull()
+        val kept = page.indices.filter { it !in into }
+        // The primary's action block joins its alternatives' in page order, so a change to any of
+        // them changes the example's digest.
+        val read =
+            kept.map { index ->
+                val (title, example) = page[index]
+                val folded = into.filterValues { it == index }.keys.sorted()
+                if (folded.isEmpty()) return@map title to example
+                val text =
+                    (listOf(index) + folded).joinToString("\n") { action(page[it].second)!!.text }
+                title to
+                    example.copy(
+                        blocks =
+                            example.blocks.map {
+                                if (it.role != BlockRole.ACTION) it
+                                else
+                                    SourceBlock(
+                                        BlockRole.ACTION,
+                                        text,
+                                        Documented.sha256(text.toByteArray()),
+                                    )
+                            }
+                    )
+            }
+        val reviews = kept.map { found[it] }
+        val alternatives = kept.map { it in into.values }
         // A reviewed name stands in for a generic title.
         val names = read.mapIndexed { index, (title, _) -> reviews[index]?.name ?: title }
         val stems =
@@ -372,12 +444,12 @@ object DocumentedExamples {
                             read[it].first == title &&
                             (read[it].second.problem == null || example.problem != null)
                     }
+                // A reviewed name stands in for the title, so a legacy scenario that kept the
+                // generic title doesn't claim the example.
                 val byTitle =
                     if (shared) emptyList()
-                    else
-                        owners.filter {
-                            titled && it.title == title || name != null && it.title == name
-                        }
+                    else if (name != null) owners.filter { it.title == name }
+                    else owners.filter { titled && it.title == title }
                 val stem = stems[index]
                 // A scenario is named for its example, so the scenario with the example's name
                 // holds
@@ -480,13 +552,14 @@ object DocumentedExamples {
                     (counts.getValue(owner) == 1) ||
                     (reviewed && reviewedClaims.count { it == owner } == 1)
             )
-                example
+                example.copy(alternatives = alternatives[index])
             else
                 DocumentedExample(
                     example.title,
                     ExampleStatus.AMBIGUOUS,
                     detail = "$owner matches several examples",
                     blocks = read[index].second.blocks,
+                    alternatives = alternatives[index],
                 )
         }
     }

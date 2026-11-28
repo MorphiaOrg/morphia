@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.nin;
+import static dev.morphia.query.updates.UpdateOperators.set;
 
 public class TestNin extends TemplatedTestBase {
 
@@ -21,4 +22,12 @@ public class TestNin extends TemplatedTestBase {
         testQuery((query) -> query.filter(nin("quantity", List.of(5, 15))), new FindOptions().projection().exclude("_id"));
     }
 
+    /**
+     * test data: dev/morphia/test/query/filters/nin/selectOnElementsNotInAnArray
+     */
+    @Test
+    @DisplayName("Select on Elements Not in an Array")
+    public void testSelectOnElementsNotInAnArray() {
+        testUpdate((query) -> query.filter(nin("genres", List.of("Drama"))), set("exclude", true));
+    }
 }

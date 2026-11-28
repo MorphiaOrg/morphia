@@ -55,4 +55,14 @@ public class TestIn extends TemplatedTestBase {
         testUpdate((query) -> query.filter(in("rated", List.of("G", "TV-G"))),
                 set("familyFriendly", true));
     }
+
+    /**
+     * test data: dev/morphia/test/query/filters/in/useInWithARegularExpression
+     */
+    @Test
+    @DisplayName("Use $in with a Regular Expression")
+    public void testUseInWithARegularExpression() {
+        testQuery((query) -> query.filter(in("plot", List.of(Pattern.compile("^Alien"), Pattern.compile("sci-fi")))),
+                new FindOptions().projection().include("title", "plot").projection().exclude("_id"));
+    }
 }

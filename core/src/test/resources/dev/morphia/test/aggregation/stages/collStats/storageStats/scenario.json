@@ -26,7 +26,7 @@
     ]
   },
   "expected": {
-    "none": "the page publishes no result"
+    "none": "the page elides its printed results with ..., so they prove only part of them"
   },
   "comparison": {
     "order": "UNORDERED",
@@ -37,5 +37,8 @@
   "requirements": {
     "minimumServer": null,
     "topology": "STANDALONE"
+  },
+  "skipped": {
+    "published": "the page elides its printed results with ..., so they prove only part of them"
   }
 }

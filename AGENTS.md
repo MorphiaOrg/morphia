@@ -23,6 +23,11 @@ Rules:
 ## Code quality
 - After making changes, run `./mvnw spotless:apply` to ensure code formatting is consistent.
 
+## Scripts
+- Scripts live only in a `bin/` folder: the `bin/` of the module they serve (e.g. `audits/bin/`), or
+  the repository root's `bin/` for repo-wide scripts. Never add a script anywhere else; a Makefile
+  or workflow calls it there.
+
 ## Build Commands
 - Build with deps: `./mvnw install -pl :morphia-core -am -DskipTests`
 - Skip dokka: `-Ddeploy.skip=true`
@@ -34,6 +39,9 @@ Rules:
 - When running tests to verify a fix, be sure to run it once with mapper=reflection and once with mapper=critter to
   ensure both work correctly.
   - run the critter mapper first as it's more likely to have issues and you want to catch those early
+  - the audits module's own tests don't use a mapper: run them once (`make -C audits test`). Core's operator
+    scenario tests (`make -C audits core-test`, weekly discovery) also run once, under the default mapper: they
+    run against plain `Document` collections, and `build.yml`'s mapper matrix covers mapper parity
 
 ## Critter Code Generator
 - The `critter-maven` plugin generates models at build time (AOT); runtime generation with the Class-File API

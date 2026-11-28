@@ -12,6 +12,8 @@ import dev.morphia.audits.extraction.ExampleOverrides
 import dev.morphia.audits.extraction.ExampleStatus
 import dev.morphia.audits.extraction.Extraction
 import dev.morphia.audits.extraction.FormSource
+import dev.morphia.audits.extraction.MissingFix
+import dev.morphia.audits.extraction.MissingReport
 import dev.morphia.audits.extraction.Overrides
 import dev.morphia.audits.extraction.ScenarioPatch
 import dev.morphia.audits.extraction.SourceBlock
@@ -402,5 +404,68 @@ class ExtractionTest {
                 ExampleOverrides(),
             )
         assertEquals(listOf("main", "main#2"), result.failures.map { it.title })
+    }
+
+    @Test
+    fun theMissingReportGroupsEachExampleByWhatItWaitsOn() {
+        val unseeded = blocks.drop(1)
+        val page =
+            inventory()
+                .pages[0]
+                .copy(
+                    problems = listOf("GROUP_COUNT_DROP: Observed 0 reference groups"),
+                    examples =
+                        listOf(
+                            DocumentedExample(
+                                "Unseeded",
+                                ExampleStatus.UNOWNED,
+                                stem = "unseeded",
+                                blocks = unseeded,
+                            ),
+                            DocumentedExample(
+                                "Unread",
+                                ExampleStatus.UNSUPPORTED,
+                                stem = "unread",
+                                detail = "SYNTAX",
+                                blocks = blocks,
+                            ),
+                            DocumentedExample(
+                                "main",
+                                ExampleStatus.UNNAMED,
+                                detail = "a generic title needs a reviewed name",
+                            ),
+                        ),
+                )
+        val groups =
+            MissingReport.groups(
+                repository,
+                inventory().copy(pages = listOf(page)),
+                ExampleOverrides(),
+            )
+        assertEquals(
+            setOf("PAGE GROUP_COUNT_DROP", "EXAMPLE UNOWNED", "EXAMPLE SYNTAX", "EXAMPLE UNNAMED"),
+            groups.map { "${it.scope} ${it.category}" }.toSet(),
+        )
+        val byCategory = groups.associateBy { it.category }
+        // An unowned example's detail is extraction's reason for refusing it.
+        assertEquals(
+            "the page prints results for items, which nothing seeds",
+            byCategory.getValue("UNOWNED").entries.single().detail,
+        )
+        assertEquals(MissingFix.REVIEW, byCategory.getValue("UNNAMED").fix)
+        val unread = byCategory.getValue("SYNTAX").entries.single()
+        assertEquals(Overrides.identity(blocks), unread.blocksSha256)
+        assertEquals(blocks, unread.blocks)
+        assertEquals(
+            "https://github.com/mongodb/docs/blob/${"a".repeat(40)}/content/manual/manual/source/reference/operator/query/gt.txt",
+            unread.source,
+        )
+        val page2 = byCategory.getValue("GROUP_COUNT_DROP").entries.single()
+        assertEquals("Observed 0 reference groups", page2.detail)
+        assertEquals(null, page2.blocksSha256)
+        val markdown = MissingReport.markdown(groups)
+        assertTrue(markdown.startsWith("# Missing scenarios: 4"), markdown)
+        assertTrue(markdown.contains("### `query/filters/gt/Unread`"), markdown)
+        assertTrue(markdown.contains(blocks[1].text), markdown)
     }
 }

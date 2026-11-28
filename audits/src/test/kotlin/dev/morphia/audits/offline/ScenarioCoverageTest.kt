@@ -3,6 +3,7 @@ package dev.morphia.audits.offline
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.extraction.Coverage
 import dev.morphia.audits.extraction.DocumentedExamples
+import dev.morphia.audits.extraction.MissingReport
 import dev.morphia.audits.extraction.Overrides
 import java.nio.file.Files
 import java.nio.file.Path
@@ -40,12 +41,23 @@ class ScenarioCoverageTest {
         assertEquals(rules, Overrides.RULES)
     }
 
-    /** Every in-scope documented example has a scenario, or a reviewed exclusion. */
+    /**
+     * Every in-scope documented example has a scenario, or a reviewed exclusion. Every missing one
+     * is listed on every run by category, with guidance and its source blocks, in
+     * `audits/target/missing-scenarios.md` and `.json`.
+     */
     @Test
     fun everyExampleHasAScenario() {
         val inventory =
             AuditJson.exampleInventory(Files.readString(root.resolve(DocumentedExamples.PATH)))
         val missing = Coverage.missingScenarios(root, inventory, overrides)
+        val groups = MissingReport.groups(root, inventory, overrides)
+        val report = root.resolve("audits/target/missing-scenarios.json")
+        Files.createDirectories(report.parent)
+        Files.writeString(report, AuditJson.write(groups) + "\n")
+        val markdown = root.resolve("audits/target/missing-scenarios.md")
+        Files.writeString(markdown, MissingReport.markdown(groups))
+        println(MissingReport.summary(groups) + "Report: $markdown and $report")
         assertEquals(
             emptyList<String>(),
             missing,

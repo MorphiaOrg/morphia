@@ -28,6 +28,13 @@ data class ScenarioInput(
  * `OperatorCaseRunner` checks. The page decides everything but what a reviewed override changes.
  */
 object ScenarioWriter {
+    /**
+     * Why an elided page's results aren't checked: they prove only part of what the server returns,
+     * and the serialization check holds Morphia to the documented command.
+     */
+    const val ELIDED =
+        "the page elides its printed results with ..., so they prove only part of them"
+
     private val settings =
         JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).indent(true).build()
 
@@ -119,6 +126,7 @@ object ScenarioWriter {
             skipped["behavior"] = BsonString(reason)
             skipped["published"] = BsonString(reason)
         }
+        if (documented.elided && "published" !in skipped) skipped["published"] = BsonString(ELIDED)
         override?.skipped?.forEach { (check, reason) -> skipped[check] = BsonString(reason) }
         val scenario =
             BsonDocument()
@@ -155,7 +163,13 @@ object ScenarioWriter {
                             "printed",
                             BsonArray(printed.map { PublishedEncoding.encode(it) }),
                         )
-                    } ?: BsonDocument("none", BsonString("the page publishes no result")),
+                    }
+                        ?: BsonDocument(
+                            "none",
+                            BsonString(
+                                if (documented.elided) ELIDED else "the page publishes no result"
+                            ),
+                        ),
                 )
                 .append(
                     "comparison",

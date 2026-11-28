@@ -43,8 +43,21 @@ data class UntestedExample(
 /** `audits/catalog/untested-examples.json`: the reviewed baseline of untested scenarios. */
 data class UntestedExamples(val schemaVersion: Int = 1, val examples: List<UntestedExample>)
 
-/** An in-scope example, or a page, with no scenario: [line] says why; [key] names it stably. */
-data class MissingScenario(val key: String, val line: String)
+/**
+ * An in-scope example, or a page, with no scenario: [line] says why; [key] names it stably. The
+ * other fields are for [MissingReport]: the [page] (`<context>/<operator>`), the example's [title]
+ * (null when the reader couldn't read the page at all), the [category] the report groups it under,
+ * the reader's [detail], and the example's source [blocks].
+ */
+data class MissingScenario(
+    val key: String,
+    val line: String,
+    val page: String = "",
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val title: String? = null,
+    val category: String = "",
+    @get:JsonInclude(JsonInclude.Include.NON_NULL) val detail: String? = null,
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY) val blocks: List<SourceBlock> = emptyList(),
+)
 
 /** One entry of the work queue: a scenario with no test, and the test it needs. */
 data class UntestedScenario(
@@ -103,6 +116,9 @@ object Coverage {
                         MissingScenario(
                             "${page.id}#$code" + if (ordinal > 0) "#${ordinal + 1}" else "",
                             "${page.id}: the reader couldn't read the page: $problem",
+                            page.id,
+                            category = code,
+                            detail = problem.substringAfter(':', "").trim().ifEmpty { null },
                         )
                     }
                 problems +
@@ -124,10 +140,27 @@ object Coverage {
                                 key,
                                 "${page.id} \"${example.title}\": ${example.status}" +
                                     (example.detail?.let { " ($it)" } ?: ""),
+                                page.id,
+                                example.title,
+                                category(example),
+                                example.detail,
+                                example.blocks,
                             )
                         }
             }
     }
+
+    /**
+     * What a missing example waits on: the reader's problem code for an unsupported one, its status
+     * otherwise, and `SCENARIO_FILE_MISSING` for an owned example whose scenario is gone.
+     */
+    private fun category(example: DocumentedExample): String =
+        when (example.status) {
+            ExampleStatus.UNSUPPORTED ->
+                example.detail?.substringBefore(':')?.trim()?.ifEmpty { null } ?: "UNSUPPORTED"
+            ExampleStatus.OWNED -> "SCENARIO_FILE_MISSING"
+            else -> example.status.name
+        }
 
     /**
      * Each example's key: its page and title, and its place among the page's examples with that

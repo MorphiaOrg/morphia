@@ -1,5 +1,6 @@
 package dev.morphia.audits.shell
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.published.*
 import dev.morphia.audits.semantics.BsonSnapshot
@@ -80,6 +81,7 @@ object ShellPrograms {
         val values: List<BsonSnapshot>?,
         val dependencies: List<String>,
         val published: List<PublishedDocument>? = null,
+        val elided: Boolean = false,
     )
 
     private data class CommandMeaning(
@@ -95,6 +97,7 @@ object ShellPrograms {
         val publishedProfile: String?,
         val error: ProgramExpectedError?,
         val order: dev.morphia.audits.semantics.ResultOrder,
+        @get:JsonInclude(JsonInclude.Include.NON_DEFAULT) val elided: Boolean = false,
     )
 
     private data class Meaning(
@@ -165,6 +168,7 @@ object ShellPrograms {
                                 it.publishedProfile,
                                 it.error,
                                 it.order,
+                                it.elided,
                             )
                         },
                     )
@@ -1006,17 +1010,44 @@ object ShellPrograms {
                 pending += PendingExpectation(unit, null, emptyList())
                 return
             }
-            val dependencies = linkedSetOf<String>()
+            // Results that elide, as the docs' tested examples do, prove only part of what the
+            // server returns: the example's command is still checked, its results aren't. Their
+            // strings are judged as the parser read them; a bare `...` is looked for only once the
+            // parser has rejected the block, so a misread can't drop a check that would have run.
+            val stored = storedBytes
+            val read =
+                try {
+                    results(unit, linkedSetOf())
+                } catch (failure: RuntimeException) {
+                    if (
+                        failure !is EvaluatorException &&
+                            failure !is ShellLiterals.UnsupportedLiteral &&
+                            failure !is Stop || !ShellEllipsis.scan(unit.source)
+                    )
+                        throw failure
+                    null
+                }
+            if (
+                read == null ||
+                    read.published.orEmpty().any { ShellEllipsis.elides(it) } ||
+                    read.values.orEmpty().any { ShellEllipsis.elides(it.value()) }
+            ) {
+                storedBytes = stored
+                pending += PendingExpectation(unit, null, emptyList(), elided = true)
+            } else pending += read
+        }
+
+        /** The expectation [unit] prints, read as its format reads it. */
+        fun results(unit: ProgramBlock, dependencies: MutableSet<String>): PendingExpectation {
             if (unit.format == ProgramFormat.LEGACY_DOCUMENTS) {
                 val parsed = LegacyDocuments.parse(unit.source, limits.values)
                 if (parsed.state != ShellLiteralState.NORMALIZED)
                     stop("EXPECTED_DOCUMENTS", parsed.problems.joinToString { it.code })
-                pending +=
-                    PendingExpectation(
-                        unit,
-                        parsed.documents.map { snapshot(it) },
-                        dependencies.toList(),
-                    )
+                return PendingExpectation(
+                    unit,
+                    parsed.documents.map { snapshot(it) },
+                    dependencies.toList(),
+                )
             } else {
                 val fragments =
                     if (unit.format == ProgramFormat.SHELL_RESULTS)
@@ -1058,7 +1089,7 @@ object ShellPrograms {
                     storePublished(v)
                 }
 
-                pending += PendingExpectation(unit, null, dependencies.toList(), docs)
+                return PendingExpectation(unit, null, dependencies.toList(), docs)
             }
         }
 
@@ -1099,6 +1130,7 @@ object ShellPrograms {
                         command = selected.id,
                         documents = pending.values,
                         published = pending.published,
+                        elided = pending.elided,
                         error = pending.block.expectedError,
                         order = request.resultOrder,
                         source = ProgramLocation(pending.block.id, null),

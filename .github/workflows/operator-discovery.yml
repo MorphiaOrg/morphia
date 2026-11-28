@@ -1,9 +1,9 @@
 name: Operator Example Discovery
 
 # Extracts the documented operator examples at the head of mongodb/docs and runs core's operator
-# tests against the result under both mappers, uploading every report. It never commits. The Publish
-# job then files its findings as issues in this repository: each documented operator with no Morphia
-# factory, each example that appeared upstream, and failing tests. An example with no scenario fails
+# tests against the result, uploading every report. It never commits. The Publish job then files its
+# findings as issues in this repository: each documented operator with no Morphia factory, each
+# example that appeared upstream, and failing tests. An example with no scenario fails
 # the Discover job, and is listed in its summary rather than filed.
 # An issue's marker keeps reruns from filing it twice; a closed issue is not reopened.
 on:
@@ -38,19 +38,10 @@ jobs:
           distribution: temurin
           cache: maven
 
-      # A sparse, blobless clone: git checks every blob, and it makes no rate-limited API calls.
+      # A shallow, blobless, sparse checkout of the bundle's roots: git checks every blob, and it
+      # makes no rate-limited API calls.
       - name: Checkout mongodb/docs operator pages
-        run: |
-          git clone -q --filter=blob:none --no-checkout https://github.com/mongodb/docs.git "$RUNNER_TEMP/docs"
-          # The operator pages, their includes and tested snippets, and the rest of the bundle's roots
-          # (audits/config/manual-baseline-sources.json).
-          git -C "$RUNNER_TEMP/docs" sparse-checkout set --no-cone \
-            /content/manual/manual/snooty.toml /content/manual/manual/source/reference/ \
-            /content/manual/manual/source/includes/ /content/manual/manual/source/core/ \
-            /content/manual/manual/source/tutorial/ /content/manual/manual/source/images/ \
-            /content/manual/manual/source/code-examples/ \
-            /content/code-examples/tested/
-          git -C "$RUNNER_TEMP/docs" checkout -q
+        run: audits/bin/checkout-docs.sh "$RUNNER_TEMP/docs" HEAD
 
       - name: Setup the pinned parser's Python
         uses: actions/setup-python@v7
@@ -61,7 +52,7 @@ jobs:
         run: python -m pip install uv==0.13.7
 
       - name: Extract and test
-        run: audits/discover.sh "$RUNNER_TEMP/docs" "$RUNNER_TEMP/discovery" --test
+        run: audits/bin/discover.sh "$RUNNER_TEMP/docs" "$RUNNER_TEMP/discovery" --test
 
       - name: Summarize
         if: always()

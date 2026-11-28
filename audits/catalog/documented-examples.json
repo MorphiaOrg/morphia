@@ -2399,28 +2399,19 @@
   }, {
     "context" : "aggregation/expressions",
     "examples" : [ {
+      "alternatives" : true,
       "blocks" : [ {
         "role" : "ACTION",
-        "sha256" : "8fff4fb0364f1f3c8237436072c06206d4f193845c70109dd5b850d4e4f7d0e6",
-        "text" : "db.movies.aggregate( [\n   { $match: { runtime: { $gt: 1000 } } },\n   {\n      $project:\n        {\n          title: 1,\n          rentalPrice:\n            {\n              $cond: {\n                 if: { $gte: [ \"$imdb.rating\", 9 ] },\n                 then: 5.99,\n                 else: 3.99\n              }\n            }\n        }\n   }\n] )\n"
+        "sha256" : "d61f1256f00614f278553d5b188d999ff03d48303e1a3b38a321ca1730a1eea8",
+        "text" : "db.movies.aggregate( [\n   { $match: { runtime: { $gt: 1000 } } },\n   {\n      $project:\n        {\n          title: 1,\n          rentalPrice:\n            {\n              $cond: {\n                 if: { $gte: [ \"$imdb.rating\", 9 ] },\n                 then: 5.99,\n                 else: 3.99\n              }\n            }\n        }\n   }\n] )\n\ndb.movies.aggregate( [\n   { $match: { runtime: { $gt: 1000 } } },\n   {\n      $project:\n        {\n          title: 1,\n          rentalPrice:\n            {\n              $cond: [\n                 { $gte: [ \"$imdb.rating\", 9 ] },\n                 5.99,\n                 3.99\n              ]\n            }\n        }\n   }\n] )\n"
       }, {
         "role" : "EXPECTED",
         "sha256" : "0cb275d680055cd3264c2dd43a682739436e7b039054de148968596887249d39",
         "text" : "[\n  { _id: ..., title: 'Baseball', rentalPrice: 5.99 },\n  { _id: ..., title: 'Centennial', rentalPrice: 3.99 }\n]\n"
       } ],
-      "detail" : "SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : null,
-      "title" : "main"
-    }, {
-      "blocks" : [ {
-        "role" : "ACTION",
-        "sha256" : "ea7d58e9191d39a2b8ac89c2c0ff2737607f6c537a0818f66e793873d5e85a9c",
-        "text" : "db.movies.aggregate( [\n   { $match: { runtime: { $gt: 1000 } } },\n   {\n      $project:\n        {\n          title: 1,\n          rentalPrice:\n            {\n              $cond: [\n                 { $gte: [ \"$imdb.rating\", 9 ] },\n                 5.99,\n                 3.99\n              ]\n            }\n        }\n   }\n] )\n"
-      } ],
       "detail" : null,
-      "owner" : "aggregation/expressions/cond/condExpressionOperator",
+      "name" : "Price Rentals by Rating",
+      "owner" : "aggregation/expressions/cond/priceRentalsByRating",
       "status" : "OWNED",
       "stem" : null,
       "title" : "main"
@@ -9632,10 +9623,10 @@
         "sha256" : "b2cc56e234b178d79a50e54997659485b6ae37c56666494c5a1e52ee6401dd57",
         "text" : "[\n  { _id: ..., title: 'Baseball', runtime: 1140, runtimeHours: 19, licenseFeeUSD: 9.5 },\n  { _id: ..., title: 'Centennial', runtime: 1256, runtimeHours: 20, licenseFeeUSD: 10 }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "usingTwoAddFieldsStages",
+      "detail" : null,
+      "owner" : "aggregation/stages/addFields/usingTwoAddFieldsStages",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Using Two $addFields Stages"
     }, {
       "blocks" : [ {
@@ -9662,11 +9653,11 @@
         "sha256" : "f57cb7a24ede55a0289e887d25ef376acbb4ed709da32b53a7881bb320aa2e86",
         "text" : "[\n  { _id: ..., title: 'Baseball', runtime: 1155 },\n  { _id: ..., title: 'Centennial', runtime: 1271 }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
+      "detail" : null,
       "name" : "Add Fifteen Minutes to the Runtime",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "addFifteenMinutesToTheRuntime",
+      "owner" : "aggregation/stages/addFields/addFifteenMinutesToTheRuntime",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ {
@@ -9678,11 +9669,11 @@
         "sha256" : "1db4ffcbfbadcf4f5e2a4be16df182c5c3266239bfe14bcc4e97a507f6dfddfa",
         "text" : "[\n  { _id: 'Baseball', title: 'Documentary' },\n  { _id: 'Centennial', title: 'Action' }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
+      "detail" : null,
       "name" : "Replace the Id and Title",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "replaceTheIdAndTitle",
+      "owner" : "aggregation/stages/addFields/replaceTheIdAndTitle",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ {
@@ -9709,11 +9700,11 @@
         "sha256" : "69f314ad9e45ee44a911baae1ca075cce96f6e246bf137723b9f9cb16cbf831d",
         "text" : "[\n  { _id: ..., title: 'Baseball', runtime: 1140 },\n  { _id: ..., title: 'Centennial', runtime: 1256 }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
+      "detail" : null,
       "name" : "Remove the Plot",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "removeThePlot",
+      "owner" : "aggregation/stages/addFields/removeThePlot",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Remove Fields"
     }, {
       "blocks" : [ {
@@ -9725,11 +9716,11 @@
         "sha256" : "18fd1216a28c0cb2d179a813540f8ee40c12afae432a11103a980a2fe98c6e2e",
         "text" : "[\n  { _id: ..., title: 'Baseball', rated: 'TV-PG' },\n  { _id: ..., title: 'Centennial' }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
+      "detail" : null,
       "name" : "Remove a Missing Rating",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "removeAMissingRating",
+      "owner" : "aggregation/stages/addFields/removeAMissingRating",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Remove Fields"
     } ],
     "includes" : [ {
@@ -9968,6 +9959,10 @@
         "role" : "ACTION",
         "sha256" : "2b7999310b37793f942ab7e1870ed01a073f650ba3c2224f8069e9e891883a5b",
         "text" : "db.matrices.aggregate( [ { $collStats: { storageStats: { } } } ] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "868b527c2a00b24e79102d2cabe0a6c101066b725bbdc29e424c8f2f8b662665",
+        "text" : "  {\n    localTime : 2020-03-06T01:44:57.437Z,\n    storageStats: {\n    size: 608500363,\n    count: 1104369,\n    avgObjSize: 550,\n    storageSize: 4096,\n    freeStorageSize: 2490380,\n    capped: false,\n    wiredTiger : {\n      ...\n    },\n    nindexes : 2,\n    indexDetails : {\n      ...\n    },\n    indexBuilds: [\n      _id_1_abc_1\n    ],\n    totalIndexSize: 260337664,\n    indexSizes: {\n    _id_ : 9891840,\n    _id_1_abc_1 : 250445824\n    },\n    totalSize: 613216256,\n    scaleFactor : 1\n  },\n  host : 'mongo.example.net:27017',\n  ns : 'test.matrices'\n}"
       } ],
       "detail" : null,
       "owner" : "aggregation/stages/collStats/storageStats",
@@ -10845,9 +10840,9 @@
         "sha256" : "beb8ef307bd441431a17c9fc87670bafdc4d4c2434838a0776ab180d05dcc85f",
         "text" : "[\n  {\n    name: 'year_1_title_1',\n    key: { year: 1, title: 1 },\n    host: ...,\n    accesses: ...,\n    spec: { v: 2, key: { year: 1, title: 1 }, name: 'year_1_title_1' }\n  },\n  {\n    name: 'rated_1_year_1',\n    key: { rated: 1, year: 1 },\n    host: ...,\n    accesses: ...,\n    spec: { v: 2, key: { rated: 1, year: 1 }, name: 'rated_1_year_1' }\n  },\n  {\n    name: 'metacritic_1',\n    key: { metacritic: 1 },\n    host: ...,\n    accesses: ...,\n    spec: {\n      v: 2,\n      key: { metacritic: 1 },\n      name: 'metacritic_1',\n      partialFilterExpression: { rated: 'R' }\n    }\n  },\n  {\n    name: '_id_',\n    key: { _id: 1 },\n    host: ...,\n    accesses: ...,\n    spec: { v: 2, key: { _id: 1 }, name: '_id_' }\n  },\n  {\n    name: 'cast_text_fullplot_text_genres_text_title_text',\n    key: { _fts: 'text', _ftsx: 1 },\n    host: ...,\n    accesses: ...,\n    spec: ...\n  }\n]\n"
       } ],
-      "detail" : "SYNTAX",
+      "detail" : "a generic title needs a reviewed name",
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNNAMED",
       "stem" : null,
       "title" : "main"
     } ],
@@ -11693,6 +11688,10 @@
         "role" : "ACTION",
         "sha256" : "89b5e2674ac3b3c45793136dad844890e1b53360ebf6cb15ecd32ed2fc9dbc9f",
         "text" : "db.orders.aggregate( [\n    { $planCacheStats: { } }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "f8cd248570c0baa2d988a29243d719766009b6b8d29ab5039f21841ebb3dfeee",
+        "text" : "[\n  {                                             // Plan Cache Entry 1\n    version: '2',\n    planCacheShapeHash: '478AD696',\n    planCacheKey: '21AE23AD',\n    isActive: true,\n    works: Long(\"7\"),\n    timeOfCreation: ISODate(\"2023-05-22T20:33:49.031Z\"),\n    cachedPlan: {\n      ...\n    },\n    indexFilterSet: false,\n    isPinned: false,\n    estimatedSizeBytes: Long(\"8194\"),\n    host: 'mongodb1.example.net:27018'\n  },\n  {                                             // Plan Cache Entry 2\n        version: '2',\n        planCacheShapeHash: '3D8AFDC6',\n        planCacheKey: '1C2C4360',\n        isActive: true,\n        works: Long(\"6\"),\n        timeOfCreation: ISODate(\"2023-05-22T20:33:50.584Z\"),\n        cachedPlan: {\n          ...\n        },\n        indexFilterSet: false,\n        isPinned: false,\n        estimatedSizeBytes: Long(\"11547\"),\n        host: 'mongodb1.example.net:27018'\n      },\n      {                                          // Plan Cache Entry 3\n        version: '2',\n        planCacheShapeHash: '27285F9B',\n        planCacheKey: '20BB9404',\n        isActive: true,\n        works: Long(\"1\"),\n        timeOfCreation: ISODate(\"2023-05-22T20:33:49.051Z\"),\n        cachedPlan: {\n          ...\n        },\n        indexFilterSet: false,\n        isPinned: false,\n        estimatedSizeBytes: Long(\"7406\"),\n        host: 'mongodb1.example.net:27018'\n      },\n      {                                          // Plan Cache Entry 4\n        version: '2',\n        planCacheShapeHash: '478AD696',\n        planCacheKey: 'B1435201',\n        isActive: true,\n        works: Long(\"5\"),\n        timeOfCreation: ISODate(\"2023-05-22T20:33:49.009Z\"),\n        cachedPlan: {\n          ...\n        },\n        indexFilterSet: false,\n        isPinned: false,\n        estimatedSizeBytes: Long(\"7415\"),\n        host: 'mongodb1.example.net:27018'\n      }\n    ],"
       } ],
       "detail" : null,
       "owner" : "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
@@ -12580,10 +12579,11 @@
         "sha256" : "a1d38e11590b974caa1f17a872cedaad4cd5636df1e15abe9d95863b30882f5e",
         "text" : "[\n  { _id: ..., title: 'Baseball', rated: 'UNRATED' }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "overwritingAnExistingField",
+      "detail" : null,
+      "name" : "Overwrite the Rating",
+      "owner" : "aggregation/stages/set/overwriteTheRating",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ {
@@ -12595,10 +12595,11 @@
         "sha256" : "ab4bfb7faf6389e25a3989be0a80a68131cbebb8513f432d10574d363fc1db90",
         "text" : "[\n  { _id: 'Baseball', title: 'movie' },\n  { _id: 'Centennial', title: 'movie' }\n]\n...\n"
       } ],
-      "detail" : "DOCUMENT_STREAM_SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "overwritingAnExistingField",
+      "detail" : null,
+      "name" : "Replace the Id with the Title",
+      "owner" : "aggregation/stages/set/replaceTheIdWithTheTitle",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Overwriting an Existing Field"
     }, {
       "blocks" : [ {
@@ -14518,10 +14519,10 @@
         "sha256" : "74c9e6edf426644c30f03470acf93ac9e6557e4b41a929856d80e8eee5e15d4a",
         "text" : "[                                                                                                                                                                                                                                                                               \n  {                                                                                                                                                                                                                                                                             \n    plot: 'Aliens come to Earth seeking scientists to help them in their war.',                                                                                                                                                                                                 \n    title: 'This Island Earth'                                                                                                                                                                                                                                                  \n  },                                                                                                                                                                                                                                                                            \n  {                                                                 \n    plot: 'Censored by the Polish authorities, this film was reedited and new footage added. It begins with a sci-fi motif: abstract images and electronic music take the viewer from ruins of Lebanon ...',                                                                    \n    title: 'Rece do gèry'                                           \n  },                                                                \n  {                                                                 \n    plot: 'An idyllic sci-fi future has one major drawback: life must end at 30.',                                                      \n    title: \"Logan's Run\"                                            \n  },                                                                \n  {                                                                 \n    plot: \"Four horror/sci-fi segments directed by four famous directors which are their own versions of classic stories from Rod Serling's landmark television series.\",                                                                                                       \n    title: 'Twilight Zone: The Movie'                               \n  },                                                                \n  {                                                                 \n    plot: 'Aliens who look like clowns come from outer space and terrorize a small town.',                                              \n    title: 'Killer Klowns from Outer Space'                         \n  },\n  ...\n]\n\n"
       } ],
-      "detail" : "SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "useInWithARegularExpression",
+      "detail" : null,
+      "owner" : "query/filters/in/useInWithARegularExpression",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Use $in with a Regular Expression"
     } ],
     "includes" : [ {
@@ -14889,10 +14890,10 @@
         "sha256" : "5c10942fa0b906562d6cc1ace8b5e885fdfd28d928372aa386c6d1b7ef43efa6",
         "text" : "{\n  acknowledged: true,\n  insertedId: null,\n  matchedCount: ...,\n  modifiedCount: ...,\n  upsertedCount: 0\n}\n"
       } ],
-      "detail" : "SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "updateBasedOnNotEqualEmbeddedDocumentFields",
+      "detail" : null,
+      "owner" : "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Update Based on Not Equal Embedded Document Fields"
     }, {
       "blocks" : [ {
@@ -15058,10 +15059,10 @@
         "sha256" : "5c10942fa0b906562d6cc1ace8b5e885fdfd28d928372aa386c6d1b7ef43efa6",
         "text" : "{\n  acknowledged: true,\n  insertedId: null,\n  matchedCount: ...,\n  modifiedCount: ...,\n  upsertedCount: 0\n}\n"
       } ],
-      "detail" : "SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "selectOnElementsNotInAnArray",
+      "detail" : null,
+      "owner" : "query/filters/nin/selectOnElementsNotInAnArray",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Select on Elements Not in an Array"
     } ],
     "includes" : [ {
@@ -15449,10 +15450,10 @@
         "sha256" : "29c3ddd6094d67e6a870abaafb7058bd183af54057c8d60ba3dd4dafff2de4b3",
         "text" : "[\n  {\n    title: 'Baseball',\n    year: 1994,\n    score: ...\n  }\n]\n"
       } ],
-      "detail" : "SYNTAX",
-      "owner" : null,
-      "status" : "UNSUPPORTED",
-      "stem" : "returnTheRelevanceScore",
+      "detail" : null,
+      "owner" : "query/filters/text/returnTheRelevanceScore",
+      "status" : "OWNED",
+      "stem" : null,
       "title" : "Return the Relevance Score"
     }, {
       "blocks" : [ {
@@ -15468,9 +15469,9 @@
         "sha256" : "048580e4817f63f2059c1b1800566325b1b3adee47eb2b2eaf675040f8292232",
         "text" : "[\n  { title: 'Baseball', year: 1994, score: ... },\n  { title: 'Centennial', year: 1978, score: ... }\n]\n"
       } ],
-      "detail" : "SYNTAX",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "returnTop2MatchingDocuments",
       "title" : "Return Top 2 Matching Documents"
     }, {
@@ -15487,9 +15488,9 @@
         "sha256" : "6f718d3bcca9a53073cd401afbb3f1216b8fa9e19247f27a65422c7ae1c2e04d",
         "text" : "[\n  { title: 'Centennial', year: 1978, score: ... },\n  { title: 'Baseball', year: 1994, score: ... }\n]\n"
       } ],
-      "detail" : "SYNTAX",
+      "detail" : null,
       "owner" : null,
-      "status" : "UNSUPPORTED",
+      "status" : "UNOWNED",
       "stem" : "combineTextWithOtherQueryAndSortOperations",
       "title" : "Combine $text with Other Query and Sort Operations"
     }, {
@@ -17536,10 +17537,10 @@
   "sourceRepository" : "mongodb/docs",
   "summary" : {
     "examples.ambiguous" : 0,
-    "examples.owned" : 530,
-    "examples.unnamed" : 5,
-    "examples.unowned" : 53,
-    "examples.unsupported" : 104,
+    "examples.owned" : 541,
+    "examples.unnamed" : 6,
+    "examples.unowned" : 55,
+    "examples.unsupported" : 89,
     "pages" : 290,
     "pages.skipped" : 10,
     "reviews.stale" : 0
